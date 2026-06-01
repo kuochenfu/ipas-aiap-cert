@@ -1,0 +1,43 @@
+:root {
+  --bg: #0f1729;
+  --panel: #1b2540;
+  --accent: #4f8cff;
+  --correct: #2fa66b;
+  --wrong: #d6455b;
+  --text: #e7ecf5;
+  font-family: system-ui, "Noto Sans TC", "PingFang TC", sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); }
+#app { max-width: 760px; margin: 0 auto; padding: 16px; }
+.topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.topbar h1 { font-size: 1.2rem; margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; border: none; border-radius: 10px; }
+.back, .review-btn { background: var(--panel); padding: 8px 12px; }
+.level-grid, .mode-picker { display: grid; gap: 12px; grid-template-columns: 1fr; }
+.level-card, .mode-card, .subject-card {
+  display: flex; flex-direction: column; gap: 6px;
+  background: var(--panel); padding: 16px; text-align: left;
+}
+.subject-card { width: 100%; }
+.subject-code { color: var(--accent); font-weight: 700; }
+.subject-name { font-size: 1.1rem; }
+.subject-stats, .subject-time { font-size: 0.85rem; opacity: 0.8; }
+.question .prompt { font-size: 1.05rem; line-height: 1.6; }
+.choices { display: grid; gap: 10px; margin: 16px 0; }
+.choice { display: flex; gap: 10px; background: var(--panel); padding: 12px; text-align: left; }
+.choice.selected { outline: 2px solid var(--accent); }
+.choice.correct { outline: 2px solid var(--correct); }
+.choice.wrong { outline: 2px solid var(--wrong); }
+.choice-id { font-weight: 700; }
+.explanation { background: var(--panel); padding: 12px; border-radius: 10px; line-height: 1.6; }
+.qnav { display: flex; gap: 8px; margin-top: 16px; }
+.qnav button { background: var(--panel); padding: 10px 14px; flex: 1; }
+.qnav .submit { background: var(--accent); }
+.progress, .timer { font-variant-numeric: tabular-nums; }
+.timer { margin-left: auto; }
+.score { font-size: 1.6rem; font-weight: 700; }
+.score.pass { color: var(--correct); }
+.score.fail { color: var(--wrong); }
+.topic-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.topic-table th, .topic-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #2c3858; }

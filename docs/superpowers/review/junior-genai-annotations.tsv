@@ -99,3 +99,27 @@ junior-genai-115-1-q47	past	115年第一次 第47題	A	L123	高	產線建議優�
 junior-genai-115-1-q48	past	115年第一次 第48題	C	L123	高	行為變化致資料漂移影響推論
 junior-genai-115-1-q49	past	115年第一次 第49題	B	L121	高	整合可靠性靠自動化整合測試模擬外部
 junior-genai-115-1-q50	past	115年第一次 第50題	C	L123	高	降偏差輸出靠生成後人工審查修正
+junior-genai-gen-q001	new	B1	C	L122	高	RAG 為降低幻覺的標準做法
+junior-genai-gen-q002	new	B1	A	L121	高	No code 以視覺化少寫程式建構應用
+junior-genai-gen-q003	new	B1	D	L123	高	推論 API 與雲端運算為持續營運成本
+junior-genai-gen-q004	new	B1	A	L122	高	文字轉圖像工具產生視覺草圖
+junior-genai-gen-q005	new	B1	D	L121	中	平台模型為描述資料流程的抽象藍圖
+junior-genai-gen-q006	new	B1	C	L123	中	社會評分屬 EU AI Act 不可接受風險
+junior-genai-gen-q007	new	B1	B	L122	高	角色扮演提示引導語氣與貼切度
+junior-genai-gen-q008	new	B1	C	L121	高	高效能交易核心不適合 No code
+junior-genai-gen-q009	new	B1	B	L123	高	去識別化與規範控管個資隱私風險
+junior-genai-gen-q010	new	B1	D	L122	高	Agent 能自主規劃並呼叫工具
+junior-genai-gen-q011	new	B1	B	L121	高	公民開發者為非資訊業務自建應用
+junior-genai-gen-q012	new	B1	A	L123	高	人工審查與查核控管幻覺風險
+junior-genai-gen-q013	new	B1	A	L122	高	Copilot 提供程式碼即時補全
+junior-genai-gen-q014	new	B1	C	L121	高	無限底層控制非 No code 優勢
+junior-genai-gen-q015	new	B1	B	L123	高	延遲品質準確度為技術效能指標
+junior-genai-gen-q016	new	B1	C	L122	高	Few-shot 以範例引導格式風格
+junior-genai-gen-q017	new	B1	B	L121	高	No code 仍須驗證流程與資料正確性
+junior-genai-gen-q018	new	B1	D	L123	高	AI 草稿加人工審核最穩健
+junior-genai-gen-q019	new	B1	A	L122	高	工具呼叫整合內部 API 取即時資料
+junior-genai-gen-q020	new	B1	B	L121	高	審核權限規範為 No code 治理作為
+junior-genai-gen-q021	new	B1	D	L123	高	導入目標應具體可衡量有驗收指標
+junior-genai-gen-q022	new	B1	A	L122	高	文字轉語音屬音訊生成領域
+junior-genai-gen-q023	new	B1	B	L121	中	No code 免寫程式 Low code 允少量碼
+junior-genai-gen-q024	new	B1	B	L123	高	自建與商用取捨看隱私成本維運客製

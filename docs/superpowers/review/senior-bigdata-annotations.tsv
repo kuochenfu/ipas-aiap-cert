@@ -49,3 +49,27 @@ senior-bigdata-114-2-q47	past	114年第二梯次 第47題	B	L223	高	nlargest(5)
 senior-bigdata-114-2-q48	past	114年第二梯次 第48題	D	L221	低	需依附圖 describe 輸出判讀 youtube Q1=89.25；原圖未附
 senior-bigdata-114-2-q49	past	114年第二梯次 第49題	C	L223	高	isnull() 與 isna() 為等義別名，對應選項 A、C
 senior-bigdata-114-2-q50	past	114年第二梯次 第50題	B	L221	低	需依附圖執行結果判讀；fit(X,y) 順序正確、截距 3.5561 對應 B、F
+senior-bigdata-gen-q001	new	B1	A	L221	高	平均數>中位數通常為右偏，少數大值拉高均值
+senior-bigdata-gen-q002	new	B1	D	L221	高	α＝顯著水準，控制虛無為真時誤拒（型一錯誤）機率上限
+senior-bigdata-gen-q003	new	B1	B	L221	高	固定區間、獨立、率穩定的計數事件用卜瓦松分布
+senior-bigdata-gen-q004	new	B1	D	L221	高	先分層再層內隨機抽取以維持母體比例＝分層抽樣
+senior-bigdata-gen-q005	new	B1	A	L221	高	r=0.85為強正向線性關係，相關不等於因果
+senior-bigdata-gen-q006	new	B1	C	L221	高	經驗法則95%落在±2σ，100±2×15＝70至130
+senior-bigdata-gen-q007	new	B1	B	L222	高	RDBMS固定綱要＋SQL；NoSQL彈性模型利水平擴展
+senior-bigdata-gen-q008	new	B1	C	L222	高	filter()惰性求值產生新資料集屬Transformation
+senior-bigdata-gen-q009	new	B1	A	L222	高	ETL＝擷取、清洗轉換、載入至資料倉儲
+senior-bigdata-gen-q010	new	B1	C	L222	高	HDFS區塊分散多節點＋複製多份支援平行與容錯
+senior-bigdata-gen-q011	new	B1	B	L222	高	數十億筆離線批次用分散式框架＋分散式儲存平行處理
+senior-bigdata-gen-q012	new	B1	D	L222	高	一致性＝交易前後維持符合約束的有效狀態
+senior-bigdata-gen-q013	new	B1	A	L223	高	標準化轉為均0標準差1；Min-Max線性縮放到固定區間
+senior-bigdata-gen-q014	new	B1	B	L223	高	無序類別Label Encoding引入虛假順序與距離誤導模型
+senior-bigdata-gen-q015	new	B1	B	L223	高	穩健縮放用中位數與IQR，對離群值不敏感
+senior-bigdata-gen-q016	new	B1	D	L223	高	檢視單一連續變數分布形狀用直方圖
+senior-bigdata-gen-q017	new	B1	C	L223	高	SMOTE依少數類近鄰內插合成新樣本屬過採樣
+senior-bigdata-gen-q018	new	B1	A	L223	高	PCA對變異數敏感，未標準化時大量級特徵主導主成分
+senior-bigdata-gen-q019	new	B1	B	L224	高	充足多樣具代表性資料提升模型泛化能力
+senior-bigdata-gen-q020	new	B1	D	L224	高	依行為大數據主動推送商品屬推薦系統
+senior-bigdata-gen-q021	new	B1	D	L224	高	訓練前去識別化／假名化＋存取權限控管與稽核
+senior-bigdata-gen-q022	new	B1	C	L224	中	聯邦學習資料留本地、只交換參數／梯度協作訓練
+senior-bigdata-gen-q023	new	B1	C	L224	高	系統性偏誤或錯誤標註會被模型學到並放大
+senior-bigdata-gen-q024	new	B1	A	L224	高	即時事件近即時逐筆／微批次運算屬串流處理

@@ -49,3 +49,27 @@ senior-ai-tech-114-2-q47	past	114年第二梯次 第47題	C	L212	中	損失未�
 senior-ai-tech-114-2-q48	past	114年第二梯次 第48題	B	L213	高	KD-Tree加速鄰域查詢
 senior-ai-tech-114-2-q49	past	114年第二梯次 第49題	A	L212	中	嵌入正規化非主因（不正確）
 senior-ai-tech-114-2-q50	past	114年第二梯次 第50題	C	L211	中	CLIP雙編碼器對齊不足
+senior-ai-tech-gen-q001	new	B1	C	L211	高	Self-Attention平行化捕長依賴
+senior-ai-tech-gen-q002	new	B1	A	L211	高	語意分割逐像素偵測用邊界框
+senior-ai-tech-gen-q003	new	B1	D	L211	高	ASR語音轉文字TTS文字轉語音
+senior-ai-tech-gen-q004	new	B1	B	L211	高	多模態融合文字影像語音
+senior-ai-tech-gen-q005	new	B1	A	L211	高	NER辨識人名地名組織實體
+senior-ai-tech-gen-q006	new	B1	D	L211	高	卷積核共享局部感受野省參數
+senior-ai-tech-gen-q007	new	B1	B	L211	高	詞嵌入低維稠密表語意相似
+senior-ai-tech-gen-q008	new	B1	C	L211	高	擴散模型加噪去噪生成
+senior-ai-tech-gen-q009	new	B1	B	L212	高	不平衡用F1/PR-AUC評估
+senior-ai-tech-gen-q010	new	B1	D	L212	高	自建vs API綜合多構面評估
+senior-ai-tech-gen-q011	new	B1	A	L212	高	可解釋性讓人理解決策依據
+senior-ai-tech-gen-q012	new	B1	C	L212	高	切分前全資料轉換致洩漏
+senior-ai-tech-gen-q013	new	B1	B	L212	高	推論再訓練監控為營運成本
+senior-ai-tech-gen-q014	new	B1	A	L212	高	查資料代表性比較子群表現
+senior-ai-tech-gen-q015	new	B1	D	L212	高	K折輪流驗證估計更穩定
+senior-ai-tech-gen-q016	new	B1	C	L212	高	RAG加人工審查降幻覺風險
+senior-ai-tech-gen-q017	new	B1	A	L213	高	CI/CD自動化提升可重現性
+senior-ai-tech-gen-q018	new	B1	C	L213	高	輸入分布偏離為資料概念漂移
+senior-ai-tech-gen-q019	new	B1	B	L213	高	藍綠部署快速切換可回滾
+senior-ai-tech-gen-q020	new	B1	D	L213	高	容器打包環境一致可移植
+senior-ai-tech-gen-q021	new	B1	A	L213	高	增實例加負載平衡為水平擴展
+senior-ai-tech-gen-q022	new	B1	D	L213	高	特徵庫共享避免訓練服務偏斜
+senior-ai-tech-gen-q023	new	B1	B	L213	高	監控含系統指標與模型漂移
+senior-ai-tech-gen-q024	new	B1	C	L213	高	API微服務獨立部署擴展重用

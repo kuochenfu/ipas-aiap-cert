@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { escapeHtml } from "../src/ui/escape";
-import { renderSubjectCard, renderChoice, renderStudyView } from "../src/ui/render";
+import { renderSubjectCard, renderChoice, renderStudyView, renderPaperPicker, renderExamPaper, renderExamReview } from "../src/ui/render";
 
 describe("escapeHtml", () => {
   it("跳脫角括號與引號", () => {
@@ -41,5 +41,39 @@ describe("renderStudyView", () => {
     expect(html).toContain("人工智慧基礎概論"); // 科目名稱
     expect(html).toContain('rel="noopener noreferrer"');
     expect(html).toContain('target="_blank"');
+  });
+});
+
+describe("renderPaperPicker", () => {
+  it("含科目名稱與三份按鈕", () => {
+    const html = renderPaperPicker("人工智慧基礎概論", 3);
+    expect(html).toContain("人工智慧基礎概論");
+    expect((html.match(/data-paper="/g) ?? []).length).toBe(3);
+  });
+});
+
+const examQs = [
+  { id: "q1", subjectId: "s", prompt: "P1<x>", choices: [
+    { id: "A", text: "a" }, { id: "B", text: "b" }, { id: "C", text: "c" }, { id: "D", text: "d" }],
+    answer: "A", explanation: "因為 A", topic: "T", difficulty: "中", source: "past-exam" },
+] as any;
+
+describe("renderExamPaper", () => {
+  it("含 data-qid、已作答計數、交卷、跳脫；依 answers 標 selected", () => {
+    const html = renderExamPaper(examQs, { q1: "B" }, "10:00", 1);
+    expect(html).toContain('data-qid="q1"');
+    expect(html).toContain("已作答");
+    expect(html).toContain('data-nav="submit"');
+    expect(html).toContain("&lt;x&gt;");
+    expect(html).toMatch(/class="[^"]*selected[^"]*"[^>]*data-qid="q1"[^>]*data-choice="B"/);
+  });
+});
+
+describe("renderExamReview", () => {
+  it("標示正解與你的作答、含詳解", () => {
+    const html = renderExamReview(examQs, { q1: "B" }, 0, "回成績");
+    expect(html).toContain("因為 A");
+    expect(html).toMatch(/class="[^"]*correct[^"]*"><span class="choice-id">A/);
+    expect(html).toMatch(/class="[^"]*wrong[^"]*"><span class="choice-id">B/);
   });
 });

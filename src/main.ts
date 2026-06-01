@@ -1,6 +1,6 @@
 import "./styles.css";
 import {
-  renderHome, renderLevel, renderModePicker, renderQuestion, renderResult,
+  renderHome, renderLevel, renderModePicker, renderQuestion, renderResult, renderStudyView,
 } from "./ui/render";
 import { getSubject } from "./domain/catalog";
 import { getQuestions } from "./data/index";
@@ -10,7 +10,7 @@ import { addMiss } from "./state/storage";
 import type { ChoiceId, Question } from "./data/types";
 import type { Level } from "./data/types";
 
-type View = "home" | "level" | "mode" | "play" | "result" | "review";
+type View = "home" | "level" | "mode" | "play" | "result" | "review" | "study";
 type Mode = "exam" | "drill";
 
 type Session = {
@@ -65,6 +65,7 @@ function startTimer() {
 
 function render() {
   if (session.view === "home") { stopTimer(); app.innerHTML = renderHome(); return; }
+  if (session.view === "study") { stopTimer(); app.innerHTML = renderStudyView(); return; }
   if (session.view === "level") { stopTimer(); app.innerHTML = renderLevel(session.level); return; }
   if (session.view === "mode") {
     stopTimer();
@@ -152,6 +153,7 @@ app.addEventListener("click", (event) => {
   const nav = target.getAttribute("data-nav");
   if (!nav) return;
   if (nav === "home") { session = blankSession(); render(); return; }
+  if (nav === "study") { session.view = "study"; render(); return; }
   if (nav === "back") { session.view = "level"; render(); return; }
   if (nav === "quit") { stopTimer(); session.view = "level"; render(); return; }
   if (nav === "prev") { if (session.index > 0) session.index--; session.reveal = revealForCurrent(); render(); return; }

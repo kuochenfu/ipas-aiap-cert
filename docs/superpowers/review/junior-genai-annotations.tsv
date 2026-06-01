@@ -1,0 +1,51 @@
+id	type	sourceRef	answer	Lchapter	confidence	依據
+junior-genai-114-4-q01	past	114年第四梯次 第1題	B	L121	高	Low Code 中模型為抽象描述核心元素
+junior-genai-114-4-q02	past	114年第四梯次 第2題	D	L123	高	分散敏感資料持續訓練選聯邦學習
+junior-genai-114-4-q03	past	114年第四梯次 第3題	B	L121	高	可測試性靠自動化測試與服務虛擬化
+junior-genai-114-4-q04	past	114年第四梯次 第4題	A	L122	高	圖轉文字提示易遺失關聯資訊
+junior-genai-114-4-q05	past	114年第四梯次 第5題	D	L122	中	APE 回饋僅局部難全面評估輸出
+junior-genai-114-4-q06	past	114年第四梯次 第6題	B	L121	高	AI 生介面模板結合數據做個人化
+junior-genai-114-4-q07	past	114年第四梯次 第7題	C	L122	高	MCP 流程 Host→Client→Server→查詢
+junior-genai-114-4-q08	past	114年第四梯次 第8題	C	L122	高	A2A 由 Client 發起 Remote 執行回傳
+junior-genai-114-4-q09	past	114年第四梯次 第9題	B	L122	高	上下文工程核心為優化提示與上下文
+junior-genai-114-4-q10	past	114年第四梯次 第10題	B	L122	高	矛盾上下文易致幻覺或隨機採信
+junior-genai-114-4-q11	past	114年第四梯次 第11題	A	L122	高	Solution Graph 用 BFS/DFS/最佳優先搜尋
+junior-genai-114-4-q12	past	114年第四梯次 第12題	C	L123	高	本地部署優勢在敏感資料不外傳
+junior-genai-114-4-q13	past	114年第四梯次 第13題	D	L122	高	Copilot 由 Codex 模型即時生成建議
+junior-genai-114-4-q14	past	114年第四梯次 第14題	B	L122	高	FAQ 出錯缺檢索改單缺 API 調用
+junior-genai-114-4-q15	past	114年第四梯次 第15題	B	L122	高	控制變量/風格標籤同模型動態調風格
+junior-genai-114-4-q16	past	114年第四梯次 第16題	D	L122	中	角色分工不清致代理重複做同任務
+junior-genai-114-4-q17	past	114年第四梯次 第17題	D	L122	高	保留語氣微調文件更新交給 RAG
+junior-genai-114-4-q18	past	114年第四梯次 第18題	D	L122	高	品質波動主因在檢索取得過時文件
+junior-genai-114-4-q19	past	114年第四梯次 第19題	B	L122	中	意圖誤判源於 Prompt 指示不明確
+junior-genai-114-4-q20	past	114年第四梯次 第20題	D	L123	高	生成式誤用於影像診斷恐誤判致風險
+junior-genai-114-4-q21	past	114年第四梯次 第21題	A	L123	高	優先準確先改 ASR 再 LLM 後效能
+junior-genai-114-4-q22	past	114年第四梯次 第22題	C	L122	高	樣板化源於過度依賴常見報告範式
+junior-genai-114-4-q23	past	114年第四梯次 第23題	D	L122	中	表格擷取結構複雜零樣本易失敗
+junior-genai-114-4-q24	past	114年第四梯次 第24題	D	L123	中	合規優先選自訓私有化加自動風控
+junior-genai-114-4-q25	past	114年第四梯次 第25題	B	L122	高	圖文對應需結合圖片特徵與語言建模
+junior-genai-114-4-q26	past	114年第四梯次 第26題	C	L122	高	風格一致不需新知識降生成溫度
+junior-genai-114-4-q27	past	114年第四梯次 第27題	C	L122	中	會議摘要標註角色主題邊界加語意分群
+junior-genai-114-4-q28	past	114年第四梯次 第28題	B	L122	高	Few-shot 需提供範例依相同風格回覆
+junior-genai-114-4-q29	past	114年第四梯次 第29題	C	L122	高	即時分析需同步外部即時行情來源
+junior-genai-114-4-q30	past	114年第四梯次 第30題	A	L123	高	導入順序先定目標 KPI 再資料後技術
+junior-genai-114-4-q31	past	114年第四梯次 第31題	B	L123	高	避觸法優先資料最小化與去識別化
+junior-genai-114-4-q32	past	114年第四梯次 第32題	A	L122	高	跨國合規關鍵在術語對齊與語意抽取
+junior-genai-114-4-q33	past	114年第四梯次 第33題	C	L121	高	No Code 以可視化降門檻促跨部門協作
+junior-genai-114-4-q34	past	114年第四梯次 第34題	B	L123	高	病歷摘要優先驗證醫療準確與一致
+junior-genai-114-4-q35	past	114年第四梯次 第35題	B	L122	高	延遲測試看首個完整回應所需時間
+junior-genai-114-4-q36	past	114年第四梯次 第36題	A	L123	中	防提示注入靠輸入檢測與回應審核
+junior-genai-114-4-q37	past	114年第四梯次 第37題	A	L123	高	數據漂移為訓練與部署分佈隨時間差異
+junior-genai-114-4-q38	past	114年第四梯次 第38題	C	L123	高	演算法偏見導入公平性檢測與調整
+junior-genai-114-4-q39	past	114年第四梯次 第39題	A	L122	高	線性流程用 CoT 多方案權衡用 ToT
+junior-genai-114-4-q40	past	114年第四梯次 第40題	D	L122	高	Graph Prompting 捕捉非線性結構關聯
+junior-genai-114-4-q41	past	114年第四梯次 第41題	A	L122	中	少樣本遇領域偏移範例難涵蓋多樣性
+junior-genai-114-4-q42	past	114年第四梯次 第42題	A	L122	高	知識蒸餾讓小模型學大模型降成本
+junior-genai-114-4-q43	past	114年第四梯次 第43題	D	L122	高	規模提升 Benchmark 視資料品質與資源
+junior-genai-114-4-q44	past	114年第四梯次 第44題	C	L122	高	RAG 擴知識 MCP 著重工具與 API 整合
+junior-genai-114-4-q45	past	114年第四梯次 第45題	A	L122	高	MMLU 為多領域多任務語言理解基準
+junior-genai-114-4-q46	past	114年第四梯次 第46題	D	L123	高	重建追蹤推理過程非 Guardrails 目的
+junior-genai-114-4-q47	past	114年第四梯次 第47題	B	L122	高	Chunking 提高檢索相關性降長文噪音
+junior-genai-114-4-q48	past	114年第四梯次 第48題	A	L122	中	多向量檢索器支援多種表示提升檢索
+junior-genai-114-4-q49	past	114年第四梯次 第49題	D	L122	高	Solution Graph 為決策參考框架
+junior-genai-114-4-q50	past	114年第四梯次 第50題	C	L122	高	續寫文章屬生成式語言建模

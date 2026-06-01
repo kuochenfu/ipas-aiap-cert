@@ -76,7 +76,7 @@ function render() {
   if (session.view === "level") { stopTimer(); app.innerHTML = renderLevel(session.level); return; }
   if (session.view === "mode") {
     stopTimer();
-    app.innerHTML = renderModePicker(getSubject(session.subjectId)?.name ?? "");
+    app.innerHTML = renderModePicker(getSubject(session.subjectId)?.name ?? "", getQuestions(session.subjectId).length);
     return;
   }
   if (session.view === "paper") {

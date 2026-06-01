@@ -1,0 +1,75 @@
+id	type	sourceRef	answer	Lchapter	confidence	依據
+senior-ai-tech-114-2-q01	past	114年第二梯次 第1題	B	L211	高	情感分析判斷情感傾向
+senior-ai-tech-114-2-q02	past	114年第二梯次 第2題	A	L211	高	Self-Attention捕捉長距依賴
+senior-ai-tech-114-2-q03	past	114年第二梯次 第3題	B	L211	高	MLM隨機遮罩雙向預測
+senior-ai-tech-114-2-q04	past	114年第二梯次 第4題	C	L211	高	Word2Vec預測GloVe共現統計
+senior-ai-tech-114-2-q05	past	114年第二梯次 第5題	A	L211	高	長文常見詞TF權重放大
+senior-ai-tech-114-2-q06	past	114年第二梯次 第6題	B	L211	中	N-gram固定窗難捕長依賴
+senior-ai-tech-114-2-q07	past	114年第二梯次 第7題	A	L211	高	IoU高閾值要求重疊更高
+senior-ai-tech-114-2-q08	past	114年第二梯次 第8題	C	L211	高	Softmax保留比例Pooling取最大
+senior-ai-tech-114-2-q09	past	114年第二梯次 第9題	B	L212	高	增強分佈偏移損泛化
+senior-ai-tech-114-2-q10	past	114年第二梯次 第10題	D	L212	高	F1兼顧精確率召回率
+senior-ai-tech-114-2-q11	past	114年第二梯次 第11題	C	L211	高	DBSCAN參數ε與MinPts
+senior-ai-tech-114-2-q12	past	114年第二梯次 第12題	B	L212	高	PCA消除特徵共線性
+senior-ai-tech-114-2-q13	past	114年第二梯次 第13題	B	L213	高	K8s編排部署擴展
+senior-ai-tech-114-2-q14	past	114年第二梯次 第14題	A	L212	中	交叉驗證選穩定參數組合
+senior-ai-tech-114-2-q15	past	114年第二梯次 第15題	C	L213	高	Model Registry管模型版本
+senior-ai-tech-114-2-q16	past	114年第二梯次 第16題	D	L211	高	Seq2Seq序列轉序列
+senior-ai-tech-114-2-q17	past	114年第二梯次 第17題	D	L211	中	檢索相關性vs語意相似
+senior-ai-tech-114-2-q18	past	114年第二梯次 第18題	D	L211	中	稀疏化約束使注意力聚焦
+senior-ai-tech-114-2-q19	past	114年第二梯次 第19題	B	L211	高	反向翻譯擴充低資源語料
+senior-ai-tech-114-2-q20	past	114年第二梯次 第20題	B	L211	中	WGAN損失緩解模式崩潰
+senior-ai-tech-114-2-q21	past	114年第二梯次 第21題	B	L211	中	訓練模態缺失感知模型
+senior-ai-tech-114-2-q22	past	114年第二梯次 第22題	D	L213	高	KL散度量化分佈差異
+senior-ai-tech-114-2-q23	past	114年第二梯次 第23題	A	L213	高	小範圍漸進擴展全院
+senior-ai-tech-114-2-q24	past	114年第二梯次 第24題	D	L212	高	防火牆非對抗擾動手段
+senior-ai-tech-114-2-q25	past	114年第二梯次 第25題	B	L212	中	資料授權篩選源頭預防
+senior-ai-tech-114-2-q26	past	114年第二梯次 第26題	D	L212	高	LASSO L1抑制共線性
+senior-ai-tech-114-2-q27	past	114年第二梯次 第27題	C	L212	高	遞迴展開時間窗聚合
+senior-ai-tech-114-2-q28	past	114年第二梯次 第28題	C	L212	高	標準化目標編碼交互特徵
+senior-ai-tech-114-2-q29	past	114年第二梯次 第29題	B	L213	高	CI提交即自動建置測試
+senior-ai-tech-114-2-q30	past	114年第二梯次 第30題	A	L212	高	雜湊數位簽章保不可否認
+senior-ai-tech-114-2-q31	past	114年第二梯次 第31題	B	L213	高	水平擴展加自動伸縮
+senior-ai-tech-114-2-q32	past	114年第二梯次 第32題	D	L213	中	PSI偵測輸入分佈偏移
+senior-ai-tech-114-2-q33	past	114年第二梯次 第33題	C	L211	中	Skip-gram利於罕見詞
+senior-ai-tech-114-2-q34	past	114年第二梯次 第34題	D	L211	高	全景分割涵蓋語義與實例
+senior-ai-tech-114-2-q35	past	114年第二梯次 第35題	A	L211	高	CLIP共同嵌入零樣本分類
+senior-ai-tech-114-2-q36	past	114年第二梯次 第36題	B	L212	中	網格搜尋系統化窮舉參數
+senior-ai-tech-114-2-q37	past	114年第二梯次 第37題	B	L213	高	小批次加分片降記憶體
+senior-ai-tech-114-2-q38	past	114年第二梯次 第38題	B	L211	中	增取樣步數強化細節
+senior-ai-tech-114-2-q39	past	114年第二梯次 第39題	C	L212	高	殘差自相關屬配適不足
+senior-ai-tech-114-2-q40	past	114年第二梯次 第40題	A	L211	高	VAE/GAN/Diffusion本質差異
+senior-ai-tech-114-2-q41	past	114年第二梯次 第41題	A	L212	高	調參評估同資料致洩漏
+senior-ai-tech-114-2-q42	past	114年第二梯次 第42題	D	L213	中	VAE監控潛在空間偵偏移
+senior-ai-tech-114-2-q43	past	114年第二梯次 第43題	B	L212	高	低資源遞減標註比F1
+senior-ai-tech-114-2-q44	past	114年第二梯次 第44題	C	L211	高	VAE/GAN兼預測與生成
+senior-ai-tech-114-2-q45	past	114年第二梯次 第45題	D	L212	高	降維減訓練時間與過擬合
+senior-ai-tech-114-2-q46	past	114年第二梯次 第46題	A	L213	高	資料概念漂移監測預警
+senior-ai-tech-114-2-q47	past	114年第二梯次 第47題	C	L212	中	損失未平衡致任務競爭
+senior-ai-tech-114-2-q48	past	114年第二梯次 第48題	B	L213	高	KD-Tree加速鄰域查詢
+senior-ai-tech-114-2-q49	past	114年第二梯次 第49題	A	L212	中	嵌入正規化非主因（不正確）
+senior-ai-tech-114-2-q50	past	114年第二梯次 第50題	C	L211	中	CLIP雙編碼器對齊不足
+senior-ai-tech-gen-q001	new	B1	C	L211	高	Self-Attention平行化捕長依賴
+senior-ai-tech-gen-q002	new	B1	A	L211	高	語意分割逐像素偵測用邊界框
+senior-ai-tech-gen-q003	new	B1	D	L211	高	ASR語音轉文字TTS文字轉語音
+senior-ai-tech-gen-q004	new	B1	B	L211	高	多模態融合文字影像語音
+senior-ai-tech-gen-q005	new	B1	A	L211	高	NER辨識人名地名組織實體
+senior-ai-tech-gen-q006	new	B1	D	L211	高	卷積核共享局部感受野省參數
+senior-ai-tech-gen-q007	new	B1	B	L211	高	詞嵌入低維稠密表語意相似
+senior-ai-tech-gen-q008	new	B1	C	L211	高	擴散模型加噪去噪生成
+senior-ai-tech-gen-q009	new	B1	B	L212	高	不平衡用F1/PR-AUC評估
+senior-ai-tech-gen-q010	new	B1	D	L212	高	自建vs API綜合多構面評估
+senior-ai-tech-gen-q011	new	B1	A	L212	高	可解釋性讓人理解決策依據
+senior-ai-tech-gen-q012	new	B1	C	L212	高	切分前全資料轉換致洩漏
+senior-ai-tech-gen-q013	new	B1	B	L212	高	推論再訓練監控為營運成本
+senior-ai-tech-gen-q014	new	B1	A	L212	高	查資料代表性比較子群表現
+senior-ai-tech-gen-q015	new	B1	D	L212	高	K折輪流驗證估計更穩定
+senior-ai-tech-gen-q016	new	B1	C	L212	高	RAG加人工審查降幻覺風險
+senior-ai-tech-gen-q017	new	B1	A	L213	高	CI/CD自動化提升可重現性
+senior-ai-tech-gen-q018	new	B1	C	L213	高	輸入分布偏離為資料概念漂移
+senior-ai-tech-gen-q019	new	B1	B	L213	高	藍綠部署快速切換可回滾
+senior-ai-tech-gen-q020	new	B1	D	L213	高	容器打包環境一致可移植
+senior-ai-tech-gen-q021	new	B1	A	L213	高	增實例加負載平衡為水平擴展
+senior-ai-tech-gen-q022	new	B1	D	L213	高	特徵庫共享避免訓練服務偏斜
+senior-ai-tech-gen-q023	new	B1	B	L213	高	監控含系統指標與模型漂移
+senior-ai-tech-gen-q024	new	B1	C	L213	高	API微服務獨立部署擴展重用

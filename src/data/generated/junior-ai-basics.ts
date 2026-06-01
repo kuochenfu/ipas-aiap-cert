@@ -15,7 +15,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "對隨機缺失且近似常態的數值特徵，以平均數或中位數填補（B）能在不大幅扭曲分布下保留樣本。整欄刪除（A）會損失資訊、一律填 0（C）會引入偏誤、隨機亂數（D）會破壞資料結構。",
-    topic: "資料處理",
+    topic: "資料處理與分析概念",
     difficulty: "易",
     source: "generated",
   },
@@ -33,7 +33,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "兩者最關鍵差異在於是否使用帶標籤資料：監督式學習以已標註的輸入—目標對應進行訓練，非監督式學習則不依賴標籤、著重發掘資料內在結構（B）。A、C、D 對演算法、任務型態與是否需資料的描述皆不正確。",
-    topic: "機器學習基礎",
+    topic: "機器學習概念",
     difficulty: "易",
     source: "generated",
   },
@@ -51,7 +51,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "ReLU 在正區間梯度為常數 1、計算簡單，能緩解深層網路的梯度消失問題（B）。輸出介於 0~1 是 Sigmoid（A）、轉為總和為 1 的機率分布是 Softmax（C）；D 描述與啟動函數的非線性作用不符。",
-    topic: "深度學習",
+    topic: "機器學習概念",
     difficulty: "中",
     source: "generated",
   },
@@ -69,7 +69,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "精準率 = TP /（TP + FP）= 40 /（40 + 10）= 0.80（B）。0.67 為召回率 TP/(TP+FN)=40/60；其餘選項與精準率公式不符。",
-    topic: "評估指標",
+    topic: "機器學習概念",
     difficulty: "中",
     source: "generated",
   },
@@ -87,7 +87,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "訓練表現好、測試表現差，代表模型過度記憶訓練資料的細節與雜訊而泛化不足，即過擬合（Overfitting，B）。欠擬合是訓練本身就差；資料洩漏是測試資訊滲入訓練；梯度爆炸是訓練不穩定，皆非此描述。",
-    topic: "機器學習基礎",
+    topic: "機器學習概念",
     difficulty: "易",
     source: "generated",
   },
@@ -105,7 +105,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "少樣本提示是在提示中提供少量示範範例，讓模型依範例的格式或邏輯產生回應（A），屬推論時的提示技巧而非重新訓練。B 是重訓、D 為零樣本（zero-shot）、C 與少樣本概念無關。",
-    topic: "生成式AI",
+    topic: "鑑別式 AI 與生成式 AI 概念",
     difficulty: "中",
     source: "generated",
   },
@@ -123,7 +123,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "RAG 先從外部知識庫檢索相關文件，再以之為依據生成回應，可提升答案正確性並降低模型幻覺（hallucination）（B）。它仍需 LLM 運算（A 錯）、不會轉成決策樹（C 錯），也非自動學習新知識（D 錯）。",
-    topic: "生成式AI",
+    topic: "鑑別式 AI 與生成式 AI 概念",
     difficulty: "中",
     source: "generated",
   },
@@ -141,7 +141,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "K-means 屬非監督式學習的分群（clustering）方法，不使用標籤，將資料依相似性（距離）劃分為 K 個群集（B）。它非迴歸、非強化式學習，也不依賴已知標籤訓練分類邊界。",
-    topic: "機器學習基礎",
+    topic: "機器學習概念",
     difficulty: "易",
     source: "generated",
   },
@@ -159,7 +159,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "判定係數 R² 衡量模型對目標變異的解釋比例，越接近 1 解釋能力越好（C）。MSE、MAE 為誤差越小越好且無上限為 1 的特性；交叉熵用於分類任務，皆不符。",
-    topic: "評估指標",
+    topic: "機器學習概念",
     difficulty: "中",
     source: "generated",
   },
@@ -177,7 +177,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "負責任 AI 治理應建立資料治理、模型風險評估與人為監督機制，並兼顧公平性、透明度與個資保護（B）。隱匿用途與限制（A）、移除人為介入（C）、僅看準確率而忽略偏見與個資（D）皆違反 AI 治理原則。",
-    topic: "AI治理",
+    topic: "人工智慧概念",
     difficulty: "易",
     source: "generated",
   },
@@ -195,7 +195,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "無序類別特徵應使用 One-hot 編碼（B），為每個類別建立獨立的二元欄位，避免引入虛假的大小或順序關係。序數編碼（A）會強加順序；對數轉換與標準化（C、D）用於數值特徵，皆不適合。",
-    topic: "資料處理",
+    topic: "資料處理與分析概念",
     difficulty: "易",
     source: "generated",
   },
@@ -213,8 +213,219 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "Transformer 的核心是自注意力機制（Self-Attention，B），可直接建模序列中任意位置間的關聯且利於平行化，克服 RNN 必須逐步處理的限制。卷積層、循環連接、池化層皆非 Transformer 的核心機制。",
-    topic: "深度學習",
+    topic: "鑑別式 AI 與生成式 AI 概念",
     difficulty: "中",
+    source: "generated",
+  },
+  {
+    id: "junior-ai-basics-gen-q013",
+    subjectId: "junior-ai-basics",
+    prompt: "下列關於「過擬合（Overfitting）」的敘述，何者最正確？",
+    choices: [
+      { id: "A", text: "模型在訓練與測試資料上表現都很差" },
+      { id: "B", text: "模型完全無法從訓練資料學到任何規律" },
+      { id: "C", text: "訓練資料量越大一定會造成過擬合" },
+      { id: "D", text: "模型在訓練資料表現很好，但在未見過的測試資料表現明顯變差" },
+    ],
+    answer: "D",
+    explanation:
+      "過擬合是模型過度記憶訓練資料的細節與雜訊，導致在訓練集表現好、對未見資料（測試集）泛化差（D）。兩者都差是欠擬合（A）；完全學不到是欠擬合或訓練失敗（B）；資料量越大通常反而緩解過擬合（C）。",
+    topic: "機器學習概念",
+    difficulty: "中",
+    source: "generated",
+  },
+  {
+    id: "junior-ai-basics-gen-q014",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "下列關於「人工智慧（AI）、機器學習（ML）、深度學習（DL）」三者範圍關係的敘述，何者最正確？",
+    choices: [
+      { id: "A", text: "三者互不相關，是各自獨立的技術領域" },
+      { id: "B", text: "深度學習涵蓋機器學習，機器學習又涵蓋人工智慧" },
+      { id: "C", text: "深度學習是機器學習的一個子集，機器學習又是人工智慧的一個子集" },
+      { id: "D", text: "人工智慧只能透過深度學習實現，沒有其他方法" },
+    ],
+    answer: "C",
+    explanation:
+      "範圍由大到小為人工智慧 ⊃ 機器學習 ⊃ 深度學習，故深度學習是機器學習的子集、機器學習是人工智慧的子集（C）。三者並非互不相關（A），包含關係方向與 B 相反；人工智慧也包含規則式等非深度學習方法（D 錯）。",
+    topic: "人工智慧概念",
+    difficulty: "易",
+    source: "generated",
+  },
+  {
+    id: "junior-ai-basics-gen-q015",
+    subjectId: "junior-ai-basics",
+    prompt: "下列關於「鑑別式模型（Discriminative）與生成式模型（Generative）」的敘述，何者最正確？",
+    choices: [
+      { id: "A", text: "鑑別式模型著重學習資料的類別邊界以做分類或預測，生成式模型則學習資料分布以產生新樣本" },
+      { id: "B", text: "鑑別式模型只能用於影像，生成式模型只能用於文字" },
+      { id: "C", text: "生成式模型無法用於任何分類任務" },
+      { id: "D", text: "鑑別式模型一定比生成式模型準確" },
+    ],
+    answer: "A",
+    explanation:
+      "鑑別式模型聚焦學習區分類別的決策邊界（如分類器），生成式模型則學習資料的分布以生成新樣本（A）。兩者皆不限定資料型態（B 錯）；生成式模型亦可用於分類等任務（C 錯）；準確度視任務與資料而定，無絕對高低（D 錯）。",
+    topic: "鑑別式 AI 與生成式 AI 概念",
+    difficulty: "中",
+    source: "generated",
+  },
+  {
+    id: "junior-ai-basics-gen-q016",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "在資料分析的敘述統計中，當資料分布明顯偏斜（含極端離群值）時，下列哪一個指標較能穩健代表資料的「集中趨勢」？",
+    choices: [
+      { id: "A", text: "平均數（Mean）" },
+      { id: "B", text: "中位數（Median）" },
+      { id: "C", text: "全距（Range）" },
+      { id: "D", text: "標準差（Standard Deviation）" },
+    ],
+    answer: "B",
+    explanation:
+      "中位數以排序後的中間值表示集中趨勢，對極端離群值不敏感，較為穩健（B）。平均數易被離群值拉動（A）；全距與標準差衡量的是離散程度而非集中趨勢（C、D）。",
+    topic: "資料處理與分析概念",
+    difficulty: "中",
+    source: "generated",
+  },
+  {
+    id: "junior-ai-basics-gen-q017",
+    subjectId: "junior-ai-basics",
+    prompt: "強化式學習（Reinforcement Learning）的核心運作機制最符合下列哪一項描述？",
+    choices: [
+      { id: "A", text: "以大量帶標籤的輸入—輸出對直接訓練模型" },
+      { id: "B", text: "在無任何回饋下單純發掘資料的群集結構" },
+      { id: "C", text: "代理人（Agent）與環境互動，依獲得的獎勵訊號學習較佳的行動策略" },
+      { id: "D", text: "將連續數值轉換為類別標籤以利分類" },
+    ],
+    answer: "C",
+    explanation:
+      "強化式學習透過代理人與環境互動，依行動所得的獎勵（reward）訊號逐步學習能最大化長期回報的策略（C）。帶標籤直接訓練是監督式（A）；無回饋找群集是非監督式（B）；D 為資料轉換，皆非強化式學習的核心。",
+    topic: "機器學習概念",
+    difficulty: "中",
+    source: "generated",
+  },
+  {
+    id: "junior-ai-basics-gen-q018",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "生成對抗網路（GAN）由兩個相互競爭的網路組成，下列關於其組成與運作的敘述，何者最正確？",
+    choices: [
+      { id: "A", text: "兩個網路皆只負責生成樣本，彼此不互相評估" },
+      { id: "B", text: "GAN 只能用於監督式分類，無法生成新資料" },
+      { id: "C", text: "生成器負責分類，判別器負責迴歸預測" },
+      { id: "D", text: "生成器（Generator）負責產生假樣本，判別器（Discriminator）負責分辨真假，兩者對抗訓練" },
+    ],
+    answer: "D",
+    explanation:
+      "GAN 中生成器產生擬真的假樣本，判別器嘗試分辨真假，兩者在對抗中互相提升（D）。並非皆只生成且不互評（A）；GAN 的目的正是生成新資料（B 錯）；生成器與判別器的職責與 C 描述相反。",
+    topic: "鑑別式 AI 與生成式 AI 概念",
+    difficulty: "難",
+    source: "generated",
+  },
+  {
+    id: "junior-ai-basics-gen-q019",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "企業在蒐集與使用含個人資料的訓練資料時，為兼顧法規遵循與隱私保護，下列哪一項做法最為適當？",
+    choices: [
+      { id: "A", text: "盡量蒐集越多個資越好，且無須告知當事人用途" },
+      { id: "B", text: "依目的蒐集必要的最少資料，並落實去識別化與當事人權利保障" },
+      { id: "C", text: "只要資料用於 AI 訓練，即可不受任何個資規範限制" },
+      { id: "D", text: "將個資公開於網路以提升模型透明度" },
+    ],
+    answer: "B",
+    explanation:
+      "個資處理應符合目的明確與最小化原則，僅蒐集必要資料，並透過去識別化與保障當事人權利來降低風險（B）。過度蒐集且不告知（A）、誤認 AI 訓練可豁免規範（C）、公開個資（D）都違反隱私保護與法規精神。",
+    topic: "人工智慧概念",
+    difficulty: "中",
+    source: "generated",
+  },
+  {
+    id: "junior-ai-basics-gen-q020",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "對數值特徵進行「標準化（Standardization，如 Z-score）」的主要目的為下列何者？",
+    choices: [
+      { id: "A", text: "刪除資料中所有的離群值" },
+      { id: "B", text: "把連續數值直接轉換為類別標籤" },
+      { id: "C", text: "將不同尺度的特徵調整到可比較的範圍，避免大尺度特徵主導模型" },
+      { id: "D", text: "為缺失值自動填補合理數值" },
+    ],
+    answer: "C",
+    explanation:
+      "標準化將特徵轉為相近尺度（如均值 0、標準差 1），避免量級較大的特徵在距離或梯度計算中主導模型（C）。它不做類別轉換（B）、不直接刪除離群值（A），也非缺失值填補（D）。",
+    topic: "資料處理與分析概念",
+    difficulty: "易",
+    source: "generated",
+  },
+  {
+    id: "junior-ai-basics-gen-q021",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "在類別不平衡（如詐騙偵測中正樣本極少）的分類問題中，下列哪一項評估指標若單獨使用最容易產生誤導？",
+    choices: [
+      { id: "A", text: "準確率（Accuracy）" },
+      { id: "B", text: "召回率（Recall）" },
+      { id: "C", text: "F1 分數（F1-score）" },
+      { id: "D", text: "精準率（Precision）" },
+    ],
+    answer: "A",
+    explanation:
+      "在嚴重不平衡時，模型只要全部預測為多數類別也能有很高的準確率，故單看準確率最易誤導（A）。召回率、精準率與兼顧兩者的 F1 分數較能反映對少數類別的辨識能力（B、C、D）。",
+    topic: "機器學習概念",
+    difficulty: "難",
+    source: "generated",
+  },
+  {
+    id: "junior-ai-basics-gen-q022",
+    subjectId: "junior-ai-basics",
+    prompt: "大型語言模型（LLM）出現「幻覺（Hallucination）」一詞，最符合下列哪一項描述？",
+    choices: [
+      { id: "A", text: "模型只會逐字重複使用者輸入的內容" },
+      { id: "B", text: "模型因記憶體不足而完全停止回應" },
+      { id: "C", text: "模型產生看似流暢合理、但與事實不符或無依據的內容" },
+      { id: "D", text: "模型能完美無誤地回答所有問題" },
+    ],
+    answer: "C",
+    explanation:
+      "幻覺指 LLM 生成語句通順但與事實不符或缺乏依據的內容（C）。它與記憶體不足當機（B）、單純複述輸入（A）無關，更不代表模型全知全能（D）；理解幻覺有助於導入驗證與 RAG 等緩解措施。",
+    topic: "鑑別式 AI 與生成式 AI 概念",
+    difficulty: "易",
+    source: "generated",
+  },
+  {
+    id: "junior-ai-basics-gen-q023",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "在切分資料以評估模型泛化能力時，使用「訓練集／驗證集／測試集」劃分的主要目的為下列何者？",
+    choices: [
+      { id: "A", text: "讓模型可重複看到測試集以加速收斂" },
+      { id: "B", text: "以訓練集學習、驗證集調參與選模、測試集做最終且未受訓練影響的成效評估" },
+      { id: "C", text: "三組資料皆用於訓練以增加資料量" },
+      { id: "D", text: "刪除部分資料以縮短訓練時間" },
+    ],
+    answer: "B",
+    explanation:
+      "標準做法是以訓練集學習、驗證集進行調參與模型選擇，測試集則保留作最終且不受訓練干擾的泛化評估（B）。讓模型看到測試集會造成資料洩漏（A）；三組都拿來訓練（C）或單純刪資料（D）都失去獨立評估的意義。",
+    topic: "機器學習概念",
+    difficulty: "中",
+    source: "generated",
+  },
+  {
+    id: "junior-ai-basics-gen-q024",
+    subjectId: "junior-ai-basics",
+    prompt: "資料視覺化（Data Visualization）在資料分析流程中的主要價值，最符合下列哪一項描述？",
+    choices: [
+      { id: "A", text: "以圖表呈現資料分布與關聯，協助理解資料並發現趨勢或異常" },
+      { id: "B", text: "可完全取代統計分析與建模，無須再計算任何指標" },
+      { id: "C", text: "圖表越華麗越好，內容正確與否並不重要" },
+      { id: "D", text: "視覺化僅供報告美觀，對資料探索沒有實質幫助" },
+    ],
+    answer: "A",
+    explanation:
+      "視覺化透過圖表直觀呈現分布、關聯與變化，協助探索資料、發現趨勢與異常並輔助溝通（A）。它輔助而非取代統計與建模（B）；應以正確傳達資訊為先而非僅求華麗（C）；對資料探索具實質價值（D 錯）。",
+    topic: "資料處理與分析概念",
+    difficulty: "易",
     source: "generated",
   },
 ];

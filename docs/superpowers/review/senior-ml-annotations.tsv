@@ -1,0 +1,75 @@
+id	type	sourceRef	answer	Lchapter	confidence	依據
+senior-ml-114-2-q01	past	114年第二梯次 第1題	B	L233	高	交叉驗證評估泛化；其餘為統計假設檢定
+senior-ml-114-2-q02	past	114年第二梯次 第2題	C	L233	高	L1/Lasso 產生稀疏模型、權重收斂為零
+senior-ml-114-2-q03	past	114年第二梯次 第3題	C	L231	高	非凸函數多極值易陷局部最優解
+senior-ml-114-2-q04	past	114年第二梯次 第4題	B	L232	高	DBSCAN 非核心非邊界且不可達者為雜訊點
+senior-ml-114-2-q05	past	114年第二梯次 第5題	A	L232	高	卷積層自動提取局部特徵
+senior-ml-114-2-q06	past	114年第二梯次 第6題	C	L232	高	區域感知＋參數共享降低參數與運算量
+senior-ml-114-2-q07	past	114年第二梯次 第7題	A	L232	高	時間序列趨勢預測適合 LSTM
+senior-ml-114-2-q08	past	114年第二梯次 第8題	D	L232	高	資訊增益為決策樹分裂準則
+senior-ml-114-2-q09	past	114年第二梯次 第9題	A	L233	高	距離型模型需特徵縮放統一尺度
+senior-ml-114-2-q10	past	114年第二梯次 第10題	C	L233	高	缺人力時間、需快速比較多模型最適 AutoML
+senior-ml-114-2-q11	past	114年第二梯次 第11題	D	L233	高	Random Search 高維空間搜尋更有效率
+senior-ml-114-2-q12	past	114年第二梯次 第12題	C	L233	高	學習率控制權重更新速度與收斂
+senior-ml-114-2-q13	past	114年第二梯次 第13題	B	L234	高	標籤偏差源於標記主觀偏見
+senior-ml-114-2-q14	past	114年第二梯次 第14題	C	L234	高	醫療診斷依據對可解釋性要求最高
+senior-ml-114-2-q15	past	114年第二梯次 第15題	B	L233	高	R²＝0.85 即 85% 變異可被模型解釋
+senior-ml-114-2-q16	past	114年第二梯次 第16題	A	L233	高	F1＝2×0.48/1.4≈0.686
+senior-ml-114-2-q17	past	114年第二梯次 第17題	B	L233	中	依官方答案 Adam 內建動量；SGD+Momentum 亦含動量
+senior-ml-114-2-q18	past	114年第二梯次 第18題	A	L232	高	XGBoost 正則化＋缺失值處理＋並行化
+senior-ml-114-2-q19	past	114年第二梯次 第19題	C	L233	高	不平衡資料用準確率評估最不適合
+senior-ml-114-2-q20	past	114年第二梯次 第20題	C	L233	高	互動特徵以特徵相乘/交互組合建立
+senior-ml-114-2-q21	past	114年第二梯次 第21題	C	L232	高	多頭注意力從不同表示子空間捕捉關聯
+senior-ml-114-2-q22	past	114年第二梯次 第22題	B	L231	高	貝氏定理以條件機率計算分類後驗機率
+senior-ml-114-2-q23	past	114年第二梯次 第23題	A	L231	高	隨機抽樣模擬機率分佈即蒙地卡羅法
+senior-ml-114-2-q24	past	114年第二梯次 第24題	C	L233	高	殘差系統性彎曲示異常值或非線性違反假設
+senior-ml-114-2-q25	past	114年第二梯次 第25題	A	L233	高	生成式模型特徵學習非傳統評分卡步驟
+senior-ml-114-2-q26	past	114年第二梯次 第26題	D	L233	高	擴增特徵提升複雜度與防過擬合相反
+senior-ml-114-2-q27	past	114年第二梯次 第27題	D	L232	高	改用 ReLU 引入非線性提升表達能力
+senior-ml-114-2-q28	past	114年第二梯次 第28題	C	L234	高	樣本僅高活躍顧客造成取樣偏差
+senior-ml-114-2-q29	past	114年第二梯次 第29題	D	L233	高	時間序列/滑動視窗驗證因應分布漂移
+senior-ml-114-2-q30	past	114年第二梯次 第30題	C	L233	高	語言轉移使召回率下降拉低 F1
+senior-ml-114-2-q31	past	114年第二梯次 第31題	B	L233	高	監控驗證損失設耐心值再早停
+senior-ml-114-2-q32	past	114年第二梯次 第32題	D	L233	高	L1/Lasso 係數縮為 0 達自動特徵選擇
+senior-ml-114-2-q33	past	114年第二梯次 第33題	B	L231	高	兩兩比對複雜度 O(n²)
+senior-ml-114-2-q34	past	114年第二梯次 第34題	D	L233	高	分層留一兼顧利用率與類別比例
+senior-ml-114-2-q35	past	114年第二梯次 第35題	A	L231	高	(6+3)/10＝90%≥80% 可降至二維
+senior-ml-114-2-q36	past	114年第二梯次 第36題	D	L234	高	同態加密可於密文上完成運算/訓練
+senior-ml-114-2-q37	past	114年第二梯次 第37題	B	L234	中	依官方答案：同態+非對稱+雜湊+對稱組合最完整
+senior-ml-114-2-q38	past	114年第二梯次 第38題	B	L233	高	平方誤差取平均未開根號即 MSE
+senior-ml-114-2-q39	past	114年第二梯次 第39題	C	L233	高	隨機歸零神經元為 Dropout
+senior-ml-114-2-q40	past	114年第二梯次 第40題	C	L231	高	np.dot 內積＝4+10+18＝32
+senior-ml-114-2-q41	past	114年第二梯次 第41題	D	L231	高	P(A∣B)＝A_and_B/B
+senior-ml-114-2-q42	past	114年第二梯次 第42題	B	L232	高	VGG16 全連接層參數量最多
+senior-ml-114-2-q43	past	114年第二梯次 第43題	A	L232	高	VGG16 卷積層 FLOPs 最多
+senior-ml-114-2-q44	past	114年第二梯次 第44題	D	L232	高	VGG16 約 138.36M 參數、13 conv+3 FC
+senior-ml-114-2-q45	past	114年第二梯次 第45題	B	L232	低	原題選項為圖片、文字缺失；依官方答案就凍結 features、訓 classifier 概念說明
+senior-ml-114-2-q46	past	114年第二梯次 第46題	B	L232	中	附圖程式碼缺失；PCA 降噪關鍵在 n_components 設定，依官方答案
+senior-ml-114-2-q47	past	114年第二梯次 第47題	B	L233	中	附圖程式碼缺失；正解 A、C 正確使用 KNN+交叉驗證，依官方答案
+senior-ml-114-2-q48	past	114年第二梯次 第48題	C	L233	低	附圖缺失且 C 對 0~1 之敘述存疑，依官方答案 A、C 組合
+senior-ml-114-2-q49	past	114年第二梯次 第49題	C	L232	中	附圖數值缺失；空格 1=100、空格 2=110，依官方答案
+senior-ml-114-2-q50	past	114年第二梯次 第50題	C	L233	中	附圖缺失；繪圖 \"r-\"、\"r--\" 正確，依官方答案
+senior-ml-gen-q001	new	B1	A	L231	高	學習率過大使更新震盪/發散，屬最佳化與梯度
+senior-ml-gen-q002	new	B1	B	L231	高	內積 2×4+3×(−1)=5，線性代數
+senior-ml-gen-q003	new	B1	C	L231	高	母體變異數=32/8=4，機率統計
+senior-ml-gen-q004	new	B1	D	L231	高	貝氏後驗≈0.009/0.0981≈9%，條件機率
+senior-ml-gen-q005	new	B1	B	L231	高	交叉熵緩解梯度消失利收斂，損失函數
+senior-ml-gen-q006	new	B1	D	L231	高	L1=Σ|x|、L2=√Σx²，範數定義
+senior-ml-gen-q007	new	B1	C	L232	高	強化學習依獎勵試誤最大化累積報酬
+senior-ml-gen-q008	new	B1	D	L232	高	池化層降採樣縮尺寸並平移不變
+senior-ml-gen-q009	new	B1	A	L232	高	自注意力平行建模長距依賴
+senior-ml-gen-q010	new	B1	C	L232	中	Bagging降變異、Boosting降偏差
+senior-ml-gen-q011	new	B1	D	L232	高	K-means需指定K、最小化群內平方誤差
+senior-ml-gen-q012	new	B1	B	L232	高	ReLU正區間導數1緩解梯度消失
+senior-ml-gen-q013	new	B1	A	L233	高	P=0.8、R=0.5、F1=0.8/1.3≈0.62
+senior-ml-gen-q014	new	B1	B	L233	高	訓練佳驗證差為過擬合，正則化/早停
+senior-ml-gen-q015	new	B1	A	L233	高	k折輪流驗證綜合估計泛化
+senior-ml-gen-q016	new	B1	C	L233	高	隨機搜尋高維覆蓋廣效率優於網格
+senior-ml-gen-q017	new	B1	C	L233	高	距離/梯度型需縮放、純樹模型較不受影響
+senior-ml-gen-q018	new	B1	C	L233	高	不平衡改用F1/PR-AUC並重抽樣
+senior-ml-gen-q019	new	B1	D	L234	高	SHAP/LIME為事後解釋量化特徵貢獻
+senior-ml-gen-q020	new	B1	A	L234	高	衡量群體差異並減緩偏差，公平性
+senior-ml-gen-q021	new	B1	A	L234	高	資料漂移應監控並重訓
+senior-ml-gen-q022	new	B1	B	L234	中	差分隱私加校準雜訊提供可量化保證
+senior-ml-gen-q023	new	B1	B	L234	高	版本控管使可重現可稽核可回滾
+senior-ml-gen-q024	new	B1	D	L234	高	負責任AI全生命週期跨面向落實

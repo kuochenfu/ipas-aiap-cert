@@ -1,0 +1,51 @@
+id	type	sourceRef	answer	Lchapter	confidence	依據
+senior-bigdata-114-2-q01	past	114年第二梯次 第1題	D	L221	高	Z 分數=（值−均值）／標準差，Z=2 即高於平均 2 個標準差
+senior-bigdata-114-2-q02	past	114年第二梯次 第2題	B	L223	高	pandas describe() 回傳一組敘述統計量
+senior-bigdata-114-2-q03	past	114年第二梯次 第3題	A	L221	中	附圖長尾偏左屬負偏，Skewness<0；圖形需肉眼判讀
+senior-bigdata-114-2-q04	past	114年第二梯次 第4題	B	L221	高	連續型 CDF 為 PDF 的積分
+senior-bigdata-114-2-q05	past	114年第二梯次 第5題	B	L223	高	Label Encoding 對無序類別引入虛假順序關係
+senior-bigdata-114-2-q06	past	114年第二梯次 第6題	C	L223	高	標準化不會壓縮至 0~1（該效果屬 Min-Max），故 C 敘述不正確
+senior-bigdata-114-2-q07	past	114年第二梯次 第7題	C	L222	高	原子性＝交易不可分割、全成或全敗
+senior-bigdata-114-2-q08	past	114年第二梯次 第8題	B	L223	高	以既有欄位相除產生新變數屬特徵衍生
+senior-bigdata-114-2-q09	past	114年第二梯次 第9題	C	L223	高	穩健縮放用中位數與 IQR，對離群值不敏感
+senior-bigdata-114-2-q10	past	114年第二梯次 第10題	C	L223	高	即時偵測偏離常態的可疑交易為異常偵測典型情境
+senior-bigdata-114-2-q11	past	114年第二梯次 第11題	C	L222	高	海量 IoT 即時監控需大數據平台＋即時分析
+senior-bigdata-114-2-q12	past	114年第二梯次 第12題	A	L223	高	隨機過採樣複製樣本易增過擬合風險
+senior-bigdata-114-2-q13	past	114年第二梯次 第13題	D	L224	高	同態加密可在加密狀態下直接運算
+senior-bigdata-114-2-q14	past	114年第二梯次 第14題	D	L223	高	5:5 時 Gini=0.5，正規化除以最大值 0.5 得 1
+senior-bigdata-114-2-q15	past	114年第二梯次 第15題	C	L221	高	獨立、率固定、單位時間計數→卜瓦松分佈
+senior-bigdata-114-2-q16	past	114年第二梯次 第16題	A	L221	高	Z=(3200−2000)/400=3，達 |Z|≥3 判為異常
+senior-bigdata-114-2-q17	past	114年第二梯次 第17題	B	L223	高	無序類別用 Label Encoding 易造順序誤判與重要性偏誤
+senior-bigdata-114-2-q18	past	114年第二梯次 第18題	A	L222	高	節點出錯仍不部分更新＝原子性全有全無
+senior-bigdata-114-2-q19	past	114年第二梯次 第19題	C	L222	中	邊緣＋流式處理＋資料湖兼顧即時、完整、可擴展
+senior-bigdata-114-2-q20	past	114年第二梯次 第20題	D	L224	高	雲端不解密下運算唯同態加密可達成
+senior-bigdata-114-2-q21	past	114年第二梯次 第21題	B	L223	高	Tufte 數據密度：同圖整合多趨勢、提高資訊密度
+senior-bigdata-114-2-q22	past	114年第二梯次 第22題	D	L223	高	相關係數矩陣＋熱力圖一覽兩兩關聯強度方向
+senior-bigdata-114-2-q23	past	114年第二梯次 第23題	C	L221	高	虛無值 100 萬落在 95% 信賴區間內，無法拒絕 H0
+senior-bigdata-114-2-q24	past	114年第二梯次 第24題	A	L222	高	資料湖＋Spark/Ray 分散式前處理串接訓練管線
+senior-bigdata-114-2-q25	past	114年第二梯次 第25題	A	L223	中	右偏長尾資料以對數刻度放大高金額族群差異
+senior-bigdata-114-2-q26	past	114年第二梯次 第26題	C	L223	高	Confidence=P(B|A)=50%，Lift>1 表正向傾向
+senior-bigdata-114-2-q27	past	114年第二梯次 第27題	D	L222	高	近似分位數＝容忍誤差下快速估算以支援即時分析
+senior-bigdata-114-2-q28	past	114年第二梯次 第28題	A	L223	高	維度詛咒使距離趨同，ε 門檻失效全判雜訊
+senior-bigdata-114-2-q29	past	114年第二梯次 第29題	D	L223	高	量級差大應先標準化再做 PCA 避免特徵偏誤
+senior-bigdata-114-2-q30	past	114年第二梯次 第30題	C	L221	高	線性、無離群值衡量強度方向用皮爾森相關係數
+senior-bigdata-114-2-q31	past	114年第二梯次 第31題	B	L221	高	常態近似二項需 np 與 n(1−p) 皆>5
+senior-bigdata-114-2-q32	past	114年第二梯次 第32題	A	L224	高	訓練前匿名／偽匿名化＋輸出稽核符合個資合規
+senior-bigdata-114-2-q33	past	114年第二梯次 第33題	D	L221	高	非常態厚尾風險用分位數迴歸聚焦尾部分位
+senior-bigdata-114-2-q34	past	114年第二梯次 第34題	B	L222	高	互動屬性存為連結兩節點的邊屬性
+senior-bigdata-114-2-q35	past	114年第二梯次 第35題	B	L222	高	知識圖譜以 RDF 三元組建模利語意查詢與推理
+senior-bigdata-114-2-q36	past	114年第二梯次 第36題	B	L221	高	右偏＋異質變異對 Y 做 Box–Cox 轉換
+senior-bigdata-114-2-q37	past	114年第二梯次 第37題	C	L223	高	極不平衡且無法增資用 SMOTE 合成少數類
+senior-bigdata-114-2-q38	past	114年第二梯次 第38題	B	L221	高	比較兩組良率（比例）用雙比例 Z 檢定
+senior-bigdata-114-2-q39	past	114年第二梯次 第39題	D	L223	高	不平衡資料用分層 K-Fold 維持每折類別比例
+senior-bigdata-114-2-q40	past	114年第二梯次 第40題	B	L223	中	每次留一筆測試的迴圈為 LOOCV；需依附圖虛擬碼判讀
+senior-bigdata-114-2-q41	past	114年第二梯次 第41題	A	L223	中	指派最近中心＋更新群平均的迭代為 K-means；依附圖判讀
+senior-bigdata-114-2-q42	past	114年第二梯次 第42題	C	L221	高	卜瓦松成立條件為事件獨立且平均率固定
+senior-bigdata-114-2-q43	past	114年第二梯次 第43題	B	L223	高	NaN（原因A）與含小數年份（原因D）致欄位轉 float64
+senior-bigdata-114-2-q44	past	114年第二梯次 第44題	D	L223	高	含 NaN 轉整數用可空型別 Int64
+senior-bigdata-114-2-q45	past	114年第二梯次 第45題	A	L223	高	groupby Platform 對 Global_Sales 取 sum 畫長條圖
+senior-bigdata-114-2-q46	past	114年第二梯次 第46題	C	L223	高	pd.melt 攤平後 barplot estimator=sum 比較各地區總額
+senior-bigdata-114-2-q47	past	114年第二梯次 第47題	B	L223	高	nlargest(5) 取前五再以 barplot 呈現
+senior-bigdata-114-2-q48	past	114年第二梯次 第48題	D	L221	低	需依附圖 describe 輸出判讀 youtube Q1=89.25；原圖未附
+senior-bigdata-114-2-q49	past	114年第二梯次 第49題	C	L223	高	isnull() 與 isna() 為等義別名，對應選項 A、C
+senior-bigdata-114-2-q50	past	114年第二梯次 第50題	B	L221	低	需依附圖執行結果判讀；fit(X,y) 順序正確、截距 3.5561 對應 B、F

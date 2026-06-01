@@ -104,6 +104,7 @@ export const studyGuides: SubjectStudyGuide[] = [
             url: "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
           },
           { title: "Azure 上的 AI/ML 架構（導入與部署參考）- Microsoft Learn", url: "https://learn.microsoft.com/zh-tw/azure/architecture/ai-ml/" },
+          { title: "數位發展部（AI 政策與導入治理）", url: "https://moda.gov.tw/" },
         ],
       },
     ],
@@ -140,6 +141,7 @@ export const studyGuides: SubjectStudyGuide[] = [
             url: "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
           },
           { title: "Azure 上的 AI/ML 架構 - Microsoft Learn", url: "https://learn.microsoft.com/zh-tw/azure/architecture/ai-ml/" },
+          { title: "國家發展委員會（AI 導入政策與規劃）", url: "https://www.ndc.gov.tw/" },
         ],
       },
       {
@@ -274,6 +276,7 @@ export const studyGuides: SubjectStudyGuide[] = [
         links: [
           { title: "隱私 - 維基百科", url: "https://zh.wikipedia.org/wiki/隐私" },
           { title: "Algorithmic bias - Wikipedia", url: "https://en.wikipedia.org/wiki/Algorithmic_bias" },
+          { title: "數位發展部（數位治理與資安）", url: "https://moda.gov.tw/" },
         ],
       },
     ],

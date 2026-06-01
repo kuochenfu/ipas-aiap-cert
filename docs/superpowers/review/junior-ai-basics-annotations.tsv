@@ -11,15 +11,15 @@ junior-ai-basics-gen-q009	new	B1	C	L113	高	R² 判定係數為迴歸模型評�
 junior-ai-basics-gen-q010	new	B1	B	L111	高	負責任 AI 治理原則屬人工智慧治理/倫理範疇
 junior-ai-basics-gen-q011	new	B1	B	L112	高	無序類別以 One-hot 編碼屬資料前處理之特徵編碼
 junior-ai-basics-gen-q012	new	B1	B	L114	中	Transformer 自注意力為 LLM 核心，歸於生成式 AI 概念
-junior-ai-basics-gen-q013	new	B1	A	L113	高	過擬合定義為訓練好測試差，屬機器學習基本概念
+junior-ai-basics-gen-q013	new	B1	D	L113	高	過擬合定義為訓練好測試差，屬機器學習基本概念
 junior-ai-basics-gen-q014	new	B1	C	L111	高	AI⊃ML⊃DL 範圍包含關係屬人工智慧概念
 junior-ai-basics-gen-q015	new	B1	A	L114	高	鑑別式與生成式模型差異為本主題核心
 junior-ai-basics-gen-q016	new	B1	B	L112	高	偏斜資料以中位數代表集中趨勢屬敘述統計
 junior-ai-basics-gen-q017	new	B1	C	L113	高	強化式學習代理人依獎勵學習策略屬機器學習類型
-junior-ai-basics-gen-q018	new	B1	A	L114	中	GAN 生成器與判別器對抗訓練屬生成式 AI 模型
+junior-ai-basics-gen-q018	new	B1	D	L114	中	GAN 生成器與判別器對抗訓練屬生成式 AI 模型
 junior-ai-basics-gen-q019	new	B1	B	L111	中	個資最小化與去識別化屬 AI 治理/法規概念，未引用條號
-junior-ai-basics-gen-q020	new	B1	A	L112	高	標準化調整特徵尺度屬資料前處理
+junior-ai-basics-gen-q020	new	B1	C	L112	高	標準化調整特徵尺度屬資料前處理
 junior-ai-basics-gen-q021	new	B1	A	L113	中	類別不平衡下準確率易誤導屬評估指標概念
-junior-ai-basics-gen-q022	new	B1	A	L114	高	LLM 幻覺定義屬生成式 AI 概念
+junior-ai-basics-gen-q022	new	B1	C	L114	高	LLM 幻覺定義屬生成式 AI 概念
 junior-ai-basics-gen-q023	new	B1	B	L113	高	訓練/驗證/測試集劃分屬模型訓練與評估
 junior-ai-basics-gen-q024	new	B1	A	L112	高	資料視覺化價值屬資料分析概念

@@ -57,7 +57,7 @@ senior-ml-gen-q005	new	B1	B	L231	高	交叉熵緩解梯度消失利收斂，損�
 senior-ml-gen-q006	new	B1	D	L231	高	L1=Σ|x|、L2=√Σx²，範數定義
 senior-ml-gen-q007	new	B1	C	L232	高	強化學習依獎勵試誤最大化累積報酬
 senior-ml-gen-q008	new	B1	D	L232	高	池化層降採樣縮尺寸並平移不變
-senior-ml-gen-q009	new	B1	C	L232	高	自注意力平行建模長距依賴
+senior-ml-gen-q009	new	B1	A	L232	高	自注意力平行建模長距依賴
 senior-ml-gen-q010	new	B1	C	L232	中	Bagging降變異、Boosting降偏差
 senior-ml-gen-q011	new	B1	D	L232	高	K-means需指定K、最小化群內平方誤差
 senior-ml-gen-q012	new	B1	B	L232	高	ReLU正區間導數1緩解梯度消失

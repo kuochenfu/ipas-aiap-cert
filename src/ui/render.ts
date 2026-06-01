@@ -58,11 +58,11 @@ export const renderLevel = (level: Level): string => {
   `;
 };
 
-export const renderModePicker = (subjectName: string): string => `
+export const renderModePicker = (subjectName: string, drillCount: number): string => `
   <header class="topbar"><button class="back" data-nav="back">← 返回</button><h1>${escapeHtml(subjectName)}</h1></header>
   <main class="mode-picker">
     <button class="mode-card" data-mode="exam"><h2>模擬考試</h2><p>50 題・計時・100 分制・70 分及格</p></button>
-    <button class="mode-card" data-mode="drill"><h2>刷題練習</h2><p>20 題・即時對錯與詳解・不計時</p></button>
+    <button class="mode-card" data-mode="drill"><h2>刷題練習</h2><p>全部 ${drillCount} 題・即時對錯與詳解・不計時</p></button>
   </main>
 `;
 

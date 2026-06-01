@@ -97,7 +97,7 @@ function startMode(mode: Mode) {
   session.questions = buildAttempt(bank, { count }).questions;
   session.answers = {};
   session.index = 0;
-  session.reveal = mode === "drill";
+  session.reveal = false; // 兩種模式進入時皆未揭曉；drill 於作答後才揭曉
   session.view = "play";
   session.deadline = mode === "exam" ? Date.now() + subject.durationMinutes * 60_000 : null;
   if (mode === "exam") startTimer();

@@ -49,3 +49,53 @@ junior-genai-114-4-q47	past	114年第四梯次 第47題	B	L122	高	Chunking 提�
 junior-genai-114-4-q48	past	114年第四梯次 第48題	A	L122	中	多向量檢索器支援多種表示提升檢索
 junior-genai-114-4-q49	past	114年第四梯次 第49題	D	L122	高	Solution Graph 為決策參考框架
 junior-genai-114-4-q50	past	114年第四梯次 第50題	C	L122	高	續寫文章屬生成式語言建模
+junior-genai-115-1-q01	past	115年第一次 第1題	A	L123	高	偏差治理優先檢視資料代表性
+junior-genai-115-1-q02	past	115年第一次 第2題	D	L122	高	資源受限 PEFT 選低秩適配 LoRA
+junior-genai-115-1-q03	past	115年第一次 第3題	A	L121	高	儀表板可信度優先確認資料串接穩定
+junior-genai-115-1-q04	past	115年第一次 第4題	D	L122	高	單次卡頓測單次回覆反應速度延遲
+junior-genai-115-1-q05	past	115年第一次 第5題	C	L122	高	長上下文一致選 Transformer 自迴歸
+junior-genai-115-1-q06	past	115年第一次 第6題	D	L123	中	Sora 出處工具不含對外實時驗證介面
+junior-genai-115-1-q07	past	115年第一次 第7題	A	L121	高	平台內建權限控管有助治理落實
+junior-genai-115-1-q08	past	115年第一次 第8題	D	L121	高	邊緣裝置運算與資源受限致延遲
+junior-genai-115-1-q09	past	115年第一次 第9題	B	L122	高	少量範例難涵蓋新情境資料差異
+junior-genai-115-1-q10	past	115年第一次 第10題	D	L122	高	知識蒸餾讓小模型學大模型降推論成本
+junior-genai-115-1-q11	past	115年第一次 第11題	B	L122	高	No-Code 做分析介面 AutoML 做建模
+junior-genai-115-1-q12	past	115年第一次 第12題	B	L122	高	MCP 連工具 RAG 補知識來源
+junior-genai-115-1-q13	past	115年第一次 第13題	B	L122	高	Chunking 提升語意對齊降長文干擾
+junior-genai-115-1-q14	past	115年第一次 第14題	A	L122	高	表格轉結構化 JSON/Markdown 助理解
+junior-genai-115-1-q15	past	115年第一次 第15題	D	L122	高	情境感知代理用歷史與狀態調整行為
+junior-genai-115-1-q16	past	115年第一次 第16題	D	L122	高	Solution Graph 定義任務分解決策路徑
+junior-genai-115-1-q17	past	115年第一次 第17題	B	L122	高	高可用選多實例加負載分散
+junior-genai-115-1-q18	past	115年第一次 第18題	A	L122	高	程式輔助工具基於 LLM 預測不保正確
+junior-genai-115-1-q19	past	115年第一次 第19題	C	L123	高	Vibe Coding 上線前納審查重構與測試
+junior-genai-115-1-q20	past	115年第一次 第20題	C	L122	高	GPT-Realtime 適即時語音客服互動
+junior-genai-115-1-q21	past	115年第一次 第21題	D	L122	中	AgentKit 支援代理建構工具整合流程
+junior-genai-115-1-q22	past	115年第一次 第22題	D	L123	中	Veo 用 SynthID 每幀嵌不可見浮水印
+junior-genai-115-1-q23	past	115年第一次 第23題	A	L122	高	詐欺判斷屬鑑別生成報告屬生成
+junior-genai-115-1-q24	past	115年第一次 第24題	D	L123	高	TCO 除直接成本含訓練整合資安合規
+junior-genai-115-1-q25	past	115年第一次 第25題	A	L123	高	月省 29040 元整合費約 7 個月回收
+junior-genai-115-1-q26	past	115年第一次 第26題	C	L122	高	有案例資料用 RAG 結合歷史案例庫
+junior-genai-115-1-q27	past	115年第一次 第27題	A	L121	高	快速彈性自動化選 n8n 工作流整合
+junior-genai-115-1-q28	past	115年第一次 第28題	C	L123	高	訓練 GPU 成本非推理 Token 經濟範圍
+junior-genai-115-1-q29	past	115年第一次 第29題	C	L121	高	有限人力含程式概念選 Low-Code
+junior-genai-115-1-q30	past	115年第一次 第30題	B	L122	高	少樣本學習以少量示例適應新情境
+junior-genai-115-1-q31	past	115年第一次 第31題	C	L122	高	文件問答用 RAG 建向量庫結合 LLM
+junior-genai-115-1-q32	past	115年第一次 第32題	A	L121	高	No-Code 以視覺化標準化完成訓練調校
+junior-genai-115-1-q33	past	115年第一次 第33題	A	L121	高	彈性低維運選 Low-Code 加預訓練 API
+junior-genai-115-1-q34	past	115年第一次 第34題	A	L121	高	自建亂象根源在缺統一開發上線機制
+junior-genai-115-1-q35	past	115年第一次 第35題	B	L122	高	Encoder–Decoder 分理解生成階段
+junior-genai-115-1-q36	past	115年第一次 第36題	C	L122	高	多因素關聯用 Graph Prompting 結構化
+junior-genai-115-1-q37	past	115年第一次 第37題	C	L122	高	Prompt 控風格 RAG 引最新資訊
+junior-genai-115-1-q38	past	115年第一次 第38題	C	L123	高	PoC 不適合制定長期治理框架
+junior-genai-115-1-q39	past	115年第一次 第39題	D	L123	高	資料層降風險用最小化與去識別化
+junior-genai-115-1-q40	past	115年第一次 第40題	B	L122	高	RFT 用 reward 調整回應策略與偏好
+junior-genai-115-1-q41	past	115年第一次 第41題	A	L123	高	比較預測分布錯誤率屬偏見檢測
+junior-genai-115-1-q42	past	115年第一次 第42題	B	L123	高	加密狀態下計算選同態加密
+junior-genai-115-1-q43	past	115年第一次 第43題	B	L123	高	私有化部署降敏感資料外傳風險
+junior-genai-115-1-q44	past	115年第一次 第44題	B	L123	高	優先正確先語音再語言後效能
+junior-genai-115-1-q45	past	115年第一次 第45題	D	L122	高	CoT 要求逐步說明依據再給結論
+junior-genai-115-1-q46	past	115年第一次 第46題	C	L123	高	安全優先選自訓私有化加稽核控管
+junior-genai-115-1-q47	past	115年第一次 第47題	A	L123	高	產線建議優先驗證與工程判斷一致
+junior-genai-115-1-q48	past	115年第一次 第48題	C	L123	高	行為變化致資料漂移影響推論
+junior-genai-115-1-q49	past	115年第一次 第49題	B	L121	高	整合可靠性靠自動化整合測試模擬外部
+junior-genai-115-1-q50	past	115年第一次 第50題	C	L123	高	降偏差輸出靠生成後人工審查修正

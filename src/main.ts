@@ -172,7 +172,7 @@ function selectChoice(choiceId: ChoiceId) {
 }
 
 app.addEventListener("click", (event) => {
-  const target = (event.target as HTMLElement).closest("[data-level],[data-subject],[data-mode],[data-choice],[data-nav]");
+  const target = (event.target as HTMLElement).closest("[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-nav]");
   if (!(target instanceof HTMLElement)) return;
 
   const level = target.getAttribute("data-level");

@@ -162,3 +162,81 @@ export const renderStudyView = (): string => {
     </main>
   `;
 };
+
+export const renderPaperPicker = (subjectName: string, paperCount: number): string => {
+  const cards = Array.from({ length: paperCount }, (_, i) => `
+    <button class="mode-card" data-paper="${i}"><h2>第 ${i + 1} 份</h2><p>50 題・單頁作答・計時</p></button>
+  `).join("");
+  return `
+    <header class="topbar"><button class="back" data-nav="back-mode">← 返回</button><h1>${escapeHtml(subjectName)}</h1></header>
+    <main class="mode-picker">${cards}</main>
+  `;
+};
+
+// 單頁考卷中的選項（含 data-qid，作答中不揭曉對錯）。
+const renderExamChoice = (qid: string, choice: Choice, selected: boolean): string => {
+  const classes = ["choice"];
+  if (selected) classes.push("selected");
+  return `
+    <button class="${classes.join(" ")}" data-qid="${escapeHtml(qid)}" data-choice="${choice.id}">
+      <span class="choice-id">${choice.id}</span>
+      <span class="choice-text">${escapeHtml(choice.text)}</span>
+    </button>`;
+};
+
+export const renderExamPaper = (
+  questions: Question[],
+  answers: Record<string, string | undefined>,
+  timeText: string,
+  answered: number,
+): string => {
+  const blocks = questions.map((q, i) => `
+    <section class="exam-q" data-qid="${escapeHtml(q.id)}">
+      <p class="prompt"><span class="qnum">${i + 1}.</span> ${escapeHtml(q.prompt)}</p>
+      <div class="choices">${q.choices.map((c) => renderExamChoice(q.id, c, answers[q.id] === c.id)).join("")}</div>
+    </section>`).join("");
+  return `
+    <header class="topbar exam-bar">
+      <button class="back" data-nav="quit">結束</button>
+      <span class="progress">已作答 <span class="answered-count">${answered}</span> / ${questions.length}</span>
+      <span class="timer">${timeText}</span>
+      <button class="submit" data-nav="submit">交卷</button>
+    </header>
+    <main class="exam-paper">
+      ${blocks}
+      <button class="submit submit-bottom" data-nav="submit">交卷</button>
+    </main>
+  `;
+};
+
+export const renderExamReview = (
+  questions: Question[],
+  answers: Record<string, string | undefined>,
+  scoreLine: number,
+  backLabel: string,
+): string => {
+  const blocks = questions.map((q, i) => {
+    const mine = answers[q.id];
+    const choices = q.choices.map((c) => {
+      const classes = ["choice"];
+      if (c.id === q.answer) classes.push("correct");
+      if (mine === c.id && c.id !== q.answer) classes.push("wrong");
+      return `<div class="${classes.join(" ")}"><span class="choice-id">${c.id}</span><span class="choice-text">${escapeHtml(c.text)}</span></div>`;
+    }).join("");
+    const yours = mine ? `你的作答：${mine}` : "未作答";
+    return `
+      <section class="exam-q">
+        <p class="prompt"><span class="qnum">${i + 1}.</span> ${escapeHtml(q.prompt)}</p>
+        <div class="choices">${choices}</div>
+        <p class="your-answer">${escapeHtml(yours)}</p>
+        <div class="explanation"><strong>詳解</strong><p>${escapeHtml(q.explanation || "（尚無詳解）")}</p></div>
+      </section>`;
+  }).join("");
+  return `
+    <header class="topbar"><button class="back" data-nav="result">← ${escapeHtml(backLabel)}</button><h1>逐題檢討</h1></header>
+    <main class="exam-paper review">
+      <p class="lead">本次得分 ${scoreLine} 分</p>
+      ${blocks}
+    </main>
+  `;
+};

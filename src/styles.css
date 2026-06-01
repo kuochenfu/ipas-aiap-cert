@@ -107,3 +107,14 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; border-ra
 .study-links li { margin: 3px 0; }
 .reading-link { color: var(--accent); text-decoration: none; font-weight: 600; }
 .reading-link:hover { text-decoration: underline; }
+.exam-bar { position: sticky; top: 0; z-index: 5; background: rgba(245,242,235,0.94);
+  backdrop-filter: blur(10px); padding: 10px 4px; border-bottom: 1px solid var(--border); }
+.exam-bar .submit { flex: none; padding: 8px 16px; }
+.exam-paper { display: grid; gap: 14px; }
+.exam-q { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.exam-q .prompt { margin-top: 0; }
+.qnum { color: var(--accent); font-weight: 800; margin-right: 4px; }
+.exam-paper .choices { grid-template-columns: 1fr; }
+.submit-bottom { width: 100%; padding: 14px; font-size: 1.05rem; }
+.your-answer { margin: 8px 0 0; color: var(--muted); font-weight: 700; }
+.exam-paper.review .explanation { margin-top: 10px; }

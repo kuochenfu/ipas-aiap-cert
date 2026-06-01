@@ -18,3 +18,17 @@ export type Question = {
   source: "past-exam" | "generated";
   sourceRef?: string;
 };
+
+export type ReadingLink = { title: string; url: string };
+
+export type StudyTopic = {
+  code: string;
+  title: string;
+  contents: string[];
+  links: ReadingLink[];
+};
+
+export type SubjectStudyGuide = {
+  subjectId: string;
+  topics: StudyTopic[];
+};

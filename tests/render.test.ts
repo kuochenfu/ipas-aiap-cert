@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { escapeHtml } from "../src/ui/escape";
-import { renderSubjectCard, renderChoice } from "../src/ui/render";
+import { renderSubjectCard, renderChoice, renderStudyView } from "../src/ui/render";
 
 describe("escapeHtml", () => {
   it("跳脫角括號與引號", () => {
@@ -31,5 +31,15 @@ describe("renderChoice", () => {
     expect(right).toContain("correct");
     const wrong = renderChoice({ id: "B", text: "b" }, { selected: true, reveal: true, correct: false });
     expect(wrong).toContain("wrong");
+  });
+});
+
+describe("renderStudyView", () => {
+  it("含科目名稱、主題標題、外部連結安全屬性、跳脫", () => {
+    const html = renderStudyView();
+    expect(html).toContain("學習主題");
+    expect(html).toContain("人工智慧基礎概論"); // 科目名稱
+    expect(html).toContain('rel="noopener noreferrer"');
+    expect(html).toContain('target="_blank"');
   });
 });

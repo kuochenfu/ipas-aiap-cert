@@ -1,8 +1,9 @@
 import { escapeHtml } from "./escape";
 import type { Choice } from "../data/types";
 import type { Subject } from "../domain/catalog";
-import { getSubjectsByLevel } from "../domain/catalog";
+import { getSubjectsByLevel, subjects } from "../domain/catalog";
 import { getBankStats } from "../data/index";
+import { getStudyGuide } from "../data/studyGuide";
 import type { Level } from "../data/types";
 import type { Question } from "../data/types";
 
@@ -40,6 +41,7 @@ export const renderHome = (): string => `
       <button class="level-card" data-level="junior"><h2>初級</h2><p>人工智慧基礎概論 ・ 生成式 AI 應用與規劃</p></button>
       <button class="level-card" data-level="senior"><h2>中級</h2><p>技術應用規劃 ・ 大數據 ・ 機器學習</p></button>
     </div>
+      <button class="study-entry" data-nav="study">📚 學習主題（延伸閱讀）</button>
   </main>
 `;
 
@@ -112,6 +114,51 @@ export const renderResult = (
       <p>答對 ${correct} 題、答錯 ${wrong} 題（及格 70 分）</p>
       <table class="topic-table"><thead><tr><th>主題</th><th>答對/總數</th></tr></thead><tbody>${rows}</tbody></table>
       <button class="review-btn" data-nav="review">逐題檢討</button>
+    </main>
+  `;
+};
+
+const renderReadingLink = (link: { title: string; url: string }): string =>
+  `<li><a class="reading-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.title)}</a></li>`;
+
+export const renderStudyView = (): string => {
+  const sections = (["junior", "senior"] as const).map((level) => {
+    const subjectsHtml = subjects
+      .filter((s) => s.level === level)
+      .map((s) => {
+        const guide = getStudyGuide(s.id);
+        const topics = (guide?.topics ?? [])
+          .map((t) => `
+            <div class="study-topic">
+              <h4>${escapeHtml(t.code)}　${escapeHtml(t.title)}</h4>
+              <ul class="study-contents">${t.contents.map((c) => `<li>${escapeHtml(c)}</li>`).join("")}</ul>
+              <ul class="study-links">${t.links.map(renderReadingLink).join("")}</ul>
+            </div>
+          `)
+          .join("");
+        return `
+          <section class="study-subject">
+            <h3>${escapeHtml(s.code)}　${escapeHtml(s.name)}</h3>
+            ${topics}
+          </section>
+        `;
+      })
+      .join("");
+    return `
+      <section class="study-level">
+        <h2>${level === "junior" ? "初級" : "中級"}</h2>
+        ${subjectsHtml}
+      </section>
+    `;
+  }).join("");
+  return `
+    <header class="topbar">
+      <button class="back" data-nav="home">← 返回</button>
+      <h1>學習主題（延伸閱讀）</h1>
+    </header>
+    <main class="study">
+      <p class="lead">依官方評鑑範圍，掌握各科應讀主題與延伸閱讀。</p>
+      ${sections}
     </main>
   `;
 };

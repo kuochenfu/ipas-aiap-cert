@@ -28,10 +28,52 @@ const isNoise = (line: string): boolean =>
   line === "答" ||
   line === "案" ||
   line === "題目" ||
-  /^第\s*\d+\s*頁/.test(line);
+  /^第\s*\d+\s*頁/.test(line) ||
+  // 圖表分隔線（pdftotext 將 PDF 內表格框線輸出為連續 - 或 = ）。
+  /^[-=]{3,}$/.test(line);
 
-const questionStart = /^([A-D])\s+(\d+)\.\s*(.*)$/;
+// 答案字母可能為半形 A-D，也可能被 pdftotext 輸出為全形 Ａ-Ｄ。
+const questionStart = /^([A-DＡ-Ｄ])\s+(\d+)\.\s*(.*)$/;
 const choiceStart = /^\(([A-D])\)\s*(.*)$/;
+
+// 將全形英文字母 Ａ-Ｚ 正規化為半形 A-Z（僅作用於答案字母）。
+const toHalfWidthLetter = (ch: string): ChoiceId => {
+  const code = ch.charCodeAt(0);
+  if (code >= 0xff21 && code <= 0xff3a) {
+    return String.fromCharCode(code - 0xff21 + 0x41) as ChoiceId;
+  }
+  return ch as ChoiceId;
+};
+
+// 一行內可能塞入多個選項，例：「(A)MAE；(B)MSE；(C)RMSE；(D)R²」。
+// 依「下一個預期字母」切分，避免誤切到選項內文中出現的 (A) 等括號字母。
+type SplitChoice = { id: ChoiceId; text: string };
+const splitInlineChoices = (id: ChoiceId, rest: string): SplitChoice[] => {
+  const order: ChoiceId[] = ["A", "B", "C", "D"];
+  const out: SplitChoice[] = [{ id, text: "" }];
+  let expectedIndex = order.indexOf(id) + 1;
+  let buf = "";
+  // 掃描 rest，遇到「下一個預期字母」的 (X) 才切新選項。
+  for (let i = 0; i < rest.length; i++) {
+    const nextExpected = order[expectedIndex];
+    if (
+      nextExpected &&
+      rest[i] === "(" &&
+      rest[i + 1] === nextExpected &&
+      rest[i + 2] === ")"
+    ) {
+      out[out.length - 1].text = buf;
+      out.push({ id: nextExpected, text: "" });
+      expectedIndex += 1;
+      buf = "";
+      i += 2; // 跳過 X)
+      continue;
+    }
+    buf += rest[i];
+  }
+  out[out.length - 1].text = buf;
+  return out;
+};
 
 type Draft = {
   number: number;
@@ -41,6 +83,20 @@ type Draft = {
 };
 
 const stripTrailing = (text: string): string => text.replace(/[；;]\s*$/, "");
+
+// pdftotext 會把「請根據此資訊回答 42~45 題」這類跨題共用引文（shared stem）
+// 接在前一題最後選項之後。這段文字屬於後續題目，不應併入選項，故予以移除。
+// 觸發詞只出現在共用引文，不會出現在正常選項內文。
+const SHARED_STEM_TRIGGER =
+  /(請?根據[^。]*回答|回答(下列|後續)?[^。]*第?\s*\d+\s*[~～至-]\s*\d+\s*題|回答第\s*\d+\s*題)/;
+// 在「行（part）」層級切除共用引文。第一個 part 是選項/題幹本體（marker 行），
+// 其後的延續行若任一處出現共用引文觸發詞，代表本欄位後方接的是「下一組題目的
+// 共用引文」整段敘述（圖／表／程式碼題的前言），與本選項無關，
+// 故丟棄所有延續行、只保留 marker 行。實測各卷此情形下 marker 行皆為完整選項。
+const dropSharedStemParts = (parts: string[]): string[] => {
+  const hasStem = parts.some((p, i) => i > 0 && SHARED_STEM_TRIGGER.test(p));
+  return hasStem ? parts.slice(0, 1) : parts;
+};
 
 export const parsePaper = (markdown: string, ctx: ParseContext): Question[] => {
   const lines = markdown.split("\n").map((l) => l.trim());
@@ -56,7 +112,7 @@ export const parsePaper = (markdown: string, ctx: ParseContext): Question[] => {
     if (qm) {
       current = {
         number: Number(qm[2]),
-        answer: qm[1] as ChoiceId,
+        answer: toHalfWidthLetter(qm[1]),
         promptParts: [qm[3]],
         choices: [],
       };
@@ -67,9 +123,14 @@ export const parsePaper = (markdown: string, ctx: ParseContext): Question[] => {
 
     const cm = choiceStart.exec(line);
     if (cm && current) {
-      const choice = { id: cm[1] as ChoiceId, parts: [cm[2]] };
-      current.choices.push(choice);
-      target = choice.parts;
+      const segments = splitInlineChoices(cm[1] as ChoiceId, cm[2]);
+      let lastChoice: { id: ChoiceId; parts: string[] } | null = null;
+      for (const seg of segments) {
+        lastChoice = { id: seg.id, parts: [seg.text] };
+        current.choices.push(lastChoice);
+      }
+      // 跨行延續只會接續最後一個選項。
+      target = lastChoice ? lastChoice.parts : null;
       continue;
     }
 
@@ -80,13 +141,14 @@ export const parsePaper = (markdown: string, ctx: ParseContext): Question[] => {
   return drafts.map((draft) => {
     const choices = CHOICE_IDS.map((id) => {
       const found = draft.choices.find((c) => c.id === id);
-      return { id, text: stripTrailing((found?.parts ?? []).join("")) };
+      const joined = dropSharedStemParts(found?.parts ?? []).join("");
+      return { id, text: stripTrailing(joined) };
     });
     const number = String(draft.number).padStart(2, "0");
     return {
       id: `${ctx.subjectId}-${ctx.examCode}-q${number}`,
       subjectId: ctx.subjectId,
-      prompt: draft.promptParts.join(""),
+      prompt: dropSharedStemParts(draft.promptParts).join(""),
       choices,
       answer: draft.answer,
       explanation: "",

@@ -1,0 +1,2902 @@
+[
+  {
+    "id": "junior-genai-115-1-q01",
+    "subjectId": "junior-genai",
+    "prompt": "某零售企業導入生成式 AI 商品推薦系統。測試結果顯示，在購物行為、偏好設定與價格區間相同的情況下，不同客戶族群收到的推薦商品類型仍出現明顯差異，且差異方向不易以既有行銷策略解釋。若在模型架構與推論設定皆未調整情形下，專案目標是優先降低可能的模型偏差風險，下列何者最合理？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "重新檢視訓練資料的樣本分布與代表性"
+      },
+      {
+        "id": "B",
+        "text": "限制推薦結果僅顯示高銷量商品"
+      },
+      {
+        "id": "C",
+        "text": "降低模型參數規模以簡化決策邏輯"
+      },
+      {
+        "id": "D",
+        "text": "提高推薦結果的隨機性以增加多樣性"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第1題"
+  },
+  {
+    "id": "junior-genai-115-1-q02",
+    "subjectId": "junior-genai",
+    "prompt": "在進行大型語言模型 (LLM) 企業專屬知識的 Fine-tuning 時，若內部 GPU 運算資源與記憶體嚴重受限，下列哪一種參數高效微調（PEFT, Parameter Efficient Fine-Tuning）技術最能在維持模型效能的前提下，顯著降低需更新的參數數量？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "知識蒸餾（Knowledge Distillation） "
+      },
+      {
+        "id": "B",
+        "text": "提示詞工程（Prompt Engineering） "
+      },
+      {
+        "id": "C",
+        "text": "梯度凍結（Gradient Freezing） "
+      },
+      {
+        "id": "D",
+        "text": "低秩適配（Low-RankAdaptation）"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第2題"
+  },
+  {
+    "id": "junior-genai-115-1-q03",
+    "subjectId": "junior-genai",
+    "prompt": "某企業規劃透過 Low-Code 平台建置可視化儀表板，以支援營運數據的即時監控與分析判讀。若企業特別關注儀表板顯示結果的穩定性與分析可信度，下列何者最應優先確認？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "是否具備穩定的資料串接能力與即時更新機制"
+      },
+      {
+        "id": "B",
+        "text": "是否提供自動化決策建議與預測分析模組"
+      },
+      {
+        "id": "C",
+        "text": "是否支援彈性介面設計與多角色權限管理"
+      },
+      {
+        "id": "D",
+        "text": "是否整合流程觸發與跨系統通知功能"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第3題"
+  },
+  {
+    "id": "junior-genai-115-1-q04",
+    "subjectId": "junior-genai",
+    "prompt": "某企業導入生成式 AI 客服系統後發現，系統整體運作穩定，且在單位時間內可處理大量對話請求。部分使用者仍反映在互動過程中回覆出現卡頓感，經初步排除網路連線與前端介面效能問題後，若專案團隊希望針對此現象進行效能測試，下列何者最符合測試重點？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "評估系統長時間運作的穩定程度"
+      },
+      {
+        "id": "B",
+        "text": "測量系統單位時間的總處理量"
+      },
+      {
+        "id": "C",
+        "text": "比較不同回覆內容的語言品質"
+      },
+      {
+        "id": "D",
+        "text": "分析單次互動回覆的反應速度表現"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第4題"
+  },
+  {
+    "id": "junior-genai-115-1-q05",
+    "subjectId": "junior-genai",
+    "prompt": "某企業導入生成式 AI 系統，希望自動產出客服回覆與內部文件摘要。系統需能理解使用者輸入的完整語句內容，並在回覆中維持語意連貫，即使對話內容較長仍能保持上下文一致性。基於上述需求，下列何種模型架構最為適合？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "卷積神經網路（Convolutional Neural Network, CNN） "
+      },
+      {
+        "id": "B",
+        "text": "遞迴神經網路（Recurrent Neural Network, RNN） "
+      },
+      {
+        "id": "C",
+        "text": "基於 Transformer 架構的自迴歸模型（Autoregressive Model） "
+      },
+      {
+        "id": "D",
+        "text": "生成對抗網路（GenerativeAdversarial Network, GAN）"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第5題"
+  },
+  {
+    "id": "junior-genai-115-1-q06",
+    "subjectId": "junior-genai",
+    "prompt": "OpenAI 已為 Sora 生成的影片提供多種出處證明機制，以降低誤導性或欺騙性內容帶來的風險。下列何者不屬於目前 OpenAI 官方為 Sora 內容提供的出處證明工具？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "所有資產上內嵌的 C2PA（Content Credentials）元數據"
+      },
+      {
+        "id": "B",
+        "text": "預設可見的動態浮水印"
+      },
+      {
+        "id": "C",
+        "text": "用於追蹤生成內容的內部反向影像與音訊搜尋工具"
+      },
+      {
+        "id": "D",
+        "text": "平台對外開放的實時來源驗證介面"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第6題"
+  },
+  {
+    "id": "junior-genai-115-1-q07",
+    "subjectId": "junior-genai",
+    "prompt": "某企業導入 No-Code/Low-Code 平台，讓各部門能自行建立資料分析與流程應用。隨著使用範圍擴大，管理層開始關注資料權限、存取紀錄與合規要求。依資料治理觀點，下列何者最合理描述此類平台對企業治理機制的典型影響？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "平台內建角色權限與資料存取控管機制，有助治理制度落實"
+      },
+      {
+        "id": "B",
+        "text": "平台強化部門自主性，通常使既有治理流程難以延續"
+      },
+      {
+        "id": "C",
+        "text": "平台主要支援應用快速開發，資料治理仍需完全仰賴外部系統"
+      },
+      {
+        "id": "D",
+        "text": "平台透過自動化設定機制，可顯著降低治理與合規管理需求"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第7題"
+  },
+  {
+    "id": "junior-genai-115-1-q08",
+    "subjectId": "junior-genai",
+    "prompt": "某製造企業規劃於設備端建置邊緣運算（Edge Computing）架構，並以 No-Code/Low-Code 平台開發即時監控應用。測試顯示，系統在雲端環境執行順暢，但部署至邊緣裝置後出現回應延遲與效能下降。依此情境判斷，下列何者最合理解釋該現象？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "邊緣運算架構可降低系統對效能的需求"
+      },
+      {
+        "id": "B",
+        "text": "No-Code/Low-Code 平台僅能在雲端環境執行"
+      },
+      {
+        "id": "C",
+        "text": "雲端部署通常比邊緣部署更容易出現延遲"
+      },
+      {
+        "id": "D",
+        "text": "邊緣裝置通常受限於運算能力與可用資源"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第8題"
+  },
+  {
+    "id": "junior-genai-115-1-q09",
+    "subjectId": "junior-genai",
+    "prompt": "某企業使用生成式 AI 進行文字分類，初期僅根據既有業務資料設計少量樣本提示（Few-shot Prompting） 。當模型應用至新市場資料時，團隊發現分類結果明顯不穩定，且原先提供的範例並未涵蓋新市場常見的表達方式。依此情境判斷，下列何者最可能為主要原因？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "模型容易對單一範例產生過度記憶"
+      },
+      {
+        "id": "B",
+        "text": "少量範例難以涵蓋新情境的資料差異"
+      },
+      {
+        "id": "C",
+        "text": "Prompt 設計無法引導模型擷取共通特徵"
+      },
+      {
+        "id": "D",
+        "text": "模型推理能力不足以完成分類任務"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第9題"
+  },
+  {
+    "id": "junior-genai-115-1-q10",
+    "subjectId": "junior-genai",
+    "prompt": "某企業建置檢索增強生成（Retrieval-augmented generation, RAG）系統支援內部知識查詢。隨著使用量提升，團隊發現模型回覆品質穩定，但推論延遲與運算成本逐漸增加。專案規劃在維持回覆品質前提下進行效能優化。在此情境下，若採用知識蒸餾（Knowledge Distillation） ，下列敘述何者最為合理？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "將檢索資料轉換為結構化規則以取代模型"
+      },
+      {
+        "id": "B",
+        "text": "僅透過增加檢索文件數量改善效能"
+      },
+      {
+        "id": "C",
+        "text": "停用生成模型以避免延遲問題"
+      },
+      {
+        "id": "D",
+        "text": "使小型模型學習大型模型行為，以降低推論成本"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第10題"
+  },
+  {
+    "id": "junior-genai-115-1-q11",
+    "subjectId": "junior-genai",
+    "prompt": "某零售企業規劃提升門市數據應用能力，目標包括：門市主管可自行調整分析畫面與檢視指標呈現，以及由行銷部門建立銷售預測模型，以支援補貨與促銷規劃。企業在選型時以工具的主要功能定位與典型用途作為評估依據。依此需求判斷，下列哪一項 AI 工具使用規劃最合理？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "以 AutoML 作為分析介面調整平台，No-Code 平台用於模型訓練"
+      },
+      {
+        "id": "B",
+        "text": "以 No-Code 平台支援分析與介面調整，AutoML 負責模型建立"
+      },
+      {
+        "id": "C",
+        "text": "僅導入 No-Code 平台，同時滿足高階模型建立與分析需求"
+      },
+      {
+        "id": "D",
+        "text": "僅導入 AutoML，以兼顧介面調整與模型訓練"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第11題"
+  },
+  {
+    "id": "junior-genai-115-1-q12",
+    "subjectId": "junior-genai",
+    "prompt": "下列何者最能正確說明 Model Context Protocol（MCP）與檢索增強生成（Retrieval-Augmented Generation, RAG）在功能定位上的主要差異？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "MCP 主要用於降低模型訓練成本；RAG 主要用於提升推論速度"
+      },
+      {
+        "id": "B",
+        "text": "MCP 著重模型與外部工具或系統互動；RAG 著重補充模型知識來源"
+      },
+      {
+        "id": "C",
+        "text": "RAG 必須依賴向量資料庫；MCP 不需任何外部整合"
+      },
+      {
+        "id": "D",
+        "text": "RAG 屬標準化通訊協議；MCP 屬資料檢索技術"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第12題"
+  },
+  {
+    "id": "junior-genai-115-1-q13",
+    "subjectId": "junior-genai",
+    "prompt": "某企業建置文件型知識查詢系統，將大量長篇內部文件轉換為可供生成式 AI 使用的知識來源。在測試過程中，團隊發現若直接以整份文件進行檢索，模型回覆常包含無關內容，且引用段落不夠精準。團隊評估後，決定導入 Chunking 機制的主要目的為何？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "透過縮短輸入長度，加速模型推理流程"
+      },
+      {
+        "id": "B",
+        "text": "提升檢索結果的語意對齊程度，並降低長文件帶來的干擾"
+      },
+      {
+        "id": "C",
+        "text": "減少模型執行時的記憶體使用量，以提升系統穩定性"
+      },
+      {
+        "id": "D",
+        "text": "讓模型在生成回覆時具備更高的創意發揮空間"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第13題"
+  },
+  {
+    "id": "junior-genai-115-1-q14",
+    "subjectId": "junior-genai",
+    "prompt": "某企業導入大型語言模型（LLM）分析內部報表，使用者經常提供 Excel 匯出的表格資料（如銷售數據與統計表） 。測試時發現，模型對原始表格解析效果不穩定。為提升模型理解與回應品質，下列哪一種上下文工程（Context Engineering）作法較為適當？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "將表格內容轉換為結構化 JSON 或 Markdown table"
+      },
+      {
+        "id": "B",
+        "text": "在維持原始表格呈現方式下，補充欄位與數據說明"
+      },
+      {
+        "id": "C",
+        "text": "將表格資料隨機切割後分段輸入"
+      },
+      {
+        "id": "D",
+        "text": "直接提供原始表格內容以保留完整資訊"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第14題"
+  },
+  {
+    "id": "junior-genai-115-1-q15",
+    "subjectId": "junior-genai",
+    "prompt": "在生成式 AI 應用設計中，情境感知代理（Context-awareAgent）的核心特性為何？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "能依任務需求即時重新訓練模型參數以優化結果"
+      },
+      {
+        "id": "B",
+        "text": "僅依使用者當前輸入指令執行任務，不保留歷程資訊"
+      },
+      {
+        "id": "C",
+        "text": "具備跨模態處理能力，可同時理解文字與影像內容"
+      },
+      {
+        "id": "D",
+        "text": "能利用對話歷史、任務狀態調整行為與決策"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第15題"
+  },
+  {
+    "id": "junior-genai-115-1-q16",
+    "subjectId": "junior-genai",
+    "prompt": "某企業建置 AgenticAI 系統處理跨部門複雜任務，團隊以解決方案圖譜（SolutionGraph）作為規劃框架。下列何者為 Solution Graph 的主要功能？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "取代語言模型推理機制，改以圖形搜尋完成決策"
+      },
+      {
+        "id": "B",
+        "text": "作為任務知識庫，用於儲存 AI 已完成案例以供檢索"
+      },
+      {
+        "id": "C",
+        "text": "限制代理（Agent）僅能依固定流程執行，以降低行為不確定性"
+      },
+      {
+        "id": "D",
+        "text": "定義代理（Agent）可參考的任務分解與決策路徑結構"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第16題"
+  },
+  {
+    "id": "junior-genai-115-1-q17",
+    "subjectId": "junior-genai",
+    "prompt": "某企業提供大型語言模型（LLM）API 服務，需支援高併發請求與流量波動，同時要求服務不中斷並具備故障容忍能力。若以高可用性與可擴展性為主要設計原則，下列哪一種部署方式較為適當？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "採用單一高效能虛擬機（VM）集中部署，以提升資源使用效率"
+      },
+      {
+        "id": "B",
+        "text": "建立多個模型服務實例並透過負載分散機制提供服務"
+      },
+      {
+        "id": "C",
+        "text": "將推論任務改由用戶端設備分擔，以降低伺服器負載壓力"
+      },
+      {
+        "id": "D",
+        "text": "使用 FTP 協議傳輸請求與回應，以減少服務通訊負擔"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第17題"
+  },
+  {
+    "id": "junior-genai-115-1-q18",
+    "subjectId": "junior-genai",
+    "prompt": "關於 ChatGPT、Anthropic Claude、GitHub Copilot 等 AI 程式碼輔助工具的運作原理，下列敘述何者正確？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "這些工具基於大型語言模型，經由大量程式碼與文本訓練，透過預測下一個符號來生成程式碼，但不保證產生程式碼的正確性"
+      },
+      {
+        "id": "B",
+        "text": "GitHub Copilot 會在提供程式碼建議前執行並驗證該程式碼，確保其執行結果正確無誤"
+      },
+      {
+        "id": "C",
+        "text": "Anthropic Claude 的程式碼建議並非即時生成，而是從事先整理的已知解答資料庫中檢索而得"
+      },
+      {
+        "id": "D",
+        "text": "ChatGPT 內建完整的編譯器，可在輸出程式碼前自動編譯並更正所有語法與邏輯錯誤"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第18題"
+  },
+  {
+    "id": "junior-genai-115-1-q19",
+    "subjectId": "junior-genai",
+    "prompt": "某新創公司採用 MVP（Minimum Viable Product）策略，導入 Vibe Coding 以加速開發，雖然初期能快速產出可運作功能，但技術主管提醒，在正式上線前仍可能存在程式碼品質與安全風險。下列哪一項措施最合理，以降低品質與安全問題？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "直接沿用 AI 生成程式碼至正式環境，以降低開發成本"
+      },
+      {
+        "id": "B",
+        "text": "持續優化提示詞，即可避免大部分品質問題"
+      },
+      {
+        "id": "C",
+        "text": "將生成程式碼納入審查、重構與安全測試流程"
+      },
+      {
+        "id": "D",
+        "text": "限制開發者修改 AI 生成之程式碼架構，以維持一致性"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第19題"
+  },
+  {
+    "id": "junior-genai-115-1-q20",
+    "subjectId": "junior-genai",
+    "prompt": "在規劃生成式 AI 解決方案時，下列何種應用場景最適合採用 GPT-Realtime 類型模型？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "需長時間批次處理的大規模報表生成任務"
+      },
+      {
+        "id": "B",
+        "text": "即時資料查詢與結構化資訊檢索系統"
+      },
+      {
+        "id": "C",
+        "text": "即時語音客服與互動式 AI 代理"
+      },
+      {
+        "id": "D",
+        "text": "以高一致性為優先的法規文件自動摘要"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第20題"
+  },
+  {
+    "id": "junior-genai-115-1-q21",
+    "subjectId": "junior-genai",
+    "prompt": "關於 2025 年 OpenAI 提供的 AgentKit，下列何者最能描述其主要用途？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "建立強化式學習（Reinforcement Learning）訓練所需的互動式模擬環境"
+      },
+      {
+        "id": "B",
+        "text": "提供代理（Agent）模型的大規模預訓練與權重優化機制"
+      },
+      {
+        "id": "C",
+        "text": "「Agent-to-Agent」的代理通訊協議"
+      },
+      {
+        "id": "D",
+        "text": "支援 Agents 的建構、工具整合與任務流程開發"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第21題"
+  },
+  {
+    "id": "junior-genai-115-1-q22",
+    "subjectId": "junior-genai",
+    "prompt": "所有在 Gemini 應用程式透過 Veo 生成的影片，皆採用何種技術措施來協助企業用戶應對 AI 生成內容可能帶來的不實資訊風險？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "嚴格限制所有用戶每日的影片生成次數與使用時間"
+      },
+      {
+        "id": "B",
+        "text": "在所有生成影片的開頭與結尾處強制加入明顯的 AI 標示警語"
+      },
+      {
+        "id": "C",
+        "text": "要求所有影片輸出時必須附帶至少 10 秒的免責聲明片段"
+      },
+      {
+        "id": "D",
+        "text": "使用 SynthID 技術在每一幀（frame）影片中嵌入不可見的數位浮水印"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第22題"
+  },
+  {
+    "id": "junior-genai-115-1-q23",
+    "subjectId": "junior-genai",
+    "prompt": "某保險公司想建立智慧理賠系統，包含兩個功能：(1)自動判斷理賠案件是否為詐欺案件 (2)自動生成理賠調查報告。請問這兩個功能分別屬於哪種 AI 技術類型？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "(1)鑑別式 AI (2)生成式 AI"
+      },
+      {
+        "id": "B",
+        "text": "(1)生成式 AI (2)鑑別式 AI"
+      },
+      {
+        "id": "C",
+        "text": "兩者都是鑑別式 AI"
+      },
+      {
+        "id": "D",
+        "text": "兩者都是生成式 AI"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第23題"
+  },
+  {
+    "id": "junior-genai-115-1-q24",
+    "subjectId": "junior-genai",
+    "prompt": "某大型製造工廠導入生成式 AI 系統來優化能源消耗，每日需處理約 10 萬筆設備數據並生成能源優化建議。系統每月 API 調用成本約 15 萬元，內部維護人力成本8 萬元，基礎設施成本 5 萬元。該工廠評估導入效益時，下列哪一項總體擁有成本（Total Cost of Ownership, TCO）分析最完整？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "主要以 API 調用成本 15 萬元作為 TCO 評估基礎"
+      },
+      {
+        "id": "B",
+        "text": "以 API 調用成本 15 萬元及維護人力成本 8 萬元進行整體估算"
+      },
+      {
+        "id": "C",
+        "text": "綜合 API 調用、維護人力與基礎設施等直接成本進行評估，共約 28 萬元"
+      },
+      {
+        "id": "D",
+        "text": "除直接成本外，並考量訓練、系統整合與資安合規等相關支出"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第24題"
+  },
+  {
+    "id": "junior-genai-115-1-q25",
+    "subjectId": "junior-genai",
+    "prompt": "某機構計畫導入生成式 AI 旅遊資訊服務對話系統自動生成多語言對話。目前每月需人工翻譯 600 則訊息，每則成本 50 元；若改用 ChatGPTAPI，每則訊息需 2000Tokens，而 Token 成本 0.8 元/1000 Tokens，但需額外投入系統整合費用 20 萬元。關於投資報酬率（Return on Investment, ROI）評估，下列何者最為正確？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "每月節省成本 29,040 元，系統整合成本約 7 個月回收"
+      },
+      {
+        "id": "B",
+        "text": "每月節省成本 30,000 元，系統整合成本約 7 個月回收"
+      },
+      {
+        "id": "C",
+        "text": "每月節省成本 28,040 元，系統整合成本約 8 個月回收"
+      },
+      {
+        "id": "D",
+        "text": "每月節省成本 25,000 元，系統整合成本約 8 個月回收"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第25題"
+  },
+  {
+    "id": "junior-genai-115-1-q26",
+    "subjectId": "junior-genai",
+    "prompt": "某支付平台為了強化洗錢行為檢測，計劃導入生成式 AI 技術來輔助分析可疑交易模式。該平台擁有大量歷史交易記錄和已知洗錢案例資料，希望 AI 能自動生成可疑交易的特徵描述報告。下列哪一種生成式 AI 技術最適合此需求？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "使用 Midjourney 生成交易流程圖像"
+      },
+      {
+        "id": "B",
+        "text": "採用 Few-shot Learning 訓練圖像識別模型"
+      },
+      {
+        "id": "C",
+        "text": "運用 RAG 檢索增強生成技術結合歷史案例資料庫"
+      },
+      {
+        "id": "D",
+        "text": "直接使用 ChatGPT 的基礎模型進行分析"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第26題"
+  },
+  {
+    "id": "junior-genai-115-1-q27",
+    "subjectId": "junior-genai",
+    "prompt": "某紡織公司希望建立自動化品質檢測流程，既有的 AI 系統檢測到布料瑕疵時，需自動拍照存檔、發送通知給品管人員。該公司具有一定開發人力，希望快速建置此工作流程，並保有彈性調整空間，下列哪一種解決方案最適合？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "使用 n8n 建立工作流（Workflow） ，整合 AI 檢測 API、檔案系統、通訊軟體"
+      },
+      {
+        "id": "B",
+        "text": "委外開發客製化程式，完全符合公司需求規格"
+      },
+      {
+        "id": "C",
+        "text": "採購現成的品質管理軟體，直接導入使用"
+      },
+      {
+        "id": "D",
+        "text": "使用 Excel 巨集搭配人工作業處理檢測結果"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第27題"
+  },
+  {
+    "id": "junior-genai-115-1-q28",
+    "subjectId": "junior-genai",
+    "prompt": "某市政府交通局計劃導入生成式 AI 技術來自動生成公車到站時間預測的文字報告，每日需處理約 50 萬筆交通資料並生成 1000 份報告。在評估導入成本時，團隊希望進行 Token Economics 分析（指模型推理與生成過程中，Token 使用量及其費用） 。下列何者不屬於 Token Economics 的考量範圍？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "每次 API 呼叫所需的輸入 Token 數量"
+      },
+      {
+        "id": "B",
+        "text": "生成報告內容所消耗的輸出 Token 費用"
+      },
+      {
+        "id": "C",
+        "text": "AI 模型訓練階段使用 Token 數量所需的 GPU 記憶體成本"
+      },
+      {
+        "id": "D",
+        "text": "模型推理過程中的 Token 使用量統計"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第28題"
+  },
+  {
+    "id": "junior-genai-115-1-q29",
+    "subjectId": "junior-genai",
+    "prompt": "某農業合作社希望建立一套自動化工作流程，當農民透過手機 APP 回報田間病蟲害照片時，系統能自動通知相關專家、建立案件紀錄並排程現場訪查。該合作社IT 資訊人力有限，僅有一位具備基礎程式概念的人員。下列哪一種開發方式最適合此需求？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "採用傳統程式開發，從零開始撰寫完整系統"
+      },
+      {
+        "id": "B",
+        "text": "使用純粹的 No-Code 平台，完全不需要任何程式技能"
+      },
+      {
+        "id": "C",
+        "text": "使用 Low-Code 平台，結合視覺化拖拉與少量程式碼"
+      },
+      {
+        "id": "D",
+        "text": "直接購買現成的農業管理軟體，不進行客製化"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第29題"
+  },
+  {
+    "id": "junior-genai-115-1-q30",
+    "subjectId": "junior-genai",
+    "prompt": "某市政府環保局想建立一個垃圾分類查詢系統，讓民眾輸入物品名稱後自動判斷分類。由於垃圾種類繁多，但每種分類的訓練範例有限，工程師決定採用少樣本學習（Few-shot Learning）技術。下列何者為少樣本學習（Few-shot Learning）的主要特徵？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "需重新蒐集大規模標註資料，以確保模型具備穩定表現"
+      },
+      {
+        "id": "B",
+        "text": "透過少量任務示例，引導模型適應新情境或新分類需求"
+      },
+      {
+        "id": "C",
+        "text": "不需任何範例輸入，即可完成新任務推論"
+      },
+      {
+        "id": "D",
+        "text": "僅適用於自然語言處理任務，對其他模態效果有限"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第30題"
+  },
+  {
+    "id": "junior-genai-115-1-q31",
+    "subjectId": "junior-genai",
+    "prompt": "某有機農場累積了十年的病蟲害防治紀錄文件，包含不同作物的病害症狀描述、防治方法和效果評估。農場主人希望建立一個 AI 助手，能根據農民描述的作物症狀，快速提供相關的防治建議和歷史案例。下列哪一種技術最適合解決這個需求？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "直接使用 ChatGPT 的預訓練知識回答農業問題"
+      },
+      {
+        "id": "B",
+        "text": "將所有文件內容加入 ChatGPT 的系統提示詞中"
+      },
+      {
+        "id": "C",
+        "text": "採用 RAG 技術，將農場文件建立向量資料庫，結合大語言模型生成回答"
+      },
+      {
+        "id": "D",
+        "text": "使用少樣本學習（Few-shot Learning） ，在提示詞中提供 3-5 個病害案例"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第31題"
+  },
+  {
+    "id": "junior-genai-115-1-q32",
+    "subjectId": "junior-genai",
+    "prompt": "隨著企業加速導入 AI，No-Code/Low-Code 平台逐漸成為模型開發與產品化的常見工具。相較於傳統自行撰寫程式的建模流程，下列何者最能正確描述此類平台在模型訓練機制上的典型特性？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "透過視覺化介面與標準化流程，協助完成模型訓練與調校"
+      },
+      {
+        "id": "B",
+        "text": "主要提供既有模型推論能力，通常不支援重新訓練"
+      },
+      {
+        "id": "C",
+        "text": "著重資料處理與轉換，模型訓練仍需外部工具完成"
+      },
+      {
+        "id": "D",
+        "text": "多數僅適用於特定大數據框架（如 Spark）的訓練流程"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第32題"
+  },
+  {
+    "id": "junior-genai-115-1-q33",
+    "subjectId": "junior-genai",
+    "prompt": "某醫療院所希望改善行政效率，規劃讓各科室人員可自行建立行政回報與內部申請表單，並導入 AI 功能以自動判讀與分類填寫內容（如問題類型或需求性質） ，同時需兼顧流程調整彈性與降低系統開發維運負擔。下列哪一種技術組合最適合？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "Low-Code 平台 × 預訓練語言模型 API"
+      },
+      {
+        "id": "B",
+        "text": "No-Code 平台 × 規則式自動化（Rule-basedAutomation） "
+      },
+      {
+        "id": "C",
+        "text": "傳統程式開發 × 自建深度學習模型"
+      },
+      {
+        "id": "D",
+        "text": "試算表工具 × 手動資料標記分析"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第33題"
+  },
+  {
+    "id": "junior-genai-115-1-q34",
+    "subjectId": "junior-genai",
+    "prompt": "某企業導入 No-Code/Low-Code 平台開放各部門自行開發應用。半年後發現：出現多個功能相近系統、資料欄位定義不一致，且部分應用未經審核即上線，並伴隨權限與維運管理混亂。下列何者最可能為根本問題？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "缺乏統一的開發與上線管理機制"
+      },
+      {
+        "id": "B",
+        "text": "平台提供過高的應用設計自主性"
+      },
+      {
+        "id": "C",
+        "text": "部門未建立共用的資料分析呈現標準"
+      },
+      {
+        "id": "D",
+        "text": "系統整合與自動化能力尚未完善"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第34題"
+  },
+  {
+    "id": "junior-genai-115-1-q35",
+    "subjectId": "junior-genai",
+    "prompt": "在生成式 AI 文字生成模型設計中，Encoder–Decoder 與 Decoder-only 為常見架構。下列何者最能正確說明兩者在資訊處理與生成機制上的核心差異？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "Encoder–Decoder 透過編碼與解碼階段處理序列，Decoder-only 則以單一模型完成處理"
+      },
+      {
+        "id": "B",
+        "text": "Encoder–Decoder 區分輸入理解與內容生成階段，Decoder-only 以單一模型同時處理上下文與生成"
+      },
+      {
+        "id": "C",
+        "text": "Decoder-only 架構主要依賴外部知識檢索，Encoder–Decoder 則不需要"
+      },
+      {
+        "id": "D",
+        "text": "Encoder–Decoder 架構僅適用於翻譯任務，Decoder-only 架構較適合對話任務"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第35題"
+  },
+  {
+    "id": "junior-genai-115-1-q36",
+    "subjectId": "junior-genai",
+    "prompt": "某連鎖零售企業使用生成式 AI 協助規劃門市補貨策略。決策時需同時考量多項彼此相關的因素，例如：庫存水位、促銷活動、區域銷售差異與物流限制。專案團隊發現，AI 雖能逐步說明推論過程，但對於多條件之間的相互影響掌握不足，導致建議結果偶有偏差。若希望透過提示工程（Prompt Engineering）改善此問題，下列哪一種策略最為適合？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "Chain of Thought，要求模型逐步展開推論"
+      },
+      {
+        "id": "B",
+        "text": "Tree of Thoughts，增加多種推論路徑探索"
+      },
+      {
+        "id": "C",
+        "text": "Graph Prompting，以結構化方式呈現條件與關聯"
+      },
+      {
+        "id": "D",
+        "text": "Zero-shot Prompting，避免範例影響模型判斷"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第36題"
+  },
+  {
+    "id": "junior-genai-115-1-q37",
+    "subjectId": "junior-genai",
+    "prompt": "某電商平台導入生成式 AI 客服助理，用於自動回覆顧客詢問。營運需求包含：需即時反映每日更新的促銷活動與商品資訊，同時維持品牌一致的回覆語氣，且企業希望避免因模型重新訓練所造成的成本增加與系統不穩定。在此情境下，下列哪一種技術策略最合理？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "僅進行 Fine-tuning，使模型同時學習品牌語氣與即時促銷內容"
+      },
+      {
+        "id": "B",
+        "text": "僅導入 RAG 更新促銷資訊，期望模型直接從檢索內容學習品牌語氣"
+      },
+      {
+        "id": "C",
+        "text": "透過 Prompt Engineering 控制回覆風格，並以 RAG 引入最新商品與活動資訊"
+      },
+      {
+        "id": "D",
+        "text": "持續進行增量 Fine-tuning，以確保活動資訊同步更新"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第37題"
+  },
+  {
+    "id": "junior-genai-115-1-q38",
+    "subjectId": "junior-genai",
+    "prompt": "某企業規劃導入生成式 AI 助理，在正式全面部署前進行概念驗證（PoC） ，下列何者最不適合作為此階段的主要工作？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "驗證模型在實際使用情境下的回覆品質與穩定性"
+      },
+      {
+        "id": "B",
+        "text": "測試 AI 功能與業務需求的匹配程度"
+      },
+      {
+        "id": "C",
+        "text": "制定跨部門使用規範，與長期治理框架"
+      },
+      {
+        "id": "D",
+        "text": "評估系統整合可行性與技術限制"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第38題"
+  },
+  {
+    "id": "junior-genai-115-1-q39",
+    "subjectId": "junior-genai",
+    "prompt": "某企業規劃導入生成式 AI 客服系統，需處理顧客查詢並引用歷史交易資料。法遵部門在風險評估中指出，系統若不當處理顧客個人資料，可能引發合規與法律責任。若專案初期希望從資料層面降低敏感資訊暴露風險，下列敘述何者最為合理？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "強化模型輸出審查與遮罩機制，以過濾可能出現的敏感資訊"
+      },
+      {
+        "id": "B",
+        "text": "設定 AI 回覆範圍與角色權限，限制其存取特定類型資料"
+      },
+      {
+        "id": "C",
+        "text": "將資料集中於加密儲存環境，並加強系統存取控管"
+      },
+      {
+        "id": "D",
+        "text": "僅提供必要資料或數據欄位與去識別化策略，減少模型接觸可識別個資"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第39題"
+  },
+  {
+    "id": "junior-genai-115-1-q40",
+    "subjectId": "junior-genai",
+    "prompt": "某企業導入大型語言模型（LLM）進行客服自動化，並已透過 Fine-Tuning 學習企業標準問答範例，但在實務運作中仍出現回應策略未符合服務優先順序及語氣與品牌風格不一致的情況，因此技術團隊建議再導入 Reinforcement Fine-tuning（RFT）機制進行優化，其主要目的為何？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "擴展模型的知識涵蓋範圍與資料記憶能力"
+      },
+      {
+        "id": "B",
+        "text": "透過 reward 訊號調整模型回應策略與行為偏好"
+      },
+      {
+        "id": "C",
+        "text": "提升模型推論速度與降低回應延遲"
+      },
+      {
+        "id": "D",
+        "text": "降低 prompt 設計複雜度並取代訓練流程"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第40題"
+  },
+  {
+    "id": "junior-genai-115-1-q41",
+    "subjectId": "junior-genai",
+    "prompt": "企業在評估 AI 決策模型是否存在資料分布偏差時，下列何者最屬於偏見檢測（Bias Detection）而非偏見緩解（Bias Mitigation）措施？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "比較不同資料分布的模型預測結果分布與錯誤率"
+      },
+      {
+        "id": "B",
+        "text": "重新加權訓練樣本以平衡資料分布代表性"
+      },
+      {
+        "id": "C",
+        "text": "在推論階段加入輸出過濾規則"
+      },
+      {
+        "id": "D",
+        "text": "調整模型決策閾值（Decision Threshold）以降低預測差異"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第41題"
+  },
+  {
+    "id": "junior-genai-115-1-q42",
+    "subjectId": "junior-genai",
+    "prompt": "某企業希望利用含敏感資訊的資料進行 AI 模型訓練，但政策要求原始資料不得外洩，且資料可集中於安全環境中處理。同時，企業希望在資料使用過程中，即使資料處於加密狀態，仍能完成模型計算。在此需求下，下列哪一種技術最為適合？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "聯邦學習（Federated Learning） "
+      },
+      {
+        "id": "B",
+        "text": "同態加密（Homomorphic Encryption） "
+      },
+      {
+        "id": "C",
+        "text": "零知識證明（Zero-knowledge Proof） "
+      },
+      {
+        "id": "D",
+        "text": "資料匿名化（DataAnonymization）"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第42題"
+  },
+  {
+    "id": "junior-genai-115-1-q43",
+    "subjectId": "junior-genai",
+    "prompt": "某金融服務公司規劃導入生成式 AI，在評估模型部署方式時，基於內部控制與治理要求，企業考慮將大型語言模型建置於公司可管理環境，而非直接採用外部雲端服務。下列何者最能合理說明此部署決策的潛在優勢？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "有助提升模型回覆穩定性並降低隨機性影響"
+      },
+      {
+        "id": "B",
+        "text": "可降低敏感資料需傳輸至外部服務的風險"
+      },
+      {
+        "id": "C",
+        "text": "可直接減少模型訓練與維運所需資源投入"
+      },
+      {
+        "id": "D",
+        "text": "可避免模型輸出偏差與幻覺（Hallucination）問題"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第43題"
+  },
+  {
+    "id": "junior-genai-115-1-q44",
+    "subjectId": "junior-genai",
+    "prompt": "某智慧製造廠導入語音互動 AI 助理，作業人員可透過語音查詢設備狀態與操作指引。系統流程包含語音轉文字、語言模型生成回覆，以及即時查詢內部系統資料。測試結果顯示：語音轉文字在專業設備術語上錯誤率偏高；語言模型回覆偶有內容不夠精準；系統整體回應速度略慢但仍在可接受範圍。若專案目標為優先確保正確執行指令，下列改進措施的執行順序何者最合理？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "優化語言模型 → 強化語音模型 → 優化系統效能 → 調整生成參數"
+      },
+      {
+        "id": "B",
+        "text": "強化語音模型 → 優化語言模型與知識補充 → 調整生成參數 → 優化系統效能"
+      },
+      {
+        "id": "C",
+        "text": "優化系統效能 → 強化語音模型 → 優化語言模型與知識補充 → 調整生成參數"
+      },
+      {
+        "id": "D",
+        "text": "強化語音模型 → 優化系統效能 → 優化語言模型與知識補充 → 調整生成參數"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第44題"
+  },
+  {
+    "id": "junior-genai-115-1-q45",
+    "subjectId": "junior-genai",
+    "prompt": "某企業導入生成式 AI 助理，協助內部人員撰寫專案建議與分析報告。團隊希望透過思維鏈（Chain of Thought, CoT）提示設計提升模型輸出的邏輯性與推理透明度，下列何者最符合該提示策略？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "「請直接給出最終建議，不需顯示分析過程。」 "
+      },
+      {
+        "id": "B",
+        "text": "「以下提供兩份分析報告範例，請依相同格式產出新報告。」 "
+      },
+      {
+        "id": "C",
+        "text": "「請將任務拆為三個步驟：資料整理 → 重點摘要 → 建議產出。」 "
+      },
+      {
+        "id": "D",
+        "text": "「請逐步說明你的判斷依據與推理過程，最後再給出結論。」"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第45題"
+  },
+  {
+    "id": "junior-genai-115-1-q46",
+    "subjectId": "junior-genai",
+    "prompt": "某金融監理機構規劃導入生成式 AI 以協助內部人員分析申報文件與監理報告，系統需處理大量涉及企業敏感資料與未公開資訊。主管機關明確要求「資料安全與法規遵循必須優先於導入速度與成本考量」 。在此條件下，下列哪一種策略最為適當？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "採用雲端大型語言模型 API，並透過資料遮罩與加密機制降低外洩風險"
+      },
+      {
+        "id": "B",
+        "text": "導入開源模型進行私有化部署，以兼顧成本彈性與模型可控性"
+      },
+      {
+        "id": "C",
+        "text": "自行訓練並私有化部署模型，同時建立存取控管與稽核機制"
+      },
+      {
+        "id": "D",
+        "text": "先驗證模型效益，再逐步補強合規與資安架構"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第46題"
+  },
+  {
+    "id": "junior-genai-115-1-q47",
+    "subjectId": "junior-genai",
+    "prompt": "某製造企業規劃導入生成式 AI 協助產線異常紀錄分析，系統將根據設備回報與維修紀錄自動產出問題摘要與建議處置說明。在試行測試階段，為降低營運與決策風險，下列何者最應優先驗證？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "AI 生成建議與實際工程判斷的一致性與正確性"
+      },
+      {
+        "id": "B",
+        "text": "系統在高資料量輸入下的處理速度與延遲表現"
+      },
+      {
+        "id": "C",
+        "text": "模型對不同設備品牌資料格式的轉換能力"
+      },
+      {
+        "id": "D",
+        "text": "異常分析報告的視覺化呈現與介面易讀性"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第47題"
+  },
+  {
+    "id": "junior-genai-115-1-q48",
+    "subjectId": "junior-genai",
+    "prompt": "某企業將機器學習模型部署於線上推薦系統。模型在測試階段表現良好，但上線數月後，點擊率與預測準確度逐漸下降。經分析發現，近期使用者行為模式與模型訓練期間的資料特徵出現顯著變化。此現象最可能屬於下列何者？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "模型過度擬合訓練資料，無法泛化至未知樣本"
+      },
+      {
+        "id": "B",
+        "text": "特徵工程設計不佳，導致輸入資訊不足"
+      },
+      {
+        "id": "C",
+        "text": "資料統計特徵隨時間改變，影響模型推論效果"
+      },
+      {
+        "id": "D",
+        "text": "系統資料結構調整，造成特徵欄位錯置"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第48題"
+  },
+  {
+    "id": "junior-genai-115-1-q49",
+    "subjectId": "junior-genai",
+    "prompt": "某企業使用 Low-Code 平台建置內部營運系統，系統需整合財務、庫存與第三方物流服務。團隊希望確保系統在跨部門流程與外部服務整合下，具高可靠性與可測試性。下列哪一項作法最能達成目標？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "只透過平台提供的流程模擬與即時預覽，檢查常用操作路徑"
+      },
+      {
+        "id": "B",
+        "text": "建立自動化測試流程，結合模擬外部服務與可重複執行的整合測試"
+      },
+      {
+        "id": "C",
+        "text": "將測試重點放在使用者介面操作，確認操作流程是否順暢"
+      },
+      {
+        "id": "D",
+        "text": "上線後再透過使用者回饋與報表監控系統行為，進行修正"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第49題"
+  },
+  {
+    "id": "junior-genai-115-1-q50",
+    "subjectId": "junior-genai",
+    "prompt": "某招聘公司使用生成式 AI 生成面試問題與候選人評估建議。團隊發現模型可能對性別或年齡產生的資料分布偏差。下列哪一種策略最能有效降低生成偏差輸出的風險？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "調整模型架構與參數，使生成更靈活與多樣化"
+      },
+      {
+        "id": "B",
+        "text": "大幅增加訓練資料量，但不清理或平衡資料中的性別與年齡分布"
+      },
+      {
+        "id": "C",
+        "text": "在生成後對模型輸出進行人工審查，並依偏差情況修正結果"
+      },
+      {
+        "id": "D",
+        "text": "僅允許高階主管操作系統，透過人員篩選控制生成結果"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第一次 第50題"
+  },
+  {
+    "id": "junior-genai-114-4-q01",
+    "subjectId": "junior-genai",
+    "prompt": "在 Low Code 平台的開發應用設計中，關於「模型（Model） 」 ，下列敘述何者最符合實際情況？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "模型僅扮演設計視覺化的輔助工具，對應用邏輯的影響有限"
+      },
+      {
+        "id": "B",
+        "text": "模型是用來抽象描述資料結構、業務流程與介面邏輯的核心元素，影響應用的設計與維護"
+      },
+      {
+        "id": "C",
+        "text": "模型僅依循 UML（Unified Modeling Language）等傳統建模方式，缺乏針對 Low Code 環境的延展性"
+      },
+      {
+        "id": "D",
+        "text": "模型在 Low Code 平台中已被自動程式碼生成全面取代，實際價值有限"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第1題"
+  },
+  {
+    "id": "junior-genai-114-4-q02",
+    "subjectId": "junior-genai",
+    "prompt": "企業在導入生成式 AI 平台時，往往需要利用分散於不同部門或機構中的大量敏感文本資料。若希望在確保隱私的前提下，仍能讓模型持續優化並降低資料外洩風險，下列哪一種方法最適合？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "同態加密（Homomorphic Encryption） "
+      },
+      {
+        "id": "B",
+        "text": "安全多方計算（Secure Multi-party Computation） "
+      },
+      {
+        "id": "C",
+        "text": "零知識證明（Zero-knowledge Proofs） "
+      },
+      {
+        "id": "D",
+        "text": "聯邦學習（Federated Learning）"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第2題"
+  },
+  {
+    "id": "junior-genai-114-4-q03",
+    "subjectId": "junior-genai",
+    "prompt": "某企業利用 No Code/Low Code 平台開發內部營運系統。為確保系統在跨部門流程與外部服務整合下仍具良好的可測試性 （Testability） ，下列哪一項作法最為合適？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "依賴 No Code/Low Code 平台提供的即時預覽與基本單元測試功能，快速驗證常見流程"
+      },
+      {
+        "id": "B",
+        "text": "導入可重複執行的自動化測試流程，並透過 API 或服務虛擬化進行模組化驗證"
+      },
+      {
+        "id": "C",
+        "text": "將測試聚焦於使用者介面互動與操作流程驗證，檢查系統表面功能"
+      },
+      {
+        "id": "D",
+        "text": "依靠使用者回饋與正式上線後的監控資料，作為修正依據"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第3題"
+  },
+  {
+    "id": "junior-genai-114-4-q04",
+    "subjectId": "junior-genai",
+    "prompt": "某社交平台嘗試結合自動提示工程（Automatic Prompt Engineer,APE）與圖提示（Graph Prompting） ，讓 AI 協助分析使用者之間的互動關係。在這個過程中，下列何者為最可能遇到的挑戰？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "圖結構轉換為文字提示時，可能導致部分關聯資訊遺失"
+      },
+      {
+        "id": "B",
+        "text": "APE 在圖資料上無法產生任何提示內容"
+      },
+      {
+        "id": "C",
+        "text": "圖轉文字後能完整保留所有上下文，對推理不造成影響"
+      },
+      {
+        "id": "D",
+        "text": "Graph Prompting 僅能處理線性路徑，限制多分支探索"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第4題"
+  },
+  {
+    "id": "junior-genai-114-4-q05",
+    "subjectId": "junior-genai",
+    "prompt": "在超長上下文任務中使用自動提示工程 （Automatic Prompt Engineer,APE）時，可能面臨的最大限制是什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "迭代優化難以因應上下文的不斷變動，導致調整失效"
+      },
+      {
+        "id": "B",
+        "text": "模型的記憶容量有限，無法完整保留所有長篇資訊"
+      },
+      {
+        "id": "C",
+        "text": "提示內容難以有效分解，無法支援複雜任務拆解"
+      },
+      {
+        "id": "D",
+        "text": "回饋機制通常僅針對局部片段，難以全面評估最終輸出品質"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第5題"
+  },
+  {
+    "id": "junior-genai-114-4-q06",
+    "subjectId": "junior-genai",
+    "prompt": "某設計團隊計畫在短時間內完成一款行動應用程式，必須同時達到高度個人化體驗、快速生成介面與行銷內容自動產出等需求。若結合 NoCode/Low Code 平台與生成式 AI 技術，以下哪一種整合策略最能符合目標？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "使用生成式 AI 自動產生 API 呼叫與元件配置，並由開發者手動整合至 No Code 平台流程"
+      },
+      {
+        "id": "B",
+        "text": "透過生成式 AI 在 No Code 平台中自動建立介面模板，並結合使用者數據即時生成個人化功能與行銷推播內容"
+      },
+      {
+        "id": "C",
+        "text": "在 No Code 平台中導入生成式 AI，快速建立跨專案可重用的通用模組，專注於提升開發速度"
+      },
+      {
+        "id": "D",
+        "text": "在 No Code 平台中完全依賴生成式 AI 自動產生所有應用功能與流程，不經人工設計或驗證"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第6題"
+  },
+  {
+    "id": "junior-genai-114-4-q07",
+    "subjectId": "junior-genai",
+    "prompt": "某團隊希望讓 AI 自動查詢 GitHub 上的程式碼庫，並生成摘要給使用者參考。開發者決定透過 Model Context Protocol（MCP）來實現，AI需先發出請求，再經由 MCP 架構逐步完成查詢與回傳。在此情境下，MCP 運作流程的正確順序為何？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "MCP Server→AI Host→MCP Client→資料查詢→結果回傳 AIHost"
+      },
+      {
+        "id": "B",
+        "text": "MCP Client→AI Host→MCP Server→資料查詢→結果回傳 AIHost"
+      },
+      {
+        "id": "C",
+        "text": "AI Host→MCP Client→ MCP Server→資料查詢→結果回傳 AIHost"
+      },
+      {
+        "id": "D",
+        "text": "AI Host→MCP Server→MCP Client→資料查詢→結果回傳 AI Host"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第7題"
+  },
+  {
+    "id": "junior-genai-114-4-q08",
+    "subjectId": "junior-genai",
+    "prompt": "在 Agent-to-Agent（A2A）架構中，不同代理人之間會分工合作。一般而言，下列敘述何者最符合 Client Agent 與 Remote Agent 的互動流程？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "Remote Agent 主動分派任務給 Client Agent"
+      },
+      {
+        "id": "B",
+        "text": "由人工事先設定 Client Agent 與 Remote Agent 處理任務的先後順序"
+      },
+      {
+        "id": "C",
+        "text": "Client Agent 發起任務，Remote Agent 執行並回傳結果"
+      },
+      {
+        "id": "D",
+        "text": "Client Agent 與 Remote Agent 同時處理任務並同步處理結果"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第8題"
+  },
+  {
+    "id": "junior-genai-114-4-q09",
+    "subjectId": "junior-genai",
+    "prompt": "在導入生成式 AI 的應用規劃中，上下文工程（Context Engineering）的核心目的為何？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "縮短模型訓練時間"
+      },
+      {
+        "id": "B",
+        "text": "優化提示與上下文"
+      },
+      {
+        "id": "C",
+        "text": "增加模型參數數量"
+      },
+      {
+        "id": "D",
+        "text": "優化 Fine-tuning 正確率"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第9題"
+  },
+  {
+    "id": "junior-genai-114-4-q10",
+    "subjectId": "junior-genai",
+    "prompt": "某公司在導入生成式 AI 協助撰寫內部報告時，測試人員刻意在輸入的上下文中放入互相矛盾的資訊 （例如：同一位員工在不同段落被描述為「入職三年」與「入職五年」 ） 。在這種情況下，最常見的模型行為會是什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "永遠選擇第一段資訊作為答案依據"
+      },
+      {
+        "id": "B",
+        "text": "可能生成幻覺或隨機採信其中一方的內容"
+      },
+      {
+        "id": "C",
+        "text": "拒絕回答，並要求提供更一致的輸入"
+      },
+      {
+        "id": "D",
+        "text": "自動判斷並只選擇正確的資訊"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第10題"
+  },
+  {
+    "id": "junior-genai-114-4-q11",
+    "subjectId": "junior-genai",
+    "prompt": "Agentic AI 在解決方案圖譜（Solution Graph）上尋找最佳解決路徑時，通常會使用什麼樣的搜尋策略？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "使用廣度優先、深度優先或最佳優先等演算法進行探索"
+      },
+      {
+        "id": "B",
+        "text": "每一步都隨機選擇動作，反覆嘗試直到找到一條可行路徑"
+      },
+      {
+        "id": "C",
+        "text": "只執行事先假定的一條路徑，失敗就停止"
+      },
+      {
+        "id": "D",
+        "text": "完全依靠 LLM 一次性推斷最優完整路徑"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第11題"
+  },
+  {
+    "id": "junior-genai-114-4-q12",
+    "subjectId": "junior-genai",
+    "prompt": "某企業考慮將開源大型語言模型（GPT-OSS）自行部署在本地伺服器，以取代雲端服務。下列何者最能代表本地部署對企業的實際好處？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "可以達到無運算成本，因為本地部署模型不會產生額外的資源消耗"
+      },
+      {
+        "id": "B",
+        "text": "模型的預測能力會比在雲端運行時更精度，因為本地環境更加可靠"
+      },
+      {
+        "id": "C",
+        "text": "可確保輸入模型的敏感資料不會傳輸給第三方，提升資料隱私和自主控制"
+      },
+      {
+        "id": "D",
+        "text": "以上皆是"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第12題"
+  },
+  {
+    "id": "junior-genai-114-4-q13",
+    "subjectId": "junior-genai",
+    "prompt": "關於 GitHub Copilot，下列敘述何者正確？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "GitHub Copilot 基於程式碼片段查詢工具，透過後端搜尋大型程式碼資料庫提供建議"
+      },
+      {
+        "id": "B",
+        "text": "GitHub Copilot 僅適用於 GitHub 上的開源專案，無法在私有程式碼庫或本地環境中提供程式碼補全建議"
+      },
+      {
+        "id": "C",
+        "text": "GitHub Copilot 利用靜態分析技術分析程式碼，根據邏輯流程推導下一步應寫的程式碼"
+      },
+      {
+        "id": "D",
+        "text": "GitHub Copilot 由 OpenAI 的 Codex 模型提供技術支援，可即時在開發者編輯程式碼時給出整行或整個函式建議"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第13題"
+  },
+  {
+    "id": "junior-genai-114-4-q14",
+    "subjectId": "junior-genai",
+    "prompt": "某電商公司導入 Agentic AI 來處理客服工作。測試發現 Agent 在回答產品 FAQ 時經常出錯，且無法幫客戶修改訂單。這種情況最可能是因為缺少下列哪兩項工具或技術？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "API 調用（API Calling）＋ 任務規劃器（Task Planner） "
+      },
+      {
+        "id": "B",
+        "text": "向量資料庫檢索（Vector Retrieval）＋API 調用（API Calling） "
+      },
+      {
+        "id": "C",
+        "text": "向量資料庫檢索（Vector Retrieval）＋任務規劃器（TaskPlanner） "
+      },
+      {
+        "id": "D",
+        "text": "任務規劃器（Task Planner）＋溫度參數（Temperature）設定"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第14題"
+  },
+  {
+    "id": "junior-genai-114-4-q15",
+    "subjectId": "junior-genai",
+    "prompt": "某客服自動回應系統希望根據不同客戶群體調整回覆風格。在兼顧即時性與效果的前提下，下列哪一種方案最適合？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "直接微調預訓練模型針對每個客戶群體分別訓練不同風格模型"
+      },
+      {
+        "id": "B",
+        "text": "利用控制變量（Control Tokens）或風格標籤在同一模型內動態調整風格"
+      },
+      {
+        "id": "C",
+        "text": "利用生成對抗網路 （GAN） 生成不同風格文本，並透過人工篩選最終答案"
+      },
+      {
+        "id": "D",
+        "text": "採用規則式替換方法，替換回覆詞彙以符合不同風格要求。"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第15題"
+  },
+  {
+    "id": "junior-genai-114-4-q16",
+    "subjectId": "junior-genai",
+    "prompt": "在建置多代理大型語言模型（Multi-agent LLMs）系統時，如果沒有清楚定義每個代理的任務啟動條件和角色分工，最可能出現什麼問題？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "回覆內容前後不連貫，系統邏輯斷裂"
+      },
+      {
+        "id": "B",
+        "text": "不同代理的答案互相衝突，無法判斷最終決策"
+      },
+      {
+        "id": "C",
+        "text": "系統陷入無限對話循環，導致資源耗盡"
+      },
+      {
+        "id": "D",
+        "text": "多個代理重複做同樣的任務，造成效率低落"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第16題"
+  },
+  {
+    "id": "junior-genai-114-4-q17",
+    "subjectId": "junior-genai",
+    "prompt": "某公司部署結合 Fine-tuning 與檢索增強生成（RAG）的語言模型系統作為內部文件助理。系統需同時確保回覆語氣一致、能即時查詢每日新增文件、維持效能穩定，並避免頻繁重新訓練。在長期維護與效能平衡下，下列哪一種策略最合適？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "每週重新 Fine-tune 模型 ， 將新文件整合進模型知識 ， 逐步取代 RAG模組"
+      },
+      {
+        "id": "B",
+        "text": "完全依靠基礎模型與 RAG，不進行 Fine-tune，僅透過提示設計控制語氣"
+      },
+      {
+        "id": "C",
+        "text": "每日進行增量 Fine-tune，讓模型即時學習新文件內容，避免依賴檢索"
+      },
+      {
+        "id": "D",
+        "text": "保留語氣相關 Fine-tuning，僅透過檢索系統更新文件內容，不頻繁改動模型"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第17題"
+  },
+  {
+    "id": "junior-genai-114-4-q18",
+    "subjectId": "junior-genai",
+    "prompt": "某客服系統在回覆「訂單取消政策」時，即使生成溫度固定為 0.6，回覆品質仍常出現差異。調查顯示，檢索到的政策內容有時是最新版本，有時則是過時文件，此外 Prompt 約束不足，微調語料也有模糊描述。若要優先改善品質波動，應先解決下列哪一項問題？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "調整溫度參數，降低生成隨機性"
+      },
+      {
+        "id": "B",
+        "text": "加強 Prompt 設計，限制模型表達方式"
+      },
+      {
+        "id": "C",
+        "text": "優化微調語料，減少含糊描述"
+      },
+      {
+        "id": "D",
+        "text": "提升檢索系統品質，確保取得的政策內容正確且最新"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第18題"
+  },
+  {
+    "id": "junior-genai-114-4-q19",
+    "subjectId": "junior-genai",
+    "prompt": "某醫院導入了一套智慧系統，由三個模組構成：語音辨識 （ASR） → 語言模型生成（LLM） → 查詢醫療資料庫 API。近期發現部分查詢結果錯誤，例如醫師詢問「術後復健流程」時，系統卻誤判為要查詢「術前注意事項」 ，因此查詢到錯誤的文件。經檢查已排除語音辨識的錯誤，下列何者最可能是造成查詢錯誤的來源？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "醫療資料庫 API 對應規則設計不清，造成意圖映射模糊"
+      },
+      {
+        "id": "B",
+        "text": "LLM 的 Prompt 缺乏明確指示，導致語意分類判斷錯誤"
+      },
+      {
+        "id": "C",
+        "text": "查詢 API 回傳速度過慢，影響系統處理正確性"
+      },
+      {
+        "id": "D",
+        "text": "LLM 未經醫療領域微調，難以正確理解專業性詞彙"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第19題"
+  },
+  {
+    "id": "junior-genai-114-4-q20",
+    "subjectId": "junior-genai",
+    "prompt": "某醫院正在規劃一個 AI 專案，目的是協助醫師從胸腔 X 光影像中判斷是否存在肺炎徵兆，團隊卻誤將生成式 AI 模型運用於影像診斷。下列哪一項最可能成為主要風險？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "模型在生成報告時語句流暢，但僅在文字表達上有差異，對診斷結果沒有重大影響"
+      },
+      {
+        "id": "B",
+        "text": "模型若資料不足，僅會降低生成報告的完整性，而非影響判斷病灶的正確性"
+      },
+      {
+        "id": "C",
+        "text": "模型偏向生成內容而非分類，但此差異僅影響效率，不會造成誤診風險"
+      },
+      {
+        "id": "D",
+        "text": "模型可能生成與實際影像不符的診斷結論，導致誤判並引發醫療與法律風險"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第20題"
+  },
+  {
+    "id": "junior-genai-114-4-q21",
+    "subjectId": "junior-genai",
+    "prompt": "某公司開發的智慧車載語音助理，可透過語音辨識（ASR）辨識駕駛語音，再由 LLM 生成回答並查詢車載 API。測試中發現：ASR 對汽車專業術語辨識錯誤率高；LLM 的回覆常不精確；系統回覆延遲雖存在但仍可接受。若目標是「優先提升準確性與回答品質」 ，下列改進步驟的最合理執行順序為何？1. 擴充並標註汽車領域語音資料，微調 ASR 模型2. 微調 LLM 並加入檢索增強（RAG）3. 優化系統架構，引入批次推論降低延遲4. 動態調整生成溫度，平衡準確度與多樣性",
+    "choices": [
+      {
+        "id": "A",
+        "text": "1 → 2 → 4 → 3"
+      },
+      {
+        "id": "B",
+        "text": "2 → 1→ 3 → 4"
+      },
+      {
+        "id": "C",
+        "text": "1 → 3 → 2 → 4"
+      },
+      {
+        "id": "D",
+        "text": "3 → 1 → 2 → 4"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第21題"
+  },
+  {
+    "id": "junior-genai-114-4-q22",
+    "subjectId": "junior-genai",
+    "prompt": "一家顧問公司使用生成式 AI 協助撰寫數據分析報告。雖然模型在測試中表現優異，但其生成的報告多半僅遵循固定段落結構，替換數值或關鍵詞即可完成，卻未能展現針對不同專案的多樣化推理與分析。下列何者為造成這種現象的最合理解釋？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "模型在生成過程中缺乏對字體與排版的優化能力，因此無法展現分析邏輯"
+      },
+      {
+        "id": "B",
+        "text": "測試資料涵蓋過多統計圖表，導致模型無法專注於文字內容的多樣化表達"
+      },
+      {
+        "id": "C",
+        "text": "模型過度依賴訓練語料中的常見報告範式，導致生成結果以樣板化結構取代真正的推理"
+      },
+      {
+        "id": "D",
+        "text": "模型因無法正確辨識報告中的頁碼與標題層級，才出現樣板化的結果"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第22題"
+  },
+  {
+    "id": "junior-genai-114-4-q23",
+    "subjectId": "junior-genai",
+    "prompt": "在應用零樣本提示（Zero-Shot Prompting）時，下列哪一種情境最可能因缺乏示範而失敗，出現語意錯誤或結構錯誤的輸出？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "要求模型判斷一段影評文字的情感傾向"
+      },
+      {
+        "id": "B",
+        "text": "要求模型將一段新聞摘要濃縮為一句話"
+      },
+      {
+        "id": "C",
+        "text": "要求模型將一段繁體中文翻譯成英文"
+      },
+      {
+        "id": "D",
+        "text": "要求模型從表格中擷取所有城市的最高氣溫"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第23題"
+  },
+  {
+    "id": "junior-genai-114-4-q24",
+    "subjectId": "junior-genai",
+    "prompt": "某保險公司計畫導入生成式 AI 的內部合約查詢系統，協助業務員與法務部門快速解讀保單條款與理賠規範。高層特別強調客戶資料隱私與合規風險控管，即使需要投入較多資源，也必須確保資料不會外洩。在此情況下，下列哪一種策略最符合公司的資料安全與合規優先考量？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "導入開源模型並由 IT 團隊自建，後續再逐步補強隱私與合規控管"
+      },
+      {
+        "id": "B",
+        "text": "在需求確認階段即納入法遵與稽核單位，設定準確率 KPI，並透過MVP 驗證成效"
+      },
+      {
+        "id": "C",
+        "text": "優先使用雲端大型 API 模型快速部署，並根據使用數據持續調整"
+      },
+      {
+        "id": "D",
+        "text": "投入資源自訓並私有化部署 LLM，並同步建立自動化風控機制"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第24題"
+  },
+  {
+    "id": "junior-genai-114-4-q25",
+    "subjectId": "junior-genai",
+    "prompt": "某新創公司開發一套圖像描述生成系統，能根據輸入的照片自動產生說明文字。為了讓產生的描述文字能與圖片資訊精準對應，下列哪一種設計思路最關鍵？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "強化語言模型的句法與流暢性，確保生成文字更自然易讀"
+      },
+      {
+        "id": "B",
+        "text": "在生成過程中結合圖片特徵與語言建模，讓模型同時利用影像內容與文字資訊"
+      },
+      {
+        "id": "C",
+        "text": "調整生成策略（如 Beam Search 或溫度參數） ，以提升輸出文字的合理性"
+      },
+      {
+        "id": "D",
+        "text": "專注於文字序列上下文的建模，只提升文字間的連貫性"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第25題"
+  },
+  {
+    "id": "junior-genai-114-4-q26",
+    "subjectId": "junior-genai",
+    "prompt": "某電商平台希望生成的商品描述在風格與用詞上保持一致性，但不需要新增專業知識。下列哪種方法最適合？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "擴充語料庫並微調模型，使風格統一"
+      },
+      {
+        "id": "B",
+        "text": "增加提示詞複雜度，引導模型風格一致"
+      },
+      {
+        "id": "C",
+        "text": "降低生成溫度，以減少隨機性並提升風格一致性"
+      },
+      {
+        "id": "D",
+        "text": "使用全連接神經網路對生成結果後期篩選"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第26題"
+  },
+  {
+    "id": "junior-genai-114-4-q27",
+    "subjectId": "junior-genai",
+    "prompt": "某企業已建置 AI 語音記錄系統，並希望整合生成式 AI 進行「會議即時摘要」 功能，下列哪一種策略最能提升摘要的語意品質與使用價值？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "使用語音轉文字模型即時輸出逐字稿並轉入 GPT 摘要"
+      },
+      {
+        "id": "B",
+        "text": "將語音逐段切分並建立關鍵字索引，以利摘要模型從中擷取核心內容生成會議重點"
+      },
+      {
+        "id": "C",
+        "text": "將語音轉文字後標註發言角色與主題邊界，結合語意分群進行動態摘要"
+      },
+      {
+        "id": "D",
+        "text": "將所有語音內容儲存為完整紀錄，提供事後人工摘要比對用"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第27題"
+  },
+  {
+    "id": "junior-genai-114-4-q28",
+    "subjectId": "junior-genai",
+    "prompt": "某公司正在開發一個智慧客服系統，負責回覆顧客關於退換貨、優惠活動與商品建議等問題。研發團隊嘗試使用不同的提示設計方式來提升模型效能 。 下列哪一個提示最符合 「少樣本提示 （Few-Shot Prompting） 」的設計原則？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "「請回答顧客詢問：如何申請退貨？」 "
+      },
+      {
+        "id": "B",
+        "text": "「以下是兩組客服對話範例，請依照相同風格回覆新的顧客問題」 "
+      },
+      {
+        "id": "C",
+        "text": "「請逐步分析顧客投訴的原因，並依照推理過程生成合適回覆」 "
+      },
+      {
+        "id": "D",
+        "text": "「請以正式的語氣回覆顧客的提問」"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第28題"
+  },
+  {
+    "id": "junior-genai-114-4-q29",
+    "subjectId": "junior-genai",
+    "prompt": "某投資公司導入生成式 AI，用於即時分析股市波動並提供市場背景資訊。若希望 AI 能兼顧「即時性」與「可靠性」 。下列哪一項設計最能有效提升 AI 在即時股市分析上的表現？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "將 AI 系統連結至公司內部歷史交易資料庫，以便快速調用既有的案例參考"
+      },
+      {
+        "id": "B",
+        "text": "調整模型的回應邏輯，讓 AI 優先輸出最新市場行情，而不是完整的背景分析"
+      },
+      {
+        "id": "C",
+        "text": "建立與外部即時行情來源同步的查詢模組，確保 AI 能即時擷取最新金融數據"
+      },
+      {
+        "id": "D",
+        "text": "增加訓練資料中模擬的金融危機與市場異常案例，以提升 AI 在特殊情境下的表現能力"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第29題"
+  },
+  {
+    "id": "junior-genai-114-4-q30",
+    "subjectId": "junior-genai",
+    "prompt": "某大型物流公司計畫導入 AI 系統，以改善客服與配送作業的效率。專案團隊規劃了以下四個步驟，請問正確的執行順序為何？1. 建立符合公司服務流程的 AI 對話邏輯與應答範本，確保顧客體驗一致2. 明確定義導入 AI 的目標並設定關鍵績效指標（KPI）3. 蒐集與清理過往客服紀錄與配送相關資料，作為模型訓練素材4. 評估並選擇合適的 AI 技術供應商或開源方案，確立技術方向與架構",
+    "choices": [
+      {
+        "id": "A",
+        "text": "2 → 3 → 4 → 1"
+      },
+      {
+        "id": "B",
+        "text": "3 → 2 → 1 → 4"
+      },
+      {
+        "id": "C",
+        "text": "2 → 1 → 3 → 4"
+      },
+      {
+        "id": "D",
+        "text": "1 → 4 → 3 → 2"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第30題"
+  },
+  {
+    "id": "junior-genai-114-4-q31",
+    "subjectId": "junior-genai",
+    "prompt": "某跨國電商企業導入生成式 AI，協助處理顧客服務請求，並根據顧客歷史訂單提供個人化建議。資安與法遵部門擔心 AI 在回覆時可能洩漏顧客個資，若要在導入初期優先避免觸法風險，下列哪一項措施最符合要求？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "在加密環境下導入完整的顧客訂單與行為資料，並透過嚴格存取控管降低洩漏風險"
+      },
+      {
+        "id": "B",
+        "text": "實施資料最小化與去識別化，確保 AI 在訓練與生成過程中不直接處理或暴露敏感個資"
+      },
+      {
+        "id": "C",
+        "text": "強化模型的回覆審查流程，透過自動過濾與人工抽查結合，降低個資外洩的機率"
+      },
+      {
+        "id": "D",
+        "text": "設定 AI 的角色與回覆範圍，讓其專注於客服相關內容，避免回答其他敏感議題"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第31題"
+  },
+  {
+    "id": "junior-genai-114-4-q32",
+    "subjectId": "junior-genai",
+    "prompt": "某國際銀行導入生成式 AI，用於彙整不同國家金融監管機構的合規規範，建立跨國合規知識庫。由於各國條文表述方式不同，且監管要求具有高度專業性與隱含邏輯，若要確保知識庫在後續查詢與生成報告時能維持正確性與一致性，下列哪一項 AI 能力最為關鍵？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "具備跨語言專業術語對齊與條文語意抽取能力，能正確辨識不同國家規範間的對應與差異"
+      },
+      {
+        "id": "B",
+        "text": "能自動最佳化文件檢索效率，縮短跨國法規查詢的延遲時間，提升合規部門使用體驗"
+      },
+      {
+        "id": "C",
+        "text": "能將合規文件轉換為多種輸出形式 （如簡報、摘要或法規清單） ，以符合不同決策層級需求"
+      },
+      {
+        "id": "D",
+        "text": "具備根據歷史案例生成合規解釋的能力，協助新進員工快速理解法規在實務上的應用"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第32題"
+  },
+  {
+    "id": "junior-genai-114-4-q33",
+    "subjectId": "junior-genai",
+    "prompt": "在企業導入 MLOps（Machine Learning Operations）的過程中，除了模型部署與維運挑戰外，仍可能面臨其他推動上的困難。下列何者為No Code 平台最能有效解決的挑戰？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "自動化大量資料的標註與前處理，以降低數據準備成本"
+      },
+      {
+        "id": "B",
+        "text": "提升運算基礎設施的可擴展性，以因應大規模服務需求"
+      },
+      {
+        "id": "C",
+        "text": "透過可視化建模介面，降低技術門檻並促進跨部門協作"
+      },
+      {
+        "id": "D",
+        "text": "提供進階特徵工程能力，優化高維度數據的處理效率"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第33題"
+  },
+  {
+    "id": "junior-genai-114-4-q34",
+    "subjectId": "junior-genai",
+    "prompt": "某醫療機構計畫導入生成式 AI 協助撰寫病歷摘要。在技術測試階段，為確保系統能安全應用於臨床，最應優先關注下列哪一項指標？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "資料儲存與存取架構的完整性，確保長期運作過程中的數據可追溯性"
+      },
+      {
+        "id": "B",
+        "text": "生成內容的醫療準確性與臨床一致性，避免出現錯誤或誤導性資訊"
+      },
+      {
+        "id": "C",
+        "text": "模型在不同病例語境下的泛化能力，確保不因個別樣本而偏差"
+      },
+      {
+        "id": "D",
+        "text": "系統回應時間的穩定性，以支援醫療場域中可能的即時需求"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第34題"
+  },
+  {
+    "id": "junior-genai-114-4-q35",
+    "subjectId": "junior-genai",
+    "prompt": "在即時客服系統的效能測試中，若針對延遲測試（Latency Testing）進行評估，下列哪一項指標最能反映系統是否符合用戶即時互動需求？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "AI 模型在同一分鐘內可完成的回覆訊息數量"
+      },
+      {
+        "id": "B",
+        "text": "客戶從輸入問題到收到第一個完整回應所需的時間"
+      },
+      {
+        "id": "C",
+        "text": "客服系統能連續提供服務的運行時長"
+      },
+      {
+        "id": "D",
+        "text": "AI 產生回答時用詞的多樣性與表達創意程度"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第35題"
+  },
+  {
+    "id": "junior-genai-114-4-q36",
+    "subjectId": "junior-genai",
+    "prompt": "某航空公司導入生成式 AI 聲控客服，提供航班與票務查詢。有人員透過惡意提示，試圖讓系統洩漏內部安檢流程。在此情境中，下列何者為降低提示攻擊（Prompt Injection）風險的最佳策略？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "導入輸入檢測與回應審核流程，防止敏感指令被執行"
+      },
+      {
+        "id": "B",
+        "text": "限制 AI 可回應的主題範圍，使系統僅回答非敏感的航班與票務查詢，避免處理內部或敏感流程資訊"
+      },
+      {
+        "id": "C",
+        "text": "隨機變化回覆內容，讓攻擊者難以預測回應行為以增加攻擊難度"
+      },
+      {
+        "id": "D",
+        "text": "擴充與更新航班與票務資料來源，以提升模型的知識正確性與覆蓋率"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第36題"
+  },
+  {
+    "id": "junior-genai-114-4-q37",
+    "subjectId": "junior-genai",
+    "prompt": "在機器學習模型的實務應用中，常會出現數據漂移（Data Drift）的情況。此現象主要是指下列哪一種情況？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "訓練時使用的資料分佈，與部署後實際輸入資料的統計特徵隨時間逐漸出現差異，導致模型表現衰退"
+      },
+      {
+        "id": "B",
+        "text": "在資料前處理過程中，因特徵刪減或缺失補值不當，造成樣本資訊量下降"
+      },
+      {
+        "id": "C",
+        "text": "模型對訓練數據擬合過度，在未知數據上泛化能力不足"
+      },
+      {
+        "id": "D",
+        "text": "後端資料庫因欄位定義或結構調整，導致特徵提取流程與原始設計不一致"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第37題"
+  },
+  {
+    "id": "junior-genai-114-4-q38",
+    "subjectId": "junior-genai",
+    "prompt": "某銀行導入生成式 AI 放貸審核系統，用於分析申貸人條件並生成初步審核意見。測試過程中發現，模型對不同族群的核准率存在顯著差異，可能引發演算法偏見問題。為降低此風險，下列哪一項措施最合適？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "提升模型運算速度與效能，以確保在大量申請中快速回應"
+      },
+      {
+        "id": "B",
+        "text": "全面移除與申貸人身份相關的敏感屬性，避免模型因變數影響而產生偏差"
+      },
+      {
+        "id": "C",
+        "text": "導入資料與結果的公平性檢測流程，並依合規規範調整模型或決策邏輯"
+      },
+      {
+        "id": "D",
+        "text": "減少訓練樣本數量，降低偏見被放大的可能性"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第38題"
+  },
+  {
+    "id": "junior-genai-114-4-q39",
+    "subjectId": "junior-genai",
+    "prompt": "在提示工程 （Prompt Engineering） 的應用中，Chain-of-Thought （CoT）與 Tree of Thoughts（ToT）各適用於不同的推理情境，請問以下兩個情境，分別最適合採用哪一種方法？情境一：電商公司開發客服助理，用來協助客戶查詢退款流程與相關規範情境二：活動策劃團隊使用 AI 協助規劃多場跨部門行銷活動，需要同時考量預算、場地、時程與人力資源，並比較不同方案的可行性。",
+    "choices": [
+      {
+        "id": "A",
+        "text": "情境一採用 CoT，情境二採用 ToT"
+      },
+      {
+        "id": "B",
+        "text": "情境一採用 ToT，情境二採用 CoT"
+      },
+      {
+        "id": "C",
+        "text": "情境一與情境二都適合 CoT"
+      },
+      {
+        "id": "D",
+        "text": "情境一與情境二都適合 ToT"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第39題"
+  },
+  {
+    "id": "junior-genai-114-4-q40",
+    "subjectId": "junior-genai",
+    "prompt": "在生成式 AI 的提示工程中，Graph Prompting 在處理複雜關係資料時，為何通常比 Chain-of-Thought（CoT）更有效？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "Graph Prompting 幾乎不需要推理，只依靠圖結構即可得出結論"
+      },
+      {
+        "id": "B",
+        "text": "Graph Prompting 僅需單次提示，即可避免多輪推理的誤差累積"
+      },
+      {
+        "id": "C",
+        "text": "Graph Prompting 的生成速度通常更快，因此效率更高"
+      },
+      {
+        "id": "D",
+        "text": "Graph Prompting 能捕捉非線性結構與上下文關聯，適合處理網絡化資訊"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第40題"
+  },
+  {
+    "id": "junior-genai-114-4-q41",
+    "subjectId": "junior-genai",
+    "prompt": "在少樣本提示（Few-shot Prompting）僅能提供 1–2 個範例的情況下，若遇到領域偏移（Domain Shift） ，下列何者為模型最可能面臨的核心挑戰？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "範例數量過少，無法涵蓋新領域的多樣性，導致模型泛化不足"
+      },
+      {
+        "id": "B",
+        "text": "範例表徵有限，模型容易依賴單一樣本特性而降低適應力"
+      },
+      {
+        "id": "C",
+        "text": "範例覆蓋不足，使模型難以抽取跨領域的穩定模式"
+      },
+      {
+        "id": "D",
+        "text": "範例資訊過於稀缺，模型缺乏應對不同輸入情境的能力"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第41題"
+  },
+  {
+    "id": "junior-genai-114-4-q42",
+    "subjectId": "junior-genai",
+    "prompt": "某金融機構導入檢索增強生成（Retrieval-Augmented Generation,RAG）模型，用於客服文件查詢與自動回覆。由於大型模型運算成本過高，若考慮引入知識蒸餾（Knowledge Distillation, KD）技術，下列何者為帶來的主要效益？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "讓小型模型學習大型模型的知識，在降低運算成本的同時維持檢索與生成品質"
+      },
+      {
+        "id": "B",
+        "text": "只能應用於語音或影像辨識，無法提升文字檢索生成效能"
+      },
+      {
+        "id": "C",
+        "text": "因為 RAG 已有檢索機制，因此無需額外蒸餾知識"
+      },
+      {
+        "id": "D",
+        "text": "僅能依賴特定 API 供應商才能使用，無法在自建模型中實現"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第42題"
+  },
+  {
+    "id": "junior-genai-114-4-q43",
+    "subjectId": "junior-genai",
+    "prompt": "在評估大型語言模型，例如 7B、13B、175B 參數規模時，模型規模對基準測試（Benchmark）結果的影響，下列哪一種說法最為恰當？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "小模型在正確調整下能超越大模型，因此模型大小並不重要"
+      },
+      {
+        "id": "B",
+        "text": "大模型在多數情境下表現較好，但在特定任務上略遜於小模型"
+      },
+      {
+        "id": "C",
+        "text": "模型規模與基準測試結果完全無關，影響主要來自測試設計"
+      },
+      {
+        "id": "D",
+        "text": "模型越大，Benchmark 結果可能提升，但幅度取決於訓練數據品質與資源配置"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第43題"
+  },
+  {
+    "id": "junior-genai-114-4-q44",
+    "subjectId": "junior-genai",
+    "prompt": "在 AI 應用設計中，Model Context Protocol（MCP）與檢索增強生成（RAG）都能擴展模型的能力，但兩者的核心差異主要為下列何者？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "MCP 擴展模型工具，但主要用於補足訓練資料不足"
+      },
+      {
+        "id": "B",
+        "text": "MCP 能標準化連接資源，但仍需依賴向量資料庫"
+      },
+      {
+        "id": "C",
+        "text": "RAG 常用於擴展知識庫內容，而 MCP 更著重於動態工具與 API 呼叫的整合"
+      },
+      {
+        "id": "D",
+        "text": "RAG 透過統一協議，提升回答相關性"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第44題"
+  },
+  {
+    "id": "junior-genai-114-4-q45",
+    "subjectId": "junior-genai",
+    "prompt": "下列哪一個資料集專門設計用於測試大型語言模型在多領域、多任務語言理解中，涵蓋人文、科學與社會科學等領域，而非專門用於數學推理或中文專業知識？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "MMLU"
+      },
+      {
+        "id": "B",
+        "text": "GSM8K"
+      },
+      {
+        "id": "C",
+        "text": "MATH"
+      },
+      {
+        "id": "D",
+        "text": "C-Eval"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第45題"
+  },
+  {
+    "id": "junior-genai-114-4-q46",
+    "subjectId": "junior-genai",
+    "prompt": "某智慧工廠導入生成式 AI，協助產線工程師即時產生維修指引與操作建議。下列哪一項並非團隊在系統設計中加入 Guardrails（防護機制）的主要目的？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "檢查工程師輸入內容，避免觸發錯誤或危險需求"
+      },
+      {
+        "id": "B",
+        "text": "過濾與驗證 AI 輸出的維修指引，確保符合安全標準"
+      },
+      {
+        "id": "C",
+        "text": "確保生成的操作建議符合法規與產業安全規範"
+      },
+      {
+        "id": "D",
+        "text": "完整重建並追蹤 AI 模型的全部推理過程"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第46題"
+  },
+  {
+    "id": "junior-genai-114-4-q47",
+    "subjectId": "junior-genai",
+    "prompt": "某顧問公司導入生成式 AI ， 協助團隊快速檢索並摘要長篇的法規文件 。為了改善檢索結果常出現不相關或過於分散內容的問題，下列何者為團隊決定對文件進行文本切分（Chunking）的主要目的？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "讓模型在回答時能加快推理速度"
+      },
+      {
+        "id": "B",
+        "text": "提高檢索相關性與降低長上下文噪音"
+      },
+      {
+        "id": "C",
+        "text": "降低系統記憶體和硬體資源的負擔"
+      },
+      {
+        "id": "D",
+        "text": "使模型在生成回覆時更具創造性與多樣化"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第47題"
+  },
+  {
+    "id": "junior-genai-114-4-q48",
+    "subjectId": "junior-genai",
+    "prompt": "某開發團隊在建置企業內部知識檢索系統時，選擇採用多向量檢索器（Multi-vector Retriever） ，下列何者為協助提升系統查詢的完整性與精準度的主要方式？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "支援同時處理多種資訊表示，提升跨文本型態的檢索效果"
+      },
+      {
+        "id": "B",
+        "text": "透過多向量壓縮與共享權重方式，降低檢索過程的運算與儲存成本"
+      },
+      {
+        "id": "C",
+        "text": "以切分並過濾文件片段，減少上下文長度帶來的 Token 負擔"
+      },
+      {
+        "id": "D",
+        "text": "透過調整生成階段的溫度參數，使模型在回覆時更穩定一致"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第48題"
+  },
+  {
+    "id": "junior-genai-114-4-q49",
+    "subjectId": "junior-genai",
+    "prompt": "在 Agentic AI 的架構中，解決方案圖譜（Solution Graph）常被用來輔助代理的任務執行，其主要作用為何？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "透過圖形結構完全取代大型語言模型的推理，讓代理只依靠圖演算法完成任務"
+      },
+      {
+        "id": "B",
+        "text": "僅用於保存代理的輸出結果，方便後續檢視與審計，而不影響實際推理流程"
+      },
+      {
+        "id": "C",
+        "text": "將代理限制在既定流程內，避免其產生偏離設計腳本的行為"
+      },
+      {
+        "id": "D",
+        "text": "作為代理在執行過程中的參考框架，用於組織決策步驟並支援任務推理"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第49題"
+  },
+  {
+    "id": "junior-genai-114-4-q50",
+    "subjectId": "junior-genai",
+    "prompt": "小明想開發一個部落格寫作工具，讓用戶輸入文章開頭後，系統自動幫忙寫出後續內容，例如輸入 「今天去了台北木柵動物園...」 ，系統就能續寫。若要實現這樣的功能，最適合選擇下列哪一類任務？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "序列到序列建模（Sequence-to-Sequence Modeling） ，透過輸入序列產生新的輸出序列"
+      },
+      {
+        "id": "B",
+        "text": "遮罩語言建模（Masked Language Modeling） ，補齊文字中缺失的詞語或片段"
+      },
+      {
+        "id": "C",
+        "text": "生成式語言建模（Text Generation） ，依據上下文持續產生新的內容"
+      },
+      {
+        "id": "D",
+        "text": "文本分類（Text Classification） ，針對輸入文本判斷情感、主題或標籤《以下空白》"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "114年第四梯次 第50題"
+  }
+]

@@ -22,7 +22,8 @@ Vite + TypeScript，純前端靜態 SPA，部署於 GitHub Pages（base path `/i
 | 檔案 | 職責 |
 |------|------|
 | `storage.ts` | 錯題本的讀寫，localStorage key 為 `ipas-aiap-misses`。 |
-| `attempt.ts` | `buildAttempt` 依模式（考試/刷題）從題庫抽題並洗牌；封裝單次作答的題目清單。 |
+| `attempt.ts` | `buildAttempt` 從題庫取題（可注入 shuffle）；`shuffleWith` 提供可注入亂數的洗牌。刷題以 identity shuffle 取整個題庫（原序）。 |
+| `mockPapers.ts` | `buildMockPaper(bank, subjectId, paperIndex)` 以 `subjectId + 份次` 為 seed（FNV-1a ＋ mulberry32）產生**決定性、可重現**的 50 題試卷；`PAPER_COUNT = 3`。 |
 
 ### `src/ui/`
 畫面渲染，依賴 DOM，不含業務邏輯。
@@ -30,7 +31,7 @@ Vite + TypeScript，純前端靜態 SPA，部署於 GitHub Pages（base path `/i
 | 檔案 | 職責 |
 |------|------|
 | `escape.ts` | HTML 字元跳脫工具函式。 |
-| `render.ts` | 所有 HTML 片段的產生函式（題目卡、選項、成績報告、科目選單等）。 |
+| `render.ts` | 所有 HTML 片段的產生函式：首頁、級別/科目、模式選單、試卷選單（`renderPaperPicker`）、刷題逐題卡（`renderQuestion`）、單頁考卷（`renderExamPaper`）、單頁檢討（`renderExamReview`）、成績、學習主題（`renderStudyView`）。 |
 
 ### `src/data/`
 題庫資料層，負責合併多個來源並對外提供統一介面。
@@ -43,9 +44,12 @@ Vite + TypeScript，純前端靜態 SPA，部署於 GitHub Pages（base path `/i
 | `generated/<subjectId>.ts` | 手寫補充新題陣列。 |
 | `<subjectId>.ts` | 合併 past-exams JSON + explanations + generated，提供 `getQuestions`、`getBankStats`。 |
 | `index.ts` | 統一匯出所有科目的 `getQuestions`、`getBankStats`。 |
+| `studyGuide.ts` | 「學習主題（延伸閱讀）」資料：依官方評鑑範圍轉錄的 18 個評鑑主題 ＋ 策展外部連結；提供 `getStudyGuide`。 |
 
 ### `src/main.ts`
-畫面狀態機（View State Machine）。管理頁面切換（首頁 → 科目選擇 → 模式選擇 → 作答 → 結果）、計時器、模擬考試與刷題練習兩種流程。
+畫面狀態機（View State Machine）。視圖：`home / level / mode / paper / play / result / review / study`。管理頁面切換、計時器與自動交卷、以及兩種流程：
+- **模擬考試**：`mode → paper`（選 3 份）→ `play`（單頁 `renderExamPaper`，選項就地更新不重繪）→ `result` → `review`（單頁 `renderExamReview`）。
+- **刷題練習**：`mode → play`（逐題 `renderQuestion`，全題庫、原序、即時揭曉）。
 
 ### `scripts/`
 資料管線腳本，於 Node.js 環境執行（tsx），不進 bundle。

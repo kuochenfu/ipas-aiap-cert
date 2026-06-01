@@ -73,9 +73,11 @@ function render() {
   }
   if (session.view === "play" || session.view === "review") {
     const q = session.questions[session.index];
+    const review = session.view === "review";
     app.innerHTML = renderQuestion(
       q, session.index, session.questions.length,
-      session.answers[q.id], session.reveal, timeText(),
+      session.answers[q.id], session.reveal, review ? "" : timeText(),
+      review,
     );
     return;
   }
@@ -113,6 +115,13 @@ function finishExam() {
   render();
 }
 
+// 檢討模式一律揭曉；刷題模式僅在該題已作答時揭曉；作答中（考試）不揭曉。
+function revealForCurrent(): boolean {
+  if (session.view === "review") return true;
+  const q = session.questions[session.index];
+  return session.mode === "drill" && session.answers[q.id] !== undefined;
+}
+
 function selectChoice(choiceId: ChoiceId) {
   const q = session.questions[session.index];
   session.answers[q.id] = choiceId;
@@ -145,14 +154,15 @@ app.addEventListener("click", (event) => {
   if (nav === "home") { session = blankSession(); render(); return; }
   if (nav === "back") { session.view = "level"; render(); return; }
   if (nav === "quit") { stopTimer(); session.view = "level"; render(); return; }
-  if (nav === "prev") { if (session.index > 0) session.index--; session.reveal = session.mode === "drill" && session.answers[session.questions[session.index].id] !== undefined; render(); return; }
+  if (nav === "prev") { if (session.index > 0) session.index--; session.reveal = revealForCurrent(); render(); return; }
   if (nav === "next") {
     if (session.index < session.questions.length - 1) session.index++;
-    session.reveal = session.mode === "drill" && session.answers[session.questions[session.index].id] !== undefined;
+    session.reveal = revealForCurrent();
     render();
     return;
   }
-  if (nav === "submit") { finishExam(); return; }
+  if (nav === "submit" && session.view === "play") { finishExam(); return; }
+  if (nav === "result") { session.view = "result"; render(); return; }
   if (nav === "review") { session.view = "review"; session.reveal = true; session.index = 0; render(); return; }
 });
 

@@ -60,13 +60,14 @@ export const renderModePicker = (subjectName: string): string => `
   <header class="topbar"><button class="back" data-nav="back">← 返回</button><h1>${escapeHtml(subjectName)}</h1></header>
   <main class="mode-picker">
     <button class="mode-card" data-mode="exam"><h2>模擬考試</h2><p>50 題・計時・100 分制・70 分及格</p></button>
-    <button class="mode-card" data-mode="drill"><h2>刷題練習</h2><p>自選題數・即時對錯與詳解・不計時</p></button>
+    <button class="mode-card" data-mode="drill"><h2>刷題練習</h2><p>20 題・即時對錯與詳解・不計時</p></button>
   </main>
 `;
 
 export const renderQuestion = (
   q: Question, index: number, total: number,
   selected: string | undefined, reveal: boolean, timeText: string,
+  review: boolean,
 ): string => {
   const choices = q.choices
     .map((c) => renderChoice(c, { selected: selected === c.id, reveal, correct: c.id === q.answer }))
@@ -74,6 +75,10 @@ export const renderQuestion = (
   const explanation = reveal
     ? `<div class="explanation"><strong>詳解</strong><p>${escapeHtml(q.explanation || "（尚無詳解）")}</p></div>`
     : "";
+  // 檢討模式回到成績頁；作答模式才有交卷。
+  const lastButton = review
+    ? `<button class="submit" data-nav="result">回成績</button>`
+    : `<button class="submit" data-nav="submit">交卷</button>`;
   return `
     <header class="topbar">
       <button class="back" data-nav="quit">結束</button>
@@ -87,7 +92,7 @@ export const renderQuestion = (
       <div class="qnav">
         <button class="prev" data-nav="prev">上一題</button>
         <button class="next" data-nav="next">下一題</button>
-        <button class="submit" data-nav="submit">交卷</button>
+        ${lastButton}
       </div>
     </main>
   `;

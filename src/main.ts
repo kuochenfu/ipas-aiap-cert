@@ -37,6 +37,9 @@ let session: Session = blankSession();
 let timerId: number | null = null;
 let studyNotesCache: StudyNotesBySubject | null = null;
 let studyNotesPromise: Promise<StudyNotesBySubject> | null = null;
+let ttsRate = 1;
+let activeTtsButton: HTMLButtonElement | null = null;
+let activeUtterance: SpeechSynthesisUtterance | null = null;
 
 function blankSession(): Session {
   return {
@@ -120,6 +123,98 @@ function startTimer() {
   }, 1000);
 }
 
+function canSpeak(): boolean {
+  return "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+}
+
+function clearTtsButton() {
+  if (!activeTtsButton) return;
+  activeTtsButton.classList.remove("speaking");
+  activeTtsButton.setAttribute("aria-pressed", "false");
+  activeTtsButton.setAttribute("title", "朗讀");
+  activeTtsButton.setAttribute("aria-label", activeTtsButton.getAttribute("data-tts-label") ?? "朗讀");
+  activeTtsButton = null;
+}
+
+function stopTts() {
+  if (canSpeak()) window.speechSynthesis.cancel();
+  activeUtterance = null;
+  clearTtsButton();
+}
+
+function syncTtsRateButtons() {
+  app.querySelectorAll<HTMLButtonElement>("[data-tts-rate]").forEach((button) => {
+    button.classList.toggle("active", Number(button.dataset.ttsRate) === ttsRate);
+  });
+}
+
+function syncTtsControls() {
+  const supported = canSpeak();
+  syncTtsRateButtons();
+  app.querySelectorAll<HTMLButtonElement>("[data-tts-rate]").forEach((button) => {
+    button.disabled = !supported;
+  });
+  app.querySelectorAll<HTMLButtonElement>("[data-tts-section]").forEach((button) => {
+    button.disabled = !supported;
+    if (!supported) {
+      button.setAttribute("title", "此瀏覽器不支援朗讀");
+      button.setAttribute("aria-label", "此瀏覽器不支援朗讀");
+    }
+  });
+}
+
+function setTtsRate(rate: number) {
+  if (!canSpeak()) return;
+  ttsRate = rate;
+  syncTtsControls();
+  if (activeTtsButton) readStudySection(activeTtsButton, { restart: true });
+}
+
+function sectionSpeechText(section: HTMLElement): string {
+  const heading = section.querySelector("h5")?.textContent?.trim() ?? "";
+  const details = [...section.querySelectorAll("li")]
+    .map((item) => item.textContent?.trim() ?? "")
+    .filter(Boolean);
+  return [heading, ...details].join("。");
+}
+
+function markSpeaking(button: HTMLButtonElement) {
+  activeTtsButton = button;
+  button.dataset.ttsLabel = button.getAttribute("aria-label") ?? "朗讀";
+  button.classList.add("speaking");
+  button.setAttribute("aria-pressed", "true");
+  button.setAttribute("title", "停止朗讀");
+  button.setAttribute("aria-label", "停止朗讀");
+}
+
+function readStudySection(button: HTMLButtonElement, options: { restart?: boolean } = {}) {
+  if (!canSpeak()) return;
+  if (activeTtsButton === button && !options.restart) {
+    stopTts();
+    return;
+  }
+
+  const section = button.closest<HTMLElement>(".study-note-section");
+  if (!section) return;
+  const text = sectionSpeechText(section);
+  if (!text) return;
+
+  stopTts();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "zh-TW";
+  utterance.rate = ttsRate;
+  utterance.onend = () => {
+    if (activeUtterance === utterance) {
+      activeUtterance = null;
+      clearTtsButton();
+    }
+  };
+  utterance.onerror = utterance.onend;
+  activeUtterance = utterance;
+  markSpeaking(button);
+  window.speechSynthesis.speak(utterance);
+}
+
 async function loadStudyNotes(): Promise<StudyNotesBySubject> {
   if (studyNotesCache) return studyNotesCache;
   studyNotesPromise ??= import("./data/studyNotes").then((module) => module.studyNotes);
@@ -128,15 +223,20 @@ async function loadStudyNotes(): Promise<StudyNotesBySubject> {
 }
 
 function render() {
+  if (session.view !== "study") stopTts();
   if (session.view === "home") { stopTimer(); app.innerHTML = renderHome(); return; }
   if (session.view === "study") {
     stopTimer();
     if (studyNotesCache) {
       app.innerHTML = renderStudyView(studyNotesCache);
+      syncTtsControls();
     } else {
       app.innerHTML = renderStudyLoading();
       void loadStudyNotes().then((notes) => {
-        if (session.view === "study") app.innerHTML = renderStudyView(notes);
+        if (session.view === "study") {
+          app.innerHTML = renderStudyView(notes);
+          syncTtsControls();
+        }
       });
     }
     return;
@@ -265,8 +365,19 @@ function changeDrillFilter(filter: DrillFilter) {
 }
 
 app.addEventListener("click", (event) => {
-  const target = (event.target as HTMLElement).closest("[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-filter],[data-nav]");
+  const target = (event.target as HTMLElement).closest("[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-filter],[data-nav],[data-tts-section],[data-tts-rate]");
   if (!(target instanceof HTMLElement)) return;
+
+  if (target.hasAttribute("data-tts-section") && target instanceof HTMLButtonElement) {
+    readStudySection(target);
+    return;
+  }
+
+  const rate = target.getAttribute("data-tts-rate");
+  if (rate) {
+    setTtsRate(Number(rate));
+    return;
+  }
 
   const level = target.getAttribute("data-level");
   if (level) { session.level = level as Level; session.view = "level"; render(); return; }

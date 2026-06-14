@@ -51,6 +51,9 @@ describe("renderStudyView", () => {
     expect(html).toContain("人工智慧基礎概論"); // 科目名稱
     expect(html).toContain("學習指引整理");
     expect(html).toContain("則重點");
+    expect(html).toContain('data-tts-section');
+    expect(html).toContain('data-tts-rate="1"');
+    expect(html).toContain("朗讀 3.1 人工智慧概念");
     expect(html).toContain('rel="noopener noreferrer"');
     expect(html).toContain('target="_blank"');
   });

@@ -225,6 +225,14 @@ export const renderResult = (
 const renderReadingLink = (link: { title: string; url: string }): string =>
   `<li><a class="reading-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.title)}</a></li>`;
 
+const speakerIcon = `
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M11 5 6 9H3v6h3l5 4V5Z"></path>
+    <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+    <path d="M18 5.5a9 9 0 0 1 0 13"></path>
+  </svg>
+`;
+
 const renderStudyNotes = (notes: StudyNoteSection[] | undefined): string => {
   if (!notes?.length) return "";
   const count = notes.reduce((sum, section) => sum + section.details.length, 0);
@@ -234,7 +242,12 @@ const renderStudyNotes = (notes: StudyNoteSection[] | undefined): string => {
       <div class="study-note-sections">
         ${notes.map((section) => `
           <section class="study-note-section">
-            <h5>${escapeHtml(section.heading)}</h5>
+            <div class="study-note-heading">
+              <h5>${escapeHtml(section.heading)}</h5>
+              <button class="tts-button" data-tts-section aria-label="朗讀 ${escapeHtml(section.heading)}" title="朗讀" aria-pressed="false">
+                ${speakerIcon}
+              </button>
+            </div>
             <ul>
               ${section.details.map((detail) => `<li>${escapeHtml(detail)}</li>`).join("")}
             </ul>
@@ -293,6 +306,12 @@ export const renderStudyView = (studyNotes?: StudyNotesBySubject): string => {
     </header>
     <main class="study">
       <p class="lead">依官方評鑑範圍，掌握各科應讀主題與延伸閱讀。</p>
+      <div class="tts-rate" aria-label="朗讀語速">
+        <span>語速</span>
+        <button data-tts-rate="0.9">0.9x</button>
+        <button class="active" data-tts-rate="1">1.0x</button>
+        <button data-tts-rate="1.2">1.2x</button>
+      </div>
       ${sections}
     </main>
   `;

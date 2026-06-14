@@ -21,7 +21,7 @@ describe("buildMockPaper", () => {
     expect(same01).toBe(false);
   });
   it("題庫=50：三份為同一集合的排列（集合相同、順序可不同）", () => {
-    const bank = getQuestions("senior-ml").filter((q) => q.source === "past-exam"); // 恰 50 真題
+    const bank = getQuestions("senior-ml").filter((q) => q.id.includes("-114-2-")); // 原公告試題恰 50 題
     const s0 = buildMockPaper(bank, "senior-ml", 0).map((q) => q.id).sort();
     const s1 = buildMockPaper(bank, "senior-ml", 1).map((q) => q.id).sort();
     expect(s0).toEqual(s1);

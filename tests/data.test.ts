@@ -19,6 +19,12 @@ describe("題庫完整性", () => {
           ids.add(q.id);
         }
       });
+      it("真題在合併後皆有詳解", () => {
+        const missing = questions
+          .filter((q) => q.source === "past-exam" && q.explanation.trim().length === 0)
+          .map((q) => q.id);
+        expect(missing).toEqual([]);
+      });
     });
   }
 });
@@ -28,10 +34,24 @@ describe("junior-genai 內容完整性", () => {
   const past = questions.filter((q) => q.source === "past-exam");
   const generated = questions.filter((q) => q.source === "generated");
 
-  it("100 題真題詳解皆非空", () => {
-    expect(past.length).toBe(100);
-    const missing = past.filter((q) => q.explanation.trim().length === 0);
+  it("179 題真題；已補詳解的舊梯次與學習指引皆非空", () => {
+    expect(past.length).toBe(179);
+    const legacy = past.filter((q) => !q.id.includes("-115-2-") && !q.id.includes("-guide-"));
+    expect(legacy.length).toBe(100);
+    const missing = legacy.filter((q) => q.explanation.trim().length === 0);
     expect(missing.map((q) => q.id)).toEqual([]);
+    const guide = past.filter((q) => q.id.includes("-guide-"));
+    expect(guide.length).toBe(29);
+    expect(guide.filter((q) => q.explanation.trim().length === 0).map((q) => q.id)).toEqual([]);
+  });
+
+  it("115年第二次真題匯入 50 題且保留來源", () => {
+    const second = past.filter((q) => q.id.includes("-115-2-"));
+    expect(second.length).toBe(50);
+    expect(second.map((q) => q.sourceRef)).toContain("115年第二次 第1題");
+    expect(second.map((q) => q.sourceRef)).toContain("115年第二次 第50題");
+    expect(second.every((q) => q.explanation.trim().length > 0)).toBe(true);
+    expect(second.every((q) => q.choiceExplanations && Object.keys(q.choiceExplanations).length === 4)).toBe(true);
   });
 
   it("新題數 ≥10", () => {
@@ -71,8 +91,15 @@ for (const sid of ["senior-ai-tech", "senior-bigdata", "senior-ml"]) {
     const past = questions.filter((q) => q.source === "past-exam");
     const generated = questions.filter((q) => q.source === "generated");
 
-    it("50 題真題詳解皆非空", () => {
-      expect(past.length).toBe(50);
+    it("公告真題與學習指引參考題詳解皆非空", () => {
+      const expectedGuideCounts: Record<string, number> = {
+        "senior-ai-tech": 30,
+        "senior-bigdata": 40,
+        "senior-ml": 40,
+      };
+      expect(past.length).toBe(50 + expectedGuideCounts[sid]);
+      const guide = past.filter((q) => q.id.includes("-guide-"));
+      expect(guide.length).toBe(expectedGuideCounts[sid]);
       expect(past.filter((q) => q.explanation.trim().length === 0).map((q) => q.id)).toEqual([]);
     });
     it("新題數 ≥16", () => {
@@ -92,7 +119,26 @@ for (const sid of ["senior-ai-tech", "senior-bigdata", "senior-ml"]) {
 }
 
 describe("junior-ai-basics 新題完整性", () => {
-  const generated = getQuestions("junior-ai-basics").filter((q) => q.source === "generated");
+  const questions = getQuestions("junior-ai-basics");
+  const past = questions.filter((q) => q.source === "past-exam");
+  const generated = questions.filter((q) => q.source === "generated");
+
+  it("190 題真題；115年第二次與學習指引皆已匯入且保留來源", () => {
+    expect(past.length).toBe(190);
+    const second = past.filter((q) => q.id.includes("-115-2-"));
+    expect(second.length).toBe(50);
+    expect(second.map((q) => q.sourceRef)).toContain("115年第二次 第1題");
+    expect(second.map((q) => q.sourceRef)).toContain("115年第二次 第50題");
+    expect(second.every((q) => q.explanation.trim().length > 0)).toBe(true);
+    expect(second.every((q) => q.choiceExplanations && Object.keys(q.choiceExplanations).length === 4)).toBe(true);
+    const guide = past.filter((q) => q.id.includes("-guide-"));
+    expect(guide.length).toBe(40);
+    expect(guide.map((q) => q.sourceRef)).toContain("初級科目一學習指引參考題 第1題");
+    expect(guide.map((q) => q.sourceRef)).toContain("初級科目一學習指引參考題 第40題");
+    expect(guide.filter((q) => q.explanation.trim().length === 0).map((q) => q.id)).toEqual([]);
+    expect(past.find((q) => q.id === "junior-ai-basics-guide-q013")?.answer).toBe("A");
+  });
+
   it("新題數 ===24", () => {
     expect(generated.length).toBe(24);
   });

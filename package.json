@@ -9,7 +9,8 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run",
     "test:watch": "vitest",
-    "parse:papers": "tsx scripts/parse-past-papers.ts"
+    "parse:papers": "tsx scripts/parse-past-papers.ts",
+    "generate:study-notes": "tsx scripts/generate-study-notes.ts"
   },
   "devDependencies": {
     "@types/node": "^25.6.2",

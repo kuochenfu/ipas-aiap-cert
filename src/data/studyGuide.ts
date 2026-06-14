@@ -1,4 +1,4 @@
-import type { SubjectStudyGuide } from "./types";
+import type { StudyNotesBySubject, SubjectStudyGuide } from "./types";
 
 export const studyGuides: SubjectStudyGuide[] = [
   {
@@ -283,5 +283,17 @@ export const studyGuides: SubjectStudyGuide[] = [
   },
 ];
 
-export const getStudyGuide = (subjectId: string): SubjectStudyGuide | undefined =>
-  studyGuides.find((guide) => guide.subjectId === subjectId);
+export const getStudyGuide = (
+  subjectId: string,
+  notesBySubject?: StudyNotesBySubject,
+): SubjectStudyGuide | undefined => {
+  const guide = studyGuides.find((item) => item.subjectId === subjectId);
+  if (!guide) return undefined;
+  return {
+    ...guide,
+    topics: guide.topics.map((topic) => ({
+      ...topic,
+      notes: notesBySubject?.[subjectId]?.[topic.code] ?? topic.notes,
+    })),
+  };
+};

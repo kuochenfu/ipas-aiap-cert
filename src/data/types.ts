@@ -13,6 +13,7 @@ export type Question = {
   choices: Choice[];
   answer: ChoiceId;
   explanation: string;
+  choiceExplanations?: Partial<Record<ChoiceId, string>>;
   topic: string;
   difficulty: Difficulty;
   source: "past-exam" | "generated";
@@ -21,10 +22,18 @@ export type Question = {
 
 export type ReadingLink = { title: string; url: string };
 
+export type StudyNoteSection = {
+  heading: string;
+  details: string[];
+};
+
+export type StudyNotesBySubject = Record<string, Record<string, StudyNoteSection[]>>;
+
 export type StudyTopic = {
   code: string;
   title: string;
   contents: string[];
+  notes?: StudyNoteSection[];
   links: ReadingLink[];
 };
 

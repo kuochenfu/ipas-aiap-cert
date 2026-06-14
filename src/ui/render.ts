@@ -6,8 +6,15 @@ import { getBankStats } from "../data/index";
 import { getStudyGuide } from "../data/studyGuide";
 import type { Level } from "../data/types";
 import type { Question } from "../data/types";
+import type { StudyNoteSection, StudyNotesBySubject } from "../data/types";
 
 export type BankStats = { total: number; pastExam: number; generated: number };
+export type DrillFilter = "all" | "wrong" | "unanswered";
+export type DrillCounts = Record<DrillFilter, number>;
+export type DrillControls = {
+  filter: DrillFilter;
+  counts: DrillCounts;
+};
 
 export const renderSubjectCard = (subject: Subject, stats: BankStats): string => `
   <button class="subject-card" data-subject="${escapeHtml(subject.id)}">
@@ -32,6 +39,83 @@ export const renderChoice = (choice: Choice, view: ChoiceView): string => {
     </button>
   `;
 };
+
+const drillFilterLabels: Record<DrillFilter, string> = {
+  all: "全部",
+  wrong: "錯題",
+  unanswered: "未答",
+};
+
+const renderDrillFilters = ({ filter, counts }: DrillControls): string => `
+  <div class="drill-filters" aria-label="刷題篩選">
+    ${(Object.keys(drillFilterLabels) as DrillFilter[]).map((key) => `
+      <button class="drill-filter ${filter === key ? "active" : ""}" data-filter="${key}" aria-pressed="${filter === key}">
+        <span>${drillFilterLabels[key]}</span>
+        <strong>${counts[key]}</strong>
+      </button>
+    `).join("")}
+  </div>
+`;
+
+const renderAnswerSummary = (q: Question, selected: string | undefined): string => {
+  const correctChoice = q.choices.find((choice) => choice.id === q.answer);
+  const isCorrect = selected === q.answer;
+  return `
+    <div class="answer-summary ${isCorrect ? "is-correct" : "is-wrong"}">
+      <strong>${isCorrect ? "答對" : "答錯"}，正解：${q.answer}.</strong>
+      <span>${escapeHtml(correctChoice?.text ?? "")}</span>
+    </div>
+  `;
+};
+
+const explanationSegmentForChoice = (explanation: string, choiceId: string): string | undefined => {
+  const markerPattern = /(^|[。；;，,\n])\s*([ABCD])(?:[、.．：:]|\s|的)/g;
+  const markers: { choiceId: string; start: number; contentStart: number }[] = [];
+  let match: RegExpExecArray | null;
+  while ((match = markerPattern.exec(explanation)) !== null) {
+    markers.push({
+      choiceId: match[2],
+      start: match.index + match[1].length,
+      contentStart: markerPattern.lastIndex,
+    });
+  }
+  const markerIndex = markers.findIndex((marker) => marker.choiceId === choiceId);
+  if (markerIndex < 0) return undefined;
+  const marker = markers[markerIndex];
+  const next = markers[markerIndex + 1];
+  const end = next ? next.start : explanation.length;
+  const segment = explanation.slice(marker.start, end).trim().replace(/[。；;，,]\s*$/, "");
+  return segment.length >= 8 ? segment : undefined;
+};
+
+const fallbackChoiceExplanation = (q: Question, choice: Choice): string => {
+  if (choice.id === q.answer) {
+    return "這是本題正解；請搭配下方詳解掌握判斷依據。";
+  }
+  const segment = explanationSegmentForChoice(q.explanation, choice.id);
+  if (segment) return segment;
+  const correctChoice = q.choices.find((item) => item.id === q.answer);
+  return `此選項不是本題答案；它描述的是「${choice.text}」，但本題正解應判斷為「${q.answer}. ${correctChoice?.text ?? ""}」。請對照完整詳解，確認題目情境與關鍵概念的差異。`;
+};
+
+const renderChoiceExplanations = (q: Question): string => `
+  <div class="choice-explanations">
+    <strong>選項解析</strong>
+    <div class="choice-explanation-list">
+      ${q.choices.map((choice) => {
+        const classes = ["choice-explanation"];
+        if (choice.id === q.answer) classes.push("correct");
+        const text = q.choiceExplanations?.[choice.id] ?? fallbackChoiceExplanation(q, choice);
+        return `
+          <div class="${classes.join(" ")}">
+            <span class="choice-id">${choice.id}</span>
+            <p>${escapeHtml(text)}</p>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  </div>
+`;
 
 export const renderHome = (): string => `
   <header class="topbar"><h1>iPAS AI 應用規劃師 練習</h1></header>
@@ -70,17 +154,22 @@ export const renderQuestion = (
   q: Question, index: number, total: number,
   selected: string | undefined, reveal: boolean, timeText: string,
   review: boolean,
+  drillControls?: DrillControls,
 ): string => {
   const choices = q.choices
     .map((c) => renderChoice(c, { selected: selected === c.id, reveal, correct: c.id === q.answer }))
     .join("");
   const explanation = reveal
-    ? `<div class="explanation"><strong>詳解</strong><p>${escapeHtml(q.explanation || "（尚無詳解）")}</p></div>`
+    ? `
+      ${renderAnswerSummary(q, selected)}
+      <div class="explanation"><strong>詳解</strong><p>${escapeHtml(q.explanation || "（尚無詳解）")}</p></div>
+      ${renderChoiceExplanations(q)}
+    `
     : "";
-  // 檢討模式回到成績頁；作答模式才有交卷。
+  // 刷題作答不需要交卷；檢討模式保留回成績入口。
   const lastButton = review
     ? `<button class="submit" data-nav="result">回成績</button>`
-    : `<button class="submit" data-nav="submit">交卷</button>`;
+    : "";
   return `
     <header class="topbar">
       <button class="back" data-nav="quit">結束</button>
@@ -88,6 +177,7 @@ export const renderQuestion = (
       <span class="timer">${timeText}</span>
     </header>
     <main class="question">
+      ${drillControls ? renderDrillFilters(drillControls) : ""}
       <p class="prompt">${escapeHtml(q.prompt)}</p>
       <div class="choices">${choices}</div>
       ${explanation}
@@ -99,6 +189,20 @@ export const renderQuestion = (
     </main>
   `;
 };
+
+export const renderDrillEmpty = (controls: DrillControls): string => `
+  <header class="topbar">
+    <button class="back" data-nav="quit">結束</button>
+    <span class="progress">刷題練習</span>
+  </header>
+  <main class="question">
+    ${renderDrillFilters(controls)}
+    <div class="empty-state">
+      <h2>${drillFilterLabels[controls.filter]}目前沒有題目</h2>
+      <p>切換到其他篩選繼續練習。</p>
+    </div>
+  </main>
+`;
 
 export const renderResult = (
   score: number, correct: number, wrong: number, passed: boolean,
@@ -121,17 +225,48 @@ export const renderResult = (
 const renderReadingLink = (link: { title: string; url: string }): string =>
   `<li><a class="reading-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.title)}</a></li>`;
 
-export const renderStudyView = (): string => {
+const renderStudyNotes = (notes: StudyNoteSection[] | undefined): string => {
+  if (!notes?.length) return "";
+  const count = notes.reduce((sum, section) => sum + section.details.length, 0);
+  return `
+    <details class="study-notes">
+      <summary>學習指引整理 <span>${count} 則重點</span></summary>
+      <div class="study-note-sections">
+        ${notes.map((section) => `
+          <section class="study-note-section">
+            <h5>${escapeHtml(section.heading)}</h5>
+            <ul>
+              ${section.details.map((detail) => `<li>${escapeHtml(detail)}</li>`).join("")}
+            </ul>
+          </section>
+        `).join("")}
+      </div>
+    </details>
+  `;
+};
+
+export const renderStudyLoading = (): string => `
+  <header class="topbar">
+    <button class="back" data-nav="home">← 返回</button>
+    <h1>學習主題（延伸閱讀）</h1>
+  </header>
+  <main class="study">
+    <p class="lead">正在載入學習指引整理...</p>
+  </main>
+`;
+
+export const renderStudyView = (studyNotes?: StudyNotesBySubject): string => {
   const sections = (["junior", "senior"] as const).map((level) => {
     const subjectsHtml = subjects
       .filter((s) => s.level === level)
       .map((s) => {
-        const guide = getStudyGuide(s.id);
+        const guide = getStudyGuide(s.id, studyNotes);
         const topics = (guide?.topics ?? [])
           .map((t) => `
             <div class="study-topic">
               <h4>${escapeHtml(t.code)}　${escapeHtml(t.title)}</h4>
               <ul class="study-contents">${t.contents.map((c) => `<li>${escapeHtml(c)}</li>`).join("")}</ul>
+              ${renderStudyNotes(t.notes)}
               <ul class="study-links">${t.links.map(renderReadingLink).join("")}</ul>
             </div>
           `)

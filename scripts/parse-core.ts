@@ -35,6 +35,9 @@ const isNoise = (line: string): boolean =>
 // 答案字母可能為半形 A-D，也可能被 pdftotext 輸出為全形 Ａ-Ｄ。
 const questionStart = /^([A-DＡ-Ｄ])\s+(\d+)\.\s*(.*)$/;
 const choiceStart = /^\(([A-D])\)\s*(.*)$/;
+const guideQuestionStart = /^(\d+)\.\s+(?!Ans[（(])(.+)$/;
+const guideChoiceStart = /^（([A-D])）\s*(.*)$/;
+const guideAnswerStart = /^(\d+)\.\s*Ans（([A-D])）\s*(.*)$/;
 
 // 將全形英文字母 Ａ-Ｚ 正規化為半形 A-Z（僅作用於答案字母）。
 const toHalfWidthLetter = (ch: string): ChoiceId => {
@@ -99,7 +102,7 @@ const dropSharedStemParts = (parts: string[]): string[] => {
 };
 
 export const parsePaper = (markdown: string, ctx: ParseContext): Question[] => {
-  const lines = markdown.split("\n").map((l) => l.trim());
+  const lines = markdown.split("\n").map((l) => l.split("\f")[0].trim());
   const drafts: Draft[] = [];
   let current: Draft | null = null;
   // target：目前正在累加文字的欄位（題幹或某選項）
@@ -158,4 +161,174 @@ export const parsePaper = (markdown: string, ctx: ParseContext): Question[] => {
       sourceRef: `${ctx.examLabel} 第${draft.number}題`,
     } satisfies Question;
   });
+};
+
+type GuideQuestionDraft = {
+  number: number;
+  promptParts: string[];
+  choices: { id: ChoiceId; parts: string[] }[];
+};
+
+type GuideAnswerDraft = {
+  number: number;
+  answer: ChoiceId;
+  explanationParts: string[];
+};
+
+const isStudyGuideNoise = (line: string): boolean =>
+  line === "" ||
+  line.startsWith("#") ||
+  line.startsWith("- Source") ||
+  line.startsWith("- Pages") ||
+  line.startsWith("- Conversion") ||
+  /^## Page \d+/.test(line) ||
+  /^\d+$/.test(line) ||
+  /^[-=]{3,}$/.test(line) ||
+  /^/.test(line) ||
+  /^第[一二三四五六七八九十]+章/.test(line);
+
+const isStudyGuideBoundary = (line: string): boolean =>
+  line.startsWith("附件") ||
+  line.includes("本學習指引參考書目") ||
+  /^A-\d+/.test(line) ||
+  /^職能基準/.test(line) ||
+  /^\d+\.\d+(\s|$)/.test(line);
+
+const normalizeGuideText = (parts: string[]): string =>
+  parts
+    .join("")
+    .replace(/\s+/g, " ")
+    .replace(/解析：\s*/g, "解析：")
+    .trim();
+
+const parseStudyGuideQuestionDrafts = (lines: string[]): GuideQuestionDraft[] => {
+  const drafts: GuideQuestionDraft[] = [];
+  let current: GuideQuestionDraft | null = null;
+  let target: string[] | null = null;
+
+  const finish = () => {
+    if (!current) return;
+    const ids = new Set(current.choices.map((c) => c.id));
+    if (CHOICE_IDS.every((id) => ids.has(id))) drafts.push(current);
+    current = null;
+    target = null;
+  };
+
+  for (const line of lines) {
+    if (isStudyGuideNoise(line)) continue;
+    if (isStudyGuideBoundary(line)) {
+      finish();
+      continue;
+    }
+
+    const qm = guideQuestionStart.exec(line);
+    if (qm) {
+      finish();
+      current = { number: Number(qm[1]), promptParts: [qm[2]], choices: [] };
+      target = current.promptParts;
+      continue;
+    }
+
+    const cm = guideChoiceStart.exec(line);
+    if (cm && current) {
+      const choice = { id: cm[1] as ChoiceId, parts: [cm[2]] };
+      current.choices.push(choice);
+      target = choice.parts;
+      continue;
+    }
+
+    if (target) target.push(line);
+  }
+
+  finish();
+  return drafts;
+};
+
+const parseStudyGuideAnswerDrafts = (lines: string[]): GuideAnswerDraft[] => {
+  const drafts: GuideAnswerDraft[] = [];
+  let current: GuideAnswerDraft | null = null;
+
+  for (const line of lines) {
+    if (isStudyGuideNoise(line)) continue;
+
+    const am = guideAnswerStart.exec(line);
+    if (am) {
+      current = {
+        number: Number(am[1]),
+        answer: am[2] as ChoiceId,
+        explanationParts: am[3] ? [am[3]] : [],
+      };
+      drafts.push(current);
+      continue;
+    }
+
+    if (!current) continue;
+    if (isStudyGuideBoundary(line) || guideQuestionStart.test(line) || guideChoiceStart.test(line)) {
+      current = null;
+      continue;
+    }
+    current.explanationParts.push(line);
+  }
+
+  return drafts;
+};
+
+const applyStudyGuideErrata = (questions: Question[], ctx: ParseContext): Question[] => {
+  if (ctx.subjectId !== "junior-ai-basics" || ctx.examCode !== "guide") return questions;
+
+  return questions.map((q) => {
+    if (q.id === "junior-ai-basics-guide-q013") {
+      return {
+        ...q,
+        answer: "A",
+        explanation:
+          "K-means 的原理相對簡單，主要透過反覆分配點到最近中心、並更新中心點來最小化平方誤差和，並非複雜方法。K-means 常與 PCA（降維）、Elbow method（選 k 值）等方法結合，具一定彈性；對球形且大小密度接近的群體表現良好。故「原理相對其他集群法較為複雜」不正確，選 A。（依初級學習指引勘誤表修正）",
+      } satisfies Question;
+    }
+    if (q.id === "junior-ai-basics-guide-q017") {
+      return {
+        ...q,
+        prompt:
+          "當我們進行一次假設檢定，得到的 p 值為 0.03，而我們事先設定的顯著性水準為 0.05。以下哪一個敘述最合乎統計檢定的意義？",
+        choices: [
+          { id: "A", text: "我們有 97%的信心拒絕虛無假設" },
+          { id: "B", text: "我們在 95%的信心水準下拒絕虛無假設" },
+          { id: "C", text: "我們無法拒絕虛無假設" },
+          { id: "D", text: "我們犯型一錯誤的機率為 5%" },
+        ],
+        explanation:
+          "顯著性水準設定為 0.05 表示，我們容許最多 5%的機率犯型一錯誤（Type-I Error），並非代表實際犯錯機率就是 5%。因 p 值 0.03 小於顯著性水準 0.05，所以可在 95%的信心水準下拒絕虛無假設，選 B。（依初級學習指引勘誤表修正）",
+      } satisfies Question;
+    }
+    return q;
+  });
+};
+
+export const parseStudyGuide = (markdown: string, ctx: ParseContext): Question[] => {
+  const lines = markdown.split("\n").map((l) => l.split("\f")[0].trim());
+  const questionDrafts = parseStudyGuideQuestionDrafts(lines);
+  const answerDrafts = parseStudyGuideAnswerDrafts(lines);
+
+  const questions = questionDrafts.map((draft, index) => {
+    const answer = answerDrafts[index];
+    const choices = CHOICE_IDS.map((id) => {
+      const found = draft.choices.find((c) => c.id === id);
+      return { id, text: stripTrailing(normalizeGuideText(found?.parts ?? [])) };
+    });
+    const number = String(index + 1).padStart(3, "0");
+    return {
+      id: `${ctx.subjectId}-${ctx.examCode}-q${number}`,
+      subjectId: ctx.subjectId,
+      prompt: normalizeGuideText(draft.promptParts),
+      choices,
+      answer: answer?.answer ?? "A",
+      explanation: normalizeGuideText(answer?.explanationParts ?? []),
+      topic: "未分類",
+      difficulty: "中",
+      source: "past-exam",
+      sourceRef: `${ctx.examLabel} 第${index + 1}題`,
+    } satisfies Question;
+  });
+
+  return applyStudyGuideErrata(questions, ctx);
 };

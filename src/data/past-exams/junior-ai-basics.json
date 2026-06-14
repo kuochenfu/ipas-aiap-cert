@@ -1450,6 +1450,1456 @@
     "sourceRef": "115年第一次 第50題"
   },
   {
+    "id": "junior-ai-basics-115-2-q01",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某地方政府委託資料科學團隊，針對選舉期間的社群媒體貼文進行大規模輿情分析，目標是了解選民對各政策議題的態度傾向。團隊規劃整合多種 AI 技術以提升分析涵蓋率。下列哪一種技術組合最符合上述需求，且不涉及對特定個人的身份辨識？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "情感分析結合關鍵詞提取，分析貼文內容的立場與高頻議題詞彙"
+      },
+      {
+        "id": "B",
+        "text": "文本分類結合人臉辨識，辨識發文者身份後再進行政治立場分類"
+      },
+      {
+        "id": "C",
+        "text": "語音辨識結合影像辨識，將選舉造勢影片轉換為可分析的文字資料，並進行內容整理與主題歸納"
+      },
+      {
+        "id": "D",
+        "text": "推薦系統結合社群圖譜分析，針對個別使用者預測其投票選擇"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第1題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q02",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某物流公司正在規劃導入 AI 系統以優化多項業務流程，包含異常包裹偵測、路線自動規劃與倉儲揀貨效率提升。技術團隊在評估過程中，針對不同任務的資料特性與學習目標，討論應採用哪種機器學習方式。請問下列對於各學習方式的敘述，何者有誤？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "監督式學習（Supervised Learning）適合用於異常包裹偵測，前提是須備有大量已標註為正常或異常的歷史資料"
+      },
+      {
+        "id": "B",
+        "text": "非監督式學習可（Unsupervised Learning）用於分析倉儲揀貨動線的潛在分群，但無法直接預測特定行為的對錯"
+      },
+      {
+        "id": "C",
+        "text": "強化學習（Reinforcement Learning）適合應用於路線規劃，模型透過反覆嘗試與環境回饋，逐步找出最佳配送策略"
+      },
+      {
+        "id": "D",
+        "text": "非監督式學習（Unsupervised Learning）可用於異常包裹偵測，並能在缺乏標註資料的情況下，準確判斷每筆資料是否屬於特定異常類別"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第2題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q03",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某電子製造公司在產線上導入 AI 系統，自動判斷電路板是否存在焊接瑕疵，並取代人工目視檢查。該系統需處理大量產品外觀影像，並在高產量環境下短時間內完成品質判定。下列何者最不符合此應用所展現的 AI 核心技術能力？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "自然語言處理（Natural Language Processing） "
+      },
+      {
+        "id": "B",
+        "text": "電腦視覺（Computer Vision） "
+      },
+      {
+        "id": "C",
+        "text": "異常偵測（Anomaly Detection） "
+      },
+      {
+        "id": "D",
+        "text": "診斷性分析（DiagnosticAnalytics）"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第3題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q04",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某金融科技公司的交易系統，在毫秒等級的時間內持續掃描跨市場價格差異、分析大量即時報價，並自動執行交易指令。系統架構師在技術選用評估時，需確認該系統於即時交易決策中最核心依賴的 AI 能力。下列何者最能正確說明其核心 AI 能力？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "透過自然語言處理技術分析財經新聞語意，作為輔助性市場情緒指標"
+      },
+      {
+        "id": "B",
+        "text": "快速分析龐大市場數據並在極短時間內識別交易機會，驅動自動化交易決策"
+      },
+      {
+        "id": "C",
+        "text": "運用生成對抗網路模擬極端市場情境，預先產出各類黑天鵝事件的應對策略"
+      },
+      {
+        "id": "D",
+        "text": "透過推薦系統技術，根據投資人歷史交易行為推薦最適合的投資組合標的"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第4題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q05",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某地方政府導入 AI 系統審核低收入補助資格。系統已通過內部測試且準確率高，但民間團體指出不同族群核准率差異顯著。政府表示該系統由專業廠商開發，且未接獲大量申訴。依《人工智慧基本法》精神，下列何者為最適當之優先作法？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "要求廠商提出無歧視聲明，並持續觀察"
+      },
+      {
+        "id": "B",
+        "text": "提升模型整體準確率，以降低錯誤影響"
+      },
+      {
+        "id": "C",
+        "text": "進行偏誤影響評估並建立可解釋與申訴機制"
+      },
+      {
+        "id": "D",
+        "text": "因尚無大量申訴，暫不調整現行制度"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第5題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q06",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某 AI 新創公司申請 AI 系統認證，並聲稱其產品已通過我國「AI 產品與系統評測中心」之生成式 AI 評測。下列何者不屬於該中心之評測項目？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "資安（Secure） "
+      },
+      {
+        "id": "B",
+        "text": "公平性（Fair） "
+      },
+      {
+        "id": "C",
+        "text": "效率性（Efficiency） "
+      },
+      {
+        "id": "D",
+        "text": "可靠性（Reliability）"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第6題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q07",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某媒體集團計畫自行訓練一套生成式 AI 系統，用於自動產出新聞摘要與評論內容。在專案啟動會議中，法務與技術團隊共同討論如何從訓練階段就降低模型產出有害或偏頗內容的風險，並兼顧內容的多元性與公平性。請問下列哪一項措施最應該在模型訓練階段優先落實？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "確保訓練資料來源多元，並經過嚴格的內容清洗與偏見過濾，以減少模型學習到有害或偏頗資訊的風險"
+      },
+      {
+        "id": "B",
+        "text": "完全避免使用任何外部文本資料，以降低模型學習到不當內容的可能性"
+      },
+      {
+        "id": "C",
+        "text": "僅使用公司內部的新聞稿與公告進行訓練，確保資料來源可控且符合企業立場"
+      },
+      {
+        "id": "D",
+        "text": "限制模型僅能產出固定格式的內容，從輸出端約束模型避免生成不當資訊"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第7題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q08",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某保險公司規劃推出一套 AI 核保輔助系統，針對線上投保申請進行初步風險評估並自動回覆審核結果。系統開發完成後，依據金融機構運用人工智慧技術作業規範，系統在正式與消費者互動前，必須確認相關揭露義務已落實。請問下列何者不屬於該規範要求金融機構必要揭露的事項？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "詳細公開本系統所採用的機器學習模型架構與完整訓練資料內容"
+      },
+      {
+        "id": "B",
+        "text": "說明本服務的適用對象與用途範圍，使消費者了解系統的使用限制與服務邊界"
+      },
+      {
+        "id": "C",
+        "text": "說明當消費者對 AI 核保結果有異議時，是否提供人工複核或申訴管道"
+      },
+      {
+        "id": "D",
+        "text": "告知消費者本次核保審查結果係由 AI 系統自動完成，非人工逐案審核"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第8題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q09",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某大型醫院導入 AI 輔助診斷系統，用於分析病患的電子病歷與影像資料並提供疾病風險評分。系統上線後，院方陸續收到三類回饋：①放射科醫師反映無法理解系統判斷某病患為高風險的依據與理由；②數位治理委員會發現系統對特定族裔病患的誤診率顯著偏高；③資訊安全部門指出部分病患個資在未告知當事人的情況下被納入模型再訓練。依據 AI 倫理五大核心原則，上述三類問題分別對應哪一項原則的違反？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "①違反安全性、②違反問責性、③違反透明性"
+      },
+      {
+        "id": "B",
+        "text": "①違反隱私性、②違反安全性、③違反公平性"
+      },
+      {
+        "id": "C",
+        "text": "①違反公平性、②違反透明性、③違反問責性"
+      },
+      {
+        "id": "D",
+        "text": "①違反透明性、②違反公平性、③違反隱私性"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第9題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q10",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某市政府環保局計畫建立空氣品質監測 AI 系統，需整合全市 5 萬個感測器的即時數據（每秒產生大量資料記錄） ，並持續接收氣象、交通與工廠排放等資料，且需即時處理持續產生的資料。就大數據特性分析，下列何者最能說明此專案面臨的主要挑戰組合？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "Volume 與 Velocity，因為資料量龐大且持續高速產生"
+      },
+      {
+        "id": "B",
+        "text": "Variety 與 Veracity，因為資料來源多元且需確保正確性"
+      },
+      {
+        "id": "C",
+        "text": "Velocity 與 Value，因為需即時判斷資料是否具有分析價值"
+      },
+      {
+        "id": "D",
+        "text": "Volume 與 Value，因為需從大量資料中篩選出有用資訊"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第10題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q11",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某保險公司建立理賠風險預測模型時，資料科學家在特徵選擇階段提出以「性別」作為預測愛滋病毒感染風險的輸入特徵之一。資料治理委員會在審查特徵清單時，對此提出異議。下列哪一項理由最能說明「以性別預測愛滋病毒感染風險」是不適當的原因？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "性別為類別型變數，需進行編碼轉換才能輸入模型，增加前處理複雜度"
+      },
+      {
+        "id": "B",
+        "text": "性別特徵在資料集中可能存在缺失值，影響模型訓練的穩定性"
+      },
+      {
+        "id": "C",
+        "text": "以性別作為感染風險的代理特徵，會強化對特定族群的歧視性標籤，違反公平性原則"
+      },
+      {
+        "id": "D",
+        "text": "性別特徵與感染風險之間的統計相關性有限，可能降低模型預測效能"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第11題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q12",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某製造業導入 AI 進行生產排程，需整合 ERP（企業資源規劃系統）訂單資料、設備感測器產生的連續數值紀錄，以及維修技師手寫異常描述（掃描為 PDF） 。資料治理主管需判斷三類資料的型態。下列何者最能正確對應其資料型態？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "ERP 訂單資料為半結構化、感測器數值為結構化、維修文字描述為非結構化"
+      },
+      {
+        "id": "B",
+        "text": "ERP 訂單資料為結構化、感測器數值為結構化、維修文字描述為非結構化"
+      },
+      {
+        "id": "C",
+        "text": "ERP 訂單資料為結構化、感測器數值為非結構化、維修文字描述為半結構化"
+      },
+      {
+        "id": "D",
+        "text": "三者皆屬結構化資料，因為都可以轉換為數值格式後進行分析"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第12題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q13",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某銀行建立機器學習模型預測客戶的貸款違約風險。資料集中有一個「職業類別」欄位，包含「工程師、教師、業務、自由業」等類別。工程師計劃將此欄位進行編碼處理後直接輸入線性模型。下列哪一種編碼方式最可能導致模型錯誤解讀類別之間的關係？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "One-Hot Encoding"
+      },
+      {
+        "id": "B",
+        "text": "Binary Encoding"
+      },
+      {
+        "id": "C",
+        "text": "Target Encoding"
+      },
+      {
+        "id": "D",
+        "text": "Label Encoding"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第13題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q14",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某能源公司以過去三年每小時用電資料建立需求預測模型，並以 5-fold 交叉驗證評估，但上線後誤差偏高。技術主管認為問題出在資料分割方式。下列何者最能說明使用標準 k-fold 交叉驗證的根本問題？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "k-fold 交叉驗證需要的計算資源過大，不適合處理三年以上的長期資料"
+      },
+      {
+        "id": "B",
+        "text": "k-fold 交叉驗證會隨機分割資料，使訓練集中可能包含比測試集更晚的時間點，破壞時間依賴性"
+      },
+      {
+        "id": "C",
+        "text": "k-fold 交叉驗證的折數設定過少，應改為 10-fold 以提升驗證穩定性"
+      },
+      {
+        "id": "D",
+        "text": "k-fold 交叉驗證僅適用於分類問題，不適合電力需求這類連續數值預測任務"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第14題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q15",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某醫療院所建置病患再住院風險預測模型，特徵包含「年齡」 、 「體重」 、 「血壓數值」及「診斷類別代碼」等，資料科學家考慮是否需對數值特徵進行標準化（Standardization）處理。下列何種模型對特徵尺度最不敏感、最適合在不進行標準化的情況下直接使用上述特徵進行訓練？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "線性迴歸（Linear Regression） "
+      },
+      {
+        "id": "B",
+        "text": "支援向量機（Support Vector Machine） "
+      },
+      {
+        "id": "C",
+        "text": "K 近鄰演算法（K-Nearest Neighbors） "
+      },
+      {
+        "id": "D",
+        "text": "決策樹（Decision Tree）"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第15題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q16",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某企業集團在多個領域導入 AI 技術，應用於不同業務場景。請問下列哪一項最符合異常檢測（Anomaly Detection）的主要應用目標？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "分析客戶的消費行為資料，將客群依偏好進行分群，以制定差異化行銷策略"
+      },
+      {
+        "id": "B",
+        "text": "根據歷史交易與客戶資料，建立模型預測未來可能發生違約的客戶"
+      },
+      {
+        "id": "C",
+        "text": "彙整企業各部門的營運數據，建立儀表板供管理層追蹤關鍵績效指標（KPI）的變化"
+      },
+      {
+        "id": "D",
+        "text": "從設備感測資料中，即時偵測出與正常運作模式顯著偏離的訊號，以預警可能發生的故障"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第16題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q17",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某交通局計劃將公車乘客刷卡資料提供給學術機構進行通勤模式研究，該資料包含卡號、上下車時間、路線編號等欄位，且需保留跨時間追蹤同一乘客行為能力。為保護乘客隱私，下列哪種處理方式最符合個人資料保護法的去識別化要求？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "將卡號欄位全部刪除，僅保留上下車時間與路線編號"
+      },
+      {
+        "id": "B",
+        "text": "對卡號進行 MD5 雜湊處理，並保留對照表供查詢"
+      },
+      {
+        "id": "C",
+        "text": "將資料彙總為每日各路線總乘客數統計"
+      },
+      {
+        "id": "D",
+        "text": "將卡號替換為隨機編號，且不保留任何對應關係"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第17題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q18",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某工業感測器回傳溫度時序資料，約 5%出現遺漏值，確認為短暫失聯所致，非設備異常。資料工程師需在不引入虛假異常的前提下進行補值。考量資料具時間連續性，下列何種填補方式最為合適？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "將遺漏值全數填補為 0"
+      },
+      {
+        "id": "B",
+        "text": "以前後時間點的觀測值進行線性插補"
+      },
+      {
+        "id": "C",
+        "text": "填補整份資料的平均值"
+      },
+      {
+        "id": "D",
+        "text": "直接刪除包含遺漏值的時間點"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第18題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q19",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某溫室農場開發 AI 系統自動識別作物葉片上的害蟲種類，測試結果顯示：在1000 張測試影像中，系統正確識別出 80 隻害蟲，但誤判了 20 張正常葉片為有害蟲，同時漏檢了 10 隻實際存在的害蟲。對於害蟲檢測這個關鍵任務，下列哪個評估指標最需要優先關注？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "召回率（Recall） "
+      },
+      {
+        "id": "B",
+        "text": "精確率（Precision） "
+      },
+      {
+        "id": "C",
+        "text": "準確率（Accuracy） "
+      },
+      {
+        "id": "D",
+        "text": "F1 分數（F1-Score）"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第19題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q20",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某跨國企業需透過網路將各國子公司之敏感資料傳輸至總部進行模型訓練。資訊安全主管要求在傳輸過程中防範中間人攻擊，避免資料遭竊取或竄改。在不影響系統跨國即時傳輸效率之前提下，下列哪一項措施最能有效降低此風險？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "在接收端加強存取權限與身分驗證，限制只有授權人員可讀取資料"
+      },
+      {
+        "id": "B",
+        "text": "在資料傳輸過程中進行加密，並確認雙方身分以確保通訊安全"
+      },
+      {
+        "id": "C",
+        "text": "將資料拆分為多個部分分批傳送，降低單次資料外洩風險"
+      },
+      {
+        "id": "D",
+        "text": "改用離線備援方式進行跨國資料交換，以降低網路攻擊風險"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第20題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q21",
+    "subjectId": "junior-ai-basics",
+    "prompt": "關於深度學習（Deep Learning） ，下列敘述何者最為正確？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "深度學習模型通常需要人工設計特徵，以提升模型表現"
+      },
+      {
+        "id": "B",
+        "text": "深度學習主要應用於資料壓縮與特徵轉換，較少用於預測任務"
+      },
+      {
+        "id": "C",
+        "text": "深度學習透過多層神經網路，能自動從大量資料中學習抽象特徵"
+      },
+      {
+        "id": "D",
+        "text": "深度學習模型通常不需要大量資料即可達到良好效果，適合資料量有限的情境"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第21題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q22",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某企業於不同業務場景導入 AI 應用。下列關於其應用情境與機器學習類型的敘述，何者正確？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "客服對話分析中，同時使用少量標註資料與大量未標註資料進行訓練，屬於監督式學習（Supervised Learning） "
+      },
+      {
+        "id": "B",
+        "text": "商品分類系統依據顧客購買行為自動將商品分群，且未使用任何標註資料，屬於監督式學習（Supervised Learning） "
+      },
+      {
+        "id": "C",
+        "text": "自動駕駛系統根據操作結果的回饋持續調整決策策略，屬於非監督式學習（Unsupervised Learning） "
+      },
+      {
+        "id": "D",
+        "text": "使用者行為分析中，依據瀏覽與點擊模式將使用者分群，且未使用標註資料，屬於非監督式學習（Unsupervised Learning）"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第22題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q23",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某房仲業者委託 AI 團隊開發一套房價預測系統，希望根據物件坪數、屋齡、樓層與地段等條件，自動估算每間房屋的成交價格，供業務人員作為議價參考依據。下列哪一種指標最適合在系統上線前評估模型的預測準確程度？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "均方誤差（MSE） "
+      },
+      {
+        "id": "B",
+        "text": "精確率（Precision） "
+      },
+      {
+        "id": "C",
+        "text": "F1 分數（F1 Score） "
+      },
+      {
+        "id": "D",
+        "text": "召回率（Recall）"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第23題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q24",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某電商平台導入強化學習（Reinforcement Learning）技術優化商品推薦策略，AI代理（AIAgent）會根據使用者的點擊與購買行為持續調整推薦內容。技術團隊在討論中發現，系統面臨一個核心挑戰：若 AIAgent 總是推薦過去表現良好的商品，可能會錯失發掘更高潛力商品的機會；但若頻繁嘗試未知商品，又可能影響短期的推薦成效與使用者體驗。請問上述情境敘述的是強化學習中哪一個核心問題？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "探索與利用的權衡（Exploration vs. Exploitation） "
+      },
+      {
+        "id": "B",
+        "text": "偏差與變異的權衡（Bias vs. Variance） "
+      },
+      {
+        "id": "C",
+        "text": "梯度爆炸與消失（Vanishing and Exploding Gradients） "
+      },
+      {
+        "id": "D",
+        "text": "過擬合與欠擬合（Overfitting and Underfitting）"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第24題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q25",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某語音辨識系統需分析長時間的語音序列，發現當句子較長時，模型難以保留長時間序列中的前段資訊，導致辨識準確度下降。為改善此問題，下列何種模型最適合？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "長短期記憶網路（LSTM） "
+      },
+      {
+        "id": "B",
+        "text": "循環神經網路（RNN） "
+      },
+      {
+        "id": "C",
+        "text": "卷積神經網路（CNN） "
+      },
+      {
+        "id": "D",
+        "text": "生成式對抗網路（GAN）"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第25題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q26",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某大型連鎖超市建置生鮮商品損耗預測模型，以減少報廢損失。資料庫中共有120 萬筆銷售紀錄，但僅有約 8 萬筆資料標記為「正常銷售」或「損耗發生」 ，其餘資料均未標註。在標註資源有限的情況下，團隊希望提升模型預測表現。請問下列哪一種機器學習方式最適合此情境？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "監督式學習（Supervised Learning） ，以 8 萬筆已標註資料訓練分類模型，捨棄其餘 112 萬筆無標註資料"
+      },
+      {
+        "id": "B",
+        "text": "半監督式學習（Semi-supervised Learning） ，同時利用少量已標註資料學習分類邊界，並從大量無標註資料中學習資料整體分布特性"
+      },
+      {
+        "id": "C",
+        "text": "非監督式學習（Unsupervised Learning） ，對全部 120 萬筆資料進行自動分群，再由專家事後人工確認各群所代表的損耗類型"
+      },
+      {
+        "id": "D",
+        "text": "強化學習（Reinforcement Learning） ，讓模型在每次預測後依據實際損耗結果作為回饋訊號，持續調整損耗預警策略"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第26題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q27",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某製造業評估在不同場景導入 AI，包含：（甲）依據設備感測器數值判斷是否出現異常；（乙）依據客服對話內容判斷客戶情緒；（丙）依據產品影像輪廓直接進行瑕疵分類。下列哪一種情境最適合以自編碼器（Autoencoder）作為主要模型架構？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "甲"
+      },
+      {
+        "id": "B",
+        "text": "乙"
+      },
+      {
+        "id": "C",
+        "text": "丙"
+      },
+      {
+        "id": "D",
+        "text": "甲與丙"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第27題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q28",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某 AI 團隊正在訓練一個深度神經網路，用於辨識工廠產線上的瑕疵零件。工程師發現訓練過程中損失函數震盪幅度大，且不同批次資料造成模型學習方向不穩定。為改善此問題，團隊在各隱藏層加入 Batch Normalization 機制。請問此調整在訓練階段最主要的作用為何？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "將輸入影像標準化，使不同類別的特徵分布更加一致"
+      },
+      {
+        "id": "B",
+        "text": "自動調整模型權重初始化方式，以避免訓練初期震盪"
+      },
+      {
+        "id": "C",
+        "text": "增加模型隱藏層的非線性能力，以提升分類精度上限"
+      },
+      {
+        "id": "D",
+        "text": "降低不同批次輸入造成的內部特徵分布變動，使梯度更新更穩定"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第28題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q29",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某 AI 研究團隊採用 GRPO（Group Relative Policy Optimization）作為一種基於強化學習的模型優化方法，用於提升大型語言模型的表現。請問 GRPO 最適合用來強化模型在哪一類任務上的表現？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "判斷客服留言的情緒傾向，將每則訊息快速歸類為正面、負面或中性"
+      },
+      {
+        "id": "B",
+        "text": "將客服電話錄音即時轉換為文字，供後續人工審閱使用"
+      },
+      {
+        "id": "C",
+        "text": "針對數學應用題或邏輯謎題，逐步推導出正確解答"
+      },
+      {
+        "id": "D",
+        "text": "分析商品圖片的外觀特徵，自動辨識類別與品項"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第29題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q30",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某法律科技公司開發一套合約風險審查系統，可自動分析合約內容並標示潛在的高風險條款。律師在使用過程中，希望了解模型做出風險判斷的依據，因此系統導入顯著性圖（Saliency Map）作為可解釋 AI 的方法。請問在此自然語言處理（Natural Language Processing, NLP）應用情境中，顯著性圖主要用來標示什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "合約中各段落之間的語意相似程度，協助辨識重複或可能矛盾的條款"
+      },
+      {
+        "id": "B",
+        "text": "模型在進行預測時，輸入文字中對結果影響程度較高的文字片段"
+      },
+      {
+        "id": "C",
+        "text": "不同版本合約之間的文字差異，用以標示新增或修改的條款位置"
+      },
+      {
+        "id": "D",
+        "text": "模型在訓練資料中學習到的高頻詞彙，反映常見的風險相關用語"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第30題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q31",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某製造業 AI 品質預測模型採用部分依賴圖（Partial Dependence Plots, PDP）分析特徵影響效果。資料科學家希望了解「溫度特徵」對良品率的整體影響趨勢，但主管進一步詢問，是否能用 PDP 判斷某一筆瑕疵產品批次資料中，溫度是否為主要原因。下列何者最能說明 PDP 在此情境中的限制？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "PDP 無法顯示模型的預測準確率"
+      },
+      {
+        "id": "B",
+        "text": "PDP 僅能反映模型輸出結果，無法提供任何特徵影響的資訊"
+      },
+      {
+        "id": "C",
+        "text": "PDP 僅能用於單一特徵分析，無法同時考慮多個特徵的影響"
+      },
+      {
+        "id": "D",
+        "text": "PDP 僅呈現整體趨勢，無法判斷單一批次的原因"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第31題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q32",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某銀行使用 LIME（Local Interpretable Model-agnostic Explanations）來解釋其信貸審核模型的決策結果。分析師在閱讀解釋報告時，看到系統建立了一個簡化模型來近似原模型在該筆資料附近的行為。下列何者最能說明 LIME 中代理模型（Surrogate model）的意義？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "一個全局解釋所有預測的線性代理模型"
+      },
+      {
+        "id": "B",
+        "text": "用於產生擾動資料的資料生成機制"
+      },
+      {
+        "id": "C",
+        "text": "一種獨立訓練的生成式模型，用於輔助預測"
+      },
+      {
+        "id": "D",
+        "text": "用於擬合原黑箱模型在目標實例附近的預測行為"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第32題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q33",
+    "subjectId": "junior-ai-basics",
+    "prompt": "小明在 2025 年使用 AI 模型，將自己的照片轉換為公仔風格影像。該模型在維持生成品質的同時，也能在模型規模較大的情況下兼顧運算效率。下列何者最能敘述此模型可能採用的設計方式？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "基於單一稠密 Transformer 架構，每次運算都使用全部模型參數"
+      },
+      {
+        "id": "B",
+        "text": "採用稀疏專家混合（Sparse Mixture-of-Experts）架構，每次僅使用部分模型來提升效率"
+      },
+      {
+        "id": "C",
+        "text": "採用生成對抗網路（GAN） ，透過兩個模型互相比較來提升影像品質"
+      },
+      {
+        "id": "D",
+        "text": "採用卷積神經網路（CNN） ，直接進行影像轉換"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第33題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q34",
+    "subjectId": "junior-ai-basics",
+    "prompt": "CLIP 與 DINO 皆屬於自監督學習（Self-supervised Learning）模型，但其訓練資料來源有所不同。下列何者最能正確敘述兩者在訓練資料型態上的差異？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "皆使用有標註圖像資料進行監督式學習"
+      },
+      {
+        "id": "B",
+        "text": "皆使用未標註圖像資料進行自監督學習"
+      },
+      {
+        "id": "C",
+        "text": "CLIP 使用圖像與文字配對資料，DINO 使用未標註圖像資料"
+      },
+      {
+        "id": "D",
+        "text": "CLIP 使用未標註圖像資料，DINO 使用圖像與文字配對資料"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第34題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q35",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某企業導入大型語言模型（LLM）進行長篇法規文件的問答查詢。使用者反映，當問題需整合文件中較不相關的資訊時，模型回答的連貫性與準確性明顯下降。技術團隊認為此現象與模型架構特性有關。下列何者最能說明傳統Transformer 在此情境下的限制？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "模型在推理時僅能依賴固定長度的上下文窗口，無法同時處理分散於全文的資訊"
+      },
+      {
+        "id": "B",
+        "text": "模型能記住的內容取決於訓練語料，推理時遇到新內容可能無法應對"
+      },
+      {
+        "id": "C",
+        "text": "Transformer 在長序列處理時效率下降，但仍可完整處理所有輸入內容"
+      },
+      {
+        "id": "D",
+        "text": "每次推理後 Transformer 都需重新訓練才能記住新的資訊"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第35題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q36",
+    "subjectId": "junior-ai-basics",
+    "prompt": "小明剛加入一間電商公司擔任 AI 專案的業務窗口，在與技術團隊的交接會議中，工程師說明模型訓練時，會持續比對預測值與實際值之間的差距，並透過一套機制逐步調整模型內部參數，直到預測結果趨於穩定為止。請問工程師敘述的是深度學習中哪個元件的功能？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "優化器（Optimizer） "
+      },
+      {
+        "id": "B",
+        "text": "資料前處理模組"
+      },
+      {
+        "id": "C",
+        "text": "模型架構"
+      },
+      {
+        "id": "D",
+        "text": "激活函數（Activation Function）"
+      }
+    ],
+    "answer": "A",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第36題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q37",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某醫療 AI 系統使用深度學習模型分析胸腔 X 光影像，判斷患者是否罹患肺炎。醫院評估委員會要求系統必須能夠標示「影像中哪些區域對本次診斷判斷影響最大」 ，以供放射科醫師進行審核確認。 下列哪一種可解釋 AI 技術最能直接滿足「標示影像中對預測結果影響最大的區域」此一需求？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "LIME（Local Interpretable Model-agnostic Explanations） "
+      },
+      {
+        "id": "B",
+        "text": "SHAP（SHapleyAdditive exPlanations） "
+      },
+      {
+        "id": "C",
+        "text": "部分依賴圖（Partial Dependence Plot, PDP） "
+      },
+      {
+        "id": "D",
+        "text": "顯著性圖（Saliency Map）"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第37題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q38",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某電商平台希望偵測異常評論行為，例如大量重複貼文或疑似機器人生成的評論。由於此類異常樣本難以事先完整標記，系統主要依據大量正常評論的分布來識別偏離行為。下列哪一種機器學習框架最能滿足此系統的設計需求？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "非監督式學習（Unsupervised Learning）的關聯規則挖掘，從評論中找出常見字詞組合"
+      },
+      {
+        "id": "B",
+        "text": "監督式學習（Supervised Learning）的二元分類，從已標記資料學習分類模型"
+      },
+      {
+        "id": "C",
+        "text": "半監督式學習（Semi-supervised Learning）的異常偵測，辨識偏離正常分布的評論行為"
+      },
+      {
+        "id": "D",
+        "text": "強化學習（Reinforcement Learning） ，透過回饋機制優化評論判斷策略"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第38題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q39",
+    "subjectId": "junior-ai-basics",
+    "prompt": "在命名實體辨識（Named Entity Recognition, NER）任務中，模型需根據整句文字判斷每個詞的標籤，並考慮詞與詞之間的關聯性。若採用 ConditionalRandom Field（CRF）作為模型，下列何者最能描述其模型類型？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "生成式模型（Generative Model） "
+      },
+      {
+        "id": "B",
+        "text": "無監督模型（Unsupervised Model） "
+      },
+      {
+        "id": "C",
+        "text": "鑑別式模型（Discriminative Model） "
+      },
+      {
+        "id": "D",
+        "text": "自迴歸模型（Autoregressive Model）"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第39題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q40",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某音樂串流平台希望開發一套 AI 系統，能根據平台上累積的大量歌曲資料，自動生成具有不同風格變化的全新旋律，供創作者作為靈感參考。平台技術長在評估方案時強調，系統不能只是播放或拼接既有歌曲片段，也不能僅進行資料的重建，而是要真正學習音樂的結構與風格，並創作出從未出現過的新旋律。請問下列哪一種模型技術最符合此需求？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "K-近鄰演算法（K-Nearest Neighbors, KNN） "
+      },
+      {
+        "id": "B",
+        "text": "自編碼器（Autoencoder） "
+      },
+      {
+        "id": "C",
+        "text": "生成對抗網路（GAN） "
+      },
+      {
+        "id": "D",
+        "text": "隨機森林（Random Forest）"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第40題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q41",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某資安公司正在評估導入機器學習模型來偵測網路流量中的異常連線行為。技術團隊在比較各種演算法時，其中一位工程師建議採用支援向量機（SVM） 。請問下列何者最正確敘述支援向量機的特性？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "擅長處理大規模非結構化資料，且模型訓練完成後可自動適應新進資料而無需重新建模"
+      },
+      {
+        "id": "B",
+        "text": "透過多個模型的集體決策來提升預測穩定性，在資料量不足時仍能維持一定的準確率"
+      },
+      {
+        "id": "C",
+        "text": "在高維度且樣本數相對有限的情境下表現良好，但當訓練資料量龐大時運算成本會顯著上升"
+      },
+      {
+        "id": "D",
+        "text": "具備強大的特徵自動萃取能力，特別適合影像與語音等需要逐層抽象化處理的複雜任務"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第41題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q42",
+    "subjectId": "junior-ai-basics",
+    "prompt": "下列哪一項是可解釋人工智慧（XAI）領域，LIME（Local Interpretable Model-agnostic Explanations）最可能被用於的情境？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "分析即時通訊系統中訊息傳輸效率的瓶頸"
+      },
+      {
+        "id": "B",
+        "text": "建立機制以強化系統中的資料安全與隱私保護"
+      },
+      {
+        "id": "C",
+        "text": "當某筆貸款申請被模型拒絕時，分析該筆資料中各項因素與結果之間的關聯"
+      },
+      {
+        "id": "D",
+        "text": "監控並優化推薦系統的回應速度與系統效能，以提升整體使用體驗"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第42題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q43",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某信用評分公司導入 SHAP（SHapleyAdditive exPlanations）框架分析機器學習模型的輸出行為。分析師希望了解： 「對於某位特定申請人被評為高風險的信用評分，各項輸入特徵分別對這個評分結果貢獻了多少」 。下列哪一項最能正確說明 SHAP Shapley 值在此情境中所提供的資訊？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "各特徵在模型訓練過程中對結果穩定性的影響程度"
+      },
+      {
+        "id": "B",
+        "text": "此申請人的各項特徵，分別讓風險評分上升或下降的影響程度"
+      },
+      {
+        "id": "C",
+        "text": "各特徵在所有客戶資料中對整體預測準確度的影響程度"
+      },
+      {
+        "id": "D",
+        "text": "各特徵在模型中被使用的頻率"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第43題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q44",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某金融集團評估將大型語言模型導入客服與風控系統，團隊採用如 120B 參數等級的超大型語言模型以確保回應品質。請問下列何者最能說明企業在正式環境部署超大型語言模型時，最需要優先考量的因素？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "模型參數量龐大，導致每次輸出結果差異極大，難以符合金融業對回應一致性的要求"
+      },
+      {
+        "id": "B",
+        "text": "超大型模型無法支援批次處理，在高併發的客服場景下將造成嚴重的服務瓶頸"
+      },
+      {
+        "id": "C",
+        "text": "推理延遲較高且運算資源消耗龐大，每次請求成本遠高於小型模型，需在模型效能與營運成本之間審慎權衡"
+      },
+      {
+        "id": "D",
+        "text": "模型會依任務複雜度自動調整運算資源配置，因此不需特別考量推理成本"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第44題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q45",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某智慧交通系統在城市主要路口安裝監視攝影機，需即時識別畫面中的汽車、機車、公車等不同車輛類型，並統計各路口的車輛流量以支援號誌控制優化。下列哪一種神經網路架構最適合處理此類影像中的物件類型識別任務？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "循環神經網路（RNN） ，適合處理序列資料"
+      },
+      {
+        "id": "B",
+        "text": "卷積神經網路（CNN） ，適合處理影像資料"
+      },
+      {
+        "id": "C",
+        "text": "長短期記憶網路（LSTM） ，適合處理長期依賴"
+      },
+      {
+        "id": "D",
+        "text": "多層感知機（MLP） ，將輸入資料轉換為數值後進行分類"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第45題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q46",
+    "subjectId": "junior-ai-basics",
+    "prompt": "AutoSkill 框架的主要目標是什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "建立一個降低對大型語言模型（LLM）依賴的自動化系統"
+      },
+      {
+        "id": "B",
+        "text": "透過持續更新模型參數來提升任務表現"
+      },
+      {
+        "id": "C",
+        "text": "將重複的互動經驗轉化為可重複使用的明確技能模組"
+      },
+      {
+        "id": "D",
+        "text": "透過檢索外部知識來改善模型回應品質"
+      }
+    ],
+    "answer": "C",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第46題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q47",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某大型語言模型（LLM）在訓練過程中，研究人員發現模型在生成文本時，長期集中產生少數幾種相似的回應形式，缺乏多樣性。下列何者最能說明此現象及其可能原因？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "過度擬合（Overfitting） "
+      },
+      {
+        "id": "B",
+        "text": "模式崩潰（Mode Collapse） "
+      },
+      {
+        "id": "C",
+        "text": "梯度消失（Vanishing Gradient） "
+      },
+      {
+        "id": "D",
+        "text": "模型收斂速度（Convergence Rate）"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第47題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q48",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某電商平台建置機器學習模型，用於預測用戶在瀏覽特定商品後的購買機率。模型上線初期表現穩定，但維運團隊在定期審查中發現兩種不同情形：情形甲：模型上線半年後恰逢消費趨勢轉變，過去高購買意願的用戶行為模式（如長時間停留商品頁）不再是強烈的購買訊號，即便輸入特徵分布與訓練期相近，模型預測準確率仍明顯下降。情形乙：平台新增了行動裝置端的入口，新用戶的年齡分布、裝置類型與使用時段特徵與原訓練資料差異顯著，導致模型對這批用戶的預測偏差增大。下列哪一項最能正確對應兩種情形所屬的模型劣化類型？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "甲為資料漂移（Data Drift） 、乙為概念漂移（Concept Drift） "
+      },
+      {
+        "id": "B",
+        "text": "甲為概念漂移（Concept Drift） 、乙為資料漂移（Data Drift） "
+      },
+      {
+        "id": "C",
+        "text": "甲為模型過擬合（Overfitting） 、乙為資料漂移（Data Drift） "
+      },
+      {
+        "id": "D",
+        "text": "甲與乙均屬概念漂移（Concept Drift） ，因為兩者都導致模型預測準確率下降"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第48題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q49",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某資安公司目前以鑑別式 AI 偵測已知網路攻擊。為因應新型變種攻擊，研究人員計劃利用生成式 AI 模擬可能的攻擊流量，並納入防禦模型訓練。下列何者最能說明此做法對鑑別式 AI 防禦模型的主要助益？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "生成式 AI 可取代真實攻擊資料，降低蒐集成本"
+      },
+      {
+        "id": "B",
+        "text": "生成式 AI 可直接負責防禦決策，取代原有模型"
+      },
+      {
+        "id": "C",
+        "text": "模擬攻擊資料可使模型自動轉為生成式架構"
+      },
+      {
+        "id": "D",
+        "text": "將模擬攻擊納入訓練，可提升模型對未知攻擊的辨識能力"
+      }
+    ],
+    "answer": "D",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第49題"
+  },
+  {
+    "id": "junior-ai-basics-115-2-q50",
+    "subjectId": "junior-ai-basics",
+    "prompt": "某企業已部署一套預訓練大型語言模型作為內部知識問答系統，主要用於查詢人資、財務與法遵相關的內部規範。由於公司內規每月都會滾動更新，管理層要求系統在文件更新後必須能立即反映最新內容，不能等待模型重新訓練。技術團隊正在評估應採用檢索增強生成（RAG）還是微調（Fine-tuning）來因應此需求。請問下列哪一項評估最為正確？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "採用 Fine-tuning 較為適合，只要定期將更新後的內規文件加入訓練資料，模型便能即時反映最新規範內容"
+      },
+      {
+        "id": "B",
+        "text": "採用 RAG 較為適合，將更新後的文件同步至外部知識庫，模型即可在不重新訓練的情況下立即查詢最新內容"
+      },
+      {
+        "id": "C",
+        "text": "採用 Fine-tuning 較為適合，因為模型經過內規語料訓練後，回應品質會優於透過 RAG 生成的答案"
+      },
+      {
+        "id": "D",
+        "text": "兩者皆可達成需求，差異僅在於建置成本高低，與系統能否即時反映更新內容無關"
+      }
+    ],
+    "answer": "B",
+    "explanation": "",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "115年第二次 第50題"
+  },
+  {
     "id": "junior-ai-basics-114-4-q01",
     "subjectId": "junior-ai-basics",
     "prompt": "在人工智慧系統的決策流程中，下列哪一種情境最符合「人在迴圈上（Human-over-the-loop） 」所強調的監督機制？",
@@ -2898,5 +4348,1165 @@
     "difficulty": "中",
     "source": "past-exam",
     "sourceRef": "114年第四梯次 第50題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q001",
+    "subjectId": "junior-ai-basics",
+    "prompt": "下列何者最適合訓練電腦下圍棋、自動駕駛等動態重複地互動的問題？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "監督式學習（Supervised Learning）"
+      },
+      {
+        "id": "B",
+        "text": "非監督式學習（Unsupervised Learning）"
+      },
+      {
+        "id": "C",
+        "text": "半監督式學習（Semi-supervised Learning）"
+      },
+      {
+        "id": "D",
+        "text": "強化學習（Reinforcement Learning）"
+      }
+    ],
+    "answer": "D",
+    "explanation": "解析：強化學習（Reinforcement Learning, RL）是一種機器學習方法，讓代理（Agent）透過與環境不斷互動，學習到一系列動作，以最大化累積獎勵。這種學習方式非常適合用於訓練電腦在動態、複雜的環境中做出決策，例如下圍棋、自動駕駛等。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第1題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q002",
+    "subjectId": "junior-ai-basics",
+    "prompt": "關於 AI 的定義，下列敘述何者較為正確？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "AI 僅限於深度學習技術"
+      },
+      {
+        "id": "B",
+        "text": "AI 包括各種技術，例如機器學習、專家系統等"
+      },
+      {
+        "id": "C",
+        "text": "AI 系統只能在學術研究中應用"
+      },
+      {
+        "id": "D",
+        "text": "AI 無法應用於金融領域"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：人工智慧（AI）就像是一個龐大的拼圖，由許多不同的技術碎片組成。這些技術各司其職，共同構成了我們所理解的人工智慧。 （A）不限於深度學習，還有機器學習、演算法等。 （C）不只限制於特定的研究、金融領域，在各領域都有許多 AI 的應用，如：醫學、交通等。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第2題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q003",
+    "subjectId": "junior-ai-basics",
+    "prompt": "為了提升 AI 系統的透明性，下列哪種措施是適當的？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "不需對外揭露任何有關 AI 系統的資訊"
+      },
+      {
+        "id": "B",
+        "text": "規劃透過發布報告、技術文件或網站揭露 AI 系統的相關資訊"
+      },
+      {
+        "id": "C",
+        "text": "僅對內部員工進行透明性說明"
+      },
+      {
+        "id": "D",
+        "text": "將所有 AI 系統資訊保密"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：透過定期或不定期發佈 AI 系統於各決策環節的決策流程，有助於提昇AI 系統的透明性。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第3題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q004",
+    "subjectId": "junior-ai-basics",
+    "prompt": "下列何者不適合做為資料分布估計？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "直方圖（Histogram）"
+      },
+      {
+        "id": "B",
+        "text": "散布圖（Scatter plot）"
+      },
+      {
+        "id": "C",
+        "text": "雷達圖（Radar chart）"
+      },
+      {
+        "id": "D",
+        "text": "四分位數（Quartile）"
+      }
+    ],
+    "answer": "C",
+    "explanation": "解析：雷達圖有幾個限制，無法直觀呈現機率密度：雷達圖主要用於比較不同個體在多個維度上的表現，而非呈現數據在每個維度上的分布情況。要了解數據在某個維度上的集中程度、分散程度等，需要更適合的圖形，如直方圖。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第4題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q005",
+    "subjectId": "junior-ai-basics",
+    "prompt": "K-Means 聚類算法中，K 代表什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "數據集中特徵的數量"
+      },
+      {
+        "id": "B",
+        "text": "數據集中樣本的數量"
+      },
+      {
+        "id": "C",
+        "text": "所需劃分的群組數量"
+      },
+      {
+        "id": "D",
+        "text": "迭代次數3-21"
+      }
+    ],
+    "answer": "C",
+    "explanation": "解析：K 在 K-Means 演算法中代表我們希望將數據分為幾個群組。K 值的選擇會直接影響最終的聚類結果，因此是一個非常重要的參數。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第5題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q006",
+    "subjectId": "junior-ai-basics",
+    "prompt": "深度學習模型中，下列哪一項通常用來降低過擬合問題？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "增加訓練數據量"
+      },
+      {
+        "id": "B",
+        "text": "增加模型的複雜度"
+      },
+      {
+        "id": "C",
+        "text": "增加學習率"
+      },
+      {
+        "id": "D",
+        "text": "增加正則化項"
+      }
+    ],
+    "answer": "D",
+    "explanation": "解析：過擬合指的是模型過度學習訓練數據中的雜訊或特徵，導致在測試集上表現不佳。正則化是一種在模型中加入額外項來懲罰複雜模型的方法，常見的正則化項有 L1 正則化和 L2 正則化。增加正則化項可以使模型變得更簡單，降低過擬合的風險，提高模型的泛化能力。3-23",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第6題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q007",
+    "subjectId": "junior-ai-basics",
+    "prompt": "生成式人工智慧最核心的能力是什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "從大量數據中學習"
+      },
+      {
+        "id": "B",
+        "text": "執行複雜的數學計算"
+      },
+      {
+        "id": "C",
+        "text": "生成新的、原創的內容"
+      },
+      {
+        "id": "D",
+        "text": "控制機器人"
+      }
+    ],
+    "answer": "C",
+    "explanation": "解析：生成式 AI 的最大特徵就是能夠生成全新的文本、圖像、音樂等內容。這與傳統的 AI 主要用於分析或預測已有數據不同。生成式 AI 透過學習大量數據的模式，能產生出具有創造性的輸出。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第7題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q008",
+    "subjectId": "junior-ai-basics",
+    "prompt": "下列哪項技術是生成式 AI 發展的重要基礎？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "決策樹"
+      },
+      {
+        "id": "B",
+        "text": "神經網路"
+      },
+      {
+        "id": "C",
+        "text": "線性迴歸"
+      },
+      {
+        "id": "D",
+        "text": "貝氏分類"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：神經網路，尤其是深度學習模型，是生成式 AI 的基石。這些模型能夠學習數據中的複雜模式，並生成與訓練數據相似但又不完全相同的新的數據。其他選項如決策樹、線性迴歸和貝氏分類雖然也是機器學習的重要方法，但並不擅長生成新的內容。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第8題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q009",
+    "subjectId": "junior-ai-basics",
+    "prompt": "關於 AI，下列敘述何者較為正確？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "AI 僅限於深度學習技術"
+      },
+      {
+        "id": "B",
+        "text": "AI 包括各種技術，例如機器學習、專家系統等"
+      },
+      {
+        "id": "C",
+        "text": "AI 系統只能在學術研究中應用"
+      },
+      {
+        "id": "D",
+        "text": "AI 無法應用於金融領域"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：AI 是一個廣泛的領域，涵蓋了多種技術，包括但不限於機器學習、深度學習、專家系統、自然語言處理和計算機視覺等。它不僅限於深度學習，也不僅侷限於學術研究，且已成功應用於金融、醫療、製造等多個領域。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第9題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q010",
+    "subjectId": "junior-ai-basics",
+    "prompt": "在 AI 治理中，下列何者是國際合作的重要性？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "統一 AI 發展標準"
+      },
+      {
+        "id": "B",
+        "text": "避免 AI 技術的濫用"
+      },
+      {
+        "id": "C",
+        "text": "促進 AI 技術的轉移"
+      },
+      {
+        "id": "D",
+        "text": "以上皆是3-221. Ans（D）解析：強化學習（Reinforcement Learning, RL）是一種機器學習方法，讓代理（Agent）透過與環境不斷互動，學習到一系列動作，以最大化累積獎勵。這種學習方式非常適合用於訓練電腦在動態、複雜的環境中做出決策，例如下圍棋、自動駕駛等。2. Ans（B）解析：人工智慧（AI）就像是一個龐大的拼圖，由許多不同的技術碎片組成。這些技術各司其職，共同構成了我們所理解的人工智慧。 （A）不限於深度學習，還有機器學習、演算法等。 （C）不只限制於特定的研究、金融領域，在各領域都有許多 AI 的應用，如：醫學、交通等。3. Ans（B）解析：透過定期或不定期發佈 AI 系統於各決策環節的決策流程，有助於提昇AI 系統的透明性。4. Ans（C）解析：雷達圖有幾個限制，無法直觀呈現機率密度：雷達圖主要用於比較不同個體在多個維度上的表現，而非呈現數據在每個維度上的分布情況。要了解數據在某個維度上的集中程度、分散程度等，需要更適合的圖形，如直方圖。5. Ans（C）解析：K 在 K-Means 演算法中代表我們希望將數據分為幾個群組。K 值的選擇會直接影響最終的聚類結果，因此是一個非常重要的參數。6. Ans（D）解析：過擬合指的是模型過度學習訓練數據中的雜訊或特徵，導致在測試集上表現不佳。正則化是一種在模型中加入額外項來懲罰複雜模型的方法，常見的正則化項有 L1 正則化和 L2 正則化。增加正則化項可以使模型變得更簡單，降低過擬合的風險，提高模型的泛化能力。3-237. Ans（C）解析：生成式 AI 的最大特徵就是能夠生成全新的文本、圖像、音樂等內容。這與傳統的 AI 主要用於分析或預測已有數據不同。生成式 AI 透過學習大量數據的模式，能產生出具有創造性的輸出。8. Ans（B）解析：神經網路，尤其是深度學習模型，是生成式 AI 的基石。這些模型能夠學習數據中的複雜模式，並生成與訓練數據相似但又不完全相同的新的數據。其他選項如決策樹、線性迴歸和貝氏分類雖然也是機器學習的重要方法，但並不擅長生成新的內容。9. Ans（B）解析：AI 是一個廣泛的領域，涵蓋了多種技術，包括但不限於機器學習、深度學習、專家系統、自然語言處理和計算機視覺等。它不僅限於深度學習，也不僅侷限於學術研究，且已成功應用於金融、醫療、製造等多個領域。10. Ans（D）解析：在 AI 治理中，國際合作的重要性包含多個方面，主要包括：統一 AI 發展標準，確保不同國家在技術應用上的一致性和互操作性。避免 AI 技術的濫用，透過跨國監管和政策協調減少倫理與安全風險。促進 AI 技術的轉移，幫助各國共享技術資源，縮小數位鴻溝。因此，以上選項都屬於國際合作的重要性。3-24"
+      }
+    ],
+    "answer": "D",
+    "explanation": "解析：在 AI 治理中，國際合作的重要性包含多個方面，主要包括：統一 AI 發展標準，確保不同國家在技術應用上的一致性和互操作性。避免 AI 技術的濫用，透過跨國監管和政策協調減少倫理與安全風險。促進 AI 技術的轉移，幫助各國共享技術資源，縮小數位鴻溝。因此，以上選項都屬於國際合作的重要性。3-24",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第10題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q011",
+    "subjectId": "junior-ai-basics",
+    "prompt": "關於 K 平均法（K-means） ，下列敘述何者「不」正確？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "希望找出 k 個互不交集的群集"
+      },
+      {
+        "id": "B",
+        "text": "不同的起始群集中心，可能會造成不同的分群結果"
+      },
+      {
+        "id": "C",
+        "text": "容易受雜訊與離群值（Outlier）影響其群集中心"
+      },
+      {
+        "id": "D",
+        "text": "可以處理類別型資料"
+      }
+    ],
+    "answer": "D",
+    "explanation": "解析：K-means 演算法特性為隨機選取集群中心、依距離計算、各群質心為代表點、分割式分群、易受離群值影響、類別型資料集群方法。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第11題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q012",
+    "subjectId": "junior-ai-basics",
+    "prompt": "在品質管理中，若一產品的生產過程中標準差顯著偏大，通常意味著什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "資料點高度集中，產品質量穩定"
+      },
+      {
+        "id": "B",
+        "text": "生產過程波動大，產品品質不穩定"
+      },
+      {
+        "id": "C",
+        "text": "資料無法反映產品實際狀況"
+      },
+      {
+        "id": "D",
+        "text": "中位數數值高，品質良率較高"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：標準差越大表示數據分散程度越高，在品質管理中意味著產品或過程波動大，進而產品品質不穩定，故答案為 B。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第12題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q013",
+    "subjectId": "junior-ai-basics",
+    "prompt": "下列何者「並非」K 平均數（k-means）集群法的特點？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "原理相對其他集群法較為複雜"
+      },
+      {
+        "id": "B",
+        "text": "可結合其他方法，使用上較為彈性"
+      },
+      {
+        "id": "C",
+        "text": "在特定情況下，能將集群的任務處理得足夠好"
+      },
+      {
+        "id": "D",
+        "text": "不適合非球形、數據密度變化大或有離群數據的集群問題"
+      }
+    ],
+    "answer": "A",
+    "explanation": "K-means 的原理相對簡單，主要透過反覆分配點到最近中心、並更新中心點來最小化平方誤差和，並非複雜方法。K-means 常與 PCA（降維）、Elbow method（選 k 值）等方法結合，具一定彈性；對球形且大小密度接近的群體表現良好。故「原理相對其他集群法較為複雜」不正確，選 A。（依初級學習指引勘誤表修正）",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第13題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q014",
+    "subjectId": "junior-ai-basics",
+    "prompt": "驗證性資料分析（Confirmatory Data Analysis, CDA）與探索性資料分析（Exploratory Data Analysis, EDA）相比，主要著重於下列哪一項？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "對資料進行初步描述和視覺化"
+      },
+      {
+        "id": "B",
+        "text": "驗證先前生成的假設並進行深入挖掘"
+      },
+      {
+        "id": "C",
+        "text": "排除資料中的極端值以提高準確性"
+      },
+      {
+        "id": "D",
+        "text": "探索數據中潛在的模式和異常"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：驗證性資料分析的重點在於檢驗先前所提出的假設，通常採用分類、分群、相關性分析或預測模型等方法進行深入分析，因此答案為 B。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第14題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q015",
+    "subjectId": "junior-ai-basics",
+    "prompt": "以下哪種情況下，使用中位數來描述資料的集中趨勢最為合適？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "一組考試成績，大部分學生分數集中在 80 分左右"
+      },
+      {
+        "id": "B",
+        "text": "一組房屋價格數據，其中包含少數豪宅的極端高價"
+      },
+      {
+        "id": "C",
+        "text": "一組產品銷售量數據，每個產品的銷量差異不大"
+      },
+      {
+        "id": "D",
+        "text": "一組學生身高數據，呈現出常態分布3-30"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：平均數：易受極端值影響。當資料中有極端值時，平均數可能會偏離資料的中心趨勢。中位數：不受極端值影響。它能更準確地反映資料的中心趨勢，特別是在資料分布不對稱或有極端值的情況下。眾數：表示資料中出現頻率最高的數值。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第15題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q016",
+    "subjectId": "junior-ai-basics",
+    "prompt": "一組數據中，如果平均數小於中位數，那麼這組數據的分布可能是下列哪一種?",
+    "choices": [
+      {
+        "id": "A",
+        "text": "對稱分布"
+      },
+      {
+        "id": "B",
+        "text": "正偏態分布"
+      },
+      {
+        "id": "C",
+        "text": "負偏態分布"
+      },
+      {
+        "id": "D",
+        "text": "無法判斷"
+      }
+    ],
+    "answer": "C",
+    "explanation": "解析：對稱分布：平均數、中位數和眾數通常會接近。正偏態分布：資料的尾巴向右邊延伸，平均數會大於中位數。負偏態分布：資料的尾巴向左邊延伸，平均數會小於中位數。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第16題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q017",
+    "subjectId": "junior-ai-basics",
+    "prompt": "當我們進行一次假設檢定，得到的 p 值為 0.03，而我們事先設定的顯著性水準為 0.05。以下哪一個敘述最合乎統計檢定的意義？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "我們有 97%的信心拒絕虛無假設"
+      },
+      {
+        "id": "B",
+        "text": "我們在 95%的信心水準下拒絕虛無假設"
+      },
+      {
+        "id": "C",
+        "text": "我們無法拒絕虛無假設"
+      },
+      {
+        "id": "D",
+        "text": "我們犯型一錯誤的機率為 5%"
+      }
+    ],
+    "answer": "B",
+    "explanation": "顯著性水準設定為 0.05 表示，我們容許最多 5%的機率犯型一錯誤（Type-I Error），並非代表實際犯錯機率就是 5%。因 p 值 0.03 小於顯著性水準 0.05，所以可在 95%的信心水準下拒絕虛無假設，選 B。（依初級學習指引勘誤表修正）",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第17題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q018",
+    "subjectId": "junior-ai-basics",
+    "prompt": "一組資料中，若平均數大於中位數，則這組資料的分布可能是下列哪一種？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "對稱分布"
+      },
+      {
+        "id": "B",
+        "text": "負偏態分布"
+      },
+      {
+        "id": "C",
+        "text": "正偏態分布"
+      },
+      {
+        "id": "D",
+        "text": "無法判斷"
+      }
+    ],
+    "answer": "C",
+    "explanation": "解析：對稱分布：平均數、中位數和眾數通常會接近；負偏態分布：資料的尾巴向左邊延伸，平均數會小於中位數；正偏態分布：資料的尾巴向右邊延伸，平均數會大於中位數。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第18題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q019",
+    "subjectId": "junior-ai-basics",
+    "prompt": "下列哪一個敘述關於四分位距（IQR）是正確的？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "四分位距會受到極端值的影響"
+      },
+      {
+        "id": "B",
+        "text": "四分位距代表資料中所有數據的分散程度"
+      },
+      {
+        "id": "C",
+        "text": "四分位距是第三四分位數與第一四分位數的差"
+      },
+      {
+        "id": "D",
+        "text": "四分位距與平均數一樣，容易受到極端值影響"
+      }
+    ],
+    "answer": "C",
+    "explanation": "解析：四分位距（IQR） ：是指一組數據中，第三四分位數（Q3）與第一四分位數（Q1）的差。也就是說，IQR 代表了資料中間 50%的數據的範圍。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第19題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q020",
+    "subjectId": "junior-ai-basics",
+    "prompt": "以下哪一種情況最適合用眾數來描述資料的集中趨勢？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "一組學生身高資料，呈現出常態分布"
+      },
+      {
+        "id": "B",
+        "text": "一組產品銷售量資料，其中一種產品的銷量遠高於其他產品"
+      },
+      {
+        "id": "C",
+        "text": "一組考試成績資料，大部分學生的分數集中在 80 分左右"
+      },
+      {
+        "id": "D",
+        "text": "一組房屋價格資料，其中包含少數豪宅的極端高價3-311. Ans（D）解析：K-means 演算法特性為隨機選取集群中心、依距離計算、各群質心為代表點、分割式分群、易受離群值影響、類別型資料集群方法。2. Ans（B）解析：標準差越大表示數據分散程度越高，在品質管理中意味著產品或過程波動大，進而產品品質不穩定，故答案為 B。3. Ans（B）解析：用於估計結果不穩定時。4. Ans（B）解析：驗證性資料分析的重點在於檢驗先前所提出的假設，通常採用分類、分群、相關性分析或預測模型等方法進行深入分析，因此答案為 B。5. Ans（B）解析：平均數：易受極端值影響。當資料中有極端值時，平均數可能會偏離資料的中心趨勢。中位數：不受極端值影響。它能更準確地反映資料的中心趨勢，特別是在資料分布不對稱或有極端值的情況下。眾數：表示資料中出現頻率最高的數值。6. Ans（C）解析：對稱分布：平均數、中位數和眾數通常會接近。正偏態分布：資料的尾巴向右邊延伸，平均數會大於中位數。負偏態分布：資料的尾巴向左邊延伸，平均數會小於中位數。7. Ans（B）解析：p 值為 0.03 表示，在虛無假設為真的情況下，觀察到目前數據或更極端數據的機率是 3%。換句話說，如果虛無假設是正確的，那麼得到這樣的結果是非常罕見的。3-32顯著性水準設定為 0.05 表示，我們願意接受 5%的風險來拒絕一個實際為真的虛無假設（即 Type-I Error） 。比較 p 值和顯著性水準：由於 0.03 < 0.05，因此我們拒絕虛無假設。這意味著，我們有 95%的信心認為，觀察到的結果並非偶然，而是支持對立假設。8. Ans（C）解析：對稱分布：平均數、中位數和眾數通常會接近；負偏態分布：資料的尾巴向左邊延伸，平均數會小於中位數；正偏態分布：資料的尾巴向右邊延伸，平均數會大於中位數。9. Ans（C）解析：四分位距（IQR） ：是指一組數據中，第三四分位數（Q3）與第一四分位數（Q1）的差。也就是說，IQR 代表了資料中間 50%的數據的範圍。10. Ans（B）解析：眾數代表資料中出現頻率最高的數值。當資料中有一個或幾個數值出現的頻率明顯高於其他數值時，眾數能較好地反映資料的集中趨勢。當一種產品的銷量遠高於其他產品時，這個產品的銷量就是眾數。這代表大多數的銷售額來自於這個產品，使用眾數能更直接地反映出最受歡迎的產品。3-33"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：眾數代表資料中出現頻率最高的數值。當資料中有一個或幾個數值出現的頻率明顯高於其他數值時，眾數能較好地反映資料的集中趨勢。當一種產品的銷量遠高於其他產品時，這個產品的銷量就是眾數。這代表大多數的銷售額來自於這個產品，使用眾數能更直接地反映出最受歡迎的產品。3-33",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第20題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q021",
+    "subjectId": "junior-ai-basics",
+    "prompt": "機器學習的三個核心要素是什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "數據、模型、損失函數"
+      },
+      {
+        "id": "B",
+        "text": "訓練集、測試集、驗證集"
+      },
+      {
+        "id": "C",
+        "text": "特徵工程、優化演算法、正則化"
+      },
+      {
+        "id": "D",
+        "text": "超參數調整、模型選擇、數據處理"
+      }
+    ],
+    "answer": "A",
+    "explanation": "解析：機器學習的三個核心要素分別是數據（Data） 、模型（Model）和損失函數（Loss Function） ，其中數據提供基礎，模型學習數據的規律，損失函數用於評估預測的準確性並指導模型優化。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第21題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q022",
+    "subjectId": "junior-ai-basics",
+    "prompt": "下列哪一項屬於監督式學習的特點？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "數據集中包含標記訊息"
+      },
+      {
+        "id": "B",
+        "text": "僅需探索數據內部的結構"
+      },
+      {
+        "id": "C",
+        "text": "使用代理與環境互動進行學習"
+      },
+      {
+        "id": "D",
+        "text": "不需要驗證集來調整參數"
+      }
+    ],
+    "answer": "A",
+    "explanation": "解析：監督式學習依賴有標記的數據集，透過學習輸入與輸出之間的映射關係來進行預測或分類。 （B）是非監督式學習的特點， （C）是強化學習的特點。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第22題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q023",
+    "subjectId": "junior-ai-basics",
+    "prompt": "機器學習模型過擬合的主要原因是什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "模型的複雜度不足"
+      },
+      {
+        "id": "B",
+        "text": "訓練數據樣本過多"
+      },
+      {
+        "id": "C",
+        "text": "模型過度學習數據中的雜訊"
+      },
+      {
+        "id": "D",
+        "text": "使用過於簡單的損失函數"
+      }
+    ],
+    "answer": "C",
+    "explanation": "解析：過擬合通常是由於模型學習了訓練數據中的雜訊或特定模式，導致模型對測試數據泛化能力不足。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第23題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q024",
+    "subjectId": "junior-ai-basics",
+    "prompt": "交叉驗證的主要目的是什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "提高模型的訓練速度"
+      },
+      {
+        "id": "B",
+        "text": "驗證數據是否線性可分"
+      },
+      {
+        "id": "C",
+        "text": "減少模型的過擬合風險"
+      },
+      {
+        "id": "D",
+        "text": "測試模型的容錯能力"
+      }
+    ],
+    "answer": "C",
+    "explanation": "解析：交叉驗證透過多次分割數據進行訓練和測試，有助於評估模型的穩健性並降低過擬合的可能性。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第24題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q025",
+    "subjectId": "junior-ai-basics",
+    "prompt": "機器學習的梯度下降演算法主要用於什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "減少模型的計算複雜度"
+      },
+      {
+        "id": "B",
+        "text": "優化模型參數以最小化損失函數"
+      },
+      {
+        "id": "C",
+        "text": "減少數據中的雜訊干擾"
+      },
+      {
+        "id": "D",
+        "text": "增強數據特徵的表示能力3-45"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：解析：梯度下降演算法是一種優化方法，透過計算損失函數相對參數的偏導數，調整模型參數使損失函數值逐漸減小。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第25題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q026",
+    "subjectId": "junior-ai-basics",
+    "prompt": "線性迴歸模型最適合解決哪種類型的問題？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "圖像分類"
+      },
+      {
+        "id": "B",
+        "text": "銷售額預測"
+      },
+      {
+        "id": "C",
+        "text": "聚類分析"
+      },
+      {
+        "id": "D",
+        "text": "遊戲策略學習"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：線性迴歸是一種典型的迴歸模型，用於解決輸出為連續值的問題，如預測銷售額或房價。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第26題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q027",
+    "subjectId": "junior-ai-basics",
+    "prompt": "決策樹的最大優勢是什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "適合大規模數據的訓練"
+      },
+      {
+        "id": "B",
+        "text": "具有良好的可解釋性"
+      },
+      {
+        "id": "C",
+        "text": "不需要進行數據標準化"
+      },
+      {
+        "id": "D",
+        "text": "適用於圖像生成任務"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：決策樹的分支結構清晰，便於直觀解釋，因此廣泛用於需要高可解釋性的任務，如醫學診斷或風險評估。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第27題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q028",
+    "subjectId": "junior-ai-basics",
+    "prompt": "神經網路與傳統機器學習模型的主要區別是什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "神經網路無法處理非線性數據"
+      },
+      {
+        "id": "B",
+        "text": "神經網路透過多層結構學習複雜特徵"
+      },
+      {
+        "id": "C",
+        "text": "神經網路只適用於迴歸問題"
+      },
+      {
+        "id": "D",
+        "text": "神經網路不需要大量數據支持"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：神經網路具有多層結構，能夠從數據中提取高層次特徵，適合處理複雜的非線性問題，例如圖像分類和語音辨識。3-47",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第28題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q029",
+    "subjectId": "junior-ai-basics",
+    "prompt": "下列關於生成對抗網路（GAN）的描述正確的是哪一項？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "GAN 僅用於分類問題"
+      },
+      {
+        "id": "B",
+        "text": "GAN 由生成器和鑑別器組成"
+      },
+      {
+        "id": "C",
+        "text": "GAN 的結果始終高度可解釋"
+      },
+      {
+        "id": "D",
+        "text": "GAN 不能生成高品質的數據"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：生成對抗網路（GAN）由生成器和鑑別器組成，透過對抗學習生成高品質的數據，應用於圖像生成、文本生成等任務。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第29題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q030",
+    "subjectId": "junior-ai-basics",
+    "prompt": "隨機森林（Random Forest）改進了單一決策樹的缺陷，主要透過什麼方法實現？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "使用核函數映射高維空間"
+      },
+      {
+        "id": "B",
+        "text": "集成多棵隨機生成的決策樹並投票"
+      },
+      {
+        "id": "C",
+        "text": "增加模型參數以減少偏差"
+      },
+      {
+        "id": "D",
+        "text": "採用生成模型替代分類器3-461. Ans（A）解析：機器學習的三個核心要素分別是數據（Data） 、模型（Model）和損失函數（Loss Function） ，其中數據提供基礎，模型學習數據的規律，損失函數用於評估預測的準確性並指導模型優化。2. Ans（A）解析：監督式學習依賴有標記的數據集，透過學習輸入與輸出之間的映射關係來進行預測或分類。 （B）是非監督式學習的特點， （C）是強化學習的特點。3. Ans（C）解析：過擬合通常是由於模型學習了訓練數據中的雜訊或特定模式，導致模型對測試數據泛化能力不足。4. Ans（C）解析：交叉驗證透過多次分割數據進行訓練和測試，有助於評估模型的穩健性並降低過擬合的可能性。5. Ans（B）解析：解析：梯度下降演算法是一種優化方法，透過計算損失函數相對參數的偏導數，調整模型參數使損失函數值逐漸減小。6. Ans（B）解析：線性迴歸是一種典型的迴歸模型，用於解決輸出為連續值的問題，如預測銷售額或房價。7. Ans（B）解析：決策樹的分支結構清晰，便於直觀解釋，因此廣泛用於需要高可解釋性的任務，如醫學診斷或風險評估。8. Ans（B）解析：神經網路具有多層結構，能夠從數據中提取高層次特徵，適合處理複雜的非線性問題，例如圖像分類和語音辨識。3-479. Ans（B）解析：生成對抗網路（GAN）由生成器和鑑別器組成，透過對抗學習生成高品質的數據，應用於圖像生成、文本生成等任務。10. Ans（B）解析：隨機森林是決策樹的集成演算法，透過構建多棵隨機決策樹並對其結果進行投票，有效降低了過擬合的風險。3-48"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：隨機森林是決策樹的集成演算法，透過構建多棵隨機決策樹並對其結果進行投票，有效降低了過擬合的風險。3-48",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第30題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q031",
+    "subjectId": "junior-ai-basics",
+    "prompt": "下列何者為鑑別式 AI 的主要目標？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "學習數據的生成過程"
+      },
+      {
+        "id": "B",
+        "text": "生成類似真實數據的新樣本"
+      },
+      {
+        "id": "C",
+        "text": "分類或迴歸數據"
+      },
+      {
+        "id": "D",
+        "text": "創建多樣化的數據分佈"
+      }
+    ],
+    "answer": "C",
+    "explanation": "解析：鑑別式 AI 專注於學習數據的條件概率 P（y|x） ，主要用於分類或迴歸任務，而非生成數據。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第31題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q032",
+    "subjectId": "junior-ai-basics",
+    "prompt": "下列何者屬於生成式 AI 使用之模型？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "支援向量機（SVM）"
+      },
+      {
+        "id": "B",
+        "text": "邏輯迴歸（Logistic Regression）"
+      },
+      {
+        "id": "C",
+        "text": "生成對抗網路（GAN）"
+      },
+      {
+        "id": "D",
+        "text": "隨機森林（Random Forest）"
+      }
+    ],
+    "answer": "C",
+    "explanation": "解析：生成對抗網路（GAN）是典型的生成式 AI 模型，專注於生成新數據，而其他選項均為鑑別式模型。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第32題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q033",
+    "subjectId": "junior-ai-basics",
+    "prompt": "關於目前生成式 AI 的主要應用，不包括下列哪一項？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "創建合成數據樣本"
+      },
+      {
+        "id": "B",
+        "text": "模擬數據分佈"
+      },
+      {
+        "id": "C",
+        "text": "分類醫學影像"
+      },
+      {
+        "id": "D",
+        "text": "生成文本"
+      }
+    ],
+    "answer": "C",
+    "explanation": "解析：生成式 AI 的核心應用包括生成合成數據、模擬分佈和生成文本，而分類醫學影像屬於鑑別式 AI 的應用範疇。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第33題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q034",
+    "subjectId": "junior-ai-basics",
+    "prompt": "生成對抗網路（GAN）的兩個核心組件是什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "編碼器與解碼器"
+      },
+      {
+        "id": "B",
+        "text": "分類器與生成器"
+      },
+      {
+        "id": "C",
+        "text": "生成器與鑑別器"
+      },
+      {
+        "id": "D",
+        "text": "訓練器與推斷器"
+      }
+    ],
+    "answer": "C",
+    "explanation": "解析：GAN 的兩個核心組件為生成器（Generator）和鑑別器（Discriminator） ，生成器負責生成數據，鑑別器負責判斷數據真假。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第34題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q035",
+    "subjectId": "junior-ai-basics",
+    "prompt": "關於鑑別式 AI，下列敘述何者較為正確？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "學習數據的聯合概率 P（x,y）"
+      },
+      {
+        "id": "B",
+        "text": "專注於數據的分類或迴歸任務"
+      },
+      {
+        "id": "C",
+        "text": "主要用於生成新數據"
+      },
+      {
+        "id": "D",
+        "text": "適合處理無標記數據3-61"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：鑑別式 AI 學習的是條件概率 P（y∣x） ，用於分類或迴歸，並不適合生成數據或非監督式學習場景。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第35題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q036",
+    "subjectId": "junior-ai-basics",
+    "prompt": "在醫學影像中，生成式 AI 和鑑別式 AI 的整合應用主要目的是什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "減少標記數據需求"
+      },
+      {
+        "id": "B",
+        "text": "自動生成診斷結論"
+      },
+      {
+        "id": "C",
+        "text": "提高診斷準確性和數據多樣性"
+      },
+      {
+        "id": "D",
+        "text": "完全取代醫生的判斷"
+      }
+    ],
+    "answer": "C",
+    "explanation": "解析：生成式 AI 用於生成多樣化數據，鑑別式 AI 提升診斷準確性，兩者結合可提高醫學影像分析的整體效能。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第36題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q037",
+    "subjectId": "junior-ai-basics",
+    "prompt": "下列哪項是生成式 AI 支援鑑別式 AI 的典型案例？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "模擬交通場景以訓練自動駕駛模型"
+      },
+      {
+        "id": "B",
+        "text": "使用 CNN 對腫瘤分類"
+      },
+      {
+        "id": "C",
+        "text": "使用 SVM 分析風險"
+      },
+      {
+        "id": "D",
+        "text": "創建更好的分類演算法"
+      }
+    ],
+    "answer": "A",
+    "explanation": "解析：生成式 AI 通常生成模擬場景數據，支援鑑別式 AI 進行模型訓練和決策。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第37題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q038",
+    "subjectId": "junior-ai-basics",
+    "prompt": "下列哪種方法能解決生成式模型的訓練不穩定性問題？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "使用更大的數據集"
+      },
+      {
+        "id": "B",
+        "text": "採用 Waserstein GAN（WGAN）"
+      },
+      {
+        "id": "C",
+        "text": "提高硬體效能"
+      },
+      {
+        "id": "D",
+        "text": "增加模型層數"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：Wasserstein GAN 透過改進損失函數提高了 GAN 模型的訓練穩定性，避免模式崩潰。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第38題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q039",
+    "subjectId": "junior-ai-basics",
+    "prompt": "在整合應用中，生成式 AI 提供的數據增強主要解決了哪個問題？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "模型過擬合"
+      },
+      {
+        "id": "B",
+        "text": "數據稀缺或不平衡"
+      },
+      {
+        "id": "C",
+        "text": "訓練過程的時間延遲"
+      },
+      {
+        "id": "D",
+        "text": "數據隱私問題"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：生成式 AI 透過生成多樣化的數據樣本解決數據稀缺或不平衡問題，增強模型的泛化能力。3-63",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第39題"
+  },
+  {
+    "id": "junior-ai-basics-guide-q040",
+    "subjectId": "junior-ai-basics",
+    "prompt": "未來整合鑑別式 AI 和生成式 AI 的關鍵方向是什麼？",
+    "choices": [
+      {
+        "id": "A",
+        "text": "增加生成模型的參數數量"
+      },
+      {
+        "id": "B",
+        "text": "開發更高效的整合框架"
+      },
+      {
+        "id": "C",
+        "text": "減少對標記數據的依賴"
+      },
+      {
+        "id": "D",
+        "text": "將兩者獨立使用3-621. Ans（C）解析：鑑別式 AI 專注於學習數據的條件概率 P（y|x） ，主要用於分類或迴歸任務，而非生成數據。2. Ans（C）解析：生成對抗網路（GAN）是典型的生成式 AI 模型，專注於生成新數據，而其他選項均為鑑別式模型。3. Ans（C）解析：生成式 AI 的核心應用包括生成合成數據、模擬分佈和生成文本，而分類醫學影像屬於鑑別式 AI 的應用範疇。4. Ans（C）解析：GAN 的兩個核心組件為生成器（Generator）和鑑別器（Discriminator） ，生成器負責生成數據，鑑別器負責判斷數據真假。5. Ans（B）解析：鑑別式 AI 學習的是條件概率 P（y∣x） ，用於分類或迴歸，並不適合生成數據或非監督式學習場景。6. Ans（C）解析：生成式 AI 用於生成多樣化數據，鑑別式 AI 提升診斷準確性，兩者結合可提高醫學影像分析的整體效能。7. Ans（A）解析：生成式 AI 通常生成模擬場景數據，支援鑑別式 AI 進行模型訓練和決策。8. Ans（B）解析：Wasserstein GAN 透過改進損失函數提高了 GAN 模型的訓練穩定性，避免模式崩潰。9. Ans（B）解析：生成式 AI 透過生成多樣化的數據樣本解決數據稀缺或不平衡問題，增強模型的泛化能力。3-6310. Ans（B）解析：整合框架的開發是未來的關鍵方向，旨在提升生成與分類模型的協同能力，實現更高效的應用。"
+      }
+    ],
+    "answer": "B",
+    "explanation": "解析：整合框架的開發是未來的關鍵方向，旨在提升生成與分類模型的協同能力，實現更高效的應用。",
+    "topic": "未分類",
+    "difficulty": "中",
+    "source": "past-exam",
+    "sourceRef": "初級科目一學習指引參考題 第40題"
   }
 ]

@@ -1,7 +1,8 @@
 import "./styles.css";
 import {
   renderHome, renderLevel, renderModePicker, renderQuestion, renderResult, renderStudyView,
-  renderPaperPicker, renderExamPaper, renderExamReview,
+  renderPaperPicker, renderExamPaper, renderExamReview, renderDrillEmpty,
+  renderStudyLoading,
 } from "./ui/render";
 import { getSubject } from "./domain/catalog";
 import { getQuestions } from "./data/index";
@@ -11,6 +12,8 @@ import { buildMockPaper, PAPER_COUNT } from "./state/mockPapers";
 import { addMiss } from "./state/storage";
 import type { ChoiceId, Question } from "./data/types";
 import type { Level } from "./data/types";
+import type { StudyNotesBySubject } from "./data/types";
+import type { DrillCounts, DrillFilter } from "./ui/render";
 
 type View = "home" | "level" | "mode" | "paper" | "play" | "result" | "review" | "study";
 type Mode = "exam" | "drill";
@@ -26,16 +29,19 @@ type Session = {
   index: number;
   reveal: boolean;          // drill：作答即揭曉；exam：交卷後 review 才揭曉
   deadline: number | null;  // exam 計時用 timestamp（ms）
+  drillFilter: DrillFilter;
 };
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 let session: Session = blankSession();
 let timerId: number | null = null;
+let studyNotesCache: StudyNotesBySubject | null = null;
+let studyNotesPromise: Promise<StudyNotesBySubject> | null = null;
 
 function blankSession(): Session {
   return {
     view: "home", level: "junior", subjectId: "", mode: "exam", paperIndex: 0,
-    questions: [], answers: {}, index: 0, reveal: false, deadline: null,
+    questions: [], answers: {}, index: 0, reveal: false, deadline: null, drillFilter: "all",
   };
 }
 
@@ -49,6 +55,50 @@ function timeText(): string {
 
 function answeredCount(): number {
   return session.questions.reduce((n, q) => n + (session.answers[q.id] !== undefined ? 1 : 0), 0);
+}
+
+function drillCounts(): DrillCounts {
+  return session.questions.reduce<DrillCounts>((counts, question) => {
+    const answer = session.answers[question.id];
+    counts.all += 1;
+    if (answer === undefined) counts.unanswered += 1;
+    if (answer !== undefined && answer !== question.answer) counts.wrong += 1;
+    return counts;
+  }, { all: 0, wrong: 0, unanswered: 0 });
+}
+
+function drillMatches(question: Question, filter = session.drillFilter): boolean {
+  const answer = session.answers[question.id];
+  if (filter === "all") return true;
+  if (filter === "unanswered") return answer === undefined;
+  return answer !== undefined && answer !== question.answer;
+}
+
+function filteredDrillIndices(filter = session.drillFilter): number[] {
+  return session.questions
+    .map((question, index) => drillMatches(question, filter) ? index : -1)
+    .filter((index) => index >= 0);
+}
+
+function firstDrillIndex(filter: DrillFilter): number | undefined {
+  return filteredDrillIndices(filter)[0];
+}
+
+function moveDrill(delta: -1 | 1) {
+  const indices = filteredDrillIndices();
+  if (!indices.length) return;
+  const currentPosition = indices.indexOf(session.index);
+  if (currentPosition >= 0) {
+    const nextPosition = Math.min(indices.length - 1, Math.max(0, currentPosition + delta));
+    session.index = indices[nextPosition];
+  } else {
+    const next = delta > 0
+      ? indices.find((index) => index > session.index) ?? indices[0]
+      : [...indices].reverse().find((index) => index < session.index) ?? indices[indices.length - 1];
+    session.index = next;
+  }
+  session.reveal = revealForCurrent();
+  render();
 }
 
 function stopTimer() {
@@ -70,9 +120,27 @@ function startTimer() {
   }, 1000);
 }
 
+async function loadStudyNotes(): Promise<StudyNotesBySubject> {
+  if (studyNotesCache) return studyNotesCache;
+  studyNotesPromise ??= import("./data/studyNotes").then((module) => module.studyNotes);
+  studyNotesCache = await studyNotesPromise;
+  return studyNotesCache;
+}
+
 function render() {
   if (session.view === "home") { stopTimer(); app.innerHTML = renderHome(); return; }
-  if (session.view === "study") { stopTimer(); app.innerHTML = renderStudyView(); return; }
+  if (session.view === "study") {
+    stopTimer();
+    if (studyNotesCache) {
+      app.innerHTML = renderStudyView(studyNotesCache);
+    } else {
+      app.innerHTML = renderStudyLoading();
+      void loadStudyNotes().then((notes) => {
+        if (session.view === "study") app.innerHTML = renderStudyView(notes);
+      });
+    }
+    return;
+  }
   if (session.view === "level") { stopTimer(); app.innerHTML = renderLevel(session.level); return; }
   if (session.view === "mode") {
     stopTimer();
@@ -88,10 +156,20 @@ function render() {
     if (session.mode === "exam") {
       app.innerHTML = renderExamPaper(session.questions, session.answers, timeText(), answeredCount());
     } else {
+      const filtered = filteredDrillIndices();
+      const controls = { filter: session.drillFilter, counts: drillCounts() };
+      if (!filtered.length && !session.reveal) {
+        app.innerHTML = renderDrillEmpty(controls);
+        return;
+      }
       const q = session.questions[session.index];
+      if (!q) {
+        app.innerHTML = renderDrillEmpty(controls);
+        return;
+      }
       app.innerHTML = renderQuestion(
         q, session.index, session.questions.length,
-        session.answers[q.id], session.reveal, "", false,
+        session.answers[q.id], session.reveal, "", false, controls,
       );
     }
     return;
@@ -130,6 +208,7 @@ function startMode(mode: Mode) {
   session.index = 0;
   session.reveal = false; // 進入時未揭曉；作答後才揭曉
   session.deadline = null;
+  session.drillFilter = "all";
   session.view = "play";
   render();
 }
@@ -166,13 +245,27 @@ function revealForCurrent(): boolean {
 
 function selectChoice(choiceId: ChoiceId) {
   const q = session.questions[session.index];
+  if (!q) return;
   session.answers[q.id] = choiceId;
   if (session.mode === "drill") session.reveal = true;
   render();
 }
 
+function changeDrillFilter(filter: DrillFilter) {
+  session.drillFilter = filter;
+  const first = firstDrillIndex(filter);
+  if (first === undefined) {
+    session.index = 0;
+    session.reveal = false;
+  } else {
+    session.index = first;
+    session.reveal = revealForCurrent();
+  }
+  render();
+}
+
 app.addEventListener("click", (event) => {
-  const target = (event.target as HTMLElement).closest("[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-nav]");
+  const target = (event.target as HTMLElement).closest("[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-filter],[data-nav]");
   if (!(target instanceof HTMLElement)) return;
 
   const level = target.getAttribute("data-level");
@@ -206,6 +299,12 @@ app.addEventListener("click", (event) => {
     return;
   }
 
+  const filter = target.getAttribute("data-filter");
+  if (filter && session.mode === "drill") {
+    changeDrillFilter(filter as DrillFilter);
+    return;
+  }
+
   const nav = target.getAttribute("data-nav");
   if (!nav) return;
   if (nav === "home") { session = blankSession(); render(); return; }
@@ -213,8 +312,15 @@ app.addEventListener("click", (event) => {
   if (nav === "back") { session.view = "level"; render(); return; }
   if (nav === "back-mode") { stopTimer(); session.view = "mode"; render(); return; }
   if (nav === "quit") { stopTimer(); session.view = "level"; render(); return; }
-  if (nav === "prev") { if (session.index > 0) session.index--; session.reveal = revealForCurrent(); render(); return; }
+  if (nav === "prev") {
+    if (session.mode === "drill") { moveDrill(-1); return; }
+    if (session.index > 0) session.index--;
+    session.reveal = revealForCurrent();
+    render();
+    return;
+  }
   if (nav === "next") {
+    if (session.mode === "drill") { moveDrill(1); return; }
     if (session.index < session.questions.length - 1) session.index++;
     session.reveal = revealForCurrent();
     render();
@@ -223,6 +329,28 @@ app.addEventListener("click", (event) => {
   if (nav === "submit" && session.view === "play") { finishExam(); return; }
   if (nav === "result") { session.view = "result"; render(); return; }
   if (nav === "review") { session.view = "review"; session.reveal = true; session.index = 0; render(); return; }
+});
+
+window.addEventListener("keydown", (event) => {
+  const target = event.target;
+  if (target instanceof HTMLElement && target.closest("input, textarea, select, [contenteditable='true']")) return;
+  if (session.mode !== "drill" || (session.view !== "play" && session.view !== "review")) return;
+
+  const key = event.key.toUpperCase();
+  if (["A", "B", "C", "D"].includes(key) && session.view === "play" && !session.reveal) {
+    event.preventDefault();
+    selectChoice(key as ChoiceId);
+    return;
+  }
+  if (event.key === "ArrowLeft") {
+    event.preventDefault();
+    moveDrill(-1);
+    return;
+  }
+  if (event.key === "ArrowRight") {
+    event.preventDefault();
+    moveDrill(1);
+  }
 });
 
 render();

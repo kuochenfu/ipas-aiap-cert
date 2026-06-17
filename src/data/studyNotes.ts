@@ -441,6 +441,7 @@ export const studyNotes: StudyNotesBySubject = {
               { "text": "全距（Range, R）：觀察值中的最大值減去最小值後的數值。由於只考慮最大與最小兩個觀察值，未考慮所有觀察值，故不能精確的反應全體觀察值的分散情形，且會受極端值影響。" },
               { "text": "四分位距（Interquartile Range, IQR）：為統計離差的度量，等於第三和第一四分位之間的差異，與全距有一樣的缺點。" },
               { "text": "平均差（Mean Deviation）：每一個觀察值與平均數之間的差距，其數值越大表示分散程度越高。" },
+              { "text": "變異數（Coefficient of Variation）：衡量資料相對離散程度的統計量。" },
               { "text": "標準差（Standard Deviation）：衡量一組資料分散程度的統計量。當標準差較大時，表示資料點離平均值的距離較遠，資料的分散程度較高；反之，若標準差較小，則表示資料點都聚集在平均值附近，資料的分散程度較低。在品質管理中，標準差常用來評估產品或過程的穩定性，標準差越大，表示產品品質越不穩定，良率越低。" }
             ]
           },
@@ -504,7 +505,7 @@ export const studyNotes: StudyNotesBySubject = {
                 "children": [
                   { "text": "接受 H0 而 H0 為真：正確決策。" },
                   { "text": "接受 H0 而 H0 為假：Type II 錯誤（β）：β = P（接受 H0 | Ha 為真）。" },
-                  { "text": "拒絕 H0 而 H0 為真：Type I 錯誤（α）：α = P（拒絕 H0 | H0 為真）。" },
+                  { "text": "拒絕 H0 而 H0 為真：Type II 錯誤（α）：α = P（拒絕 H0 | H0 為真）。" },
                   { "text": "拒絕 H0 而 H0 為假：正確決策。" }
                 ]
               },

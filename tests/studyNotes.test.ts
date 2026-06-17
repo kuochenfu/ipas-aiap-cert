@@ -15,6 +15,6 @@ describe("studyNotes 結構", () => {
       expect(section.heading.trim().length).toBeGreaterThan(0);
       expect(section.items.length).toBeGreaterThan(0);
     }
-    expect(sections.some((s) => hasNesting(s.items))).toBe(true);
+    expect(sections.every((s) => hasNesting(s.items))).toBe(true);
   });
 });

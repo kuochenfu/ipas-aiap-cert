@@ -1,4 +1,5 @@
 import type { Choice, Question } from "./types";
+import { composeGlossaryAnalysis } from "./choiceAnalysis";
 
 const subjectGuideFocus: Record<string, string> = {
   "junior-ai-basics": "人工智慧基礎概念、資料處理、機器學習與生成式 AI 概念",
@@ -16,6 +17,16 @@ const buildChoiceExplanations = (q: Question): NonNullable<Question["choiceExpla
   const out: NonNullable<Question["choiceExplanations"]> = {};
 
   for (const choice of q.choices) {
+    const composed = composeGlossaryAnalysis({
+      choiceText: choice.text,
+      choiceId: choice.id,
+      isCorrect: choice.id === q.answer,
+      correctText,
+    });
+    if (composed) {
+      out[choice.id] = composed;
+      continue;
+    }
     if (choice.id === q.answer) {
       out[choice.id] = `正解。此選項最符合題幹中的關鍵條件，應判斷為「${correctText}」。`;
       continue;

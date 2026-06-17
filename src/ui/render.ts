@@ -7,6 +7,7 @@ import { getStudyGuide } from "../data/studyGuide";
 import type { Level } from "../data/types";
 import type { Question } from "../data/types";
 import type { StudyNoteSection, StudyNotesBySubject } from "../data/types";
+import { composeGlossaryAnalysis } from "../data/choiceAnalysis";
 
 export type BankStats = { total: number; pastExam: number; generated: number };
 export type DrillFilter = "all" | "wrong" | "unanswered";
@@ -89,13 +90,29 @@ const explanationSegmentForChoice = (explanation: string, choiceId: string): str
 };
 
 const fallbackChoiceExplanation = (q: Question, choice: Choice): string => {
+  const correctChoice = q.choices.find((item) => item.id === q.answer);
+  const correctText = correctChoice?.text ?? "";
   if (choice.id === q.answer) {
-    return "這是本題正解；請搭配下方詳解掌握判斷依據。";
+    return (
+      composeGlossaryAnalysis({
+        choiceText: choice.text,
+        choiceId: choice.id,
+        isCorrect: true,
+        correctText,
+      }) ?? "這是本題正解；請搭配下方詳解掌握判斷依據。"
+    );
   }
   const segment = explanationSegmentForChoice(q.explanation, choice.id);
   if (segment) return segment;
-  const correctChoice = q.choices.find((item) => item.id === q.answer);
-  return `此選項不是本題答案；它描述的是「${choice.text}」，但本題正解應判斷為「${q.answer}. ${correctChoice?.text ?? ""}」。請對照完整詳解，確認題目情境與關鍵概念的差異。`;
+  return (
+    composeGlossaryAnalysis({
+      choiceText: choice.text,
+      choiceId: choice.id,
+      isCorrect: false,
+      correctText,
+    }) ??
+    `此選項不是本題答案；它描述的是「${choice.text}」，但本題正解應判斷為「${q.answer}. ${correctText}」。請對照完整詳解，確認題目情境與關鍵概念的差異。`
+  );
 };
 
 const renderChoiceExplanations = (q: Question): string => `

@@ -18,4 +18,22 @@ describe("sliceSection", () => {
   it("找不到該節時回傳空陣列", () => {
     expect(sliceSection(lines, "9.9")).toEqual([]);
   });
+  it("heading-list cluster 時選取最長候選（跳過 cluster gap，回傳真實內容）", () => {
+    const clusterLines = [
+      "3.1 甲",
+      "3.2 乙",
+      "3.1 甲",
+      "這是真實內容第一行。",
+      "這是真實內容第二行。",
+      "這是真實內容第三行。",
+      "3.2 乙",
+      "不該被切進來。",
+    ];
+    const slice = sliceSection(clusterLines, "3.1");
+    expect(slice).toEqual([
+      "這是真實內容第一行。",
+      "這是真實內容第二行。",
+      "這是真實內容第三行。",
+    ]);
+  });
 });

@@ -18,9 +18,14 @@ type GuideMapping = {
   topics: TopicMapping[];
 };
 
+type NoteItem = {
+  text: string;
+  children?: NoteItem[];
+};
+
 type NoteSection = {
   heading: string;
-  details: string[];
+  items: NoteItem[];
 };
 
 const guides: GuideMapping[] = [
@@ -228,7 +233,7 @@ const pushCurrent = (details: string[], current: string[]): void => {
 
 const collectSection = (lines: string[], section: SectionMapping): NoteSection => {
   const start = findSectionStart(lines, section.number);
-  if (start < 0) return { heading: `${section.number} ${section.heading}`, details: [] };
+  if (start < 0) return { heading: `${section.number} ${section.heading}`, items: [] };
 
   const end = findSectionEnd(lines, start);
   const details: string[] = [];
@@ -250,7 +255,7 @@ const collectSection = (lines: string[], section: SectionMapping): NoteSection =
   }
   pushCurrent(details, current);
 
-  return { heading: `${section.number} ${section.heading}`, details };
+  return { heading: `${section.number} ${section.heading}`, items: details.map((text) => ({ text })) };
 };
 
 const data: Record<string, Record<string, NoteSection[]>> = {};
@@ -263,7 +268,7 @@ for (const guide of guides) {
   for (const topic of guide.topics) {
     data[guide.subjectId][topic.code] = topic.sections
       .map((section) => collectSection(lines, section))
-      .filter((section) => section.details.length > 0);
+      .filter((section) => section.items.length > 0);
   }
 }
 
@@ -277,6 +282,6 @@ writeFileSync(
 );
 
 for (const [subjectId, topics] of Object.entries(data)) {
-  const count = Object.values(topics).flat().reduce((sum, section) => sum + section.details.length, 0);
+  const count = Object.values(topics).flat().reduce((sum, section) => sum + section.items.length, 0);
   console.log(`✓ ${subjectId}：${count} 則學習筆記 → ${outFile}`);
 }

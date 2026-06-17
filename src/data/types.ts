@@ -22,9 +22,14 @@ export type Question = {
 
 export type ReadingLink = { title: string; url: string };
 
+export type StudyNoteItem = {
+  text: string;
+  children?: StudyNoteItem[];
+};
+
 export type StudyNoteSection = {
   heading: string;
-  details: string[];
+  items: StudyNoteItem[];
 };
 
 export type StudyNotesBySubject = Record<string, Record<string, StudyNoteSection[]>>;

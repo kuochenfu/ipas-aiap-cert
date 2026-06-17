@@ -172,7 +172,7 @@ function setTtsRate(rate: number) {
 
 function sectionSpeechText(section: HTMLElement): string {
   const heading = section.querySelector("h5")?.textContent?.trim() ?? "";
-  const details = [...section.querySelectorAll("li")]
+  const details = [...section.querySelectorAll(".note-text")]
     .map((item) => item.textContent?.trim() ?? "")
     .filter(Boolean);
   return [heading, ...details].join("。");

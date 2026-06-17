@@ -6,7 +6,7 @@ import { getBankStats } from "../data/index";
 import { getStudyGuide } from "../data/studyGuide";
 import type { Level } from "../data/types";
 import type { Question } from "../data/types";
-import type { StudyNoteSection, StudyNotesBySubject } from "../data/types";
+import type { StudyNoteItem, StudyNoteSection, StudyNotesBySubject } from "../data/types";
 import { composeGlossaryAnalysis } from "../data/choiceAnalysis";
 
 export type BankStats = { total: number; pastExam: number; generated: number };
@@ -250,9 +250,26 @@ const speakerIcon = `
   </svg>
 `;
 
+const renderNoteItems = (items: StudyNoteItem[]): string => `
+  <ul>
+    ${items.map((item) => `
+      <li>
+        <span class="note-text">${escapeHtml(item.text)}</span>
+        ${item.children?.length ? renderNoteItems(item.children) : ""}
+      </li>
+    `).join("")}
+  </ul>
+`;
+
+const countNoteLeaves = (items: StudyNoteItem[]): number =>
+  items.reduce(
+    (sum, item) => sum + (item.children?.length ? countNoteLeaves(item.children) : 1),
+    0,
+  );
+
 const renderStudyNotes = (notes: StudyNoteSection[] | undefined): string => {
   if (!notes?.length) return "";
-  const count = notes.reduce((sum, section) => sum + section.details.length, 0);
+  const count = notes.reduce((sum, section) => sum + countNoteLeaves(section.items), 0);
   return `
     <details class="study-notes">
       <summary>學習指引整理 <span>${count} 則重點</span></summary>
@@ -265,9 +282,7 @@ const renderStudyNotes = (notes: StudyNoteSection[] | undefined): string => {
                 ${speakerIcon}
               </button>
             </div>
-            <ul>
-              ${section.details.map((detail) => `<li>${escapeHtml(detail)}</li>`).join("")}
-            </ul>
+            ${renderNoteItems(section.items)}
           </section>
         `).join("")}
       </div>

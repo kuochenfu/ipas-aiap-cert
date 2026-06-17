@@ -7,8 +7,7 @@ export type { GlossaryEntry } from "./glossary";
 export const normalizeChoiceTerm = (text: string): string =>
   text
     .replace(/[（(][^）)]*[）)]/g, "")
-    .replace(/[\s　]/g, "")
-    .trim();
+    .replace(/[\s　]/g, "");
 
 export const glossaryPurpose = (choiceText: string): GlossaryEntry | undefined =>
   glossary[normalizeChoiceTerm(choiceText)];

@@ -10,7 +10,7 @@ import {
   renderExamReview,
   renderStudyLoading,
 } from "../src/ui/render";
-import type { Question } from "../src/data/types";
+import type { Question, StudyNotesBySubject } from "../src/data/types";
 import { studyNotes } from "../src/data/studyNotes";
 
 describe("escapeHtml", () => {
@@ -168,5 +168,89 @@ describe("renderQuestion 選項解析 × glossary", () => {
     const html = renderQuestion(q, 0, 1, "D", true, "", false);
     expect(html).toContain("以規則庫與推論引擎");
     expect(html).toContain("故不選 A");
+  });
+});
+
+describe("renderStudyView with nested notes", () => {
+  it("nested rendering: parent with children produces nested <ul> inside <li>", () => {
+    const testNotes: StudyNotesBySubject = {
+      "junior-ai-basics": {
+        L111: [
+          {
+            heading: "AI 基礎概念",
+            items: [
+              {
+                text: "AI 的定義",
+                children: [
+                  { text: "狹義 AI" },
+                  { text: "廣義 AI" },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    };
+    const html = renderStudyView(testNotes);
+    // 檢查外層 <ul> 含有 <li>
+    expect(html).toContain("<li>");
+    // 檢查父項文本已跳脫並在 <span class="note-text">
+    expect(html).toContain('<span class="note-text">AI 的定義</span>');
+    // 檢查巢狀 <ul> 存在於父項後
+    expect(html).toMatch(/<li>\s*<span class="note-text">AI 的定義<\/span>\s*<ul>/);
+    // 檢查子項文本在巢狀 <ul> 中
+    expect(html).toContain('<span class="note-text">狹義 AI</span>');
+    expect(html).toContain('<span class="note-text">廣義 AI</span>');
+  });
+
+  it("escaping: item text with <script> or & is HTML-escaped in output", () => {
+    const testNotes: StudyNotesBySubject = {
+      "junior-ai-basics": {
+        L111: [
+          {
+            heading: "危險文本",
+            items: [
+              {
+                text: "包含 <script>alert('xss')</script> 與 & 符號",
+              },
+            ],
+          },
+        ],
+      },
+    };
+    const html = renderStudyView(testNotes);
+    // 驗證 <script> 被跳脫為 &lt;script&gt;
+    expect(html).toContain("&lt;script&gt;");
+    // 驗證 & 被跳脫為 &amp;
+    expect(html).toContain("&amp;");
+    // 確保原始危險標籤不出現
+    expect(html).not.toContain("<script>alert");
+  });
+
+  it("leaf count: section with 1 parent + 2 children + 1 standalone leaf = 3 则重點", () => {
+    const testNotes: StudyNotesBySubject = {
+      "junior-ai-basics": {
+        L111: [
+          {
+            heading: "計數測試",
+            items: [
+              {
+                text: "父項（非葉子）",
+                children: [
+                  { text: "子項1" },
+                  { text: "子項2" },
+                ],
+              },
+              {
+                text: "獨立葉子項",
+              },
+            ],
+          },
+        ],
+      },
+    };
+    const html = renderStudyView(testNotes);
+    // 檢查摘要中顯示正確的葉子數（子項1 + 子項2 + 獨立葉子項 = 3 個葉子）
+    expect(html).toContain("3 則重點");
   });
 });

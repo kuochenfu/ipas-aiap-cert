@@ -16,7 +16,7 @@ describe("學習主題資料", () => {
           expect(topic.title.trim().length).toBeGreaterThan(0);
           expect(topic.contents.length).toBeGreaterThan(0);
           expect(topic.notes?.length).toBeGreaterThan(0);
-          expect(topic.notes?.some((section) => section.details.length > 0)).toBe(true);
+          expect(topic.notes?.some((section) => section.items.length > 0)).toBe(true);
           expect(topic.links.length).toBeGreaterThan(0);
           for (const link of topic.links) {
             expect(link.title.trim().length).toBeGreaterThan(0);

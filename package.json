@@ -10,7 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "parse:papers": "tsx scripts/parse-past-papers.ts",
-    "generate:study-notes": "tsx scripts/generate-study-notes.ts",
+    "extract:study-slices": "tsx scripts/generate-study-notes.ts",
     "glossary:coverage": "tsx scripts/glossary-coverage.ts"
   },
   "devDependencies": {

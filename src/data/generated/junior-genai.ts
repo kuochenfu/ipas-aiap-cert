@@ -433,4 +433,194 @@ export const generated: Question[] = [
     difficulty: "難",
     source: "generated",
   },
+  {
+    id: "junior-genai-gen-q025",
+    subjectId: "junior-genai",
+    prompt:
+      "關於檢索增強生成（RAG），下列敘述何者最正確？",
+    choices: [
+      { id: "A", text: "只要導入 RAG，答案就保證完全正確，不會再有任何錯誤" },
+      { id: "B", text: "RAG 不保證正確；若來源錯誤、檢索失敗或模型忽略證據仍會產生錯答，需同時評估檢索品質與答案品質" },
+      { id: "C", text: "RAG 的重點是提高生成溫度，讓答案更有創意" },
+      { id: "D", text: "RAG 會把全部文件永久寫進模型參數，因此不需要更新知識庫" },
+    ],
+    answer: "B",
+    explanation:
+      "RAG 在生成前先檢索外部資料再放入上下文，讓答案「有機會」基於可更新、可引用、具權限的知識，但不保證正確：若來源本身錯誤、檢索失敗、切塊破壞語義或模型忽略證據，仍會錯答，因此須同時評估 retrieval quality 與 answer quality（B）。它不保證零錯誤（A）；與提高溫度無關（C）；RAG 是「檢索後放入上下文」而非寫進參數，知識庫仍需維護更新（D 錯）。",
+    topic: "生成式 AI 應用領域與工具使用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §04 RAG",
+  },
+  {
+    id: "junior-genai-gen-q026",
+    subjectId: "junior-genai",
+    prompt:
+      "「Context Engineering（脈絡工程）」相較於「Prompt Engineering（提示工程）」，範圍更廣的原因最貼近下列何者？",
+    choices: [
+      { id: "A", text: "Context 只是把提示詞寫得更長更漂亮而已" },
+      { id: "B", text: "Context Engineering 就是不斷提高模型溫度" },
+      { id: "C", text: "Context 包含系統政策、使用者目標、對話狀態、文件、工具定義與結果、記憶與可用 token 預算，需持續決定保留、摘要、檢索或丟棄" },
+      { id: "D", text: "兩者完全相同，只是名稱不同" },
+    ],
+    answer: "C",
+    explanation:
+      "Prompt 是指令文字；Context 則涵蓋系統政策、使用者目標、對話狀態、文件、工具定義與結果、記憶與可用 token 預算。Agent 做長任務時必須持續決定哪些資訊要保留、摘要、檢索或丟棄，因此範圍更廣（C）。它不是把提示寫更長（A）、也與調高溫度無關（B），更不等同於提示工程（D 錯）。",
+    topic: "生成式 AI 應用領域與工具使用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §04 Context Engineering",
+  },
+  {
+    id: "junior-genai-gen-q027",
+    subjectId: "junior-genai",
+    prompt:
+      "在設計一個「可控的 Agent 執行迴圈（Agent loop）」時，下列哪一項原則最為恰當？",
+    choices: [
+      { id: "A", text: "觀察工具的真實結果，不把「已發出請求」誤認為「任務完成」" },
+      { id: "B", text: "為了效率，任何動作都不需要成功條件或停止條件" },
+      { id: "C", text: "遇到高風險、低信心或權限不足時，仍應自行決定並執行，不需暫停" },
+      { id: "D", text: "應一次給予最大權限，讓 Agent 想做什麼都可以" },
+    ],
+    answer: "A",
+    explanation:
+      "可控的 Agent loop 應：確認成功條件與不可做事項、依工具結果修正計畫、從最小權限工具集合選擇行動，並「觀察真實結果、不把發出請求誤認為任務完成」（A）；遇到高風險、低信心、權限不足或歧義時應暫停要求人工決定。因此 B（無成功/停止條件）、C（高風險仍自行執行）、D（給予最大權限）都違反最小權限與人工監督原則。",
+    topic: "生成式 AI 應用領域與工具使用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §05 Agent",
+  },
+  {
+    id: "junior-genai-gen-q028",
+    subjectId: "junior-genai",
+    prompt:
+      "某客服系統需要把不同責任域的請求，由一個 Agent 將控制權與狀態交給另一個 Agent 接手處理。這種多 Agent 型態最接近下列何者？",
+    choices: [
+      { id: "A", text: "固定 Workflow（步驟與分支由程式預先定義）" },
+      { id: "B", text: "單一 Agent（同一個模型在迴圈中自行選工具）" },
+      { id: "C", text: "平行多 Agent（多個 Agent 同時探索後再綜合）" },
+      { id: "D", text: "Handoff 多 Agent（將控制權交給另一個 Agent）" },
+    ],
+    answer: "D",
+    explanation:
+      "把控制權與狀態從一個 Agent 轉交另一個 Agent 接手，屬 Handoff 多 Agent，常見於客服分流與不同責任域，風險是狀態遺失與責任模糊（D）。固定 Workflow 是程式預先定義步驟（A）；平行多 Agent 是同時探索再綜合（C）；單一 Agent 不涉及交接（B）。",
+    topic: "生成式 AI 應用領域與工具使用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §05 多 Agent",
+  },
+  {
+    id: "junior-genai-gen-q029",
+    subjectId: "junior-genai",
+    prompt:
+      "「提示注入（Prompt injection）」指網頁或文件中藏入指令，誘導 Agent 忽略原本政策。下列哪一項是較適當的防護原則？",
+    choices: [
+      { id: "A", text: "把外部檢索到的內容一律視為可信任的指令來執行" },
+      { id: "B", text: "把外部內容視為「資料」而非指令，並搭配權限隔離、工具限制與高風險行動的人工核准" },
+      { id: "C", text: "只要模型夠大，就不會受到提示注入影響，無須任何防護" },
+      { id: "D", text: "把所有工具權限開到最大，才能快速完成任務" },
+    ],
+    answer: "B",
+    explanation:
+      "防護提示注入的關鍵是把外部（網頁、文件）內容視為「資料」而非可執行指令，並輔以權限隔離、工具限制與對高風險行動的人工核准（B）。將外部內容當指令執行（A）正是漏洞來源；模型再大也可能被注入（C 錯）；開到最大權限會放大過度代理權風險（D 錯）。",
+    topic: "生成式 AI 應用領域與工具使用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §07 安全",
+  },
+  {
+    id: "junior-genai-gen-q030",
+    subjectId: "junior-genai",
+    prompt:
+      "評估生成式 AI 系統時，講義強調要「從單一模型分數走向任務成功」。下列對評估層級的理解何者最正確？",
+    choices: [
+      { id: "A", text: "應分層評估：元件、答案、軌跡、任務、營運與影響，任務層看使用者目標是否真正完成" },
+      { id: "B", text: "只要單一模型的準確率高，就代表整個任務一定成功完成" },
+      { id: "C", text: "評估只需看答案文筆是否流暢即可" },
+      { id: "D", text: "軌跡（步驟與工具使用）不重要，不需納入評估" },
+    ],
+    answer: "A",
+    explanation:
+      "現代評估應分層：元件（分類/檢索/生成/工具本身是否正確）、答案（正確性、groundedness、引用）、軌跡（步驟、工具、參數是否正確）、任務（使用者目標是否真正完成，例如不只建草稿而是完成預訂）、營運（延遲/成本/失敗率）與影響（公平、安全、業務成果）（A）。單一模型分數高不等於任務成功（B）；只看文筆（C）、忽略軌跡（D）都不足。",
+    topic: "生成式 AI 導入評估規劃",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §08 評估",
+  },
+  {
+    id: "junior-genai-gen-q031",
+    subjectId: "junior-genai",
+    prompt:
+      "在 Agent 專用評估指標中，「Task success rate（任務成功率）」衡量的是下列何者？",
+    choices: [
+      { id: "A", text: "回覆讀起來是否通順、看似合理" },
+      { id: "B", text: "使用了多少種不同的工具" },
+      { id: "C", text: "模型回應的字數多寡" },
+      { id: "D", text: "是否達成明確定義的成功條件，而非只產生看似合理的回覆" },
+    ],
+    answer: "D",
+    explanation:
+      "Task success rate 衡量是否達成「明確定義的成功條件」，而非只產生看似合理的回覆（D）——這正是 Agent 評估與傳統模型評估的差別。回覆是否通順（A）、字數多寡（C）、用了幾種工具（B）都不等於任務真正完成；工具使用另有 Tool correctness 與 Trajectory efficiency 等指標衡量。",
+    topic: "生成式 AI 導入評估規劃",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §08 Agent 指標",
+  },
+  {
+    id: "junior-genai-gen-q032",
+    subjectId: "junior-genai",
+    prompt:
+      "依「最小權限」的實務分級，一筆「退款、部署或對外發送訊息」這類不可逆、高風險的動作，最適合放在哪一級？",
+    choices: [
+      { id: "A", text: "L0 建議：只產生建議、不執行" },
+      { id: "B", text: "L2 核准後執行：人工確認後才寫入／發送" },
+      { id: "C", text: "L4 高自主：長時間、多工具、低監督自行執行" },
+      { id: "D", text: "不需分級，任何動作都讓 Agent 直接執行最有效率" },
+    ],
+    answer: "B",
+    explanation:
+      "退款、部署、對外訊息屬不可逆且高風險，應採 L2「核准後執行」——人工確認後才寫入/發送（B）。L0 只產生建議不執行（過於保守，但用在此仍會使任務停滯）；L4 高自主只適合可驗證、可停止且治理成熟的低風險情境（C 不當）；讓 Agent 對高風險動作直接執行會造成過度代理權風險（D 錯）。",
+    topic: "生成式 AI 導入評估規劃",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §07 最小權限分級",
+  },
+  {
+    id: "junior-genai-gen-q033",
+    subjectId: "junior-genai",
+    prompt:
+      "關於合成資料（synthetic data）的正確使用與「禁止自我證明」原則，下列敘述何者最正確？",
+    choices: [
+      { id: "A", text: "讓同一個模型產生答案、又自訂評分標準替自己打分，再把高分答案當成新的真實資料" },
+      { id: "B", text: "只要是合成資料就等同真實世界，可無限比例混入訓練而不需檢查" },
+      { id: "C", text: "合成資料可補充罕見或危險案例，但需保留來源 provenance、以真實 holdout set 評估，並避免生成器與驗證器共用同一盲點" },
+      { id: "D", text: "合成資料不可用於任何測試或紅隊演練" },
+    ],
+    answer: "C",
+    explanation:
+      "合成資料可補充罕見、昂貴或危險案例並用於邊界測試與 red-team，但不能假裝等同真實世界；應保留生成模型、提示、日期等 provenance，以真實 holdout set 評估，且不可讓生成器與驗證器共享同一盲點，並控制其比例、分群檢查品質（C）。用同一模型自產答案、自訂評分再替自己打分即違反「禁止自我證明」（A）；把合成資料當真實、無限混入（B）易導致 model collapse；合成資料本就適合用於測試與紅隊（D 錯）。",
+    topic: "生成式 AI 導入評估規劃",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §06 合成資料回饋",
+  },
+  {
+    id: "junior-genai-gen-q034",
+    subjectId: "junior-genai",
+    prompt:
+      "關於生成式 AI 系統上線後的「持續改善」，下列哪一種做法最符合「受控更新而非盲目自學」的原則？",
+    choices: [
+      { id: "A", text: "以觀測、分類、建立可重現 Evals、控制有限變因改善、離線/shadow/canary 驗證、版本化發布並保留 rollback 的迴圈進行" },
+      { id: "B", text: "讓正式模型直接吞下線上資料即時自我修改，完全不需人工審批" },
+      { id: "C", text: "只要改動不告訴任何人、也不記錄版本，就能加快迭代" },
+      { id: "D", text: "上線即終點，之後任何模型、提示或知識庫更新都不會影響系統行為" },
+    ],
+    answer: "A",
+    explanation:
+      "受控更新的改善迴圈是：觀測（錯誤/trace/成本）→ 分類失敗類型 → 建立可重現 Evals 並保留 holdout → 一次控制有限變因改善 → 離線/shadow/canary 驗證 → 版本化發布並可快速暫停或回復（rollback）（A）。讓正式模型即時吞資料自學（B）風險極高；不記錄版本（C）違反可觀測性與審批要求；模型、提示、知識庫、工具或供應商任一更新都可能改變系統行為，上線不是終點（D 錯）。",
+    topic: "生成式 AI 導入評估規劃",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §09 部署與改善",
+  },
 ];

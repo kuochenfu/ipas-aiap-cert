@@ -428,4 +428,156 @@ export const generated: Question[] = [
     difficulty: "易",
     source: "generated",
   },
+  {
+    id: "junior-ai-basics-gen-q025",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "關於「鑑別式模型」與「生成式模型」的關係，下列敘述何者最為正確？",
+    choices: [
+      { id: "A", text: "兩者是涵蓋所有 AI 的兩個互斥箱子，任一模型只能屬於其中之一" },
+      { id: "B", text: "鑑別式模型一定比生成式模型先進，已完全取代生成式模型" },
+      { id: "C", text: "它們描述的是建模方向；同一個 Transformer 可被用來生成，也可被用來分類、排序或評分" },
+      { id: "D", text: "生成式模型無法用於分類，只能產生圖片或文字" },
+    ],
+    answer: "C",
+    explanation:
+      "鑑別式（判斷 x 對應哪個 y）與生成式（在條件下產生下一個合理內容）描述的是建模方向，並非互斥的分類箱；同一個 Transformer 可被用於生成、分類、排序或評分（C）。因此 A 的「互斥」說法錯誤；兩者是不同用途而非誰取代誰（B）；生成式模型底層以生成 token 運作，仍可輸出固定分類標籤（D 錯）。",
+    topic: "鑑別式 AI 與生成式 AI 概念",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §01 觀念重整",
+  },
+  {
+    id: "junior-ai-basics-gen-q026",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "把「模型」與「AI 系統／Agent」視為不同分類層級時，下列對應何者最正確？",
+    choices: [
+      { id: "A", text: "模型回答「怎麼計算」，系統回答「如何完成任務」；Agent 是上層編排而非另一種神經網路" },
+      { id: "B", text: "Agent 就是一種比 LLM 更大的神經網路模型" },
+      { id: "C", text: "系統與模型是同義詞，區分它們沒有實務意義" },
+      { id: "D", text: "只要模型能力夠強，就不需要工具、記憶、Guardrails 或人工監督" },
+    ],
+    answer: "A",
+    explanation:
+      "模型層回答「怎麼計算」（輸入到輸出的映射），系統／Agent 層回答「如何完成任務」；Agent 是上層編排，可呼叫多種模型與非 AI 工具，而不是另一種神經網路（A）。因此 B、C 混淆了層級；現代 Agent 系統仍需 Context、記憶/狀態、工具、Guardrails、Evals 與人工監督，並非模型夠強就不用（D 錯）。",
+    topic: "鑑別式 AI 與生成式 AI 概念",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §01 觀念重整",
+  },
+  {
+    id: "junior-ai-basics-gen-q027",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "大型語言模型（LLM）的核心運作是「依上下文預測下一個 token」。下列何者最屬於其典型風險？",
+    choices: [
+      { id: "A", text: "完全不會出錯，輸出必定符合最新事實" },
+      { id: "B", text: "幻覺、提示注入與知識過時" },
+      { id: "C", text: "只能處理數字，無法處理自然語言" },
+      { id: "D", text: "一定需要連網才能輸出任何 token" },
+    ],
+    answer: "B",
+    explanation:
+      "LLM 依上下文預測 token 來完成語言與程式任務，典型風險是幻覺（自信產生缺乏根據的內容）、提示注入與知識過時（B）。它並非不會出錯（A）；LLM 專長正是自然語言（C）；是否連網屬部署選擇，與能否產生 token 無關（D 錯）。",
+    topic: "鑑別式 AI 與生成式 AI 概念",
+    difficulty: "易",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §02 技術版圖",
+  },
+  {
+    id: "junior-ai-basics-gen-q028",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "所謂「推理模型（Reasoning model）」與一般語言模型相比，最主要的差異是什麼？",
+    choices: [
+      { id: "A", text: "推論時計算越多就一定不會推理錯誤" },
+      { id: "B", text: "完全不需要訓練資料，靠規則即可運作" },
+      { id: "C", text: "在推論時投入較多計算以處理多步問題，通常伴隨延遲與成本上升" },
+      { id: "D", text: "只能用於圖片生成，不能用於數學或程式" },
+    ],
+    answer: "C",
+    explanation:
+      "推理模型的特徵是在推論（回答）時投入較多計算來處理多步問題，適用數學、程式、研究與複雜決策，但通常伴隨延遲與成本上升（C）。它仍是資料訓練出來的模型（B 錯）；投入更多計算並不保證不會推理錯誤（A 錯）；其用途偏向多步推理任務而非只做圖片生成（D 錯）。",
+    topic: "鑑別式 AI 與生成式 AI 概念",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §02 技術版圖",
+  },
+  {
+    id: "junior-ai-basics-gen-q029",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "「多模態模型（Multimodal model）」最貼切的描述是下列何者？",
+    choices: [
+      { id: "A", text: "只能處理單一種資料型態的模型" },
+      { id: "B", text: "能共同理解或生成文字、影像、音訊、影片等多種模態的模型" },
+      { id: "C", text: "把多個小模型放在同一台伺服器上就稱為多模態" },
+      { id: "D", text: "一定沒有隱私或跨模態誤判的風險" },
+    ],
+    answer: "B",
+    explanation:
+      "多模態模型能共同理解或生成文字、影像、音訊、影片等多種模態，適用菜單理解、文件解析與視覺助理等（B）。單一型態（A）與「多個模型放同台機器」（C）都不是多模態的定義；多模態仍有跨模態誤判、隱私與感知限制等風險（D 錯）。",
+    topic: "鑑別式 AI 與生成式 AI 概念",
+    difficulty: "易",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §02 技術版圖 / 附錄A",
+  },
+  {
+    id: "junior-ai-basics-gen-q030",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "現代大型模型的訓練流程，已不只是「大量資料＋反向傳播」。下列對各階段的描述何者正確？",
+    choices: [
+      { id: "A", text: "蒸餾與量化會提高推論成本，不利於本地或邊緣部署" },
+      { id: "B", text: "預訓練的目的是逐一背下每筆訓練資料的標準答案" },
+      { id: "C", text: "偏好對齊與強化學習的目的是讓輸出更不符合人類偏好" },
+      { id: "D", text: "監督式微調（SFT）是用高品質任務範例調整模型行為" },
+    ],
+    answer: "D",
+    explanation:
+      "SFT（監督式微調）是以高品質任務範例調整模型行為（D）。預訓練是從大規模資料學習通用表示與生成能力，而非逐筆背答案（B 錯）；偏好對齊與強化學習是讓輸出「更」符合人類或驗證器偏好（C 反了）；蒸餾、量化與稀疏化是「降低」推論成本、支援本地與邊緣部署（A 反了）。",
+    topic: "鑑別式 AI 與生成式 AI 概念",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §02 技術版圖",
+  },
+  {
+    id: "junior-ai-basics-gen-q031",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "詞彙「基礎模型（Foundation model）」指的是下列何者？",
+    choices: [
+      { id: "A", text: "只能完成單一特定任務、無法遷移的小型模型" },
+      { id: "B", text: "專指負責檢索排序的 reranker" },
+      { id: "C", text: "不需資料、僅靠人工規則運作的專家系統" },
+      { id: "D", text: "可支援多種下游任務的大規模預訓練模型" },
+    ],
+    answer: "D",
+    explanation:
+      "基礎模型是可支援多種下游任務的大規模預訓練模型（D），現代 AI 應用常以它為核心，再接上 RAG、工具與 Agent。單一任務小型模型（A）、純規則專家系統（C）、僅做排序的 reranker（B）都不是基礎模型的定義。",
+    topic: "鑑別式 AI 與生成式 AI 概念",
+    difficulty: "易",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 附錄A 核心詞彙",
+  },
+  {
+    id: "junior-ai-basics-gen-q032",
+    subjectId: "junior-ai-basics",
+    prompt:
+      "在生成式 AI 的可靠性議題中，「模型崩潰（Model collapse）」較常與下列哪一種情況相關？",
+    choices: [
+      { id: "A", text: "反覆使用低品質合成資料訓練，導致能力或多樣性退化" },
+      { id: "B", text: "模型參數量太大導致伺服器當機" },
+      { id: "C", text: "使用者輸入的問題太長，超過畫面顯示範圍" },
+      { id: "D", text: "只要有標註人類資料就一定會發生的必然現象" },
+    ],
+    answer: "A",
+    explanation:
+      "模型崩潰指反覆以低品質合成資料訓練，使模型能力或輸出多樣性逐漸退化（A）；典型控制包括標記來源、保留人類資料、品質篩選與獨立驗證。它與伺服器當機（B）、輸入過長（C）無關；保留人類資料與獨立驗證正是避免它的方法，並非必然發生（D 錯）。（傳統教材的「模式崩潰」多指 GAN 訓練問題，兩者需區分。）",
+    topic: "鑑別式 AI 與生成式 AI 概念",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "2025-2026補充講義 §06 可靠性 / §10 考點對照",
+  },
 ];

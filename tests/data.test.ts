@@ -139,11 +139,43 @@ describe("junior-ai-basics 新題完整性", () => {
     expect(past.find((q) => q.id === "junior-ai-basics-guide-q013")?.answer).toBe("A");
   });
 
-  it("新題數 ===24", () => {
-    expect(generated.length).toBe(24);
+  it("新題數 ===32", () => {
+    expect(generated.length).toBe(32);
   });
   it("新題 topic ∈ L111–L114 官方主題", () => {
     const allowed = new Set(officialTopics["junior-ai-basics"]);
     for (const q of generated) expect(allowed.has(q.topic)).toBe(true);
+  });
+});
+
+describe("2025-2026 補充講義新題", () => {
+  const REF_PREFIX = "2025-2026補充講義";
+  const targets: Record<string, string[]> = {
+    "junior-ai-basics": officialTopics["junior-ai-basics"],
+    "junior-genai": ["No code / Low code 概念", "生成式 AI 應用領域與工具使用", "生成式 AI 導入評估規劃"],
+  };
+
+  const guideQuestions = Object.keys(targets).flatMap((sid) =>
+    getQuestions(sid).filter((q) => q.source === "generated" && (q.sourceRef ?? "").startsWith(REF_PREFIX)),
+  );
+
+  it("兩科皆有以補充講義為來源的新題", () => {
+    for (const sid of Object.keys(targets)) {
+      const forSubject = guideQuestions.filter((q) => q.subjectId === sid);
+      expect(forSubject.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("補充講義新題合計 ≥18", () => {
+    expect(guideQuestions.length).toBeGreaterThanOrEqual(18);
+  });
+
+  it("每題四選項、詳解非空、topic 在該科官方白名單內", () => {
+    for (const q of guideQuestions) {
+      expect(q.choices.map((c) => c.id)).toEqual(["A", "B", "C", "D"]);
+      expect(["A", "B", "C", "D"]).toContain(q.answer);
+      expect(q.explanation.trim().length).toBeGreaterThan(0);
+      expect(new Set(targets[q.subjectId]).has(q.topic)).toBe(true);
+    }
   });
 });

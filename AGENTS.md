@@ -42,6 +42,10 @@ docs/markdown/*.md  →  npm run parse:papers  →  src/data/past-exams/*.json
 
 ### 學習主題（延伸閱讀）
 - `src/data/studyGuide.ts`：依官方《評鑑內容範圍》手動轉錄的 18 個評鑑主題 ＋ 策展外部連結。
+- `src/data/studyNotes.ts`：每個主題碼下的 section 有兩種來源，**勿混用**：
+  - heading 不以「補充」開頭者＝官方學習指引講義的忠實重構，改動須回頭核對原講義。
+  - heading 以「**補充 A**／**補充 B**」開頭者＝**非官方講義**，由題庫反推撰寫（依據見 `docs/coverage/<subjectId>.md` 的逐題盤點）。補充 A 為缺口考點概念卡（定義／題庫怎麼考／易混淆三段式，每張卡至少 2 個子項）；補充 B 為時效性技術與法規現況，敘述須附查證來源。heading 一律保留「非官方講義」字樣（`tests/studyNotes.test.ts` 會驗）。
+  - 目前僅 `junior-ai-basics`、`junior-genai` 兩科有補充 section；中級三科尚未做。
 - 外部連結請維持權威、穩定來源，新增時應實際以 HTTP 驗證可用；渲染一律 `target="_blank" rel="noopener noreferrer"` 並經 `escapeHtml`。
 
 ---

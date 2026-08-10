@@ -14,6 +14,15 @@ export const studyGuides: SubjectStudyGuide[] = [
         links: [
           { title: "人工智慧 - 維基百科", url: "https://zh.wikipedia.org/wiki/人工智慧" },
           {
+            title: "人工智慧基本法（115.01.14 公布）- 全國法規資料庫",
+            url: "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160093",
+          },
+          {
+            title: "立法院三讀通過《人工智慧基本法》- 數位發展部新聞發布",
+            url: "https://moda.gov.tw/press/press-releases/18316",
+          },
+          { title: "AI 產品與系統評測中心（AIEC）", url: "https://www.aiec.org.tw/" },
+          {
             title: "EU AI Act 監管框架 - 歐盟執委會 Digital Strategy",
             url: "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
           },
@@ -88,6 +97,9 @@ export const studyGuides: SubjectStudyGuide[] = [
           { title: "Learn Prompting 提示工程入門", url: "https://learnprompting.org/docs/introduction" },
           { title: "Prompt engineering 指南 - OpenAI Developers", url: "https://developers.openai.com/api/docs/guides/prompt-engineering" },
           { title: "檢索增強生成（RAG）- 維基百科", url: "https://zh.wikipedia.org/wiki/检索增强生成" },
+          { title: "Model Context Protocol 官方文件", url: "https://modelcontextprotocol.io/" },
+          { title: "C2PA 內容出處與真實性標準", url: "https://c2pa.org/" },
+          { title: "SynthID 數位浮水印 - Google DeepMind", url: "https://deepmind.google/technologies/synthid/" },
         ],
       },
       {
@@ -104,6 +116,7 @@ export const studyGuides: SubjectStudyGuide[] = [
             url: "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
           },
           { title: "Azure 上的 AI/ML 架構（導入與部署參考）- Microsoft Learn", url: "https://learn.microsoft.com/zh-tw/azure/architecture/ai-ml/" },
+          { title: "EU AI Act 條文與時程總覽（風險分級）", url: "https://artificialintelligenceact.eu/" },
           { title: "數位發展部（AI 政策與導入治理）", url: "https://moda.gov.tw/" },
         ],
       },

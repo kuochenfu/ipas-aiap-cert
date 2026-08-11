@@ -10,12 +10,15 @@ import { scoreExam, topicSummary, type AnswerState } from "./domain/exam";
 import { buildAttempt } from "./state/attempt";
 import { buildMockPaper, PAPER_COUNT } from "./state/mockPapers";
 import { addMiss } from "./state/storage";
-import { restoreDrill, parseJumpTarget } from "./domain/drill";
+import {
+  restoreDrill, parseJumpTarget, drillMatches, filteredDrillIndices, drillFilterTarget,
+  type DrillFilter,
+} from "./domain/drill";
 import { loadDrillProgress, saveDrillProgress, clearDrillProgress } from "./state/drillProgress";
 import type { ChoiceId, Question } from "./data/types";
 import type { Level } from "./data/types";
 import type { StudyNotesBySubject } from "./data/types";
-import type { DrillCounts, DrillFilter } from "./ui/render";
+import type { DrillCounts } from "./ui/render";
 
 type View = "home" | "level" | "mode" | "paper" | "play" | "result" | "review" | "study";
 type Mode = "exam" | "drill";
@@ -64,10 +67,9 @@ function answeredCount(): number {
 
 function drillCounts(): DrillCounts {
   return session.questions.reduce<DrillCounts>((counts, question) => {
-    const answer = session.answers[question.id];
     counts.all += 1;
-    if (answer === undefined) counts.unanswered += 1;
-    if (answer !== undefined && answer !== question.answer) counts.wrong += 1;
+    if (sessionDrillMatches(question, "unanswered")) counts.unanswered += 1;
+    if (sessionDrillMatches(question, "wrong")) counts.wrong += 1;
     return counts;
   }, { all: 0, wrong: 0, unanswered: 0 });
 }
@@ -84,25 +86,17 @@ function persistDrill() {
   saveDrillProgress(session.subjectId, { questionId: current.id, answers });
 }
 
-function drillMatches(question: Question, filter = session.drillFilter): boolean {
-  const answer = session.answers[question.id];
-  if (filter === "all") return true;
-  if (filter === "unanswered") return answer === undefined;
-  return answer !== undefined && answer !== question.answer;
+// 以下三個為 src/domain/drill.ts 純函式的 session 綁定版本，方便呼叫端省去傳參。
+function sessionDrillMatches(question: Question, filter = session.drillFilter): boolean {
+  return drillMatches(question, session.answers, filter);
 }
 
-function filteredDrillIndices(filter = session.drillFilter): number[] {
-  return session.questions
-    .map((question, index) => drillMatches(question, filter) ? index : -1)
-    .filter((index) => index >= 0);
-}
-
-function firstDrillIndex(filter: DrillFilter): number | undefined {
-  return filteredDrillIndices(filter)[0];
+function sessionFilteredIndices(filter = session.drillFilter): number[] {
+  return filteredDrillIndices(session.questions, session.answers, filter);
 }
 
 function moveDrill(delta: -1 | 1) {
-  const indices = filteredDrillIndices();
+  const indices = sessionFilteredIndices();
   if (!indices.length) return;
   const currentPosition = indices.indexOf(session.index);
   if (currentPosition >= 0) {
@@ -281,7 +275,7 @@ function render() {
     if (session.mode === "exam") {
       app.innerHTML = renderExamPaper(session.questions, session.answers, timeText(), answeredCount());
     } else {
-      const filtered = filteredDrillIndices();
+      const filtered = sessionFilteredIndices();
       const controls = { filter: session.drillFilter, counts: drillCounts(), total: session.questions.length };
       if (!filtered.length && !session.reveal) {
         app.innerHTML = renderDrillEmpty(controls);
@@ -382,20 +376,10 @@ function selectChoice(choiceId: ChoiceId) {
 
 function changeDrillFilter(filter: DrillFilter) {
   session.drillFilter = filter;
-  const current = session.questions[session.index];
-  // 目前這題若仍符合新篩選就留在原地——否則切回「全部」會把續作位置打回第 1 題。
-  if (current && drillMatches(current, filter)) {
-    session.reveal = revealForCurrent();
-  } else {
-    const first = firstDrillIndex(filter);
-    if (first === undefined) {
-      session.index = 0;
-      session.reveal = false;
-    } else {
-      session.index = first;
-      session.reveal = revealForCurrent();
-    }
-  }
+  const target = drillFilterTarget(session.questions, session.answers, session.index, filter);
+  session.index = target.index;
+  // 沒有題目符合時強制不揭曉，render 才會走空狀態畫面而非顯示題目。
+  session.reveal = target.empty ? false : revealForCurrent();
   persistDrill();
   render();
 }
@@ -403,7 +387,7 @@ function changeDrillFilter(filter: DrillFilter) {
 function jumpToDrillIndex(index: number) {
   session.index = index;
   // 目標題若不符當前篩選，切回「全部」，否則畫面不會有反應。
-  if (!drillMatches(session.questions[index])) session.drillFilter = "all";
+  if (!sessionDrillMatches(session.questions[index])) session.drillFilter = "all";
   session.reveal = revealForCurrent();
   persistDrill();
   render();

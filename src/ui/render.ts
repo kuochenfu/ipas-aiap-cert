@@ -8,9 +8,9 @@ import type { Level } from "../data/types";
 import type { Question } from "../data/types";
 import type { StudyNoteItem, StudyNoteSection, StudyNotesBySubject } from "../data/types";
 import { composeGlossaryAnalysis } from "../data/choiceAnalysis";
+import type { DrillFilter } from "../domain/drill";
 
 export type BankStats = { total: number; pastExam: number; generated: number };
-export type DrillFilter = "all" | "wrong" | "unanswered";
 export type DrillCounts = Record<DrillFilter, number>;
 export type DrillControls = {
   filter: DrillFilter;

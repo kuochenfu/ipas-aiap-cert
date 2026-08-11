@@ -10,6 +10,8 @@ import { scoreExam, topicSummary, type AnswerState } from "./domain/exam";
 import { buildAttempt } from "./state/attempt";
 import { buildMockPaper, PAPER_COUNT } from "./state/mockPapers";
 import { addMiss } from "./state/storage";
+import { restoreDrill, parseJumpTarget } from "./domain/drill";
+import { loadDrillProgress, saveDrillProgress, clearDrillProgress } from "./state/drillProgress";
 import type { ChoiceId, Question } from "./data/types";
 import type { Level } from "./data/types";
 import type { StudyNotesBySubject } from "./data/types";
@@ -70,6 +72,18 @@ function drillCounts(): DrillCounts {
   }, { all: 0, wrong: 0, unanswered: 0 });
 }
 
+// 只有刷題存進度；每次作答與換題後寫入。
+function persistDrill() {
+  if (session.mode !== "drill" || !session.subjectId) return;
+  const current = session.questions[session.index];
+  if (!current) return;
+  const answers: Record<string, ChoiceId> = {};
+  for (const [id, choice] of Object.entries(session.answers)) {
+    if (choice !== undefined) answers[id] = choice;
+  }
+  saveDrillProgress(session.subjectId, { questionId: current.id, answers });
+}
+
 function drillMatches(question: Question, filter = session.drillFilter): boolean {
   const answer = session.answers[question.id];
   if (filter === "all") return true;
@@ -101,6 +115,7 @@ function moveDrill(delta: -1 | 1) {
     session.index = next;
   }
   session.reveal = revealForCurrent();
+  persistDrill();
   render();
 }
 
@@ -244,7 +259,17 @@ function render() {
   if (session.view === "level") { stopTimer(); app.innerHTML = renderLevel(session.level); return; }
   if (session.view === "mode") {
     stopTimer();
-    app.innerHTML = renderModePicker(getSubject(session.subjectId)?.name ?? "", getQuestions(session.subjectId).length);
+    const bank = getQuestions(session.subjectId);
+    // 這裡對 bank（原始題庫）算索引，只是為了顯示「上次進度」提示；
+    // 必須和 startMode 實際還原用的題目序列（buildAttempt 之後的 questions）一致，
+    // 否則提示的第 N 題會跟真正續作的位置對不上。目前 buildAttempt 的 identity shuffle
+    // 回傳的陣列與 bank 相等，兩處恰好同步——若刷題排序邏輯改變，這裡也要跟著改。
+    const restored = restoreDrill(bank, loadDrillProgress(session.subjectId));
+    const answered = Object.keys(restored.answers).length;
+    const hint = answered > 0 || restored.index > 0
+      ? `上次進度：第 ${restored.index + 1} 題・已作答 ${answered} 題`
+      : undefined;
+    app.innerHTML = renderModePicker(getSubject(session.subjectId)?.name ?? "", bank.length, hint);
     return;
   }
   if (session.view === "paper") {
@@ -257,7 +282,7 @@ function render() {
       app.innerHTML = renderExamPaper(session.questions, session.answers, timeText(), answeredCount());
     } else {
       const filtered = filteredDrillIndices();
-      const controls = { filter: session.drillFilter, counts: drillCounts() };
+      const controls = { filter: session.drillFilter, counts: drillCounts(), total: session.questions.length };
       if (!filtered.length && !session.reveal) {
         app.innerHTML = renderDrillEmpty(controls);
         return;
@@ -301,15 +326,16 @@ function render() {
 function startMode(mode: Mode) {
   session.mode = mode;
   if (mode === "exam") { session.view = "paper"; render(); return; }
-  // 刷題：放入全部題目、依考卷原序（不打散）。
+  // 刷題：放入全部題目、依考卷原序（不打散），並還原上次進度。
   const bank = getQuestions(session.subjectId);
   session.questions = buildAttempt(bank, { count: bank.length, shuffle: (a) => [...a] }).questions;
-  session.answers = {};
-  session.index = 0;
-  session.reveal = false; // 進入時未揭曉；作答後才揭曉
+  const restored = restoreDrill(session.questions, loadDrillProgress(session.subjectId));
+  session.answers = restored.answers;
+  session.index = restored.index;
   session.deadline = null;
   session.drillFilter = "all";
   session.view = "play";
+  session.reveal = revealForCurrent(); // 該題已作答則揭曉
   render();
 }
 
@@ -340,27 +366,63 @@ function finishExam() {
 function revealForCurrent(): boolean {
   if (session.view === "review") return true;
   const q = session.questions[session.index];
-  return session.mode === "drill" && session.answers[q.id] !== undefined;
+  return session.mode === "drill" && q !== undefined && session.answers[q.id] !== undefined;
 }
 
 function selectChoice(choiceId: ChoiceId) {
   const q = session.questions[session.index];
   if (!q) return;
   session.answers[q.id] = choiceId;
-  if (session.mode === "drill") session.reveal = true;
+  if (session.mode === "drill") {
+    session.reveal = true;
+    persistDrill();
+  }
   render();
 }
 
 function changeDrillFilter(filter: DrillFilter) {
   session.drillFilter = filter;
-  const first = firstDrillIndex(filter);
-  if (first === undefined) {
-    session.index = 0;
-    session.reveal = false;
-  } else {
-    session.index = first;
+  const current = session.questions[session.index];
+  // 目前這題若仍符合新篩選就留在原地——否則切回「全部」會把續作位置打回第 1 題。
+  if (current && drillMatches(current, filter)) {
     session.reveal = revealForCurrent();
+  } else {
+    const first = firstDrillIndex(filter);
+    if (first === undefined) {
+      session.index = 0;
+      session.reveal = false;
+    } else {
+      session.index = first;
+      session.reveal = revealForCurrent();
+    }
   }
+  persistDrill();
+  render();
+}
+
+function jumpToDrillIndex(index: number) {
+  session.index = index;
+  // 目標題若不符當前篩選，切回「全部」，否則畫面不會有反應。
+  if (!drillMatches(session.questions[index])) session.drillFilter = "all";
+  session.reveal = revealForCurrent();
+  persistDrill();
+  render();
+}
+
+function submitDrillJump() {
+  const input = app.querySelector<HTMLInputElement>(".drill-jump-input");
+  if (!input) return;
+  const index = parseJumpTarget(input.value, session.questions.length);
+  if (index === null) { input.value = ""; return; } // 不合法：清空輸入、不打擾
+  jumpToDrillIndex(index);
+}
+
+function resetDrill() {
+  clearDrillProgress(session.subjectId);
+  session.answers = {};
+  session.index = 0;
+  session.drillFilter = "all";
+  session.reveal = false;
   render();
 }
 
@@ -439,11 +501,18 @@ app.addEventListener("click", (event) => {
   }
   if (nav === "submit" && session.view === "play") { finishExam(); return; }
   if (nav === "result") { session.view = "result"; render(); return; }
+  if (nav === "jump" && session.mode === "drill") { submitDrillJump(); return; }
+  if (nav === "drill-reset" && session.mode === "drill") { resetDrill(); return; }
   if (nav === "review") { session.view = "review"; session.reveal = true; session.index = 0; render(); return; }
 });
 
 window.addEventListener("keydown", (event) => {
   const target = event.target;
+  if (event.key === "Enter" && session.mode === "drill" && target instanceof HTMLInputElement && target.classList.contains("drill-jump-input")) {
+    event.preventDefault();
+    submitDrillJump();
+    return;
+  }
   if (target instanceof HTMLElement && target.closest("input, textarea, select, [contenteditable='true']")) return;
   if (session.mode !== "drill" || (session.view !== "play" && session.view !== "review")) return;
 

@@ -49,5 +49,6 @@ npm run parse:papers # 從 docs/markdown/*.md 重新解析真題 → src/data/pa
 - **單頁考試的就地更新**：exam 模式選項點擊是直接改 DOM class 與「已作答」計數、**不呼叫 `render()`**；drill 模式則每次互動重繪整題。改任一邊時注意兩者路徑不同。
 - **`reveal` 揭曉邏輯**：drill 作答後揭曉、檢討一律揭曉、考試作答中不揭曉——集中在 `revealForCurrent()` 與 render 分流，改導覽時別讓檢討翻頁丟失揭曉。
 - **錯題本 localStorage key 為 `ipas-aiap-misses`**，勿更名（會遺失現有使用者紀錄）。
+- **刷題進度 localStorage key 為 `ipas-aiap-drill-progress`**，勿更名（會遺失現有使用者紀錄）。進度記錄的是 `questionId` 而非索引，這是刻意設計——題庫會隨時間成長，用索引會在新增題目後悄悄指向錯的題目。
 - **已知資料限制**：`senior-ml-114-2-q45` 原始 PDF 選項為圖片，pdftotext 無法擷取，故其 `choices` 文字為空（題幹與答案正確）；測試只檢查選項 id 而非文字，故此題不會使測試失敗。
 - **新題品質**：`generated/*` 由 LLM 依官方學習指引撰寫，僅有「格式」自動測試，**內容正確性需人工複審**；擴充新題前先確認複審流程。

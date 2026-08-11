@@ -9,6 +9,8 @@ import {
   renderExamPaper,
   renderExamReview,
   renderStudyLoading,
+  renderModePicker,
+  renderDrillEmpty,
 } from "../src/ui/render";
 import type { Question, StudyNotesBySubject } from "../src/data/types";
 import { studyNotes } from "../src/data/studyNotes";
@@ -88,7 +90,7 @@ describe("renderQuestion", () => {
       false,
       "",
       false,
-      { filter: "all", counts: { all: 1, wrong: 0, unanswered: 1 } },
+      { filter: "all", counts: { all: 1, wrong: 0, unanswered: 1 }, total: 1 },
     );
     expect(html).not.toContain('data-nav="submit"');
     expect(html).not.toContain("交卷");
@@ -252,5 +254,40 @@ describe("renderStudyView with nested notes", () => {
     const html = renderStudyView(testNotes);
     // 檢查摘要中顯示正確的葉子數（子項1 + 子項2 + 獨立葉子項 = 3 個葉子）
     expect(html).toContain("3 則重點");
+  });
+});
+
+describe("刷題跳題列", () => {
+  const controls = { filter: "all" as const, counts: { all: 222, wrong: 3, unanswered: 100 }, total: 222 };
+
+  it("刷題卡片含跳題輸入框與重置鈕", () => {
+    const html = renderQuestion(examQs[0], 0, 222, undefined, false, "", false, controls);
+    expect(html).toContain('class="drill-jump-input"');
+    expect(html).toContain('max="222"');
+    expect(html).toContain('data-nav="jump"');
+    expect(html).toContain('data-nav="drill-reset"');
+  });
+
+  it("篩選結果為空的畫面也有跳題列", () => {
+    const html = renderDrillEmpty({ ...controls, filter: "wrong", counts: { all: 222, wrong: 0, unanswered: 100 } });
+    expect(html).toContain('data-nav="jump"');
+  });
+
+  it("考試單頁不含跳題列", () => {
+    const html = renderQuestion(examQs[0], 0, 50, undefined, false, "10:00", false);
+    expect(html).not.toContain('data-nav="jump"');
+  });
+});
+
+describe("模式選單進度提示", () => {
+  it("有進度時顯示提示並跳脫 HTML", () => {
+    const html = renderModePicker("科目<X>", 222, "上次進度：第 137 題・已作答 136 題");
+    expect(html).toContain("上次進度：第 137 題・已作答 136 題");
+    expect(html).toContain("科目&lt;X&gt;");
+    expect(html).not.toContain("科目<X>");
+  });
+  it("沒有進度時不顯示提示區塊", () => {
+    const html = renderModePicker("科目", 222);
+    expect(html).not.toContain("drill-progress-hint");
   });
 });

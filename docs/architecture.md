@@ -15,6 +15,7 @@ Vite + TypeScript，純前端靜態 SPA，部署於 GitHub Pages（base path `/i
 |------|------|
 | `exam.ts` | 定義考試規則（`examRules`：50 題、每題 2 分、70 及格、maxWrongToPass 15）；`scoreExam` 計算成績；`topicSummary` 統計各主題對錯；`isCorrect` 判斷單題。 |
 | `catalog.ts` | 定義 `Subject` 型別與 5 個科目（初級 2 科、中級 3 科），提供 `getSubject`、`getSubjectsByLevel`。 |
+| `drill.ts` | 純函式：`restoreDrill` 依已儲存進度還原刷題位置與作答，題庫變動時安全退回第一題；`parseJumpTarget` 解析跳題輸入為 0-based 索引，不合法回 null。 |
 
 ### `src/state/`
 應用狀態管理，依賴 localStorage，不依賴 DOM。
@@ -24,6 +25,7 @@ Vite + TypeScript，純前端靜態 SPA，部署於 GitHub Pages（base path `/i
 | `storage.ts` | 錯題本的讀寫，localStorage key 為 `ipas-aiap-misses`。 |
 | `attempt.ts` | `buildAttempt` 從題庫取題（可注入 shuffle）；`shuffleWith` 提供可注入亂數的洗牌。刷題以 identity shuffle 取整個題庫（原序）。 |
 | `mockPapers.ts` | `buildMockPaper(bank, subjectId, paperIndex)` 以 `subjectId + 份次` 為 seed（FNV-1a ＋ mulberry32）產生**決定性、可重現**的 50 題試卷；`PAPER_COUNT = 3`。 |
+| `drillProgress.ts` | 刷題進度的讀寫，localStorage key 為 `ipas-aiap-drill-progress`，依科目分別儲存。 |
 
 ### `src/ui/`
 畫面渲染，依賴 DOM，不含業務邏輯。

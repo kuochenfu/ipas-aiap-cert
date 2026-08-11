@@ -20,6 +20,12 @@
 - 存於 **localStorage**，key 固定為 `ipas-aiap-misses`。
 - 不可更換 key 名稱，否則現有使用者的錯題記錄將遺失。
 
+### 刷題進度
+- 存於 **localStorage**，key 固定為 `ipas-aiap-drill-progress`（`src/state/drillProgress.ts`）。
+- 依科目 id 分別儲存，內容為目前的 `questionId` 與作答 map（`Record<題目id, 選項字母>`）。
+- 不可更換 key 名稱，否則現有使用者的刷題進度將遺失。
+- 僅**刷題練習**會持久化進度；**模擬考試**不會。
+
 ### 私有資料
 - `docs/raw/` 存放原始 PDF，**絕對不可提交或公開**（已列入 `.gitignore`）。
 - `docs/markdown/` 為中間產物，同樣不納入版控。

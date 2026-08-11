@@ -260,6 +260,10 @@ function render() {
   if (session.view === "mode") {
     stopTimer();
     const bank = getQuestions(session.subjectId);
+    // 這裡對 bank（原始題庫）算索引，只是為了顯示「上次進度」提示；
+    // 必須和 startMode 實際還原用的題目序列（buildAttempt 之後的 questions）一致，
+    // 否則提示的第 N 題會跟真正續作的位置對不上。目前 buildAttempt 的 identity shuffle
+    // 回傳的陣列與 bank 相等，兩處恰好同步——若刷題排序邏輯改變，這裡也要跟著改。
     const restored = restoreDrill(bank, loadDrillProgress(session.subjectId));
     const answered = Object.keys(restored.answers).length;
     const hint = answered > 0 || restored.index > 0
@@ -362,7 +366,7 @@ function finishExam() {
 function revealForCurrent(): boolean {
   if (session.view === "review") return true;
   const q = session.questions[session.index];
-  return session.mode === "drill" && session.answers[q.id] !== undefined;
+  return session.mode === "drill" && q !== undefined && session.answers[q.id] !== undefined;
 }
 
 function selectChoice(choiceId: ChoiceId) {
@@ -378,13 +382,19 @@ function selectChoice(choiceId: ChoiceId) {
 
 function changeDrillFilter(filter: DrillFilter) {
   session.drillFilter = filter;
-  const first = firstDrillIndex(filter);
-  if (first === undefined) {
-    session.index = 0;
-    session.reveal = false;
-  } else {
-    session.index = first;
+  const current = session.questions[session.index];
+  // 目前這題若仍符合新篩選就留在原地——否則切回「全部」會把續作位置打回第 1 題。
+  if (current && drillMatches(current, filter)) {
     session.reveal = revealForCurrent();
+  } else {
+    const first = firstDrillIndex(filter);
+    if (first === undefined) {
+      session.index = 0;
+      session.reveal = false;
+    } else {
+      session.index = first;
+      session.reveal = revealForCurrent();
+    }
   }
   persistDrill();
   render();
@@ -498,7 +508,7 @@ app.addEventListener("click", (event) => {
 
 window.addEventListener("keydown", (event) => {
   const target = event.target;
-  if (event.key === "Enter" && target instanceof HTMLInputElement && target.classList.contains("drill-jump-input")) {
+  if (event.key === "Enter" && session.mode === "drill" && target instanceof HTMLInputElement && target.classList.contains("drill-jump-input")) {
     event.preventDefault();
     submitDrillJump();
     return;

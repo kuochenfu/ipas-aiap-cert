@@ -98,6 +98,26 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; border-ra
 }
 .drill-filter.active { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
 .drill-filter strong { font-variant-numeric: tabular-nums; }
+.drill-controls { margin-bottom: 14px; }
+.drill-controls .drill-filters { margin-bottom: 8px; }
+.drill-jump { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.drill-jump-label {
+  display: flex; align-items: center; gap: 6px;
+  color: var(--muted); font-weight: 700; font-size: 0.9rem;
+}
+.drill-jump-input {
+  width: 84px; background: var(--panel); color: var(--text);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 7px 9px; font: inherit; font-variant-numeric: tabular-nums;
+}
+.drill-jump-input:focus { outline: none; border-color: var(--accent); }
+.drill-jump-go, .drill-reset {
+  background: var(--panel); color: var(--accent);
+  border: 1px solid var(--border); padding: 7px 12px; font-weight: 700; font-size: 0.9rem;
+}
+.drill-jump-go:hover, .drill-reset:hover { border-color: var(--accent); background: var(--accent-soft); }
+.drill-reset { color: var(--muted); margin-left: auto; }
+.drill-progress-hint { color: var(--accent); font-weight: 700; }
 .empty-state {
   background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
   padding: 18px; color: var(--muted);

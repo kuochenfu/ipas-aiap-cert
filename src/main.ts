@@ -257,7 +257,7 @@ function render() {
       app.innerHTML = renderExamPaper(session.questions, session.answers, timeText(), answeredCount());
     } else {
       const filtered = filteredDrillIndices();
-      const controls = { filter: session.drillFilter, counts: drillCounts() };
+      const controls = { filter: session.drillFilter, counts: drillCounts(), total: session.questions.length };
       if (!filtered.length && !session.reveal) {
         app.innerHTML = renderDrillEmpty(controls);
         return;

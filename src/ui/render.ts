@@ -15,6 +15,7 @@ export type DrillCounts = Record<DrillFilter, number>;
 export type DrillControls = {
   filter: DrillFilter;
   counts: DrillCounts;
+  total: number;
 };
 
 export const renderSubjectCard = (subject: Subject, stats: BankStats): string => `
@@ -47,14 +48,26 @@ const drillFilterLabels: Record<DrillFilter, string> = {
   unanswered: "未答",
 };
 
-const renderDrillFilters = ({ filter, counts }: DrillControls): string => `
-  <div class="drill-filters" aria-label="刷題篩選">
-    ${(Object.keys(drillFilterLabels) as DrillFilter[]).map((key) => `
-      <button class="drill-filter ${filter === key ? "active" : ""}" data-filter="${key}" aria-pressed="${filter === key}">
-        <span>${drillFilterLabels[key]}</span>
-        <strong>${counts[key]}</strong>
-      </button>
-    `).join("")}
+const renderDrillFilters = ({ filter, counts, total }: DrillControls): string => `
+  <div class="drill-controls">
+    <div class="drill-filters" aria-label="刷題篩選">
+      ${(Object.keys(drillFilterLabels) as DrillFilter[]).map((key) => `
+        <button class="drill-filter ${filter === key ? "active" : ""}" data-filter="${key}" aria-pressed="${filter === key}">
+          <span>${drillFilterLabels[key]}</span>
+          <strong>${counts[key]}</strong>
+        </button>
+      `).join("")}
+    </div>
+    <div class="drill-jump">
+      <label class="drill-jump-label">
+        跳至
+        <input class="drill-jump-input" type="number" inputmode="numeric" min="1" max="${total}"
+               aria-label="跳至第幾題（1 到 ${total}）">
+        題
+      </label>
+      <button class="drill-jump-go" data-nav="jump">前往</button>
+      <button class="drill-reset" data-nav="drill-reset">重置進度</button>
+    </div>
   </div>
 `;
 
@@ -159,11 +172,19 @@ export const renderLevel = (level: Level): string => {
   `;
 };
 
-export const renderModePicker = (subjectName: string, drillCount: number): string => `
+export const renderModePicker = (
+  subjectName: string,
+  drillCount: number,
+  drillProgressText?: string,
+): string => `
   <header class="topbar"><button class="back" data-nav="back">← 返回</button><h1>${escapeHtml(subjectName)}</h1></header>
   <main class="mode-picker">
     <button class="mode-card" data-mode="exam"><h2>模擬考試</h2><p>50 題・計時・100 分制・70 分及格</p></button>
-    <button class="mode-card" data-mode="drill"><h2>刷題練習</h2><p>全部 ${drillCount} 題・即時對錯與詳解・不計時</p></button>
+    <button class="mode-card" data-mode="drill">
+      <h2>刷題練習</h2>
+      <p>全部 ${drillCount} 題・即時對錯與詳解・不計時</p>
+      ${drillProgressText ? `<p class="drill-progress-hint">${escapeHtml(drillProgressText)}</p>` : ""}
+    </button>
   </main>
 `;
 

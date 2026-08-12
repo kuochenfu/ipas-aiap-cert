@@ -214,7 +214,7 @@
 | guide-q028 | 外包屬風險轉移 | L123 | ✅ |
 | guide-q029 | 策略失效時應快速調整 | L123 | ✅ |
 
-> 資料品質備註：`guide-q019` 的選項 D 文字尾端混入原始 PDF 的解析段落（與 junior-ai-basics 的 `guide-q010` 同因）。本次不修，另案處理。
+> 資料品質備註（2026-08-12 已修）：`guide-q019` 的選項 D 文字尾端曾混入原始 PDF 的解析段落（與 junior-ai-basics 的 `guide-q010` 同因）。詳見 `docs/coverage/junior-ai-basics.md` 的同一則備註。
 
 ## 站內補充題（gen-q001 ~ q034）
 

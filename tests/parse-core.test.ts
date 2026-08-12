@@ -119,6 +119,56 @@ describe("parseStudyGuide", () => {
     expect(parsed[1].sourceRef).toBe("初級科目二學習指引參考題 第2題");
   });
 
+  // 學習指引的版面是「每 10 題 → 該批的答案解析區塊 → 下一批 10 題」。
+  // 每批最後一題的最末選項，曾把整段解析與頁尾一路吞進去（見 docs/coverage）。
+  it("題目區塊在答案區塊開始時結束，最末選項不吞入解析與頁尾", () => {
+    const parsed = parseStudyGuide(
+      [
+        "## Page 27",
+        "10. 在 AI 治理中，下列何者是國際合作的重要性？",
+        "（A）統一 AI 發展標準",
+        "（B）避免 AI 技術的濫用",
+        "（C）促進 AI 技術的轉移",
+        "（D）以上皆是",
+        "",
+        "## Page 28",
+        " 第三章 人工智慧基礎概論",
+        "3-22",
+        "1. Ans（D）",
+        "解析：強化學習讓代理透過與環境互動最大化累積獎勵。",
+        "2. Ans（B）",
+        "解析：AI 涵蓋多種技術。",
+      ].join("\n"),
+      { subjectId: "junior-ai-basics", examCode: "guide", examLabel: "初級科目一學習指引參考題" },
+    );
+
+    expect(parsed).toHaveLength(1);
+    expect(parsed[0].choices[3].text).toBe("以上皆是");
+    expect(parsed[0].answer).toBe("D");
+    expect(parsed[0].explanation).toBe("解析：強化學習讓代理透過與環境互動最大化累積獎勵。");
+  });
+
+  it("章節頁尾（如 3-22）不併入選項文字", () => {
+    const parsed = parseStudyGuide(
+      [
+        "1. 題目一",
+        "（A）a",
+        "（B）b",
+        "（C）c",
+        "（D）d",
+        "3-22",
+        "2. 題目二",
+        "（A）a2",
+        "（B）b2",
+        "（C）c2",
+        "（D）d2",
+      ].join("\n"),
+      { subjectId: "junior-genai", examCode: "guide", examLabel: "初級科目二學習指引參考題" },
+    );
+
+    expect(parsed[0].choices[3].text).toBe("d");
+  });
+
   it("套用初級科目一學習指引勘誤表的題目修正", () => {
     const questionBlock = Array.from({ length: 17 }, (_, index) => {
       const n = index + 1;

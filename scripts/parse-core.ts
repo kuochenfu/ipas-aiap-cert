@@ -184,6 +184,8 @@ const isStudyGuideNoise = (line: string): boolean =>
   /^## Page \d+/.test(line) ||
   /^\d+$/.test(line) ||
   /^[-=]{3,}$/.test(line) ||
+  // 章節頁尾，例「3-22」（第三章第 22 頁）。
+  /^\d+-\d+$/.test(line) ||
   /^/.test(line) ||
   /^第[一二三四五六七八九十]+章/.test(line);
 
@@ -216,7 +218,9 @@ const parseStudyGuideQuestionDrafts = (lines: string[]): GuideQuestionDraft[] =>
 
   for (const line of lines) {
     if (isStudyGuideNoise(line)) continue;
-    if (isStudyGuideBoundary(line)) {
+    // 答案區塊的開頭（「N. Ans（X）」）代表這一批題目結束。少了這個邊界，
+    // 整段解析會被當成最末選項的跨行延續一路吞進去。
+    if (isStudyGuideBoundary(line) || guideAnswerStart.test(line)) {
       finish();
       continue;
     }

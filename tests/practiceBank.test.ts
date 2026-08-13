@@ -84,6 +84,15 @@ describe("junior-ai-basics 節點題數", () => {
   it("L11302 有 12 題", () => {
     expect(getPracticeStats("junior-ai-basics").byTopic["L11302 常見的機器學習模型"]).toBe(12);
   });
+  it("L11401 有 11 題", () => {
+    expect(getPracticeStats("junior-ai-basics").byTopic["L11401 鑑別式 AI 與生成式 AI 的基本原理"]).toBe(11);
+  });
+  it("L11402 有 11 題", () => {
+    expect(getPracticeStats("junior-ai-basics").byTopic["L11402 鑑別式 AI 與生成式 AI 的整合應用"]).toBe(11);
+  });
+  it("整科合計 100 題", () => {
+    expect(getPracticeStats("junior-ai-basics").total).toBe(100);
+  });
 });
 
 describe("原題庫未受影響", () => {

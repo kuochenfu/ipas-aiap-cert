@@ -150,9 +150,12 @@ function periodViolations(answers: string[]): string[] {
   return problems;
 }
 
+// 滑動窗（i++，不是 i += 4）：固定步進 4 只會取樣不重疊的區塊，節點題數非 4 的倍數時
+// （目前的 11/14/15 題節點都不是），尾端 1～3 題永遠只落在週期檢查的覆蓋範圍內、
+// 從未被區塊排列檢查看到。滑動窗讓每個長度 4 的連續子序列都被檢查一次。
 function blockPermutationRatio(answers: string[]): number {
   const blocks: string[][] = [];
-  for (let i = 0; i + 4 <= answers.length; i += 4) blocks.push(answers.slice(i, i + 4));
+  for (let i = 0; i + 4 <= answers.length; i++) blocks.push(answers.slice(i, i + 4));
   if (blocks.length === 0) return 0;
   const permCount = blocks.filter((b) => new Set(b).size === 4).length;
   return permCount / blocks.length;
@@ -242,7 +245,7 @@ describe("新題庫：不得含簡體字", () => {
 });
 
 describe("新題庫整體品質", () => {
-  for (const subjectId of ["junior-ai-basics", "junior-genai"]) {
+  for (const subjectId of subjects) {
     it(`${subjectId}：正解字母分佈不極端（每個字母至少 15 題）`, () => {
       const counts: Record<string, number> = { A: 0, B: 0, C: 0, D: 0 };
       for (const q of getPracticeQuestions(subjectId)) counts[q.answer] += 1;

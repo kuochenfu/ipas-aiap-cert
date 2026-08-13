@@ -115,6 +115,17 @@ describe("renderQuestion", () => {
     expect(html).toContain("因為 A");
   });
 
+  it("有評鑑主題碼時顯示主題標籤", () => {
+    const html = renderQuestion({ ...examQs[0], topic: "L11101 AI 的定義與分類" }, 0, 1, undefined, false, "", false);
+    expect(html).toContain('class="q-topic"');
+    expect(html).toContain("L11101 AI 的定義與分類");
+  });
+
+  it("主題為未分類時不顯示主題標籤", () => {
+    const html = renderQuestion({ ...examQs[0], topic: "未分類" }, 0, 1, undefined, false, "", false);
+    expect(html).not.toContain('class="q-topic"');
+  });
+
   it("選項解析優先取用詳解中的選項段落", () => {
     const html = renderQuestion({
       ...examQs[0],

@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   restoreDrill, parseJumpTarget, drillMatches, filteredDrillIndices, drillFilterTarget,
+  practiceProgressKey,
 } from "../src/domain/drill";
 import type { Question } from "../src/data/types";
 import type { AnswerState } from "../src/domain/exam";
@@ -33,6 +34,16 @@ describe("restoreDrill", () => {
   it("過濾掉不存在於題庫的作答 id", () => {
     const out = restoreDrill(bank, { questionId: "q1", answers: { q1: "A", gone: "D" } });
     expect(out.answers).toEqual({ q1: "A" });
+  });
+});
+
+describe("practiceProgressKey", () => {
+  it("回傳科目 id 加上 :practice 後綴", () => {
+    expect(practiceProgressKey("junior-ai-basics")).toBe("junior-ai-basics:practice");
+  });
+  it("與原本的科目 id 不同（新題庫進度與原刷題進度需隔離）", () => {
+    const subjectId = "junior-ai-basics";
+    expect(practiceProgressKey(subjectId)).not.toBe(subjectId);
   });
 });
 

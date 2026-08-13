@@ -6,13 +6,14 @@ import {
 } from "./ui/render";
 import { getSubject } from "./domain/catalog";
 import { getQuestions } from "./data/index";
-import { getPracticeQuestions } from "./data/practice";
+import { practiceTotal } from "./domain/assessmentTopics";
 import { scoreExam, topicSummary, type AnswerState } from "./domain/exam";
 import { buildAttempt } from "./state/attempt";
 import { buildMockPaper, PAPER_COUNT } from "./state/mockPapers";
 import { addMiss } from "./state/storage";
 import {
   restoreDrill, parseJumpTarget, drillMatches, filteredDrillIndices, drillFilterTarget,
+  practiceProgressKey,
   type DrillFilter,
 } from "./domain/drill";
 import { loadDrillProgress, saveDrillProgress, clearDrillProgress } from "./state/drillProgress";
@@ -42,11 +43,16 @@ type Session = {
   drillFilter: DrillFilter;
 };
 
+type PracticeModule = typeof import("./data/practice");
+
 const app = document.querySelector<HTMLDivElement>("#app")!;
 let session: Session = blankSession();
 let timerId: number | null = null;
 let studyNotesCache: StudyNotesBySubject | null = null;
 let studyNotesPromise: Promise<StudyNotesBySubject> | null = null;
+// 新題庫（200 題）獨立成自己的 chunk，只有進入初級科目的模式選單或實際開始練習時才載入。
+let practiceCache: PracticeModule | null = null;
+let practicePromise: Promise<PracticeModule> | null = null;
 let ttsRate = 1;
 let activeTtsButton: HTMLButtonElement | null = null;
 let activeUtterance: SpeechSynthesisUtterance | null = null;
@@ -81,7 +87,7 @@ function drillCounts(): DrillCounts {
 
 // 新題庫的進度與原刷題分開存：同一個 localStorage key 底下，科目 key 加上 :practice 後綴。
 function drillProgressKey(): string {
-  return session.bank === "practice" ? `${session.subjectId}:practice` : session.subjectId;
+  return session.bank === "practice" ? practiceProgressKey(session.subjectId) : session.subjectId;
 }
 
 // 只有刷題存進度；每次作答與換題後寫入。
@@ -241,6 +247,13 @@ async function loadStudyNotes(): Promise<StudyNotesBySubject> {
   return studyNotesCache;
 }
 
+async function loadPractice(): Promise<PracticeModule> {
+  if (practiceCache) return practiceCache;
+  practicePromise ??= import("./data/practice");
+  practiceCache = await practicePromise;
+  return practiceCache;
+}
+
 function render() {
   if (session.view !== "study") stopTts();
   if (session.view === "home") { stopTimer(); app.innerHTML = renderHome(); return; }
@@ -275,13 +288,33 @@ function render() {
         ? `上次進度：第 ${restored.index + 1} 題・已作答 ${answered} 題`
         : undefined;
     };
-    const practiceBank = getPracticeQuestions(session.subjectId);
+    // practiceTotal 只讀節點配額（domain/assessmentTopics.ts 是靜態常量），不需要載入 200 題的新題庫本體
+    // 就能算出正確題數，因此首次繪製就能顯示卡片，不會有「先無卡片、題庫載完才浮現」的閃爍。
+    const practiceCount = practiceTotal(session.subjectId);
+    const practice = practiceCount > 0
+      ? {
+        count: practiceCount,
+        // 進度提示需要讀新題庫本體才能還原上次作答位置；快取還沒到位前先留空，
+        // 下方背景載入完成、且畫面仍停在同一科目的模式選單時才補上（見下方 loadPractice().then）。
+        progressText: practiceCache
+          ? hintFor(practiceCache.getPracticeQuestions(session.subjectId), practiceProgressKey(session.subjectId))
+          : undefined,
+      }
+      : undefined;
     app.innerHTML = renderModePicker(
       getSubject(session.subjectId)?.name ?? "",
       bank.length,
       hintFor(bank, session.subjectId),
-      { count: practiceBank.length, progressText: hintFor(practiceBank, `${session.subjectId}:practice`) },
+      practice,
     );
+    if (practiceCount > 0 && !practiceCache) {
+      const subjectId = session.subjectId;
+      void loadPractice().then(() => {
+        // 若使用者已經離開這個科目的模式選單（切到別科或別的畫面），這次載入結果就不再相關，
+        // 不可覆寫使用者當下正在看的畫面——即使還是同一個 session 物件。
+        if (session.view === "mode" && session.subjectId === subjectId) render();
+      });
+    }
     return;
   }
   if (session.view === "paper") {
@@ -335,14 +368,8 @@ function render() {
   }
 }
 
-function startMode(token: ModeToken) {
-  session.mode = token === "exam" ? "exam" : "drill";
-  session.bank = token === "practice" ? "practice" : "main";
-  if (session.mode === "exam") { session.view = "paper"; render(); return; }
-  // 刷題：放入全部題目、依原序（不打散），並還原上次進度。
-  const bank = session.bank === "practice"
-    ? getPracticeQuestions(session.subjectId)
-    : getQuestions(session.subjectId);
+// 刷題共用的收尾：放入全部題目、依原序（不打散），並還原上次進度。
+function beginDrill(bank: Question[]) {
   session.questions = buildAttempt(bank, { count: bank.length, shuffle: (a) => [...a] }).questions;
   const restored = restoreDrill(session.questions, loadDrillProgress(drillProgressKey()));
   session.answers = restored.answers;
@@ -352,6 +379,24 @@ function startMode(token: ModeToken) {
   session.view = "play";
   session.reveal = revealForCurrent(); // 該題已作答則揭曉
   render();
+}
+
+function startMode(token: ModeToken) {
+  session.mode = token === "exam" ? "exam" : "drill";
+  session.bank = token === "practice" ? "practice" : "main";
+  if (session.mode === "exam") { session.view = "paper"; render(); return; }
+  if (session.bank === "practice") {
+    // 新題庫是動態載入的獨立 chunk：即使使用者搶在背景預載完成前就點了這張卡，
+    // 這裡自己 await import 仍能正常進場，不依賴 render() 那邊的背景載入是否已完成。
+    const subjectId = session.subjectId;
+    void loadPractice().then((mod) => {
+      // 若這段等待期間使用者已經切走（換科目、切到模擬考試等），就不要再用舊的點擊結果覆寫畫面。
+      if (session.subjectId !== subjectId || session.view !== "mode") return;
+      beginDrill(mod.getPracticeQuestions(subjectId));
+    });
+    return;
+  }
+  beginDrill(getQuestions(session.subjectId));
 }
 
 function startExamPaper(paperIndex: number) {

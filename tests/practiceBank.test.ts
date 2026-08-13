@@ -95,6 +95,15 @@ describe("junior-ai-basics 節點題數", () => {
   });
 });
 
+describe("junior-genai 節點題數", () => {
+  it("L12101 有 14 題", () => {
+    expect(getPracticeStats("junior-genai").byTopic["L12101 No Code / Low Code 的基本概念"]).toBe(14);
+  });
+  it("L12102 有 14 題", () => {
+    expect(getPracticeStats("junior-genai").byTopic["L12102 No Code / Low Code 的優勢與限制"]).toBe(14);
+  });
+});
+
 describe("原題庫未受影響", () => {
   it("getQuestions 的題數不變", async () => {
     const { getQuestions } = await import("../src/data/index");

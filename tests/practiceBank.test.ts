@@ -102,6 +102,12 @@ describe("junior-genai 節點題數", () => {
   it("L12102 有 14 題", () => {
     expect(getPracticeStats("junior-genai").byTopic["L12102 No Code / Low Code 的優勢與限制"]).toBe(14);
   });
+  it("L12201 有 15 題", () => {
+    expect(getPracticeStats("junior-genai").byTopic["L12201 生成式 AI 應用領域與常見工具"]).toBe(15);
+  });
+  it("L12202 有 15 題", () => {
+    expect(getPracticeStats("junior-genai").byTopic["L12202 如何善用生成式 AI 工具"]).toBe(15);
+  });
 });
 
 describe("原題庫未受影響", () => {

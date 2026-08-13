@@ -390,8 +390,11 @@ function startMode(token: ModeToken) {
     // 這裡自己 await import 仍能正常進場，不依賴 render() 那邊的背景載入是否已完成。
     const subjectId = session.subjectId;
     void loadPractice().then((mod) => {
-      // 若這段等待期間使用者已經切走（換科目、切到模擬考試等），就不要再用舊的點擊結果覆寫畫面。
-      if (session.subjectId !== subjectId || session.view !== "mode") return;
+      // 若這段等待期間使用者已經切走（換科目、切到模擬考試、或又切回主題庫等），就不要再用舊的點擊結果覆寫畫面。
+      if (
+        session.subjectId !== subjectId || session.view !== "mode"
+        || session.mode !== "drill" || session.bank !== "practice"
+      ) return;
       beginDrill(mod.getPracticeQuestions(subjectId));
     });
     return;

@@ -126,6 +126,12 @@ describe("renderQuestion", () => {
     expect(html).not.toContain('class="q-topic"');
   });
 
+  it("主題為原始題庫的自由文字主題時不顯示主題標籤", () => {
+    // 例如 src/data/generated/junior-ai-basics.ts 裡的自由文字主題（原始題庫不應出現標籤）。
+    const html = renderQuestion({ ...examQs[0], topic: "資料處理與分析概念" }, 0, 1, undefined, false, "", false);
+    expect(html).not.toContain('class="q-topic"');
+  });
+
   it("選項解析優先取用詳解中的選項段落", () => {
     const html = renderQuestion({
       ...examQs[0],

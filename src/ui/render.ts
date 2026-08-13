@@ -224,7 +224,7 @@ export const renderQuestion = (
     </header>
     <main class="question">
       ${drillControls ? renderDrillFilters(drillControls) : ""}
-      ${q.topic && q.topic !== "未分類" ? `<span class="q-topic">${escapeHtml(q.topic)}</span>` : ""}
+      ${q.topic && /^L\d{5} /.test(q.topic) ? `<span class="q-topic">${escapeHtml(q.topic)}</span>` : ""}
       <p class="prompt">${escapeHtml(q.prompt)}</p>
       <div class="choices">${choices}</div>
       ${explanation}

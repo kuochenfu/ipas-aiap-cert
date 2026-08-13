@@ -78,6 +78,12 @@ describe("junior-ai-basics 節點題數", () => {
   it("L11203 有 11 題", () => {
     expect(getPracticeStats("junior-ai-basics").byTopic["L11203 資料隱私與安全"]).toBe(11);
   });
+  it("L11301 有 11 題", () => {
+    expect(getPracticeStats("junior-ai-basics").byTopic["L11301 機器學習基本原理"]).toBe(11);
+  });
+  it("L11302 有 12 題", () => {
+    expect(getPracticeStats("junior-ai-basics").byTopic["L11302 常見的機器學習模型"]).toBe(12);
+  });
 });
 
 describe("原題庫未受影響", () => {
@@ -172,6 +178,7 @@ const SIMPLIFIED_CHARS = [
   "别", "题", "库",
   "资", "银", "风", "险", "规", "则", "训", "练", "输", "护", "议", "备", "设", "习", "级", "导",
   "维", "监", "预", "译", "签",
+  "统", "选", "对", "确", "语", "问",
 ];
 
 describe("新題庫：不得含簡體字", () => {

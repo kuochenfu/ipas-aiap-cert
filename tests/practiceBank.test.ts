@@ -68,6 +68,15 @@ describe("junior-ai-basics 節點題數", () => {
   it("L11102 有 11 題", () => {
     expect(getPracticeStats("junior-ai-basics").byTopic["L11102 AI 治理概念"]).toBe(11);
   });
+  it("L11201 有 11 題", () => {
+    expect(getPracticeStats("junior-ai-basics").byTopic["L11201 資料基本概念與來源"]).toBe(11);
+  });
+  it("L11202 有 11 題", () => {
+    expect(getPracticeStats("junior-ai-basics").byTopic["L11202 資料整理與分析流程"]).toBe(11);
+  });
+  it("L11203 有 11 題", () => {
+    expect(getPracticeStats("junior-ai-basics").byTopic["L11203 資料隱私與安全"]).toBe(11);
+  });
 });
 
 describe("原題庫未受影響", () => {

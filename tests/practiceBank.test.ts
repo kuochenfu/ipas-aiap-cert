@@ -240,3 +240,28 @@ describe("新題庫：不得含簡體字", () => {
     });
   }
 });
+
+describe("新題庫整體品質", () => {
+  for (const subjectId of ["junior-ai-basics", "junior-genai"]) {
+    it(`${subjectId}：正解字母分佈不極端（每個字母至少 15 題）`, () => {
+      const counts: Record<string, number> = { A: 0, B: 0, C: 0, D: 0 };
+      for (const q of getPracticeQuestions(subjectId)) counts[q.answer] += 1;
+      for (const letter of ["A", "B", "C", "D"]) {
+        expect(counts[letter], `${letter} 只有 ${counts[letter]} 題`).toBeGreaterThanOrEqual(15);
+      }
+    });
+
+    it(`${subjectId}：題幹不重複`, () => {
+      const prompts = getPracticeQuestions(subjectId).map((q) => q.prompt);
+      expect(new Set(prompts).size).toBe(prompts.length);
+    });
+
+    it(`${subjectId}：選項內不出現「以上皆是／皆非」`, () => {
+      for (const q of getPracticeQuestions(subjectId)) {
+        for (const c of q.choices) {
+          expect(c.text, `${q.id} ${c.id}`).not.toMatch(/以上皆[是非]/);
+        }
+      }
+    });
+  }
+});

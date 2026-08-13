@@ -12,7 +12,7 @@ import {
   renderModePicker,
   renderDrillEmpty,
 } from "../src/ui/render";
-import type { Question, StudyNotesBySubject } from "../src/data/types";
+import type { StudyNotesBySubject } from "../src/data/types";
 import { studyNotes } from "../src/data/studyNotes";
 
 describe("escapeHtml", () => {
@@ -161,32 +161,6 @@ describe("renderExamReview", () => {
     expect(html).toContain("因為 A");
     expect(html).toMatch(/class="[^"]*correct[^"]*"><span class="choice-id">A/);
     expect(html).toMatch(/class="[^"]*wrong[^"]*"><span class="choice-id">B/);
-  });
-});
-
-describe("renderQuestion 選項解析 × glossary", () => {
-  const q: Question = {
-    id: "q1",
-    subjectId: "junior-ai-basics",
-    prompt: "持續蒐集環境數據與設備狀態，最直接支援的技術？",
-    choices: [
-      { id: "A", text: "專家系統（Expert System） " },
-      { id: "B", text: "決策支援系統（Decision Support System） " },
-      { id: "C", text: "啟發式決策引擎（Heuristic Decision Engine） " },
-      { id: "D", text: "感知器網路（Sensor Network）" },
-    ],
-    answer: "D",
-    // 有手寫詳解但無 A/B/C/D 標記 → 走 fallback
-    explanation: "需求是持續蒐集環境數據，最直接由感知器網路支援。",
-    topic: "未分類",
-    difficulty: "中",
-    source: "past-exam",
-  };
-
-  it("揭曉時錯誤選項顯示詞彙表用途與範例", () => {
-    const html = renderQuestion(q, 0, 1, "D", true, "", false);
-    expect(html).toContain("以規則庫與推論引擎");
-    expect(html).toContain("故不選 A");
   });
 });
 

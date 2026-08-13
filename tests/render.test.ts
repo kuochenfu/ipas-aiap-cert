@@ -291,3 +291,23 @@ describe("模式選單進度提示", () => {
     expect(html).not.toContain("drill-progress-hint");
   });
 });
+
+describe("模式選單的新題庫卡", () => {
+  it("有新題庫時顯示第三張卡與題數", () => {
+    const html = renderModePicker("科目", 222, undefined, { count: 100 });
+    expect(html).toContain('data-mode="practice"');
+    expect(html).toContain("新題庫練習");
+    expect(html).toContain("依評鑑主題分類 100 題");
+  });
+
+  it("新題庫為空時不顯示第三張卡", () => {
+    expect(renderModePicker("科目", 222, undefined, { count: 0 })).not.toContain('data-mode="practice"');
+    expect(renderModePicker("科目", 222)).not.toContain('data-mode="practice"');
+  });
+
+  it("新題庫進度提示會被跳脫", () => {
+    const html = renderModePicker("科目", 222, undefined, { count: 100, progressText: "上次進度：第 3 題<x>" });
+    expect(html).toContain("第 3 題&lt;x&gt;");
+    expect(html).not.toContain("第 3 題<x>");
+  });
+});

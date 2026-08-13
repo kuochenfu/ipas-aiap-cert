@@ -6,6 +6,7 @@ import {
 } from "./ui/render";
 import { getSubject } from "./domain/catalog";
 import { getQuestions } from "./data/index";
+import { getPracticeQuestions } from "./data/practice";
 import { scoreExam, topicSummary, type AnswerState } from "./domain/exam";
 import { buildAttempt } from "./state/attempt";
 import { buildMockPaper, PAPER_COUNT } from "./state/mockPapers";
@@ -22,12 +23,16 @@ import type { DrillCounts } from "./ui/render";
 
 type View = "home" | "level" | "mode" | "paper" | "play" | "result" | "review" | "study";
 type Mode = "exam" | "drill";
+type Bank = "main" | "practice";
+// 模式選單的點擊 token：practice 實際上是 mode=drill + bank=practice。
+type ModeToken = "exam" | "drill" | "practice";
 
 type Session = {
   view: View;
   level: Level;
   subjectId: string;
   mode: Mode;
+  bank: Bank;               // drill 的題庫來源：原題庫或新題庫
   paperIndex: number;       // exam：第幾份試卷（0-based）
   questions: Question[];
   answers: AnswerState;
@@ -48,7 +53,7 @@ let activeUtterance: SpeechSynthesisUtterance | null = null;
 
 function blankSession(): Session {
   return {
-    view: "home", level: "junior", subjectId: "", mode: "exam", paperIndex: 0,
+    view: "home", level: "junior", subjectId: "", mode: "exam", bank: "main", paperIndex: 0,
     questions: [], answers: {}, index: 0, reveal: false, deadline: null, drillFilter: "all",
   };
 }
@@ -74,6 +79,11 @@ function drillCounts(): DrillCounts {
   }, { all: 0, wrong: 0, unanswered: 0 });
 }
 
+// 新題庫的進度與原刷題分開存：同一個 localStorage key 底下，科目 key 加上 :practice 後綴。
+function drillProgressKey(): string {
+  return session.bank === "practice" ? `${session.subjectId}:practice` : session.subjectId;
+}
+
 // 只有刷題存進度；每次作答與換題後寫入。
 function persistDrill() {
   if (session.mode !== "drill" || !session.subjectId) return;
@@ -83,7 +93,7 @@ function persistDrill() {
   for (const [id, choice] of Object.entries(session.answers)) {
     if (choice !== undefined) answers[id] = choice;
   }
-  saveDrillProgress(session.subjectId, { questionId: current.id, answers });
+  saveDrillProgress(drillProgressKey(), { questionId: current.id, answers });
 }
 
 // 以下三個為 src/domain/drill.ts 純函式的 session 綁定版本，方便呼叫端省去傳參。
@@ -258,12 +268,20 @@ function render() {
     // 必須和 startMode 實際還原用的題目序列（buildAttempt 之後的 questions）一致，
     // 否則提示的第 N 題會跟真正續作的位置對不上。目前 buildAttempt 的 identity shuffle
     // 回傳的陣列與 bank 相等，兩處恰好同步——若刷題排序邏輯改變，這裡也要跟著改。
-    const restored = restoreDrill(bank, loadDrillProgress(session.subjectId));
-    const answered = Object.keys(restored.answers).length;
-    const hint = answered > 0 || restored.index > 0
-      ? `上次進度：第 ${restored.index + 1} 題・已作答 ${answered} 題`
-      : undefined;
-    app.innerHTML = renderModePicker(getSubject(session.subjectId)?.name ?? "", bank.length, hint);
+    const hintFor = (questions: Question[], key: string): string | undefined => {
+      const restored = restoreDrill(questions, loadDrillProgress(key));
+      const answered = Object.keys(restored.answers).length;
+      return answered > 0 || restored.index > 0
+        ? `上次進度：第 ${restored.index + 1} 題・已作答 ${answered} 題`
+        : undefined;
+    };
+    const practiceBank = getPracticeQuestions(session.subjectId);
+    app.innerHTML = renderModePicker(
+      getSubject(session.subjectId)?.name ?? "",
+      bank.length,
+      hintFor(bank, session.subjectId),
+      { count: practiceBank.length, progressText: hintFor(practiceBank, `${session.subjectId}:practice`) },
+    );
     return;
   }
   if (session.view === "paper") {
@@ -317,13 +335,16 @@ function render() {
   }
 }
 
-function startMode(mode: Mode) {
-  session.mode = mode;
-  if (mode === "exam") { session.view = "paper"; render(); return; }
-  // 刷題：放入全部題目、依考卷原序（不打散），並還原上次進度。
-  const bank = getQuestions(session.subjectId);
+function startMode(token: ModeToken) {
+  session.mode = token === "exam" ? "exam" : "drill";
+  session.bank = token === "practice" ? "practice" : "main";
+  if (session.mode === "exam") { session.view = "paper"; render(); return; }
+  // 刷題：放入全部題目、依原序（不打散），並還原上次進度。
+  const bank = session.bank === "practice"
+    ? getPracticeQuestions(session.subjectId)
+    : getQuestions(session.subjectId);
   session.questions = buildAttempt(bank, { count: bank.length, shuffle: (a) => [...a] }).questions;
-  const restored = restoreDrill(session.questions, loadDrillProgress(session.subjectId));
+  const restored = restoreDrill(session.questions, loadDrillProgress(drillProgressKey()));
   session.answers = restored.answers;
   session.index = restored.index;
   session.deadline = null;
@@ -402,7 +423,7 @@ function submitDrillJump() {
 }
 
 function resetDrill() {
-  clearDrillProgress(session.subjectId);
+  clearDrillProgress(drillProgressKey());
   session.answers = {};
   session.index = 0;
   session.drillFilter = "all";
@@ -432,7 +453,7 @@ app.addEventListener("click", (event) => {
   if (subjectId) { session.subjectId = subjectId; session.view = "mode"; render(); return; }
 
   const mode = target.getAttribute("data-mode");
-  if (mode) { startMode(mode as Mode); return; }
+  if (mode) { startMode(mode as ModeToken); return; }
 
   const paper = target.getAttribute("data-paper");
   if (paper !== null) { startExamPaper(Number(paper)); return; }

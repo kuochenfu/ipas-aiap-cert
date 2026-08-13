@@ -176,6 +176,7 @@ export const renderModePicker = (
   subjectName: string,
   drillCount: number,
   drillProgressText?: string,
+  practice?: { count: number; progressText?: string },
 ): string => `
   <header class="topbar"><button class="back" data-nav="back">← 返回</button><h1>${escapeHtml(subjectName)}</h1></header>
   <main class="mode-picker">
@@ -185,6 +186,13 @@ export const renderModePicker = (
       <p>全部 ${drillCount} 題・即時對錯與詳解・不計時</p>
       ${drillProgressText ? `<p class="drill-progress-hint">${escapeHtml(drillProgressText)}</p>` : ""}
     </button>
+    ${practice && practice.count > 0 ? `
+      <button class="mode-card" data-mode="practice">
+        <h2>新題庫練習</h2>
+        <p>依評鑑主題分類 ${practice.count} 題・附選項解析・不計時</p>
+        ${practice.progressText ? `<p class="drill-progress-hint">${escapeHtml(practice.progressText)}</p>` : ""}
+      </button>
+    ` : ""}
   </main>
 `;
 

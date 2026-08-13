@@ -39,7 +39,7 @@
 | L12302 | 生成式 AI 導入規劃 | 14 |
 | L12303 | 生成式 AI 風險管理 | 14 |
 
-中級三科（senior-strategy、senior-ml、senior-mgmt）尚未納入新題庫，見 `docs/superpowers/specs/2026-08-13-practice-bank-design.md` 的 Backlog。
+中級三科（`senior-ai-tech`、`senior-bigdata`、`senior-ml`——確切 id 可在 `src/domain/catalog.ts` 查證）尚未納入新題庫，見 `docs/superpowers/specs/2026-08-13-practice-bank-design.md` 的 Backlog。
 
 ## 產業場景分佈統計
 
@@ -75,6 +75,19 @@ junior-genai { A: 27, B: 26, C: 23, D: 24 }
 ```
 
 兩科四個字母都落在 23～27 題之間，遠高於 15 題門檻，分佈平均，未做任何調整。（另外還有更嚴格的「以評鑑內容節點為單位」的週期／區塊規律檢查，見同一測試檔的「答案字母序列」區塊，此處不重複列出。）
+
+## 評鑑內容碼統計：資料有、UI 目前沒呈現
+
+每題都帶有評鑑內容碼（`topic` 欄位，如 `L11101 AI 的定義與分類`），資料層的 `getPracticeStats(subjectId)` 也能回傳 `byTopic`（各節點題數統計）。
+
+但**目前沒有任何畫面會把 practice 題庫的作答結果按這個碼分類呈現**。原因：
+
+- 刷題模式（含新題庫練習）沒有交卷按鈕，導覽列只有「上一題／下一題」，作答後即時揭曉，不會進入成績頁。
+- `topicSummary`（`src/domain/exam.ts`）只在模擬考試 `finishExam()` 之後的成績頁使用；而模擬考試（`mode → paper → play`）取用的是原題庫（`getQuestions`），不會用到 practice 題庫。
+
+（本節記錄的是專案設計 spec 裡一句被實測推翻的推理——原 spec 的「非目標」段認為「`topic` 會餵進既有的 `topicSummary`，成績頁自然按主題統計」，但這個推論忽略了 practice 題庫走的是刷題流程、刷題流程根本不到成績頁。）
+
+因此「依評鑑內容節點檢視作答表現」目前是**待辦**，不是已完成的功能；本文件其餘段落提到的節點題數/配額，指的是題庫本身的分類，不代表使用者在 UI 上能看到對應統計。
 
 ## 複審狀態與方法
 

@@ -61,6 +61,15 @@ describe("新題庫形狀契約", () => {
   }
 });
 
+describe("junior-ai-basics 節點題數", () => {
+  it("L11101 有 11 題", () => {
+    expect(getPracticeStats("junior-ai-basics").byTopic["L11101 AI 的定義與分類"]).toBe(11);
+  });
+  it("L11102 有 11 題", () => {
+    expect(getPracticeStats("junior-ai-basics").byTopic["L11102 AI 治理概念"]).toBe(11);
+  });
+});
+
 describe("原題庫未受影響", () => {
   it("getQuestions 的題數不變", async () => {
     const { getQuestions } = await import("../src/data/index");

@@ -7,6 +7,9 @@ const banks: Record<string, Question[]> = {
   "junior-genai": juniorGenai,
 };
 
+/** banks registry 涵蓋的科目清單，供測試等處推導，避免各處各自硬編一份、日後加科目卻漏改。 */
+export const practiceSubjectIds: string[] = Object.keys(banks);
+
 /** 新題庫（依評鑑內容分類）。與 src/data/index.ts 的原題庫完全獨立。 */
 export const getPracticeQuestions = (subjectId: string): Question[] => banks[subjectId] ?? [];
 

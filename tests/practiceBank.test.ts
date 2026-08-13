@@ -108,6 +108,12 @@ describe("junior-genai 節點題數", () => {
   it("L12202 有 15 題", () => {
     expect(getPracticeStats("junior-genai").byTopic["L12202 如何善用生成式 AI 工具"]).toBe(15);
   });
+  it("L12301 有 14 題", () => {
+    expect(getPracticeStats("junior-genai").byTopic["L12301 生成式 AI 導入評估"]).toBe(14);
+  });
+  it("L12302 有 14 題", () => {
+    expect(getPracticeStats("junior-genai").byTopic["L12302 生成式 AI 導入規劃"]).toBe(14);
+  });
 });
 
 describe("原題庫未受影響", () => {

@@ -115,6 +115,23 @@ describe("renderQuestion", () => {
     expect(html).toContain("因為 A");
   });
 
+  it("有評鑑主題碼時顯示主題標籤", () => {
+    const html = renderQuestion({ ...examQs[0], topic: "L11101 AI 的定義與分類" }, 0, 1, undefined, false, "", false);
+    expect(html).toContain('class="q-topic"');
+    expect(html).toContain("L11101 AI 的定義與分類");
+  });
+
+  it("主題為未分類時不顯示主題標籤", () => {
+    const html = renderQuestion({ ...examQs[0], topic: "未分類" }, 0, 1, undefined, false, "", false);
+    expect(html).not.toContain('class="q-topic"');
+  });
+
+  it("主題為原始題庫的自由文字主題時不顯示主題標籤", () => {
+    // 例如 src/data/generated/junior-ai-basics.ts 裡的自由文字主題（原始題庫不應出現標籤）。
+    const html = renderQuestion({ ...examQs[0], topic: "資料處理與分析概念" }, 0, 1, undefined, false, "", false);
+    expect(html).not.toContain('class="q-topic"');
+  });
+
   it("選項解析優先取用詳解中的選項段落", () => {
     const html = renderQuestion({
       ...examQs[0],
@@ -289,5 +306,25 @@ describe("模式選單進度提示", () => {
   it("沒有進度時不顯示提示區塊", () => {
     const html = renderModePicker("科目", 222);
     expect(html).not.toContain("drill-progress-hint");
+  });
+});
+
+describe("模式選單的新題庫卡", () => {
+  it("有新題庫時顯示第三張卡與題數", () => {
+    const html = renderModePicker("科目", 222, undefined, { count: 100 });
+    expect(html).toContain('data-mode="practice"');
+    expect(html).toContain("新題庫練習");
+    expect(html).toContain("依評鑑主題分類 100 題");
+  });
+
+  it("新題庫為空時不顯示第三張卡", () => {
+    expect(renderModePicker("科目", 222, undefined, { count: 0 })).not.toContain('data-mode="practice"');
+    expect(renderModePicker("科目", 222)).not.toContain('data-mode="practice"');
+  });
+
+  it("新題庫進度提示會被跳脫", () => {
+    const html = renderModePicker("科目", 222, undefined, { count: 100, progressText: "上次進度：第 3 題<x>" });
+    expect(html).toContain("第 3 題&lt;x&gt;");
+    expect(html).not.toContain("第 3 題<x>");
   });
 });

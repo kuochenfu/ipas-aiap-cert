@@ -24,6 +24,9 @@ export const restoreDrill = (
   return { index: found >= 0 ? found : 0, answers };
 };
 
+/** 新題庫的進度 key：與原刷題共用同一個 localStorage key，靠科目 key 的後綴隔離。 */
+export const practiceProgressKey = (subjectId: string): string => `${subjectId}:practice`;
+
 /** 把使用者輸入的題號（1-based）轉為索引（0-based）；不合法回 null。 */
 export const parseJumpTarget = (raw: string, total: number): number | null => {
   const trimmed = raw.trim();

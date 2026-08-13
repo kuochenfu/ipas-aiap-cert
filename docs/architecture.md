@@ -16,6 +16,7 @@ Vite + TypeScript，純前端靜態 SPA，部署於 GitHub Pages（base path `/i
 | `exam.ts` | 定義考試規則（`examRules`：50 題、每題 2 分、70 及格、maxWrongToPass 15）；`scoreExam` 計算成績；`topicSummary` 統計各主題對錯；`isCorrect` 判斷單題。 |
 | `catalog.ts` | 定義 `Subject` 型別與 5 個科目（初級 2 科、中級 3 科），提供 `getSubject`、`getSubjectsByLevel`。 |
 | `drill.ts` | 純函式：`restoreDrill` 依已儲存進度還原刷題位置與作答，題庫變動時安全退回第一題；`parseJumpTarget` 解析跳題輸入為 0-based 索引，不合法回 null。 |
+| `assessmentTopics.ts` | 官方《評鑑內容範圍》的評鑑內容節點目錄（`practiceTopics`：`subjectId → 節點碼/名稱/題數配額`），供新題庫（`src/data/practice/`）產題與測試核對配額；目前僅初級兩科。 |
 
 ### `src/state/`
 應用狀態管理，依賴 localStorage，不依賴 DOM。
@@ -47,6 +48,7 @@ Vite + TypeScript，純前端靜態 SPA，部署於 GitHub Pages（base path `/i
 | `<subjectId>.ts` | 合併 past-exams JSON + explanations + generated，提供 `getQuestions`、`getBankStats`。 |
 | `index.ts` | 統一匯出所有科目的 `getQuestions`、`getBankStats`。 |
 | `studyGuide.ts` | 「學習主題（延伸閱讀）」資料：依官方評鑑範圍轉錄的 18 個評鑑主題 ＋ 策展外部連結；提供 `getStudyGuide`。 |
+| `practice/<subjectId>.ts`、`practice/index.ts` | 新題庫：依官方評鑑內容節點分類的補充題（配額見 `src/domain/assessmentTopics.ts`），與 `past-exams`/`explanations`/`generated` 組成的原題庫**完全獨立、不經 `getQuestions`**；`practice/index.ts` 提供 `getPracticeQuestions`、`getPracticeStats`、`practiceSubjectIds`。目前僅初級兩科各 100 題，見 `docs/coverage/practice-bank.md`。 |
 
 ### `src/main.ts`
 畫面狀態機（View State Machine）。視圖：`home / level / mode / paper / play / result / review / study`。管理頁面切換、計時器與自動交卷、以及兩種流程：

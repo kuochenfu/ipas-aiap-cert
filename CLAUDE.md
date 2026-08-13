@@ -52,3 +52,4 @@ npm run parse:papers # 從 docs/markdown/*.md 重新解析真題 → src/data/pa
 - **刷題進度 localStorage key 為 `ipas-aiap-drill-progress`**，勿更名（會遺失現有使用者紀錄）。進度記錄的是 `questionId` 而非索引，這是刻意設計——題庫會隨時間成長，用索引會在新增題目後悄悄指向錯的題目。
 - **已知資料限制**：`senior-ml-114-2-q45` 原始 PDF 選項為圖片，pdftotext 無法擷取，故其 `choices` 文字為空（題幹與答案正確）；測試只檢查選項 id 而非文字，故此題不會使測試失敗。
 - **新題品質**：`generated/*` 由 LLM 依官方學習指引撰寫，僅有「格式」自動測試，**內容正確性需人工複審**；擴充新題前先確認複審流程。
+- **`session.bank`（`"main" | "practice"`）決定刷題的題庫來源**：`"main"` 讀 `getQuestions`（原題庫），`"practice"` 讀 `getPracticeQuestions`（`src/data/practice/`，依評鑑內容節點分類，目前僅初級兩科各 100 題）。`drillProgressKey()` 依此在 key 後綴 `:practice`，讓兩者的進度分開存在同一個 `ipas-aiap-drill-progress` map 裡。改刷題相關邏輯（進度還原、篩選、就地更新等）時，兩種來源都要確認成立，不能只測 `bank: "main"` 的路徑。新題庫的節點題數與配額由 `src/domain/assessmentTopics.ts` 定義，改配額要同步改 `tests/practiceBank.test.ts`。

@@ -1,8 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { getQuestions } from "../src/data/index";
 import type { ChoiceId } from "../src/data/types";
+import { SIMPLIFIED_CHARS } from "./simplifiedChars";
 
 const choiceIds: ChoiceId[] = ["A", "B", "C", "D"];
+const allSubjectIds = ["junior-ai-basics", "junior-genai", "senior-ai-tech", "senior-bigdata", "senior-ml"];
 const TEMPLATE_SIGNATURES = [/依學習指引中「/, /較像是在問該選項本身代表的概念/];
 
 /**
@@ -69,8 +71,42 @@ describe("原題庫詳解與選項解析覆蓋率", () => {
  * 讓後續批次的選項解析一寫進來就受同一組門檻約束，不必等到該批的覆蓋率斷言補上為止。
  * 尚未撰寫選項解析的題目（choiceExplanations 為空）不在此檢查範圍，不會誤擋進度。
  */
+/**
+ * 原題庫的手寫欄位：不得含簡體字。
+ *
+ * `tests/practiceBank.test.ts` 的同名掃描只涵蓋 `getPracticeQuestions`（新題庫），
+ * 因此在此之前，`getQuestions` 出來的詳解與選項解析——也就是 explanations overhaul
+ * 各批次寫進去的全部內容——沒有任何自動化的繁體中文檢查。這裡補上，字表與新題庫共用
+ * `tests/simplifiedChars.ts`，避免兩處各自維護而分歧。
+ *
+ * 只掃 `explanation` 與 `choiceExplanations` 這兩個**手寫**欄位：`prompt` 與 `choices`
+ * 來自 `src/data/past-exams/*.json`，是 pdftotext 解析出來的機器產物（原始考卷用字），
+ * 不由本專案撰寫，也明令不得修改，納入掃描只會產生改不掉的失敗。
+ */
+describe("原題庫手寫欄位：不得含簡體字", () => {
+  for (const subjectId of allSubjectIds) {
+    it(`${subjectId}：explanation 與 choiceExplanations 皆為繁體中文`, () => {
+      const offenders: string[] = [];
+      for (const q of getQuestions(subjectId)) {
+        const fields: Array<[string, string]> = [
+          ["explanation", q.explanation],
+          ...Object.entries(q.choiceExplanations ?? {}).map(
+            ([k, v]): [string, string] => [`choiceExplanations.${k}`, v as string],
+          ),
+        ];
+        for (const [field, text] of fields) {
+          for (const ch of SIMPLIFIED_CHARS) {
+            if (text.includes(ch)) offenders.push(`${q.id} ${field} 疑似含簡體字「${ch}」：${text}`);
+          }
+        }
+      }
+      expect(offenders).toEqual([]);
+    });
+  }
+});
+
 describe("選項解析品質門檻（全題庫）", () => {
-  for (const subjectId of ["junior-ai-basics", "junior-genai", "senior-ai-tech", "senior-bigdata", "senior-ml"]) {
+  for (const subjectId of allSubjectIds) {
     it(`${subjectId}：已撰寫的選項解析皆非樣板且長度達標`, () => {
       const offenders: string[] = [];
       for (const q of getQuestions(subjectId)) {

@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { getPracticeQuestions, getPracticeStats, practiceSubjectIds } from "../src/data/practice";
 import { practiceTopics, topicLabel } from "../src/domain/assessmentTopics";
 import type { ChoiceId, Question } from "../src/data/types";
+import { SIMPLIFIED_CHARS } from "./simplifiedChars";
 
 // 從 banks registry 推導科目清單，避免這裡與 src/data/practice/index.ts 各自維護一份、日後加科目卻漏改。
 const subjects = practiceSubjectIds;
@@ -207,18 +208,6 @@ describe("答案字母序列：避免週期／區塊規律（以每個評鑑內�
   }
 });
 
-// 常見簡體字集合，供偵測 LLM 撰題時誤用簡體字。此集合可視實際踩雷情況擴充，
-// 不必求全——目標是攔住「看起來像繁體、實際夾雜簡體」這種容易被人眼掃過的錯字。
-// 「后」刻意不列入：它在繁體中文裡本身是合法字（皇后、太后），列入會誤判。
-const SIMPLIFIED_CHARS = [
-  "价", "见", "关", "数", "据", "网", "络", "术", "应", "产", "业", "华", "与", "为", "这", "个",
-  "们", "时", "会", "学", "实", "现", "发", "从", "员", "处", "复", "传", "组", "织", "结",
-  "构", "认", "识", "记", "录", "变", "换", "优", "转", "联", "检", "测", "试", "验", "证", "类",
-  "别", "题", "库",
-  "资", "银", "风", "险", "规", "则", "训", "练", "输", "护", "议", "备", "设", "习", "级", "导",
-  "维", "监", "预", "译", "签",
-  "统", "选", "对", "确", "语", "问",
-];
 
 describe("新題庫：不得含簡體字", () => {
   for (const subjectId of subjects) {

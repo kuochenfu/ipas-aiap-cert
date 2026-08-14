@@ -640,7 +640,81 @@ git commit -m "content: explanations and choice analysis for junior-genai guide"
 
 ---
 
-### Task 10: 最終驗證與文件
+### Task 10: gen 題的選項解析（66 題）
+
+**Files:**
+- Modify: `src/data/generated/junior-ai-basics.ts`（32 題）、`src/data/generated/junior-genai.ts`（34 題）
+- Test: `tests/explanationsCoverage.test.ts`
+
+**Interfaces:**
+- Consumes: 無
+- Produces: 兩科 gen 題目的 `choiceExplanations` 欄位
+
+**背景（此任務為計畫執行中新增）：** 計畫原先假設 `gen-*` 題目已自帶選項解析，因此將其排除在範圍外。實際查證後發現 `src/data/generated/*.ts` 的 `choiceExplanations` 出現 0 次——這 66 題**完全沒有選項解析**。它們的**詳解是手寫的、86–129 字、確實合標**，因此本任務**只補選項解析、不動詳解**。
+
+若維持原範圍，這 66 題會是初級題庫中唯一沒有選項解析的一群，正好違背本計畫追求的一致性。使用者已裁定納入範圍。
+
+- [ ] **Step 1: 把 gen 的斷言改為完整版**
+
+`tests/explanationsCoverage.test.ts` 的 `describe("gen 題目不得被更動")` 目前斷言 gen 題有非空 `choiceExplanations`——那在本任務完成前不成立。整個 describe 區塊替換為：
+
+```ts
+describe("gen 題目", () => {
+  for (const subjectId of ["junior-ai-basics", "junior-genai"]) {
+    it(`${subjectId} 的 gen 題有達標詳解與三個錯誤選項解析`, () => {
+      const gen = getQuestions(subjectId).filter((q) => q.source === "generated");
+      expect(gen.length).toBeGreaterThan(0);
+      for (const q of gen) {
+        expect(q.explanation.trim().length, `${q.id} 詳解過短`).toBeGreaterThanOrEqual(60);
+        const keys = Object.keys(q.choiceExplanations ?? {}).sort();
+        const expected = choiceIds.filter((id) => id !== q.answer).sort();
+        expect(keys, `${q.id} 選項解析不齊`).toEqual(expected);
+        for (const id of expected) {
+          expect((q.choiceExplanations as Record<string, string>)[id].trim().length, `${q.id} ${id}`).toBeGreaterThan(0);
+        }
+      }
+    });
+  }
+});
+```
+
+- [ ] **Step 2: 執行測試確認失敗**
+
+Run: `npx vitest run tests/explanationsCoverage.test.ts`
+Expected: FAIL — gen 題目缺 `choiceExplanations`
+
+- [ ] **Step 3: 為 66 題補上選項解析**
+
+`src/data/generated/*.ts` 的每一題是一個 `Question` 物件字面量。在 `explanation` 之後加入 `choiceExplanations`，只寫三個錯誤選項：
+
+```ts
+    explanation: "……",
+    choiceExplanations: {
+      A: "…（為何在這一題錯）",
+      C: "…",
+      D: "…",
+    },
+```
+
+（此例正解為 B，故不寫 B。）
+
+**詳解一字不改。** 只新增 `choiceExplanations` 欄位。改完用 `git diff` 確認刪除行不含任何 `explanation:` 的內容。
+
+- [ ] **Step 4: 執行測試確認通過**
+
+Run: `npx vitest run tests/explanationsCoverage.test.ts && npm run build`
+Expected: PASS
+
+- [ ] **Step 5: 提交**
+
+```bash
+git add src/data/generated/junior-ai-basics.ts src/data/generated/junior-genai.ts tests/explanationsCoverage.test.ts
+git commit -m "content: choice analysis for junior generated questions"
+```
+
+---
+
+### Task 11: 最終驗證與文件
 
 **Files:**
 - Modify: `tests/explanationsCoverage.test.ts`
@@ -661,8 +735,8 @@ describe("原題庫詳解整體品質", () => {
 
   for (const subjectId of ["junior-ai-basics", "junior-genai"]) {
     it(`${subjectId}：所有真題都有達標詳解與三個錯誤選項解析`, () => {
-      const past = getQuestions(subjectId).filter((q) => q.source === "past-exam");
-      for (const q of past) {
+      // gen 題目自 Task 10 起同樣具備選項解析，因此這裡涵蓋整個題庫而非僅真題。
+      for (const q of getQuestions(subjectId)) {
         expect(q.explanation.trim().length, `${q.id} 詳解過短`).toBeGreaterThanOrEqual(60);
         const keys = Object.keys(q.choiceExplanations ?? {}).sort();
         const expected = ["A", "B", "C", "D"].filter((id) => id !== q.answer).sort();
@@ -723,7 +797,9 @@ for (const s of ['junior-ai-basics','junior-genai']) {
 
 - `docs/architecture.md`：更新 `src/data/` 表格——移除 `glossary.ts`、`choiceAnalysis.ts` 兩列，並把 `explanations/<subjectId>.ts` 的職責改為「手寫詳解與錯誤選項解析（`QuestionExplanation`）」。
 - `AGENTS.md`：更新「題庫資料管線」段落——手寫詳解的檔案現在同時承載選項解析；並記錄「選項解析一律手寫、不再由詞彙表自動組合」這條新不變式。
-- `CLAUDE.md`：在「大局架構」的三來源說明中，把 `explanations/<subjectId>.ts` 的描述改為同時含詳解與選項解析；在「容易踩到的點」加一則——`gen-*` 的 100 題內容不在本次改寫範圍，其詳解與選項解析定義在 `generated/*.ts` 內、不經 `explanations/*.ts`。
+另外：刪除 `tests/data.test.ts` 中 Task 1 為了讓套件變綠而加入的 `contentPending` 過濾器（它會永久放行 115-2 的空詳解，而本計畫已把那 100 題補齊）。
+
+- `CLAUDE.md`：在「大局架構」的三來源說明中，把 `explanations/<subjectId>.ts` 的描述改為同時含詳解與選項解析；在「容易踩到的點」加一則——`gen-*` 的 66 題詳解與選項解析定義在 `generated/*.ts` 的題目物件內，**不經** `explanations/*.ts`；改初級說明內容時兩處都要顧到。
 
 - [ ] **Step 5: 瀏覽器實測**
 

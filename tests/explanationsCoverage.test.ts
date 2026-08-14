@@ -152,6 +152,43 @@ describe("gen 題目", () => {
 });
 
 /**
+ * 初級兩科整體品質：不分 past-exam／generated，全題庫每一題都要達標。
+ *
+ * 與前面的「覆蓋率」斷言互補——那些以考卷為單位、只認證 past-exam；這裡直接掃兩科的
+ * 全部題目（含 `src/data/generated/*.ts` 合併進來的 gen 題），因此新增題目時若忘了寫
+ * 詳解或選項解析會立刻失敗，不必等有人記得新增一條覆蓋率斷言。
+ * 簡體字檢查不在此重複，由上面涵蓋五科的「原題庫手寫欄位」區塊負責（字表共用 tests/simplifiedChars.ts）。
+ */
+describe("初級兩科詳解整體品質", () => {
+  for (const subjectId of ["junior-ai-basics", "junior-genai"]) {
+    it(`${subjectId}：所有題目都有達標詳解與三個錯誤選項解析`, () => {
+      for (const q of getQuestions(subjectId)) {
+        expect(q.explanation.trim().length, `${q.id} 詳解過短`).toBeGreaterThanOrEqual(60);
+        const keys = Object.keys(q.choiceExplanations ?? {}).sort();
+        const expected = choiceIds.filter((id) => id !== q.answer).sort();
+        expect(keys, `${q.id} 選項解析不齊`).toEqual(expected);
+      }
+    });
+
+    it(`${subjectId}：不得殘留樣板句型`, () => {
+      for (const q of getQuestions(subjectId)) {
+        for (const re of TEMPLATE_SIGNATURES) {
+          expect(q.explanation, q.id).not.toMatch(re);
+        }
+        for (const text of Object.values(q.choiceExplanations ?? {})) {
+          expect(text as string, q.id).not.toMatch(/較適用於題目明確要求該概念/);
+        }
+      }
+    });
+  }
+
+  it("原題庫題數未變", () => {
+    expect(getQuestions("junior-ai-basics")).toHaveLength(222);
+    expect(getQuestions("junior-genai")).toHaveLength(213);
+  });
+});
+
+/**
  * 若選項解析字串一開頭就指名某個字母（如「A、」「B.」「選項 C」「（D）」），
  * 該字母必須等於它自己所屬的 key——防的是貼錯字母（複製上一題的選項解析時常見）。
  */

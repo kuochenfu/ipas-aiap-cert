@@ -5,6 +5,28 @@ import type { ChoiceId } from "../src/data/types";
 const choiceIds: ChoiceId[] = ["A", "B", "C", "D"];
 const TEMPLATE_SIGNATURES = [/依學習指引中「/, /較像是在問該選項本身代表的概念/];
 
+/**
+ * 每條選項解析的最低字元數。
+ *
+ * 依「一句話講清楚為什麼這個選項在這一題是錯的」的實際結構下限訂定：這句話必須同時
+ * 交代三件事——該選項的內容、本題題幹的具體要求、兩者的衝突點。實測既有內容，
+ * 只有名詞定義或只有結論的殘句落在 18–22 字（如「此敘述與題幹要求不符，故為錯誤選項。」18 字、
+ * 「關聯規則挖掘找的是常一起出現的字詞組合。」20 字），而三件事俱全的最短實例為 29 字
+ * （115-1 q01.C「整併多來源資料就是資料整合的定義本身，最不可能是例外選項。」）。
+ * 25 落在這個空隙裡：擋得住殘句與佔位字串，又不會誤殺寫得精簡但完整的解析。
+ *
+ * 注意此門檻擋的是「殘句／佔位」，擋不住「名詞定義＋一句尾綴」——後者可以寫得很長，
+ * 是語意問題而非長度問題，只能靠人工複審與撰寫規則（無情境題幹須改用「與正解對比」寫法）把關。
+ */
+const MIN_CHOICE_ANALYSIS_LENGTH = 25;
+
+/** 單條選項解析是否達標：非樣板、且長度足以完整交代錯誤理由。 */
+const choiceAnalysisIsComplete = (text: string): boolean => {
+  const trimmed = text.trim();
+  if (trimmed.length < MIN_CHOICE_ANALYSIS_LENGTH) return false;
+  return !TEMPLATE_SIGNATURES.some((re) => re.test(trimmed));
+};
+
 /** 該考卷中「詳解達標且三個錯誤選項解析齊全」的題數。 */
 export const completeCount = (subjectId: string, examCode: string): number =>
   getQuestions(subjectId).filter((q) => {
@@ -15,7 +37,7 @@ export const completeCount = (subjectId: string, examCode: string): number =>
     const keys = Object.keys(q.choiceExplanations ?? {}).sort();
     const expected = choiceIds.filter((id) => id !== q.answer).sort();
     return JSON.stringify(keys) === JSON.stringify(expected)
-      && expected.every((id) => (q.choiceExplanations as Record<string, string>)[id].trim().length > 0);
+      && expected.every((id) => choiceAnalysisIsComplete((q.choiceExplanations as Record<string, string>)[id]));
   }).length;
 
 describe("原題庫詳解與選項解析覆蓋率", () => {
@@ -26,6 +48,29 @@ describe("原題庫詳解與選項解析覆蓋率", () => {
   it("junior-ai-basics 115-2 全 50 題達標", () => {
     expect(completeCount("junior-ai-basics", "115-2")).toBe(50);
   });
+});
+
+/**
+ * 全題庫掃描：只要某題寫了選項解析，每一條都必須達標。
+ *
+ * 與上面的覆蓋率斷言互補——覆蓋率斷言只認證「已排程批次」的考卷，這裡則涵蓋全部五科，
+ * 讓後續批次的選項解析一寫進來就受同一組門檻約束，不必等到該批的覆蓋率斷言補上為止。
+ * 尚未撰寫選項解析的題目（choiceExplanations 為空）不在此檢查範圍，不會誤擋進度。
+ */
+describe("選項解析品質門檻（全題庫）", () => {
+  for (const subjectId of ["junior-ai-basics", "junior-genai", "senior-ai-tech", "senior-bigdata", "senior-ml"]) {
+    it(`${subjectId}：已撰寫的選項解析皆非樣板且長度達標`, () => {
+      const offenders: string[] = [];
+      for (const q of getQuestions(subjectId)) {
+        for (const [key, text] of Object.entries(q.choiceExplanations ?? {})) {
+          if (!choiceAnalysisIsComplete(text as string)) {
+            offenders.push(`${q.id}.${key}（${(text as string).trim().length} 字）：${text}`);
+          }
+        }
+      }
+      expect(offenders).toEqual([]);
+    });
+  }
 });
 
 describe("gen 題目不得被更動", () => {

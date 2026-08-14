@@ -133,16 +133,19 @@ describe("選項解析品質門檻（全題庫）", () => {
   }
 });
 
-describe("gen 題目不得被更動", () => {
+describe("gen 題目", () => {
   for (const subjectId of ["junior-ai-basics", "junior-genai"]) {
-    it(`${subjectId} 的 gen 題仍保有非空詳解`, () => {
-      // generated/*.ts 目前沒有 choiceExplanations 欄位（過去仰賴 render 時的 glossary 動態組字，
-      // Task 1 拿掉該機制後浮現的既有缺口，非本批任務造成）。Task 10 會補齊這批內容並把下面這行
-      // choiceExplanations 的斷言加回來，屆時應一併移除此註解。
+    it(`${subjectId} 的 gen 題有達標詳解與三個錯誤選項解析`, () => {
       const gen = getQuestions(subjectId).filter((q) => q.source === "generated");
       expect(gen.length).toBeGreaterThan(0);
       for (const q of gen) {
-        expect(q.explanation.trim().length, q.id).toBeGreaterThan(0);
+        expect(q.explanation.trim().length, `${q.id} 詳解過短`).toBeGreaterThanOrEqual(60);
+        const keys = Object.keys(q.choiceExplanations ?? {}).sort();
+        const expected = choiceIds.filter((id) => id !== q.answer).sort();
+        expect(keys, `${q.id} 選項解析不齊`).toEqual(expected);
+        for (const id of expected) {
+          expect((q.choiceExplanations as Record<string, string>)[id].trim().length, `${q.id} ${id}`).toBeGreaterThan(0);
+        }
       }
     });
   }

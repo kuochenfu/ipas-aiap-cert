@@ -720,6 +720,7 @@ git commit -m "content: choice analysis for junior generated questions"
 - Modify: `tests/explanationsCoverage.test.ts`
 - Create: `docs/coverage/explanations-overhaul.md`
 - Modify: `AGENTS.md`、`CLAUDE.md`、`docs/architecture.md`
+- Verify（不是新建）: `docs/coverage/bank-defects.md` — 此檔已由控制端在各批次進行中建立並持續補寫，Task 11 只需**核對它涵蓋了所有批次報告裡提出的題目瑕疵**，補上遺漏者，並在 `explanations-overhaul.md` 裡指向它。
 
 **Interfaces:**
 - Consumes: 全部前置任務

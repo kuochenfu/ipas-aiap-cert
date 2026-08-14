@@ -41,7 +41,7 @@ npm run parse:papers # 從 docs/markdown/*.md 重新解析真題 → src/data/pa
 
 **渲染走 `innerHTML` 字串樣板**：所有動態文字一律先經 `src/ui/escape.ts` 的 `escapeHtml`，外部連結加 `target="_blank" rel="noopener noreferrer"`。
 
-更深入的模組職責見 `docs/architecture.md`；不變式與操作守則見 `AGENTS.md`；各功能的設計與計畫見 `docs/superpowers/specs/` 與 `docs/superpowers/plans/`；專案回顧與待辦見 `docs/retrospective-2026-06-01.md`；已知的題目瑕疵與待複審內容見 `docs/coverage/`（尤其 `bank-defects.md` 與 `explanations-overhaul.md`）。
+更深入的模組職責見 `docs/architecture.md`；不變式與操作守則見 `AGENTS.md`；各功能的設計與計畫見 `docs/superpowers/specs/` 與 `docs/superpowers/plans/`；專案回顧與待辦見 `docs/retrospective-*.md`（最新一份為 `docs/retrospective-2026-08-14-explanations-overhaul.md`，其「最重要的一課」一節記錄了寫詳解時最容易出錯的句型與檢查法）；已知的題目瑕疵與待複審內容見 `docs/coverage/`（尤其 `bank-defects.md` 與 `explanations-overhaul.md`）。
 
 ## 容易踩到的點（gotchas）
 

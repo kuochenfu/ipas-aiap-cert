@@ -48,6 +48,10 @@ describe("原題庫詳解與選項解析覆蓋率", () => {
   it("junior-ai-basics 115-2 全 50 題達標", () => {
     expect(completeCount("junior-ai-basics", "115-2")).toBe(50);
   });
+
+  it("junior-ai-basics 114-4 全 50 題達標", () => {
+    expect(completeCount("junior-ai-basics", "114-4")).toBe(50);
+  });
 });
 
 /**

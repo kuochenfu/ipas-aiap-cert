@@ -58,6 +58,12 @@
 
 - `guide-q020` 與 `guide-q025` — 選項集同構（基礎建設／目標／訓練／採購軟體，答案皆為「目標」那一項）
 
+補充題（`gen-*`）：
+
+- `junior-ai-basics-gen-q005` 與 `gen-q013` — 同一事實的鏡像題（由描述問名稱／由名稱問描述）
+- `junior-ai-basics-gen-q015` 與 `gen-q025` — **兩對**干擾項重疊：「生成式無法用於分類」與「鑑別式一定較準／已取代」
+- `junior-ai-basics-gen-q006` 與 `junior-genai-gen-q016` — **跨科目**重複，正解幾乎相同（few-shot）
+
 ## `src/data/studyNotes.ts` 的錯誤
 
 | 位置 | 問題 |

@@ -34,7 +34,7 @@ Vite + TypeScript，純前端靜態 SPA，部署於 GitHub Pages（base path `/i
 | 檔案 | 職責 |
 |------|------|
 | `escape.ts` | HTML 字元跳脫工具函式。 |
-| `render.ts` | 所有 HTML 片段的產生函式：首頁、級別/科目、模式選單、試卷選單（`renderPaperPicker`）、刷題逐題卡（`renderQuestion`）、單頁考卷（`renderExamPaper`）、單頁檢討（`renderExamReview`）、成績、學習主題（`renderStudyView`）。選項解析區塊優先使用題目的 `choiceExplanations`；沒有時才走 `fallbackChoiceExplanation`（正解顯示固定句、錯誤選項先試 `explanationSegmentForChoice` 從詳解抽「A…B…」片段，都沒有才是通用句）——初級兩科已全部手寫，此後備路徑目前只服務中級三科。 |
+| `render.ts` | 所有 HTML 片段的產生函式：首頁、級別/科目、模式選單、試卷選單（`renderPaperPicker`）、刷題逐題卡（`renderQuestion`）、單頁考卷（`renderExamPaper`）、單頁檢討（`renderExamReview`）、成績、學習主題（`renderStudyView`）。選項解析區塊優先使用題目的 `choiceExplanations`；沒有時才走 `fallbackChoiceExplanation`（正解顯示固定句、錯誤選項先試 `explanationSegmentForChoice` 從詳解抽「A…B…」片段，都沒有才是通用句）。**注意後備路徑是逐選項生效的**：`choiceExplanations` 刻意不含正解，所以初級兩科 435 題的**正解欄位**同樣走後備（顯示固定句），並非只有中級三科在用——若日後中級也手寫完就把後備刪掉，會讓那 435 格瞬間空白。單頁檢討（`renderExamReview`）則另以 `q.choiceExplanations` 是否存在為閘門：沒有手寫解析的題目**整個區塊不顯示**，不以通用句充數。 |
 
 ### `src/data/`
 題庫資料層，負責合併多個來源並對外提供統一介面。

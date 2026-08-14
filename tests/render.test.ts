@@ -173,6 +173,13 @@ describe("renderExamReview", () => {
     expect(html).toContain("C 選項的解析");
     expect(html).toContain("D 選項的解析");
   });
+
+  it("沒有手寫選項解析時不顯示該區塊，不以通用填充句充數", () => {
+    // 中級三科目前皆無手寫選項解析；寧可不顯示，也不要讓「沒有解析」看起來像「有解析」。
+    const html = renderExamReview(examQs, { q1: "B" }, 0, "回成績");
+    expect(html).not.toContain("選項解析");
+    expect(html).not.toContain("此選項不是本題答案");
+  });
 });
 
 describe("renderStudyView with nested notes", () => {

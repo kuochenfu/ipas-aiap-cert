@@ -431,6 +431,7 @@ export const renderExamReview = (
         <div class="choices">${choices}</div>
         <p class="your-answer">${escapeHtml(yours)}</p>
         <div class="explanation"><strong>詳解</strong><p>${escapeHtml(q.explanation || "（尚無詳解）")}</p></div>
+        ${renderChoiceExplanations(q)}
       </section>`;
   }).join("");
   return `

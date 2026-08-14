@@ -162,6 +162,17 @@ describe("renderExamReview", () => {
     expect(html).toMatch(/class="[^"]*correct[^"]*"><span class="choice-id">A/);
     expect(html).toMatch(/class="[^"]*wrong[^"]*"><span class="choice-id">B/);
   });
+
+  it("顯示逐項選項解析", () => {
+    const html = renderExamReview([{
+      ...examQs[0],
+      choiceExplanations: { B: "B 選項的解析", C: "C 選項的解析", D: "D 選項的解析" },
+    }], { q1: "B" }, 0, "回成績");
+    expect(html).toContain("選項解析");
+    expect(html).toContain("B 選項的解析");
+    expect(html).toContain("C 選項的解析");
+    expect(html).toContain("D 選項的解析");
+  });
 });
 
 describe("renderStudyView with nested notes", () => {

@@ -11,7 +11,7 @@
 ## Global Constraints
 
 - **不得改動 `src/data/past-exams/`、`src/data/generated/`**。`getQuestions` 回傳題數須維持 `junior-ai-basics` 222 題、`junior-genai` 213 題。
-- **`gen-*` 的 100 題（每科 50）內容不得更動**，包含其 `explanation` 與 `choiceExplanations`。
+- **`gen-*` 的 66 題（junior-ai-basics 32、junior-genai 34）的 `explanation` 不得更動**（已達標）。其 `choiceExplanations` 原本不存在，由 Task 10 補上——除 Task 10 外，任何任務都不得改動 `src/data/generated/`。
 - **不得動中級三科的詳解內容**（`senior-ai-tech`、`senior-bigdata`、`senior-ml`）；僅能為型別一致做機械式結構轉換。
 - 所有動態文字經 `src/ui/escape.ts` 的 `escapeHtml` 後才進 `innerHTML`。
 - localStorage 相關一律不動（`ipas-aiap-misses`、`ipas-aiap-drill-progress`）。

@@ -70,6 +70,10 @@ describe("原題庫詳解與選項解析覆蓋率", () => {
   it("junior-genai 114-4 全 50 題達標", () => {
     expect(completeCount("junior-genai", "114-4")).toBe(50);
   });
+
+  it("junior-genai guide 全 29 題達標", () => {
+    expect(completeCount("junior-genai", "guide")).toBe(29);
+  });
 });
 
 /**

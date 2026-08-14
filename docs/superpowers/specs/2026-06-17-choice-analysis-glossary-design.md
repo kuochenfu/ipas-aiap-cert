@@ -1,5 +1,7 @@
 # 選項解析詞彙表查詢 — 設計文件
 
+> **已作廢（2026-08-14）**：本文件描述的 `src/data/glossary.ts` 與 `src/data/choiceAnalysis.ts` 已刪除，選項解析改為全手寫。保留此文件僅為歷史記錄；作廢理由與量測見 [`docs/coverage/explanations-overhaul.md`](../../coverage/explanations-overhaul.md)。
+
 - 日期：2026-06-17
 - 範圍：刷題練習的「選項解析」區塊，使其能逐項說明各選項（含非答案選項）的實際用途。
 

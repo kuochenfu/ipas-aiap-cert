@@ -28,8 +28,8 @@ npm run parse:papers # 從 docs/markdown/*.md 重新解析真題 → src/data/pa
 **題庫＝三個來源、載入時合併（核心設計）。** 每科的題庫不是單一檔，而是由 `src/data/<subjectId>.ts` 把三者合併：
 
 1. `src/data/past-exams/<subjectId>.json` — **真題**，由解析腳本產生，視為機器產物，勿手改。
-2. `src/data/explanations/<subjectId>.ts` — **手寫詳解** map（`題目id → 中文詳解`）。
-3. `src/data/generated/<subjectId>.ts` — **手寫新題** 陣列。
+2. `src/data/explanations/<subjectId>.ts` — **手寫詳解與錯誤選項解析** map（`題目id → { explanation, choices }`，`choices` 只放三個錯誤選項，正解不寫）。
+3. `src/data/generated/<subjectId>.ts` — **手寫新題** 陣列（詳解與選項解析寫在題目物件內）。
 
 合併時把 explanations 套到對應 id 的真題上，再接上 generated。**因此重跑 `npm run parse:papers` 只覆寫 `past-exams/*.json`，不會動到手寫的詳解與新題**——這是刻意的，改動資料層時務必維持。`src/data/index.ts` 對外只暴露 `getQuestions(subjectId)` 與 `getBankStats`。每題帶 `source: "past-exam" | "generated"`，可用於區分/篩選。
 
@@ -41,7 +41,7 @@ npm run parse:papers # 從 docs/markdown/*.md 重新解析真題 → src/data/pa
 
 **渲染走 `innerHTML` 字串樣板**：所有動態文字一律先經 `src/ui/escape.ts` 的 `escapeHtml`，外部連結加 `target="_blank" rel="noopener noreferrer"`。
 
-更深入的模組職責見 `docs/architecture.md`；不變式與操作守則見 `AGENTS.md`；各功能的設計與計畫見 `docs/superpowers/specs/` 與 `docs/superpowers/plans/`；專案回顧與待辦見 `docs/retrospective-2026-06-01.md`。
+更深入的模組職責見 `docs/architecture.md`；不變式與操作守則見 `AGENTS.md`；各功能的設計與計畫見 `docs/superpowers/specs/` 與 `docs/superpowers/plans/`；專案回顧與待辦見 `docs/retrospective-2026-06-01.md`；已知的題目瑕疵與待複審內容見 `docs/coverage/`（尤其 `bank-defects.md` 與 `explanations-overhaul.md`）。
 
 ## 容易踩到的點（gotchas）
 
@@ -52,4 +52,5 @@ npm run parse:papers # 從 docs/markdown/*.md 重新解析真題 → src/data/pa
 - **刷題進度 localStorage key 為 `ipas-aiap-drill-progress`**，勿更名（會遺失現有使用者紀錄）。進度記錄的是 `questionId` 而非索引，這是刻意設計——題庫會隨時間成長，用索引會在新增題目後悄悄指向錯的題目。
 - **已知資料限制**：`senior-ml-114-2-q45` 原始 PDF 選項為圖片，pdftotext 無法擷取，故其 `choices` 文字為空（題幹與答案正確）；測試只檢查選項 id 而非文字，故此題不會使測試失敗。
 - **新題品質**：`generated/*` 由 LLM 依官方學習指引撰寫，僅有「格式」自動測試，**內容正確性需人工複審**；擴充新題前先確認複審流程。
+- **初級的解析內容散在兩個地方**：`gen-*` 共 66 題（`junior-ai-basics` 32、`junior-genai` 34）的詳解與選項解析定義在 `generated/*.ts` 的**題目物件內**，**不經** `explanations/*.ts`；真題的則在 `explanations/*.ts`。改初級解析內容時兩處都要顧到。初級兩科每一題都必須有非空詳解與**三條**錯誤選項解析（`tests/explanationsCoverage.test.ts` 強制）；選項解析**一律手寫**，舊的詞彙表自動組合機制（`glossary.ts`／`choiceAnalysis.ts`）已刪除且不得重建，緣由見 `docs/coverage/explanations-overhaul.md`。中級三科尚無手寫選項解析，走 `render.ts` 的後備路徑。
 - **`session.bank`（`"main" | "practice"`）決定刷題的題庫來源**：`"main"` 讀 `getQuestions`（原題庫），`"practice"` 讀 `getPracticeQuestions`（`src/data/practice/`，依評鑑內容節點分類，目前僅初級兩科各 100 題）。`drillProgressKey()` 依此在 key 後綴 `:practice`，讓兩者的進度分開存在同一個 `ipas-aiap-drill-progress` map 裡。改刷題相關邏輯（進度還原、篩選、就地更新等）時，兩種來源都要確認成立，不能只測 `bank: "main"` 的路徑。新題庫的節點題數與配額由 `src/domain/assessmentTopics.ts` 定義，改配額要同步改 `tests/practiceBank.test.ts`。

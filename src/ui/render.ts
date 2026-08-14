@@ -7,7 +7,6 @@ import { getStudyGuide } from "../data/studyGuide";
 import type { Level } from "../data/types";
 import type { Question } from "../data/types";
 import type { StudyNoteItem, StudyNoteSection, StudyNotesBySubject } from "../data/types";
-import { composeGlossaryAnalysis } from "../data/choiceAnalysis";
 import type { DrillFilter } from "../domain/drill";
 
 export type BankStats = { total: number; pastExam: number; generated: number };
@@ -106,26 +105,12 @@ const fallbackChoiceExplanation = (q: Question, choice: Choice): string => {
   const correctChoice = q.choices.find((item) => item.id === q.answer);
   const correctText = correctChoice?.text ?? "";
   if (choice.id === q.answer) {
-    return (
-      composeGlossaryAnalysis({
-        choiceText: choice.text,
-        choiceId: choice.id,
-        isCorrect: true,
-        correctText,
-      }) ?? "這是本題正解；請搭配下方詳解掌握判斷依據。"
-    );
+    return "這是本題正解；請搭配下方詳解掌握判斷依據。";
   }
+  // 部分題目的詳解本身帶有「（A）…（B）…」的逐項說明，優先抽取該片段。
   const segment = explanationSegmentForChoice(q.explanation, choice.id);
   if (segment) return segment;
-  return (
-    composeGlossaryAnalysis({
-      choiceText: choice.text,
-      choiceId: choice.id,
-      isCorrect: false,
-      correctText,
-    }) ??
-    `此選項不是本題答案；它描述的是「${choice.text}」，但本題正解應判斷為「${q.answer}. ${correctText}」。請對照完整詳解，確認題目情境與關鍵概念的差異。`
-  );
+  return `此選項不是本題答案；它描述的是「${choice.text}」，但本題正解應判斷為「${q.answer}. ${correctText}」。請對照完整詳解，確認題目情境與關鍵概念的差異。`;
 };
 
 const renderChoiceExplanations = (q: Question): string => `
@@ -446,6 +431,7 @@ export const renderExamReview = (
         <div class="choices">${choices}</div>
         <p class="your-answer">${escapeHtml(yours)}</p>
         <div class="explanation"><strong>詳解</strong><p>${escapeHtml(q.explanation || "（尚無詳解）")}</p></div>
+        ${q.choiceExplanations ? renderChoiceExplanations(q) : ""}
       </section>`;
   }).join("");
   return `

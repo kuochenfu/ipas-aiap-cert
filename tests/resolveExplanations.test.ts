@@ -2,33 +2,33 @@ import { describe, it, expect } from "vitest";
 import { resolvePastExamExplanations } from "../src/data/resolveExplanations";
 import type { Question } from "../src/data/types";
 
-const sensorQ: Question = {
-  id: "q1",
-  subjectId: "junior-ai-basics",
-  prompt: "持續蒐集環境數據與設備狀態，最直接支援的技術？",
-  choices: [
-    { id: "A", text: "專家系統（Expert System） " },
-    { id: "B", text: "決策支援系統（Decision Support System） " },
-    { id: "C", text: "啟發式決策引擎（Heuristic Decision Engine） " },
-    { id: "D", text: "感知器網路（Sensor Network）" },
-  ],
-  answer: "D",
-  explanation: "",
-  topic: "未分類",
-  difficulty: "中",
-  source: "past-exam",
-};
+const q = (id: string, explanation = ""): Question => ({
+  id, subjectId: "s", prompt: "p",
+  choices: [{ id: "A", text: "a" }, { id: "B", text: "b" }, { id: "C", text: "c" }, { id: "D", text: "d" }],
+  answer: "A", explanation, topic: "未分類", difficulty: "中", source: "past-exam",
+});
 
-describe("resolvePastExamExplanations + glossary", () => {
-  it("空詳解題的錯誤選項帶出詞彙表用途與 2 範例", () => {
-    const [q] = resolvePastExamExplanations([sensorQ], {});
-    expect(q.choiceExplanations?.A).toContain("以規則庫與推論引擎");
-    expect(q.choiceExplanations?.A).toContain("例如：");
-    expect(q.choiceExplanations?.A).toContain("故不選 A");
+describe("resolvePastExamExplanations", () => {
+  it("套用手寫詳解與錯誤選項解析", () => {
+    const out = resolvePastExamExplanations(
+      [q("q1")],
+      { q1: { explanation: "手寫詳解", choices: { B: "B 錯在這", C: "C 錯在這", D: "D 錯在這" } } },
+    );
+    expect(out[0].explanation).toBe("手寫詳解");
+    expect(Object.keys(out[0].choiceExplanations ?? {}).sort()).toEqual(["B", "C", "D"]);
   });
-  it("空詳解題的正解帶出詞彙表用途並標示正解", () => {
-    const [q] = resolvePastExamExplanations([sensorQ], {});
-    expect(q.choiceExplanations?.D).toContain("這是本題正解");
-    expect(q.choiceExplanations?.D).toContain("即時採集環境與設備資料");
+
+  it("沒有手寫內容時原封不動保留題目自帶的詳解", () => {
+    const out = resolvePastExamExplanations([q("q1", "題目自帶解析")], {});
+    expect(out[0].explanation).toBe("題目自帶解析");
+    expect(out[0].choiceExplanations).toBeUndefined();
+  });
+
+  it("手寫詳解為空字串時退回題目自帶的詳解", () => {
+    const out = resolvePastExamExplanations(
+      [q("q1", "題目自帶解析")],
+      { q1: { explanation: "", choices: {} } },
+    );
+    expect(out[0].explanation).toBe("題目自帶解析");
   });
 });

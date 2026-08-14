@@ -41,11 +41,18 @@ docs/markdown/*.md  →  npm run parse:papers  →  src/data/past-exams/*.json
 ```
 
 - `src/data/past-exams/*.json` 已提交，為歷屆試題的唯一真實來源。
-- **手寫詳解**置於 `src/data/explanations/<subjectId>.ts`（map 格式，key 為題目 id）。
-- **手寫新題**置於 `src/data/generated/<subjectId>.ts`（陣列格式）。
+- **真題的手寫詳解與錯誤選項解析**置於 `src/data/explanations/<subjectId>.ts`（map 格式，key 為題目 id，值為 `QuestionExplanation = { explanation, choices }`；`choices` 只放三個**錯誤**選項，正解不寫）。
+- **手寫新題**置於 `src/data/generated/<subjectId>.ts`（陣列格式）。新題的詳解與選項解析寫在**題目物件自身**的 `explanation` / `choiceExplanations` 欄位，**不經** `explanations/*.ts`——改初級的解析內容時兩處都要顧到。
 - 重新執行 `npm run parse:papers` **只覆寫** `past-exams/*.json`，不影響 explanations 與 generated。
 - 三者由 `src/data/<subjectId>.ts` 合併，透過 `src/data/index.ts` 對外提供 `getQuestions`、`getBankStats`。
 - 每題有 `source` 欄位（`"past-exam"` / `"generated"`），可用於區分真題與新題。
+
+### 選項解析（新不變式，2026-08）
+
+- **選項解析一律手寫、不再由詞彙表自動組合。** 舊的 `src/data/glossary.ts`、`src/data/choiceAnalysis.ts` 與 `resolveExplanations.ts` 內的 `buildFallbackExplanation`／`buildChoiceExplanations` 已刪除；**不得重新引入以樣板或名詞定義自動生成解析的機制**。理由與量測見 [`docs/coverage/explanations-overhaul.md`](docs/coverage/explanations-overhaul.md)。
+- 初級兩科（`junior-ai-basics` 222 題、`junior-genai` 213 題）**每一題**都必須有非空詳解與三條錯誤選項解析；由 `tests/explanationsCoverage.test.ts` 強制。
+- 該測試檔的 `source === "generated"` 區塊只檢查非空；**25 字下限與樣板句偵測來自「選項解析品質門檻（全題庫）」區塊**（遍歷五科 `getQuestions`，因此涵蓋被合併進來的 gen 題）。若日後收窄那個全題庫掃描，gen 題會無聲失去下限。
+- 中級三科尚無手寫選項解析，走 `render.ts` 的後備路徑（詳解片段抽取 → 通用句）。這是已知缺口，不是可以拿樣板去填的空位。
 
 ### 學習主題（延伸閱讀）
 - `src/data/studyGuide.ts`：依官方《評鑑內容範圍》手動轉錄的 18 個評鑑主題 ＋ 策展外部連結。
@@ -60,6 +67,7 @@ docs/markdown/*.md  →  npm run parse:papers  →  src/data/past-exams/*.json
 ## 已知資料限制
 
 - **`senior-ml-114-2-q45`**：原始 PDF 中四個選項為圖片，pdftotext 無法擷取，故 `choices` 的文字為空字串。題幹與答案（正確字母）已正確保留。修改資料管線時請注意此邊界案例。
+- 其餘已知的題目瑕疵、重複題、`studyNotes.ts` 錯誤與尚未修掉的解析管線殘留，集中記錄於 [`docs/coverage/bank-defects.md`](docs/coverage/bank-defects.md)。撰寫詳解前先讀它，以免去「調和」已知為錯的內容。
 
 ---
 
@@ -85,7 +93,7 @@ npm run parse:papers # 重新解析 docs/markdown/*.md → src/data/past-exams/*
 | Domain | `src/domain/` | 考試規則、計分、科目目錄（無副作用） |
 | State | `src/state/` | 錯題本（localStorage）、抽題洗牌（`attempt.ts`）、決定性 3 份試卷（`mockPapers.ts`） |
 | UI | `src/ui/` | HTML 渲染函式、HTML 跳脫工具（含單頁考卷/檢討、學習主題、模式/試卷選單） |
-| Data | `src/data/` | 題庫合併層（past-exams + explanations + generated）＋學習主題（`studyGuide.ts`） |
+| Data | `src/data/` | 題庫合併層（past-exams + explanations／選項解析 + generated）＋學習主題（`studyGuide.ts`） |
 | Scripts | `scripts/` | 資料管線腳本（Node.js，不進 bundle） |
 | Entry | `src/main.ts` | 畫面狀態機、計時器、模式流程 |
 

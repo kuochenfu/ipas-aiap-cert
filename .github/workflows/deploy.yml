@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
+      # 測試必須在 build 之前跑：資料層的守衛（題庫完整性、詳解覆蓋率、圖片轉錄、
+      # 簡體字、節點配額）全靠這些測試把關，沒接上就等於整套守衛空轉。
+      - run: npm run test
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:

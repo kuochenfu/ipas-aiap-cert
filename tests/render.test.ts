@@ -11,7 +11,8 @@ import {
   renderStudyLoading,
   renderModePicker,
   renderDrillEmpty,
-} from "../src/ui/render";
+
+  renderTopicStats,} from "../src/ui/render";
 import type { StudyNotesBySubject } from "../src/data/types";
 import { studyNotes } from "../src/data/studyNotes";
 
@@ -142,6 +143,50 @@ describe("renderQuestion", () => {
     expect(html).toContain("C 是機器翻譯任務");
     expect(html).toContain("D 是文本摘要任務");
   });
+
+  // 中級詳解常把字母寫在名詞後的括號裡（「TF-IDF（A）產生⋯」）而非子句開頭。
+  // 只認子句開頭的話，這類詳解會整則抽不出東西、四條全落到通用填充句。
+  it("選項解析也認得括號寫法，並從該子句開頭取起", () => {
+    const html = renderQuestion({
+      ...examQs[0],
+      answer: "B",
+      explanation:
+        "Word2Vec（B）產生稠密語意向量。TF-IDF（A）產生的是稀疏的加權計數；"
+        + "Stop Words（C）是要被濾掉的停用詞；Bag-of-Words（D）只計次而忽略語序（L211 自然語言處理）。",
+    }, 0, 1, "A", true, "", false);
+    // 只看「選項解析」區塊本身——整則詳解也會被渲染在上方的詳解區，
+    // 對整份 HTML 做否定斷言會誤判成失敗。
+    const segments = Object.fromEntries(
+      [...html.matchAll(/<span class="choice-id">([A-D])<\/span>\s*<p>([^<]*)<\/p>/g)]
+        .map((m) => [m[1], m[2]]),
+    );
+    // 連同括號前的主詞一起取，而不是只從括號後開始的殘句
+    expect(segments.A).toBe("TF-IDF（A）產生的是稀疏的加權計數");
+    expect(segments.C).toBe("Stop Words（C）是要被濾掉的停用詞");
+    // 詳解結尾的主題標註屬於整則詳解，不該黏在最後一個選項的解析上
+    expect(segments.D).toBe("Bag-of-Words（D）只計次而忽略語序");
+    expect(html).not.toContain("此選項不是本題答案");
+  });
+
+  // 一個子句常一次談兩個干擾項（「C 的X與 D 的Y 都⋯」）。這句話確實同時解釋了兩者，
+  // 若只給前一個，後一個會被切成空白而落回通用填充句。
+  it("同一子句同時談兩個選項時，兩者共用該段解析", () => {
+    const html = renderQuestion({
+      ...examQs[0],
+      answer: "B",
+      explanation:
+        "取值只有 0 與 1（B）。A 的任何實數對應連續分佈；"
+        + "C 的正整數與 D 的任意整數雖然都是離散取值，但範圍遠大於兩個值。",
+    }, 0, 1, "A", true, "", false);
+    const segments = Object.fromEntries(
+      [...html.matchAll(/<span class="choice-id">([A-D])<\/span>\s*<p>([^<]*)<\/p>/g)]
+        .map((m) => [m[1], m[2]]),
+    );
+    expect(segments.A).toBe("A 的任何實數對應連續分佈");
+    const shared = "C 的正整數與 D 的任意整數雖然都是離散取值，但範圍遠大於兩個值";
+    expect(segments.C).toBe(shared);
+    expect(segments.D).toBe(shared);
+  });
 });
 
 describe("renderExamPaper", () => {
@@ -152,6 +197,23 @@ describe("renderExamPaper", () => {
     expect(html).toContain('data-nav="submit"');
     expect(html).toContain("&lt;x&gt;");
     expect(html).toMatch(/class="[^"]*selected[^"]*"[^>]*data-qid="q1"[^>]*data-choice="B"/);
+  });
+
+  // 這三者是螢幕閱讀器在「有時間限制的考試」裡唯一的資訊來源，
+  // 而計時器與已作答數都是就地更新、不重繪的，少了標記就完全無聲。
+  describe("輔助技術標記", () => {
+    const html = renderExamPaper(examQs, { q1: "B" }, "10:00", 1);
+    it("計時器標為 timer 並具名，且刻意不逐秒播報", () => {
+      expect(html).toMatch(/class="timer" role="timer" aria-label="[^"]+"/);
+      // role="timer" 隱含 aria-live="off"；若有人補上 aria-live 會變成每秒打斷朗讀。
+      expect(html).not.toMatch(/class="timer"[^>]*aria-live/);
+    });
+    it("已作答計數以 polite 播報（只在使用者作答時變動）", () => {
+      expect(html).toMatch(/class="progress" aria-live="polite" aria-atomic="true"/);
+    });
+    it("具備供時間門檻播報用的隱藏區域", () => {
+      expect(html).toMatch(/class="sr-live" role="status" aria-live="assertive"/);
+    });
   });
 });
 
@@ -318,5 +380,29 @@ describe("模式選單的新題庫卡", () => {
     const html = renderModePicker("科目", 222, undefined, { count: 100, progressText: "上次進度：第 3 題<x>" });
     expect(html).toContain("第 3 題&lt;x&gt;");
     expect(html).not.toContain("第 3 題<x>");
+  });
+});
+
+describe("renderTopicStats", () => {
+  const rows = [
+    { topic: "L23101 機率／統計", total: 12, answered: 4, correct: 3 },
+    { topic: "L23102 線性代數", total: 9, answered: 0, correct: 0 },
+  ];
+  const html = renderTopicStats("機器學習技術與應用", rows, "回刷題");
+
+  it("列出節點、已作答數與答對率", () => {
+    expect(html).toContain("L23101 機率／統計");
+    expect(html).toContain("4 / 12");
+    expect(html).toContain("3／4");
+    expect(html).toContain("75%");
+  });
+  it("尚未作答的節點不顯示 0% 而顯示提示", () => {
+    // 0% 會被讀成「全錯」，與「還沒做」是完全不同的意思
+    expect(html).toContain("尚未作答");
+    expect(html).not.toMatch(/0／0/);
+  });
+  it("含返回刷題的入口且文字經跳脫", () => {
+    expect(html).toContain('data-nav="back-play"');
+    expect(renderTopicStats("<x>", rows, "回刷題")).toContain("&lt;x&gt;");
   });
 });

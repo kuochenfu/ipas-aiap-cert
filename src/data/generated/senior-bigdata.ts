@@ -16,7 +16,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "當平均數（50）大於中位數（46）時，通常表示右尾較長，即右偏（正偏），少數偏大的數值會把平均數往上拉（A）。左偏時平均數會小於中位數（B）；對稱分布時兩者相近，故不能斷定為常態（C）；平均數大於中位數恰常是離群值或長尾造成，不代表沒有離群值（D）。",
-    topic: "機率統計基礎",
+    topic: "L22101 敘述性統計與資料摘要技術",
     difficulty: "中",
     source: "generated",
   },
@@ -34,7 +34,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "顯著水準 α 是控制型一錯誤的門檻，即當虛無假設為真時，仍錯誤拒絕它的機率上限（D）。虛無假設為假卻未拒絕屬型二錯誤（A）；α 越小型一錯誤越不易發生而非越大（B）；檢定力是 1−β、與 α 不同概念（C）。",
-    topic: "機率統計基礎",
+    topic: "L22103 假設檢定與統計推論",
     difficulty: "中",
     source: "generated",
   },
@@ -52,7 +52,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "在固定時間區間內、事件獨立且平均發生率穩定的計數情境，適合用卜瓦松分布建模（B）。二項分布用於固定試驗次數下的成功次數（A）；常態分布描述連續對稱資料（C）；均勻分布假設各結果等機率（D），皆不符此計數情境。",
-    topic: "機率統計基礎",
+    topic: "L22102 機率分佈與資料分佈模型",
     difficulty: "中",
     source: "generated",
   },
@@ -70,7 +70,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "先依特性（縣市）把母體切成數層、再於各層內隨機抽取以維持母體結構比例，屬分層抽樣（D）。便利抽樣只取易接觸的對象（A）；簡單隨機抽樣不先分層、整體一視同仁抽取（B）；雪球抽樣靠受訪者轉介、適用難接觸族群（C）。",
-    topic: "機率統計基礎",
+    topic: "L22103 假設檢定與統計推論",
     difficulty: "易",
     source: "generated",
   },
@@ -88,7 +88,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "皮爾森相關係數 0.85 接近 1，表示強烈的正向線性關係，但相關不等於因果（A）。相關係數高不能推論因果方向（B）；數值遠離 0，並非無關聯（C）；皮爾森係數衡量的是線性關係，正值不代表曲線關係（D）。",
-    topic: "機率統計基礎",
+    topic: "L22101 敘述性統計與資料摘要技術",
     difficulty: "易",
     source: "generated",
   },
@@ -106,7 +106,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "經驗法則（68-95-99.7 法則）中約 95% 的觀測值落在平均數正負 2 個標準差內。μ=100、σ=15，故 ±2σ 區間為 100±2×15＝70 至 130，對應選項 C，為正解。其餘選項：A 的 85 至 115 為 ±1σ（100±15），約涵蓋 68%；B 的 55 至 145 為 ±3σ（100±45），約涵蓋 99.7%；D 的 40 至 160 為 ±4σ（100±60），範圍過寬、遠超 99.7%。因此唯有 C 對應 95%。",
-    topic: "機率統計基礎",
+    topic: "L22102 機率分佈與資料分佈模型",
     difficulty: "中",
     source: "generated",
   },
@@ -126,7 +126,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "關聯式資料庫以固定綱要的資料表與 SQL 操作為主，NoSQL 則採文件、鍵值、欄族或圖等彈性資料模型以利水平擴展（B）。強一致性交易多由 RDBMS 擅長，NoSQL 不必然更適合（A）；RDBMS 正是以交易與 ACID 著稱（C）；NoSQL 同樣能存結構化資料（D）。",
-    topic: "大數據處理技術",
+    topic: "L22202 數據儲存與管理",
     difficulty: "中",
     source: "generated",
   },
@@ -144,7 +144,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "filter() 依條件產生新的資料集且屬惰性求值，是典型的轉換（Transformation）操作（C）。count()（A）、collect()（B）、saveAsTextFile()（D）都會觸發實際計算並回傳或輸出結果，屬於行動（Action）。轉換在遇到行動前不會真正執行，是 Spark 惰性求值的核心設計。",
-    topic: "大數據處理技術",
+    topic: "L22203 數據處理技術與工具",
     difficulty: "難",
     source: "generated",
   },
@@ -162,7 +162,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "ETL 指從來源系統擷取（Extract）資料、進行清洗轉換（Transform），再載入（Load）到目標資料倉儲或分析平台（A）。加密刪檔（B）、模型訓練流程（C）與備份還原（D）都不是 ETL 的定義，雖然各為真實作業，但與 ETL 三階段無關。",
-    topic: "大數據處理技術",
+    topic: "L22201 數據收集與清理",
     difficulty: "易",
     source: "generated",
   },
@@ -180,7 +180,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "HDFS 把大檔案切成區塊分散儲存於多個節點，並複製多份，以支援大規模平行處理並在節點故障時維持容錯（C）。它刻意多副本而非單節點存放（A）；其設計重點是分散與容錯而非加密（B）；HDFS 可存放非結構化與半結構化資料，不限關聯式表（D）。",
-    topic: "大數據處理技術",
+    topic: "L22202 數據儲存與管理",
     difficulty: "中",
     source: "generated",
   },
@@ -198,7 +198,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "面對每日數十億筆且持續累積的日誌批次分析，適合採分散式運算框架（如 Spark）搭配分散式儲存做平行批次處理（B），以橫向擴展承載巨量資料。單機試算表（A）、文書軟體人工統計（C）皆無法承載此規模；單表且停用索引（D）會使查詢效能崩潰。",
-    topic: "大數據處理技術",
+    topic: "L22203 數據處理技術與工具",
     difficulty: "易",
     source: "generated",
   },
@@ -216,7 +216,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "一致性（Consistency）指交易執行前後，資料庫都維持在符合所有完整性約束與規則的有效狀態（D）。全有全無屬原子性（A）；當機不遺失屬持久性（B）；並行交易互不干擾屬隔離性（C），皆為 ACID 中的其他特性。",
-    topic: "大數據處理技術",
+    topic: "L22202 數據儲存與管理",
     difficulty: "中",
     source: "generated",
   },
@@ -236,7 +236,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "標準化把資料轉為平均 0、標準差 1（Z-score），Min-Max 則線性縮放到固定區間如 0 至 1（A）。兩者方法與結果不同（B）；壓到 0–1 是 Min-Max 的效果而非標準化（C）；Min-Max 會被最大最小值的離群值嚴重影響，故對離群值並非不敏感（D）。",
-    topic: "大數據分析方法與工具",
+    topic: "L22301 統計學在大數據中的應用",
     difficulty: "中",
     source: "generated",
   },
@@ -254,7 +254,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "Label Encoding 把無序類別映成 0、1、2，會讓模型誤以為類別間存在大小順序與距離關係，產生虛假的數值關聯而誤導（B）。增加維度是 One-Hot Encoding 的特性而非 Label Encoding（A）；它通常仍可計算、不必然報錯（C）；它也不會自動刪除類別（D）。",
-    topic: "大數據分析方法與工具",
+    topic: "L22301 統計學在大數據中的應用",
     difficulty: "中",
     source: "generated",
   },
@@ -272,7 +272,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "穩健縮放（Robust Scaling）以中位數與四分位距（IQR）為基準，受極端值影響較小，最適合含離群值的特徵（B）。Min-Max 以最大最小值為界，反而被離群值嚴重拉扯（A）；刪除整個欄位會損失資訊（C）；乘以常數既不縮放也無助於降低離群值影響（D）。",
-    topic: "大數據分析方法與工具",
+    topic: "L22301 統計學在大數據中的應用",
     difficulty: "中",
     source: "generated",
   },
@@ -290,7 +290,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "呈現單一連續變數的分布形狀（偏態、峰數）最適合直方圖（D），它把數值分箱統計次數以顯示分布。圓餅圖適合呈現類別佔比（A）；折線圖適合時間序列趨勢（B）；地理熱區地圖用於空間分布（C），皆非檢視單變數分布形狀的首選。",
-    topic: "大數據分析方法與工具",
+    topic: "L22303 數據可視化工具",
     difficulty: "易",
     source: "generated",
   },
@@ -308,7 +308,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "SMOTE（Synthetic Minority Over-sampling Technique）依少數類樣本與其近鄰之間內插，合成新的少數類樣本，屬過採樣且能產生新樣本（C）。隨機欠採樣是刪減多數類而非過採樣（A）；在極不平衡下只看準確率會被多數類主導而失真（B）；竄改標籤是錯誤做法（D）。",
-    topic: "大數據分析方法與工具",
+    topic: "L22302 常見的大數據分析方法",
     difficulty: "難",
     source: "generated",
   },
@@ -326,7 +326,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "PCA 依變異數尋找主成分方向，若特徵量級差異大且未標準化，量級大的特徵會以其大變異數主導主成分（A）。降維本就會捨棄部分變異，標準化無法保證零損失（B）；PCA 不要求輸入須在 0–1 區間（C）；標準化只縮放數值，不會自動編碼類別特徵（D）。",
-    topic: "大數據分析方法與工具",
+    topic: "L22301 統計學在大數據中的應用",
     difficulty: "難",
     source: "generated",
   },
@@ -346,7 +346,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "充足、多樣且具代表性的資料能讓模型涵蓋更廣的樣態，從而提升泛化能力（B）。資料多仍可能過擬合、仍需驗證（A）；大數據不會免除特徵工程與清洗，品質與數量同等重要（C）；資料越大訓練通常越久而非越短（D）。",
-    topic: "大數據在人工智慧之應用",
+    topic: "L22401 大數據與機器學習",
     difficulty: "易",
     source: "generated",
   },
@@ -364,7 +364,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "依使用者行為大數據主動推送可能感興趣的商品，屬推薦系統的典型應用（D），常用協同過濾或內容式推薦。OCR 用於影像文字辨識（A）；語音喚醒詞偵測屬語音應用（B）；索引重建是資料庫維運作業（C），皆與個人化商品推薦無關。",
-    topic: "大數據在人工智慧之應用",
+    topic: "L22302 常見的大數據分析方法",
     difficulty: "易",
     source: "generated",
   },
@@ -382,7 +382,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "兼顧分析價值與隱私的做法是訓練前對直接識別欄位去識別化或假名化，並對資料存取施以權限控管與稽核（D）。原始個資不設限地散布（A）、誤以為上雲就免處理（B）、或公開個資（C）都會擴大隱私與合規風險，並非負責任的資料治理。",
-    topic: "大數據在人工智慧之應用",
+    topic: "L22404 大數據隱私保護、安全與合規",
     difficulty: "中",
     source: "generated",
   },
@@ -400,7 +400,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "聯邦學習（Federated Learning）讓資料留在各機構本地，只在參與方間交換模型參數或梯度更新以協作訓練，符合資料不集中的需求（C）。集中複製（A）與公開原始病歷（B）都違反隱私限制；改人工統計（D）放棄了模型協作的目的。",
-    topic: "大數據在人工智慧之應用",
+    topic: "L22404 大數據隱私保護、安全與合規",
     difficulty: "中",
     source: "generated",
   },
@@ -418,7 +418,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "若訓練資料存在系統性偏誤或大量錯誤標註，模型會學到甚至放大這些偏誤，損害預測可信度（C），呼應「垃圾進、垃圾出」。再先進的演算法也無法彌補劣質資料（A）；偏誤具系統性時不會因量大而自動抵銷（B）；資料品質直接關乎模型表現而不只影響報表外觀（D）。",
-    topic: "大數據在人工智慧之應用",
+    topic: "L22402 大數據在鑑別式 AI 中的應用",
     difficulty: "中",
     source: "generated",
   },
@@ -436,7 +436,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "即時更新推薦並偵測異常流量需要串流處理（Stream Processing），對連續到達的事件以近即時的逐筆或微批次方式運算（A）。每月人工報表（B）、累積一年再訓練（C）、列印紙本再輸入（D）都帶來過長延遲，無法滿足即時性要求。",
-    topic: "大數據在人工智慧之應用",
+    topic: "L22401 大數據與機器學習",
     difficulty: "中",
     source: "generated",
   },

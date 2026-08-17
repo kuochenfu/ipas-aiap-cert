@@ -15,7 +15,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "自注意力讓序列中每個位置可直接計算與其他所有位置的關聯，因此能平行化運算並較佳地捕捉長距離依賴（C）。它仍需訓練資料（A）、可處理較長序列而非僅固定極短輸入（B）；RNN 才是逐字遞迴、難以平行的架構，故 D 的描述張冠李戴。",
-    topic: "AI 相關技術應用",
+    topic: "L21101 自然語言處理技術與應用",
     difficulty: "中",
     source: "generated",
   },
@@ -33,7 +33,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "語意分割是對影像中每個像素指派類別標籤，物件偵測則是用邊界框定位個別物件並標示其類別（A）。兩者皆不限灰階或彩色（B）；逐像素標註是分割而非偵測，故 C 顛倒；兩者目標不同並非同義（D）。",
-    topic: "AI 相關技術應用",
+    topic: "L21102 電腦視覺技術與應用",
     difficulty: "易",
     source: "generated",
   },
@@ -51,7 +51,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "ASR（自動語音辨識）是把語音訊號轉成文字，TTS（語音合成）則是把文字轉成語音（D），兩者方向相反。A 把兩者方向寫反；B、C 將輸入輸出同型別的敘述都不符合語音與文字互轉的本質。",
-    topic: "AI 相關技術應用",
+    topic: "L21103 生成式 AI 技術與應用",
     difficulty: "易",
     source: "generated",
   },
@@ -69,7 +69,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "多模態模型的核心是能同時處理並融合文字、影像、語音等不同型態的資料來完成任務，例如看圖回答問題（B）。多台伺服器分散負載屬部署架構（A）；只能單一型態正好與多模態相反（C）；多種量化版本是模型壓縮概念（D），皆非多模態。",
-    topic: "AI 相關技術應用",
+    topic: "L21104 多模態人工智慧應用",
     difficulty: "易",
     source: "generated",
   },
@@ -87,7 +87,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "命名實體辨識（NER）的目標是從文字中找出並分類人名、地名、組織名等特定類型的實體（A）。產生摘要（B）屬文本摘要、判斷情感正負（C）屬情感分析、跨語言轉換（D）屬機器翻譯，皆為不同的 NLP 任務。",
-    topic: "AI 相關技術應用",
+    topic: "L21101 自然語言處理技術與應用",
     difficulty: "易",
     source: "generated",
   },
@@ -105,7 +105,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "卷積層以共享權重的卷積核在局部感受野上滑動，能擷取邊緣、紋理等局部特徵，並透過權重共享大幅減少參數（D）。全連接才是每節點連接所有輸入、參數量大（A）；卷積核本身即為可學習參數（B）；CNN 廣泛用於影像（C 錯誤）。",
-    topic: "AI 相關技術應用",
+    topic: "L21102 電腦視覺技術與應用",
     difficulty: "中",
     source: "generated",
   },
@@ -123,7 +123,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "詞嵌入以低維稠密向量表示詞語，語意相近的詞在向量空間中距離較近，能反映語意相似性（B）。One-hot 才是維度等於詞彙表、彼此正交且稀疏、無法表達相似性的表示法（A、C 描述的是 One-hot）；詞嵌入需從語料學習得到（D 錯誤）。",
-    topic: "AI 相關技術應用",
+    topic: "L21101 自然語言處理技術與應用",
     difficulty: "中",
     source: "generated",
   },
@@ -141,7 +141,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "擴散模型的核心是先對資料逐步加入雜訊（前向過程），再訓練模型學會逐步去除雜訊（反向過程），從純雜訊還原或生成影像（C）。生成器與判別器對抗是 GAN 的概念（A）；規則式拼貼（B）與查表檢索（D）都不是擴散模型的生成機制。",
-    topic: "AI 相關技術應用",
+    topic: "L21103 生成式 AI 技術與應用",
     difficulty: "難",
     source: "generated",
   },
@@ -159,7 +159,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "在嚴重不平衡情境下，準確率會被多數類別主導而失真，應改以精確率、召回率、F1 或 PR-AUC 等綜合評估少數類別的偵測能力（B）。只看準確率（A）、一律預測多數類（C）雖準確率高卻完全抓不到少數類；刪除少數類樣本（D）更使評估失去意義。",
-    topic: "AI 導入評估規劃",
+    topic: "L21301 數據準備與模型選擇",
     difficulty: "中",
     source: "generated",
   },
@@ -177,7 +177,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "自建與採用 API 的取捨應綜合資料隱私可控性、總體擁有成本（含維運）、團隊維運能力與客製需求等構面（D）。只看初期費用（A）忽略長期成本；認定自建必最省（B）忽略人力與維運負擔；純憑偏好而忽略資料安全（C）都不是負責任的評估。",
-    topic: "AI 導入評估規劃",
+    topic: "L21201 AI 導入評估",
     difficulty: "中",
     source: "generated",
   },
@@ -195,7 +195,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "可解釋性的目標是讓利害關係人能理解模型決策的依據與重要影響因素，以利信任、稽核與問責（A）。刻意隱藏邏輯（B）與可解釋性背道而馳；單看準確率（C）與推論速度（D）分屬效能面向，並非可解釋性所要達成的目標。",
-    topic: "AI 導入評估規劃",
+    topic: "L21203 AI 風險管理",
     difficulty: "易",
     source: "generated",
   },
@@ -213,7 +213,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "在切分前就用整份資料（含測試集）做標準化或特徵選擇，會把測試集資訊滲入訓練流程，造成資料洩漏而高估效能（C）。正確做法是先切分、僅以訓練集統計量轉換（A），測試集最終才用（B），時序資料用過去預測未來（D）也合理。",
-    topic: "AI 導入評估規劃",
+    topic: "L21301 數據準備與模型選擇",
     difficulty: "難",
     source: "generated",
   },
@@ -231,7 +231,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "模型上線後會隨使用持續產生推論運算、定期再訓練與監控維運等費用，屬於持續性營運成本（B）。PoC 顧問費（A）、初期工作站採購（C）、啟動教育訓練（D）皆為一次性建置或導入支出，不屬於營運期持續成本。",
-    topic: "AI 導入評估規劃",
+    topic: "L21201 AI 導入評估",
     difficulty: "中",
     source: "generated",
   },
@@ -249,7 +249,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "處理公平性與偏誤風險，最直接的是檢視訓練資料是否具代表性，並比較模型在不同敏感族群子群上的表現差異，據以緩解（A）。增加 GPU（B）、降低延遲（C）、擴大部署地區（D）皆屬效能或部署考量，無法處理偏誤問題。",
-    topic: "AI 導入評估規劃",
+    topic: "L21203 AI 風險管理",
     difficulty: "易",
     source: "generated",
   },
@@ -267,7 +267,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "K 折交叉驗證讓資料輪流作為驗證集，平均多次結果可得到更穩定、較不受單次切分偶然性影響的效能估計（D）。它不能取代獨立測試集（A）、無法保證絕不過擬合（B），也不會憑空增加資料量（C）。",
-    topic: "AI 導入評估規劃",
+    topic: "L21301 數據準備與模型選擇",
     difficulty: "中",
     source: "generated",
   },
@@ -285,7 +285,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "面對幻覺風險，較直接的是讓回答有可靠依據並設置把關，例如導入 RAG 以引用可信來源，並對高風險輸出加上人工審查與事實查核（C）。提高溫度（A）反而增加不確定性；假設輸出永遠正確（B）忽視風險；只看速度（D）未涵蓋正確性。",
-    topic: "AI 導入評估規劃",
+    topic: "L21203 AI 風險管理",
     difficulty: "中",
     source: "generated",
   },
@@ -303,7 +303,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "在 ML 系統導入 CI/CD 是為了把程式碼、資料與模型的建置、測試與部署自動化，提升交付一致性與可重現性、降低人為錯誤（A）。它強調而非免除測試（B）；上線後仍需監控（C）；CI/CD 反而仰賴而非省去版本控管與回溯機制，以便追溯與回滾（D 錯誤）。",
-    topic: "AI 技術應用與系統部署",
+    topic: "L21302 AI 技術系統集成與部署",
     difficulty: "中",
     source: "generated",
   },
@@ -321,7 +321,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "上線後輸入資料分布隨時間偏離訓練分布、使效能衰退，稱為資料漂移；若是輸入與目標的關係改變則為概念漂移（C），需以監控偵測並觸發再訓練。過擬合（A）是訓練階段過度貼合訓練集、梯度消失（B）是訓練難題、資料洩漏（D）是評估流程汙染，皆非此現象。",
-    topic: "AI 技術應用與系統部署",
+    topic: "L21302 AI 技術系統集成與部署",
     difficulty: "中",
     source: "generated",
   },
@@ -339,7 +339,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "藍綠部署同時維持新（綠）舊（藍）兩套環境，先驗證新版再切換流量，一旦異常可快速切回，降低上線風險（B）。它仍需運算資源（A）；保留舊版正是為了能回滾，而非永久關閉（C）；它是部署策略，與訓練／推論合併（D）無關。",
-    topic: "AI 技術應用與系統部署",
+    topic: "L21302 AI 技術系統集成與部署",
     difficulty: "難",
     source: "generated",
   },
@@ -357,7 +357,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "容器化把模型程式、相依套件與執行環境一併打包，讓應用在開發、測試與生產等不同環境間表現一致、易於移植與擴展（D）。它固定的是執行環境，與線上輸入資料分布是否隨時間改變（資料漂移）無關（C）；也與是否需要監控（A）、模型準確率（B）並無因果關係。",
-    topic: "AI 技術應用與系統部署",
+    topic: "L21302 AI 技術系統集成與部署",
     difficulty: "易",
     source: "generated",
   },
@@ -375,7 +375,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "水平擴展（Scale Out）是增加服務實例數並以負載平衡分流，必要時用自動伸縮依負載動態調整數量（A）。升級單機規格屬垂直擴展（Scale Up，B）；限流拒絕請求（C）與改為批次（D）是降載或改變服務型態，並非水平擴展。",
-    topic: "AI 技術應用與系統部署",
+    topic: "L21302 AI 技術系統集成與部署",
     difficulty: "中",
     source: "generated",
   },
@@ -393,7 +393,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "特徵儲存庫集中管理並共享特徵，讓訓練與線上推論取用一致的特徵定義與資料，避免「訓練／服務偏斜（training-serving skew）」並促進重用（D）。它不取代模型版本管理（A）、不替你選演算法（B）；雖能提供現成特徵加速建模，但模型仍需訓練資料與標註才能訓練，並非其要解決的核心問題（C）。",
-    topic: "AI 技術應用與系統部署",
+    topic: "L21302 AI 技術系統集成與部署",
     difficulty: "難",
     source: "generated",
   },
@@ -411,7 +411,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "良好的線上監控應同時涵蓋系統面（延遲、吞吐量、錯誤率）與模型品質面（預測分布變化、輸入資料漂移），才能及早發現異常並觸發處置（B）。只看主機 CPU 與磁碟（A）或只算每日呼叫次數（C）僅涵蓋部分基礎設施／流量指標，無法反映模型品質；只在使用者回報才被動檢查（D）屬事後補救、缺乏主動偵測，皆不足以監控 AI 服務。",
-    topic: "AI 技術應用與系統部署",
+    topic: "L21302 AI 技術系統集成與部署",
     difficulty: "中",
     source: "generated",
   },
@@ -429,7 +429,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "以 API／微服務方式提供推論，可讓服務獨立部署、獨立版本控管與擴展，並讓多個應用以統一介面重用同一模型、降低耦合（C）。統一介面雖能減少呼叫端因模型改版而被迫改動，但模型本身仍需持續更新與重新部署（A）；它不會自動消除隱私安全疑慮（B），也與模型準確率（D）無因果關係。",
-    topic: "AI 技術應用與系統部署",
+    topic: "L21302 AI 技術系統集成與部署",
     difficulty: "難",
     source: "generated",
   },

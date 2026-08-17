@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { subjects } from "../src/domain/catalog";
 import { getQuestions } from "../src/data/index";
+import { allNodes, seniorNodes, topicLabel } from "../src/domain/assessmentTopics";
 
 describe("題庫完整性", () => {
   for (const subject of subjects) {
@@ -65,24 +66,14 @@ describe("junior-genai 內容完整性", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it("新題 topic 為三個官方主題之一（非未分類）", () => {
-    const allowed = new Set([
-      "No code / Low code 概念",
-      "生成式 AI 應用領域與工具使用",
-      "生成式 AI 導入評估規劃",
-    ]);
+  // 2026-08-17（backlog T7）起，五科的 topic 一律改用五碼評鑑節點，真題與新題共用同一組。
+  it("新題 topic ∈ 官方評鑑節點目錄", () => {
+    const allowed = new Set(allNodes["junior-genai"].map(topicLabel));
     for (const q of generated) {
       expect(allowed.has(q.topic)).toBe(true);
     }
   });
 });
-
-const officialTopics: Record<string, string[]> = {
-  "junior-ai-basics": ["人工智慧概念", "資料處理與分析概念", "機器學習概念", "鑑別式 AI 與生成式 AI 概念"],
-  "senior-ai-tech": ["AI 相關技術應用", "AI 導入評估規劃", "AI 技術應用與系統部署"],
-  "senior-bigdata": ["機率統計基礎", "大數據處理技術", "大數據分析方法與工具", "大數據在人工智慧之應用"],
-  "senior-ml": ["機器學習基礎數學", "機器學習與深度學習", "機器學習建模與參數調校", "機器學習治理"],
-};
 
 for (const sid of ["senior-ai-tech", "senior-bigdata", "senior-ml"]) {
   describe(`${sid} 內容完整性`, () => {
@@ -96,7 +87,12 @@ for (const sid of ["senior-ai-tech", "senior-bigdata", "senior-ml"]) {
         "senior-bigdata": 40,
         "senior-ml": 40,
       };
-      expect(past.length).toBe(50 + expectedGuideCounts[sid]);
+      // 中級三科各有 114年第二梯次、115年第一次兩份公告試題，每份 50 題。
+      const sittings = ["114-2", "115-1"];
+      for (const sitting of sittings) {
+        expect(past.filter((q) => q.id.includes(`-${sitting}-`)).length).toBe(50);
+      }
+      expect(past.length).toBe(50 * sittings.length + expectedGuideCounts[sid]);
       const guide = past.filter((q) => q.id.includes("-guide-"));
       expect(guide.length).toBe(expectedGuideCounts[sid]);
       expect(past.filter((q) => q.explanation.trim().length === 0).map((q) => q.id)).toEqual([]);
@@ -110,9 +106,12 @@ for (const sid of ["senior-ai-tech", "senior-bigdata", "senior-ml"]) {
       for (const id of ids) expect(id).toMatch(re);
       expect(new Set(ids).size).toBe(ids.length);
     });
-    it("新題 topic ∈ 官方主題", () => {
-      const allowed = new Set(officialTopics[sid]);
-      for (const q of generated) expect(allowed.has(q.topic)).toBe(true);
+    // 2026-08-17（backlog T7）起，中級三科的 topic 一律改用五碼評鑑節點，
+    // 真題與新題共用同一組節點——否則成績頁的主題統計會把相同概念拆成兩列。
+    it("新題 topic ∈ 官方評鑑節點目錄", () => {
+      const allowed = new Set(seniorNodes[sid].map(topicLabel));
+      const offenders = generated.filter((q) => !allowed.has(q.topic)).map((q) => `${q.id}=${q.topic}`);
+      expect(offenders).toEqual([]);
     });
   });
 }
@@ -140,17 +139,18 @@ describe("junior-ai-basics 新題完整性", () => {
   it("新題數 ===32", () => {
     expect(generated.length).toBe(32);
   });
-  it("新題 topic ∈ L111–L114 官方主題", () => {
-    const allowed = new Set(officialTopics["junior-ai-basics"]);
-    for (const q of generated) expect(allowed.has(q.topic)).toBe(true);
+  it("新題 topic ∈ 官方評鑑節點目錄", () => {
+    const allowed = new Set(allNodes["junior-ai-basics"].map(topicLabel));
+    const offenders = generated.filter((q) => !allowed.has(q.topic)).map((q) => `${q.id}=${q.topic}`);
+    expect(offenders).toEqual([]);
   });
 });
 
 describe("2025-2026 補充講義新題", () => {
   const REF_PREFIX = "2025-2026補充講義";
   const targets: Record<string, string[]> = {
-    "junior-ai-basics": officialTopics["junior-ai-basics"],
-    "junior-genai": ["No code / Low code 概念", "生成式 AI 應用領域與工具使用", "生成式 AI 導入評估規劃"],
+    "junior-ai-basics": allNodes["junior-ai-basics"].map(topicLabel),
+    "junior-genai": allNodes["junior-genai"].map(topicLabel),
   };
 
   const guideQuestions = Object.keys(targets).flatMap((sid) =>

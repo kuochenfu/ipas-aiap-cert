@@ -20,6 +20,12 @@
 ### 錯題本
 - 存於 **localStorage**，key 固定為 `ipas-aiap-misses`。
 - 不可更換 key 名稱，否則現有使用者的錯題記錄將遺失。
+- **寫入**：只在模擬考交卷時（`main.ts` 的 `finishExam`）寫入該次的錯題 id。
+- **讀取**：刷題的「錯題」篩選器。`drillMatches` 的 `wrong` 判準是——該題若已在本次刷題作答，
+  一律以該次作答為準（答對就不算錯題，這是使用者把錯題消掉的途徑）；尚未作答的才看錯題本。
+- **清除**：「重置進度」會連同本科目（以 `subjectId-` 前綴比對）的錯題本一併清空。
+- 改動刷題篩選或考試結算時，**兩個來源都要顧到**；純函式 `drillMatches`／`filteredDrillIndices`／
+  `drillFilterTarget` 都接受選用的 `missed` 集合，未傳時行為與併入前相同。
 
 ### 刷題進度
 - 存於 **localStorage**，key 固定為 `ipas-aiap-drill-progress`（`src/state/drillProgress.ts`）。
@@ -66,7 +72,9 @@ docs/markdown/*.md  →  npm run parse:papers  →  src/data/past-exams/*.json
 
 ## 已知資料限制
 
-- **`senior-ml-114-2-q45`**：原始 PDF 中四個選項為圖片，pdftotext 無法擷取，故 `choices` 的文字為空字串。題幹與答案（正確字母）已正確保留。修改資料管線時請注意此邊界案例。
+- **原卷圖片**：考卷中的程式碼、console 輸出與資料表多以截圖呈現，pdftotext 擷取不到，會留下空選項或缺了關鍵資訊的題幹。處理方式是人工轉錄為文字，寫在手寫層 `src/data/explanations/*.ts` 的 `figures` / `choiceFigures`（**不放圖檔**：原卷每頁疊有 iPAS 浮水印，且截圖在手機不可讀、不可搜尋）。
+  - 新增考卷後務必檢查：`npm run parse:papers` 若印出「有空白選項」，代表該題選項是圖片，必須補轉錄，否則站上等同壞題。`tests/figures.test.ts` 的「沒有任何題目帶著空白選項」會擋住。
+  - 轉錄**不得**寫進 `past-exams/*.json`——那是機器產物，重跑解析會全部消失。
 - 其餘已知的題目瑕疵、重複題、`studyNotes.ts` 錯誤與尚未修掉的解析管線殘留，集中記錄於 [`docs/coverage/bank-defects.md`](docs/coverage/bank-defects.md)。撰寫詳解前先讀它，以免去「調和」已知為錯的內容。
 
 ---

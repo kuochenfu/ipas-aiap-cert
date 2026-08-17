@@ -6,6 +6,28 @@ export type Choice = { id: ChoiceId; text: string };
 
 export type Difficulty = "易" | "中" | "難";
 
+/**
+ * 原始考卷中以圖片呈現、pdftotext 無法擷取的內容之手寫轉錄。
+ * 這些「圖」實際上幾乎都是程式碼截圖與 console 輸出，故一律轉為文字保存：
+ * 可搜尋、可複製、在手機與深色模式下皆可讀，且不需在 repo 放二進位檔。
+ * 內容寫在 `src/data/explanations/*.ts`（手寫層），載入時依 id 合併，
+ * 因此重跑 `npm run parse:papers` 不會弄丟轉錄。
+ */
+export type QuestionFigure = {
+  /**
+   * note   一段散文式前言（含跨題共用引文）
+   * code   程式碼片段
+   * output console / REPL 輸出
+   * table  資料表（以等寬對齊保存）
+   * chart  真正的圖表——無法轉為文字，改以文字描述其內容
+   */
+  kind: "note" | "code" | "output" | "table" | "chart";
+  /** 圖上方的說明文字，例「下圖顯示資料集的第 1 筆部分資料。」 */
+  caption?: string;
+  /** 轉錄後的內文；note/chart 為散文，其餘保留換行與縮排。 */
+  content: string;
+};
+
 export type Question = {
   id: string;
   subjectId: string;
@@ -14,6 +36,10 @@ export type Question = {
   answer: ChoiceId;
   explanation: string;
   choiceExplanations?: Partial<Record<ChoiceId, string>>;
+  /** 題幹附圖的轉錄，依出現順序排列，渲染於題幹與選項之間。 */
+  figures?: QuestionFigure[];
+  /** 選項本身即為圖片時（例：四個選項各是一段程式碼截圖）的轉錄。 */
+  choiceFigures?: Partial<Record<ChoiceId, QuestionFigure>>;
   topic: string;
   difficulty: Difficulty;
   source: "past-exam" | "generated";

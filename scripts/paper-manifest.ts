@@ -31,12 +31,24 @@ export const papers: PaperEntry[] = [
     subjectId: "junior-genai", examCode: "114-4", examLabel: "114年第四梯次",
   },
   {
+    file: "115年第一次中級AI應用規劃師_第一科_人工智慧技術應用與規劃_公告試題_20260615003359.md",
+    subjectId: "senior-ai-tech", examCode: "115-1", examLabel: "115年第一次",
+  },
+  {
     file: "114年第二梯次中級AI應用規劃師第一科人工智慧技術應用與規劃(當次試題公告114_20251226000616.md",
     subjectId: "senior-ai-tech", examCode: "114-2", examLabel: "114年第二梯次",
   },
   {
+    file: "115年第一次中級AI應用規劃師_第二科_大數據處理分析與應用_公告試題_20260615003417.md",
+    subjectId: "senior-bigdata", examCode: "115-1", examLabel: "115年第一次",
+  },
+  {
     file: "114年第二梯次中級AI應用規劃師第二科大數據處理分析與應用(當次試題公告114_20251226000634.md",
     subjectId: "senior-bigdata", examCode: "114-2", examLabel: "114年第二梯次",
+  },
+  {
+    file: "115年第一次中級AI應用規劃師_第三科_機器學習技術與應用_公告試題_20260615003428.md",
+    subjectId: "senior-ml", examCode: "115-1", examLabel: "115年第一次",
   },
   {
     file: "114年第二梯次中級AI應用規劃師第三科機器學習技術與應用(當次試題公告114_20251226000650.md",

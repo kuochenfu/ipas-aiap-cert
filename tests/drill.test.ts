@@ -81,6 +81,27 @@ describe("drillMatches", () => {
     expect(drillMatches(wide[1], mixed, "wrong")).toBe(false);
     expect(drillMatches(wide[2], mixed, "wrong")).toBe(false);
   });
+
+  // 錯題本（模擬考交卷寫入的錯題）是「錯題」篩選的第二個來源。
+  describe("併入錯題本", () => {
+    it("未在刷題作答、但在錯題本裡的題目算錯題", () => {
+      expect(drillMatches(wide[2], mixed, "wrong", new Set(["q3"]))).toBe(true);
+    });
+    it("刷題已答對的題目，即使在錯題本裡也不算錯題（提供消掉的途徑）", () => {
+      expect(drillMatches(wide[1], mixed, "wrong", new Set(["q2"]))).toBe(false);
+    });
+    it("刷題已答錯的題目，不在錯題本裡也仍算錯題", () => {
+      expect(drillMatches(wide[0], mixed, "wrong", new Set())).toBe(true);
+    });
+    it("錯題本不影響 all 與 unanswered", () => {
+      expect(drillMatches(wide[2], mixed, "unanswered", new Set(["q3"]))).toBe(true);
+      expect(drillMatches(wide[1], mixed, "unanswered", new Set(["q2"]))).toBe(false);
+      expect(drillMatches(wide[1], mixed, "all", new Set())).toBe(true);
+    });
+    it("未傳錯題本時行為與從前相同", () => {
+      expect(drillMatches(wide[2], mixed, "wrong")).toBe(false);
+    });
+  });
 });
 
 describe("filteredDrillIndices", () => {
@@ -91,6 +112,12 @@ describe("filteredDrillIndices", () => {
   });
   it("沒有題目符合時回空陣列", () => {
     expect(filteredDrillIndices(wide, {}, "wrong")).toEqual([]);
+  });
+  it("錯題本的題目會併進 wrong 的索引，且維持題庫原序", () => {
+    expect(filteredDrillIndices(wide, mixed, "wrong", new Set(["q3", "q4"]))).toEqual([0, 2, 3]);
+  });
+  it("完全沒作答時，wrong 等同於錯題本內容", () => {
+    expect(filteredDrillIndices(wide, {}, "wrong", new Set(["q2", "q4"]))).toEqual([1, 3]);
   });
 });
 

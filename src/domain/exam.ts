@@ -54,3 +54,25 @@ export const topicSummary = (questions: Question[], answers: AnswerState): Topic
   }
   return [...map.values()];
 };
+
+export type TopicStatRow = TopicRow & { answered: number };
+
+/**
+ * 刷題的節點統計。與 `topicSummary` 的差別在於多算一欄「已作答題數」——
+ * 刷題可以只作答一部分，只看 correct/total 會把「還沒做」與「做錯」混為一談。
+ * 回傳依節點碼排序，讓同一科目每次呈現的順序固定。
+ */
+export const topicStats = (questions: Question[], answers: AnswerState): TopicStatRow[] => {
+  const map = new Map<string, TopicStatRow>();
+  for (const question of questions) {
+    const row = map.get(question.topic)
+      ?? { topic: question.topic, total: 0, correct: 0, answered: 0 };
+    row.total += 1;
+    if (answers[question.id] !== undefined) {
+      row.answered += 1;
+      if (isCorrect(question, answers[question.id])) row.correct += 1;
+    }
+    map.set(question.topic, row);
+  }
+  return [...map.values()].sort((a, b) => a.topic.localeCompare(b.topic));
+};

@@ -16,7 +16,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "梯度下降的更新量正比於學習率與梯度，學習率過大會使每步跨越過大，在最小值附近來回震盪甚至發散（A）。它不保證更快且無副作用（B）；它直接影響收斂速度與穩定性（C）；學習率是步長設定，不會改變損失函數本身的凸性（D）。本題對應機器學習基礎數學的最佳化與梯度概念。",
-    topic: "機器學習基礎數學",
+    topic: "L23103 數值優化技術與方法",
     difficulty: "中",
     source: "generated",
   },
@@ -34,7 +34,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "內積為對應分量相乘後相加：a·b = 2×4 + 3×(−1) = 8 − 3 = 5（B）。選項 A（11）誤把第二項當作正號相加（8+3）；C（8）只算了第一項；D（14）無對應的正確計算依據。內積屬機器學習基礎數學中的線性代數運算。",
-    topic: "機器學習基礎數學",
+    topic: "L23102 線性代數之機器學習基礎應用",
     difficulty: "易",
     source: "generated",
   },
@@ -52,7 +52,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "母體變異數為各值與平均數差的平方之平均：差為 −3,−1,−1,−1,0,0,2,4，平方為 9,1,1,1,0,0,4,16，總和 32，除以 8 個樣本得 4（C）。極差（max−min=7）並非變異數（A）；平均為整數不代表離散度為零（B）；變異數與平均數無必然相等關係（D）。屬基礎數學的機率統計。",
-    topic: "機器學習基礎數學",
+    topic: "L23101 機率／統計之機器學習基礎應用",
     difficulty: "中",
     source: "generated",
   },
@@ -70,7 +70,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "依貝氏定理 P(D|+)=P(+|D)P(D) / [P(+|D)P(D)+P(+|¬D)P(¬D)] = (0.9×0.01)/(0.9×0.01 + 0.09×0.99) = 0.009/(0.009+0.0891) = 0.009/0.0981 ≈ 0.092，約 9%（D）。誤以真陽性率當後驗（A）忽略低盛行率；50%（B）與 1%（C）均無依據。本題為基礎數學的貝氏與條件機率。",
-    topic: "機器學習基礎數學",
+    topic: "L23101 機率／統計之機器學習基礎應用",
     difficulty: "難",
     source: "generated",
   },
@@ -88,7 +88,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "MSE 搭配 Sigmoid 在輸出接近飽和時梯度趨近於零，易梯度消失；交叉熵的梯度形式可在預測嚴重錯誤時提供較大梯度，利於收斂（B）。交叉熵輸出仍為機率而非整數（A）；計算損失仍需真實標籤（C）；交叉熵正是分類常用而非迴歸專用（D）。屬基礎數學的損失函數。",
-    topic: "機器學習基礎數學",
+    topic: "L23103 數值優化技術與方法",
     difficulty: "中",
     source: "generated",
   },
@@ -106,7 +106,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "L1 範數定義為各分量絕對值之和 Σ|x_i|；L2 範數為各分量平方和再開根號 √(Σx_i²)（D）。選項 A 將兩者定義對調且 L1 漏開根號；最大絕對值是 L∞ 範數而非 L1/L2（B）；兩者數值一般不相等（C）。範數屬基礎數學的線性代數，並為正則化的基礎。",
-    topic: "機器學習基礎數學",
+    topic: "L23102 線性代數之機器學習基礎應用",
     difficulty: "易",
     source: "generated",
   },
@@ -126,7 +126,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "強化學習由代理人與環境互動，依獎勵訊號試誤學習，目標是最大化長期累積報酬（C）。以標註輸入輸出對訓練是監督式學習（A）；依相似度分群是非監督式分群（B）；降維保留變異是 PCA 等技術（D）。屬機器學習與深度學習的學習範式。",
-    topic: "機器學習與深度學習",
+    topic: "L23201 機器學習原理與技術",
     difficulty: "易",
     source: "generated",
   },
@@ -144,7 +144,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "池化層對特徵圖降採樣，縮減空間尺寸、降低運算量與參數，並提供一定程度的平移不變性（D）。它是縮小而非增加解析度（A）；不負責灰階轉換（B）；也不會自動產生標籤（C）。屬深度學習中的 CNN 結構。",
-    topic: "機器學習與深度學習",
+    topic: "L23203 深度學習原理與框架",
     difficulty: "中",
     source: "generated",
   },
@@ -162,7 +162,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "Transformer 以自注意力機制可平行處理整個序列，並直接建模任意位置間的長距依賴，避免 RNN 逐步循環的瓶頸（A）。逐步循環難平行化是 RNN 的特性而非 Transformer（B）；Transformer 需位置編碼補充詞序資訊（C）；其可處理變長序列而非長度為一（D）。屬深度學習的序列模型。",
-    topic: "機器學習與深度學習",
+    topic: "L23203 深度學習原理與框架",
     difficulty: "中",
     source: "generated",
   },
@@ -180,7 +180,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "Bagging 以自助抽樣平行訓練多個獨立模型再彙整，主要降低變異；Boosting 依序訓練、每輪聚焦修正前一輪的錯誤，主要降低偏差（C）。選項 A 將兩者描述對調；兩者皆可用於分類與迴歸而非僅分群（B）；Boosting 對雜訊敏感、也可能過擬合，無「一定不會」之說（D）。屬機器學習的集成方法。",
-    topic: "機器學習與深度學習",
+    topic: "L23202 常見機器學習演算法",
     difficulty: "難",
     source: "generated",
   },
@@ -198,7 +198,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "K-means 需先指定群數 K，透過反覆將樣本指派至最近群心、再更新群心，迭代最小化群內平方誤差（D）。它依賴距離度量（A）；不會自動決定 K，常需以肘部法等輔助選擇（B）；屬非監督式學習、不使用真實標籤（C）。屬機器學習的非監督分群。",
-    topic: "機器學習與深度學習",
+    topic: "L23202 常見機器學習演算法",
     difficulty: "易",
     source: "generated",
   },
@@ -216,7 +216,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "ReLU 在正區間導數恆為 1，不像 Sigmoid 在飽和區梯度趨近於零，故能緩解深層網路的梯度消失並加速訓練（B）。輸出介於 0~1 是 Sigmoid 的特性（A）；ReLU 為非線性激活，仍提供非線性表達（C）；它不改變參數量（D）。屬深度學習的激活函數。",
-    topic: "機器學習與深度學習",
+    topic: "L23203 深度學習原理與框架",
     difficulty: "中",
     source: "generated",
   },
@@ -236,7 +236,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "Precision = TP/(TP+FP) = 40/50 = 0.8；Recall = TP/(TP+FN) = 40/80 = 0.5；F1 = 2×P×R/(P+R) = 2×0.8×0.5/1.3 = 0.8/1.3 ≈ 0.615，約 0.62（A）。0.80 只是 precision（B）；0.50 只是 recall（C）；0.20 無依據（D）。屬建模的評估指標。",
-    topic: "機器學習建模與參數調校",
+    topic: "L23303 模型訓練、評估與驗證",
     difficulty: "難",
     source: "generated",
   },
@@ -254,7 +254,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "訓練表現好但驗證明顯變差是過擬合的典型徵兆，可透過正則化、增加資料、提早停止、降低模型複雜度等緩解（B）。欠擬合是訓練與驗證皆差（A）；刪除驗證集無法解決且失去評估依據（C）；落差越大代表泛化越差而非越好（D）。屬建模的過/欠擬合。",
-    topic: "機器學習建模與參數調校",
+    topic: "L23304 模型調整與優化",
     difficulty: "中",
     source: "generated",
   },
@@ -272,7 +272,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "k 折交叉驗證將資料切成 k 份，輪流取一份驗證、其餘訓練，綜合 k 次結果以較穩健估計泛化能力（A）。單次固定切分變異較大而非最小（B）；正確作法不會把保留的測試集混入訓練（C）；k 越大運算成本通常越高，且 k=2 並非通則（D）。屬建模的交叉驗證。",
-    topic: "機器學習建模與參數調校",
+    topic: "L23303 模型訓練、評估與驗證",
     difficulty: "易",
     source: "generated",
   },
@@ -290,7 +290,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "隨機搜尋在高維超參數空間中常以較少嘗試覆蓋更廣的取值組合，效率往往優於需窮舉所有格點的網格搜尋（C）。網格搜尋在高維會組合爆炸、並非總是更省（A）；調校應依驗證集而非直接在測試集上最佳化（B）；隨機搜尋是抽樣而非先窮舉（D）。屬建模的超參數調校。",
-    topic: "機器學習建模與參數調校",
+    topic: "L23302 模型選擇與架構設計",
     difficulty: "中",
     source: "generated",
   },
@@ -308,7 +308,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "KNN、SVM、以及採梯度下降的模型對特徵尺度敏感，縮放有助收斂與距離計算；而以分裂閾值運作的純樹模型（決策樹、隨機森林）對單調尺度變化通常不敏感（C、亦否定 D）。並非所有模型都必須縮放（A）；縮放作用於特徵數值而非標籤（B）。屬建模的特徵工程。",
-    topic: "機器學習建模與參數調校",
+    topic: "L23301 數據準備與特徵工程",
     difficulty: "中",
     source: "generated",
   },
@@ -326,7 +326,7 @@ export const generated: Question[] = [
     answer: "C",
     explanation:
       "不平衡資料下準確率會被多數類別主導而失真，應改用精確率、召回率、F1 或 PR-AUC，並可搭配重抽樣（過抽樣/欠抽樣）或類別權重（C）。只看準確率會誤判少數類表現（A）；全部預測多數類雖準確率高卻完全抓不到少數類（B）；刪除少數類使模型失去學習目標（D）。屬建模的評估指標與不平衡處理。",
-    topic: "機器學習建模與參數調校",
+    topic: "L23303 模型訓練、評估與驗證",
     difficulty: "中",
     source: "generated",
   },
@@ -346,7 +346,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "SHAP 與 LIME 皆為事後（post-hoc）解釋方法，透過量化各特徵對個別預測的貢獻，協助理解黑箱模型的決策（D）。它們的目的是解釋而非加速訓練（A）；LIME 在局部以可解釋模型近似，但不取代或重訓原模型（B）；兩者可用於表格、文字、影像等多種資料（C）。屬機器學習治理的可解釋性。",
-    topic: "機器學習治理",
+    topic: "L23402 演算法偏見與公平性",
     difficulty: "中",
     source: "generated",
   },
@@ -364,7 +364,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "公平性處理應先以均等機會、人口均等等指標衡量群體差異，再透過資料、特徵或後處理等方式減緩偏差（A）。整體準確率高不代表各群體公平（B）；僅刪除敏感欄位仍可能因代理變數殘留偏差，不能保證無偏（C）；公平性正是模型治理的核心議題而非單純調參（D）。屬機器學習治理的公平性與偏差。",
-    topic: "機器學習治理",
+    topic: "L23402 演算法偏見與公平性",
     difficulty: "中",
     source: "generated",
   },
@@ -382,7 +382,7 @@ export const generated: Question[] = [
     answer: "A",
     explanation:
       "輸入分布隨時間改變使模型效能下降是資料漂移（data drift／concept drift），因應方式是持續監控資料分布與效能指標，並在必要時以新資料重新訓練（A）。這與過擬合是不同概念（B）；部署後效能會隨環境改變而非恆定（C）；硬體效能與漂移的發生無關（D）。屬機器學習治理的監控與 MLOps。",
-    topic: "機器學習治理",
+    topic: "L23402 演算法偏見與公平性",
     difficulty: "中",
     source: "generated",
   },
@@ -400,7 +400,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "差分隱私的核心是在查詢結果或訓練過程加入經校準的雜訊，使「某單一個體是否在資料集中」對輸出影響有限、難以辨識，並以隱私預算 ε 提供可量化的保證（B）。明文集中上傳反而增加風險（A）；僅改欄位名稱無實質防護（C）；模型大小與隱私保護無關（D）。屬機器學習治理的隱私保護。",
-    topic: "機器學習治理",
+    topic: "L23401 數據隱私、安全與合規",
     difficulty: "難",
     source: "generated",
   },
@@ -418,7 +418,7 @@ export const generated: Question[] = [
     answer: "B",
     explanation:
       "MLOps 對資料、程式、超參數與模型版本進行控管與追溯，目的是讓結果可重現、可稽核，並在發生問題時能回溯成因或回滾至穩定版本（B）。版本控管有明確治理價值而非僅佔空間（A）；保留歷史版本正是可追溯與回滾的前提，不應一律刪除（C）；可追溯性不會降低模型準確率（D）。屬機器學習治理的 MLOps。",
-    topic: "機器學習治理",
+    topic: "L23401 數據隱私、安全與合規",
     difficulty: "易",
     source: "generated",
   },
@@ -436,7 +436,7 @@ export const generated: Question[] = [
     answer: "D",
     explanation:
       "負責任 AI 應在資料蒐集、開發、部署到上線後監控的全生命週期，跨面向地納入公平性、隱私、可解釋性與問責，並以文件化與跨部門治理機制持續落實（D）。只做一次性上線前檢查（A）忽略漂移與長期風險；僅追求準確率（B）犧牲其他面向；交給單一工程師且不留文件（C）缺乏問責與協作。屬機器學習治理的負責任 AI。",
-    topic: "機器學習治理",
+    topic: "L23402 演算法偏見與公平性",
     difficulty: "難",
     source: "generated",
   },

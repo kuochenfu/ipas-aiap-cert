@@ -22,9 +22,13 @@ const isNoise = (line: string): boolean =>
   line.startsWith("第三科") ||
   line.startsWith("考試日期") ||
   line.startsWith("一、選擇題") ||
+  // 中級考卷後半為程式題，區塊標題同樣是雜訊；漏了會被併進前一題最後一個選項。
+  line.startsWith("二、程式題") ||
   // 「答案 題目」標題，可能在「題目」中含空白（答案 題 目），
   // 或被 pdftotext 拆成「答」「案」「題目」三行。
+  // 115-1 中級科目三後段頁面的欄位順序相反，輸出為「題目 答案」。
   /^答案\s*題\s*目$/.test(line) ||
+  /^題\s*目\s*答\s*案$/.test(line) ||
   line === "答" ||
   line === "案" ||
   line === "題目" ||
@@ -93,12 +97,17 @@ const stripTrailing = (text: string): string => text.replace(/[；;]\s*$/, "");
 const SHARED_STEM_TRIGGER =
   /(請?根據[^。]*回答|回答(下列|後續)?[^。]*第?\s*\d+\s*[~～至-]\s*\d+\s*題|回答第\s*\d+\s*題)/;
 // 在「行（part）」層級切除共用引文。第一個 part 是選項/題幹本體（marker 行），
-// 其後的延續行若任一處出現共用引文觸發詞，代表本欄位後方接的是「下一組題目的
-// 共用引文」整段敘述（圖／表／程式碼題的前言），與本選項無關，
-// 故丟棄所有延續行、只保留 marker 行。實測各卷此情形下 marker 行皆為完整選項。
+// 其後的延續行若出現共用引文觸發詞，代表本欄位後方接的是「下一組題目的
+// 共用引文」整段敘述（圖／表／程式碼題的前言），與本選項無關，故予切除。
+//
+// 觸發詞常被 pdftotext 斷成兩行（「…請回答」／「第 42~43 題。」），單獨比對任一行
+// 都不會命中，故一律比對「從該行起串接到底」的字串；再取最早命中的位置切開，
+// 使該行之前合法的跨行延續得以保留。
 const dropSharedStemParts = (parts: string[]): string[] => {
-  const hasStem = parts.some((p, i) => i > 0 && SHARED_STEM_TRIGGER.test(p));
-  return hasStem ? parts.slice(0, 1) : parts;
+  for (let i = 1; i < parts.length; i++) {
+    if (SHARED_STEM_TRIGGER.test(parts.slice(i).join(""))) return parts.slice(0, i);
+  }
+  return parts;
 };
 
 export const parsePaper = (markdown: string, ctx: ParseContext): Question[] => {

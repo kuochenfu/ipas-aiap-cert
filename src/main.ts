@@ -1,16 +1,17 @@
 import "./styles.css";
 import {
   renderHome, renderLevel, renderModePicker, renderQuestion, renderResult, renderStudyView,
+  renderTopicStats,
   renderPaperPicker, renderExamPaper, renderExamReview, renderDrillEmpty,
   renderStudyLoading,
 } from "./ui/render";
 import { getSubject } from "./domain/catalog";
 import { getQuestions } from "./data/index";
 import { practiceTotal } from "./domain/assessmentTopics";
-import { scoreExam, topicSummary, type AnswerState } from "./domain/exam";
+import { scoreExam, topicStats, topicSummary, type AnswerState } from "./domain/exam";
 import { buildAttempt } from "./state/attempt";
 import { buildMockPaper, PAPER_COUNT } from "./state/mockPapers";
-import { addMiss } from "./state/storage";
+import { addMiss, loadMisses, removeMiss } from "./state/storage";
 import {
   restoreDrill, parseJumpTarget, drillMatches, filteredDrillIndices, drillFilterTarget,
   practiceProgressKey,
@@ -22,7 +23,7 @@ import type { Level } from "./data/types";
 import type { StudyNotesBySubject } from "./data/types";
 import type { DrillCounts } from "./ui/render";
 
-type View = "home" | "level" | "mode" | "paper" | "play" | "result" | "review" | "study";
+type View = "home" | "level" | "mode" | "paper" | "play" | "result" | "review" | "study" | "topics";
 type Mode = "exam" | "drill";
 type Bank = "main" | "practice";
 // 模式選單的點擊 token：practice 實際上是 mode=drill + bank=practice。
@@ -53,6 +54,8 @@ let studyNotesPromise: Promise<StudyNotesBySubject> | null = null;
 // 新題庫（200 題）獨立成自己的 chunk，只有進入初級科目的模式選單或實際開始練習時才載入。
 let practiceCache: PracticeModule | null = null;
 let practicePromise: Promise<PracticeModule> | null = null;
+// 錯題本（模擬考錯題）在進入刷題時讀取的快照，供「錯題」篩選器使用。
+let sessionMisses: ReadonlySet<string> = new Set();
 let ttsRate = 1;
 let activeTtsButton: HTMLButtonElement | null = null;
 let activeUtterance: SpeechSynthesisUtterance | null = null;
@@ -74,6 +77,14 @@ function timeText(): string {
 
 function answeredCount(): number {
   return session.questions.reduce((n, q) => n + (session.answers[q.id] !== undefined ? 1 : 0), 0);
+}
+
+// 題庫是否已依評鑑節點分類（節點碼形如 L23303）。未分類的題庫顯示「節點表現」沒有意義，
+// 目前初級的原題庫仍是「未分類」，只有新題庫與中級三科的原題庫帶節點碼。
+function bankHasTopics(): boolean {
+  if (!session.questions.length) return false;
+  const coded = session.questions.filter((q) => /^L\d{5} /.test(q.topic)).length;
+  return coded / session.questions.length > 0.5;
 }
 
 function drillCounts(): DrillCounts {
@@ -104,11 +115,11 @@ function persistDrill() {
 
 // 以下三個為 src/domain/drill.ts 純函式的 session 綁定版本，方便呼叫端省去傳參。
 function sessionDrillMatches(question: Question, filter = session.drillFilter): boolean {
-  return drillMatches(question, session.answers, filter);
+  return drillMatches(question, session.answers, filter, sessionMisses);
 }
 
 function sessionFilteredIndices(filter = session.drillFilter): number[] {
-  return filteredDrillIndices(session.questions, session.answers, filter);
+  return filteredDrillIndices(session.questions, session.answers, filter, sessionMisses);
 }
 
 function moveDrill(delta: -1 | 1) {
@@ -136,15 +147,33 @@ function stopTimer() {
   }
 }
 
+// 剩餘時間的播報門檻（分鐘）。計時器本身刻意不逐秒播報（見 render.ts 的 role="timer"），
+// 只在跨過這些門檻時對 .sr-live 寫一次，讓螢幕閱讀器使用者掌握時間又不被每秒打斷。
+const TIME_ANNOUNCE_MINUTES = [30, 10, 5, 1];
+let lastAnnouncedMinute: number | null = null;
+
+function announce(message: string) {
+  const el = app.querySelector(".sr-live");
+  if (el) el.textContent = message;
+}
+
 function startTimer() {
   stopTimer();
+  lastAnnouncedMinute = null;
   timerId = window.setInterval(() => {
     if (session.deadline !== null && Date.now() >= session.deadline) {
+      announce("時間到，已自動交卷。");
       finishExam();
       return;
     }
     const el = app.querySelector(".timer");
     if (el) el.textContent = timeText();
+    if (session.deadline === null) return;
+    const remainingMinutes = Math.ceil((session.deadline - Date.now()) / 60_000);
+    if (TIME_ANNOUNCE_MINUTES.includes(remainingMinutes) && remainingMinutes !== lastAnnouncedMinute) {
+      lastAnnouncedMinute = remainingMinutes;
+      announce(`剩餘時間 ${remainingMinutes} 分鐘。`);
+    }
   }, 1000);
 }
 
@@ -254,7 +283,52 @@ async function loadPractice(): Promise<PracticeModule> {
   return practiceCache;
 }
 
+// 換頁後把焦點移到新畫面的主標題。
+//
+// 只在「畫面切換」時移動，不是每次 render 都移——刷題作答、切篩選、翻頁都會呼叫
+// render()，那時焦點應該留在使用者剛操作的按鈕上，硬拉回標題反而更糟。
+let lastFocusedView: string | null = null;
+
+function focusViewOnChange() {
+  if (session.view === lastFocusedView) return;
+  lastFocusedView = session.view;
+  const target = app.querySelector("h1") ?? app.querySelector("main");
+  if (!(target instanceof HTMLElement)) return;
+  // 標題本身不該進入 Tab 順序，故用 -1；.view-anchor 負責隱藏聚焦外框。
+  target.setAttribute("tabindex", "-1");
+  target.classList.add("view-anchor");
+  target.focus();
+}
+
+// 以 data-* 屬性描述目前焦點所在的按鈕，供重繪後找回同一顆。
+// render() 走 innerHTML 整段替換，原本的 DOM 節點會被丟掉、焦點掉回 <body>；
+// 刷題每作答一次就重繪一次，鍵盤使用者因此每答一題就失去位置。
+const focusKeyOf = (el: Element | null): string | null => {
+  if (!(el instanceof HTMLElement)) return null;
+  for (const attr of ["data-choice", "data-nav", "data-filter", "data-subject", "data-mode", "data-paper"]) {
+    const value = el.getAttribute(attr);
+    if (value !== null) {
+      const qid = el.getAttribute("data-qid");
+      return qid !== null ? `[data-qid="${qid}"][${attr}="${value}"]` : `[${attr}="${value}"]`;
+    }
+  }
+  return null;
+};
+
 function render() {
+  const previousFocus = app.contains(document.activeElement) ? focusKeyOf(document.activeElement) : null;
+  const previousView = session.view;
+  renderView();
+  focusViewOnChange();
+  // 同一畫面內的重繪（刷題作答、切篩選、翻頁）：把焦點還給重繪前的那顆按鈕，
+  // 使用者才聽得到剛作答那一項的正誤狀態，而不是被丟回文件開頭。
+  if (session.view === previousView && previousFocus) {
+    const restored = app.querySelector(previousFocus);
+    if (restored instanceof HTMLElement) restored.focus();
+  }
+}
+
+function renderView() {
   if (session.view !== "study") stopTts();
   if (session.view === "home") { stopTimer(); app.innerHTML = renderHome(); return; }
   if (session.view === "study") {
@@ -327,7 +401,10 @@ function render() {
       app.innerHTML = renderExamPaper(session.questions, session.answers, timeText(), answeredCount());
     } else {
       const filtered = sessionFilteredIndices();
-      const controls = { filter: session.drillFilter, counts: drillCounts(), total: session.questions.length };
+      const controls = {
+        filter: session.drillFilter, counts: drillCounts(),
+        total: session.questions.length, hasTopics: bankHasTopics(),
+      };
       if (!filtered.length && !session.reveal) {
         app.innerHTML = renderDrillEmpty(controls);
         return;
@@ -342,6 +419,15 @@ function render() {
         session.answers[q.id], session.reveal, "", false, controls,
       );
     }
+    return;
+  }
+  if (session.view === "topics") {
+    stopTimer();
+    app.innerHTML = renderTopicStats(
+      getSubject(session.subjectId)?.name ?? "",
+      topicStats(session.questions, session.answers),
+      "回刷題",
+    );
     return;
   }
   if (session.view === "review") {
@@ -377,6 +463,9 @@ function beginDrill(bank: Question[]) {
   session.deadline = null;
   session.drillFilter = "all";
   session.view = "play";
+  // 錯題本（模擬考交卷時寫入）在進場時讀一次即可：它只會在交卷時被改寫，
+  // 而交卷必然離開刷題。之後的「錯題」篩選都用這份快照，避免每次篩選都碰 localStorage。
+  sessionMisses = new Set(loadMisses());
   session.reveal = revealForCurrent(); // 該題已作答則揭曉
   render();
 }
@@ -445,7 +534,9 @@ function selectChoice(choiceId: ChoiceId) {
 
 function changeDrillFilter(filter: DrillFilter) {
   session.drillFilter = filter;
-  const target = drillFilterTarget(session.questions, session.answers, session.index, filter);
+  const target = drillFilterTarget(
+    session.questions, session.answers, session.index, filter, sessionMisses,
+  );
   session.index = target.index;
   // 沒有題目符合時強制不揭曉，render 才會走空狀態畫面而非顯示題目。
   session.reveal = target.empty ? false : revealForCurrent();
@@ -472,6 +563,13 @@ function submitDrillJump() {
 
 function resetDrill() {
   clearDrillProgress(drillProgressKey());
+  // 「重置進度」是使用者明示的清空動作，本科目累積的模擬考錯題也一併清掉——
+  // 否則清空作答後，「錯題」篩選器仍會被錯題本填滿，看起來像沒重置成功。
+  // 只清本科目（錯題本的 id 帶 subjectId 前綴），不影響其他科目。
+  for (const id of sessionMisses) {
+    if (id.startsWith(`${session.subjectId}-`)) removeMiss(id);
+  }
+  sessionMisses = new Set();
   session.answers = {};
   session.index = 0;
   session.drillFilter = "all";
@@ -556,6 +654,8 @@ app.addEventListener("click", (event) => {
   if (nav === "result") { session.view = "result"; render(); return; }
   if (nav === "jump" && session.mode === "drill") { submitDrillJump(); return; }
   if (nav === "drill-reset" && session.mode === "drill") { resetDrill(); return; }
+  if (nav === "topics" && session.mode === "drill") { session.view = "topics"; render(); return; }
+  if (nav === "back-play") { session.view = "play"; render(); return; }
   if (nav === "review") { session.view = "review"; session.reveal = true; session.index = 0; render(); return; }
 });
 

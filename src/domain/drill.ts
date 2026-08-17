@@ -36,16 +36,27 @@ export const parseJumpTarget = (raw: string, total: number): number | null => {
   return value - 1;
 };
 
-/** 該題是否符合指定篩選。 */
+/**
+ * 該題是否符合指定篩選。
+ *
+ * 「錯題」有兩個來源，兩者的關係是「本次刷題的作答優先」：
+ * 1. 本次刷題答錯的題目（`answers`）。
+ * 2. 錯題本（`missed`）——模擬考交卷時寫入的錯題，跨場次累積。
+ *
+ * 已在刷題中作答的題目一律以該次作答為準：答對就不再算錯題（等於提供了把錯題本
+ * 項目「消掉」的途徑），答錯就算。尚未在刷題中作答的，才回頭看錯題本。
+ */
 export const drillMatches = (
   question: Question,
   answers: AnswerState,
   filter: DrillFilter,
+  missed?: ReadonlySet<string>,
 ): boolean => {
   const answer = answers[question.id];
   if (filter === "all") return true;
   if (filter === "unanswered") return answer === undefined;
-  return answer !== undefined && answer !== question.answer;
+  if (answer !== undefined) return answer !== question.answer;
+  return missed?.has(question.id) ?? false;
 };
 
 /** 符合指定篩選的題目索引，維持題庫原序。 */
@@ -53,9 +64,10 @@ export const filteredDrillIndices = (
   questions: Question[],
   answers: AnswerState,
   filter: DrillFilter,
+  missed?: ReadonlySet<string>,
 ): number[] =>
   questions.reduce<number[]>((indices, question, index) => {
-    if (drillMatches(question, answers, filter)) indices.push(index);
+    if (drillMatches(question, answers, filter, missed)) indices.push(index);
     return indices;
   }, []);
 
@@ -70,11 +82,12 @@ export const drillFilterTarget = (
   answers: AnswerState,
   currentIndex: number,
   filter: DrillFilter,
+  missed?: ReadonlySet<string>,
 ): { index: number; empty: boolean } => {
   const current = questions[currentIndex];
-  if (current && drillMatches(current, answers, filter)) {
+  if (current && drillMatches(current, answers, filter, missed)) {
     return { index: currentIndex, empty: false };
   }
-  const first = filteredDrillIndices(questions, answers, filter)[0];
+  const first = filteredDrillIndices(questions, answers, filter, missed)[0];
   return first === undefined ? { index: 0, empty: true } : { index: first, empty: false };
 };

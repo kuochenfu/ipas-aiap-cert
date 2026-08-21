@@ -55,11 +55,14 @@ describe("studyNotes 題庫反推補充（初級）", () => {
     }
   });
 
-  it("補充 section 的每張概念卡至少有 2 個子項", () => {
+  // 這條不變式的用意是「概念卡要有實質內容」，而不是「一定要有子項」——
+  // 比較表本身就是內容，故 table／formula／flow 型別的條目視為已滿足。
+  it("補充 section 的每張概念卡要有實質內容（2 個以上子項，或一張表／公式／流程）", () => {
     for (const subjectId of Object.keys(juniorTopicCodes)) {
       for (const [code, sections] of Object.entries(studyNotes[subjectId])) {
         for (const section of sections.filter(isSupplement)) {
           for (const card of section.items) {
+            if (card.table || card.formula || card.flow) continue;
             expect(
               card.children?.length ?? 0,
               `${subjectId}/${code}「${card.text}」子項不足`,

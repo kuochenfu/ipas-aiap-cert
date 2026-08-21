@@ -59,9 +59,11 @@ npm run parse:papers # 從 docs/markdown/*.md 重新解析真題 → src/data/pa
 - **錯題本 localStorage key 為 `ipas-aiap-misses`**，勿更名（會遺失現有使用者紀錄）。它只在**模擬考交卷**時寫入（`finishExam`），讀取端是**刷題的「錯題」篩選器**：`drillMatches` 的 `wrong` 會把「本次刷題答錯」與「在錯題本裡且本次刷題尚未作答」兩者聯集起來，刷題答對即從篩選中消失，「重置進度」則連同本科目的錯題本一併清除。改刷題篩選或考試結算時，兩個來源都要顧到。
 - **刷題進度 localStorage key 為 `ipas-aiap-drill-progress`**，勿更名（會遺失現有使用者紀錄）。進度記錄的是 `questionId` 而非索引，這是刻意設計——題庫會隨時間成長，用索引會在新增題目後悄悄指向錯的題目。
 - **原卷圖片一律轉錄為文字，不放圖檔**：考卷裡的「圖」幾乎都是程式碼／console 輸出／資料表的截圖，pdftotext 擷取不到。轉錄寫在 `explanations/*.ts` 的 `figures`（題幹附圖）與 `choiceFigures`（選項本身是圖），型別見 `QuestionFigure`。**不要改放圖片檔**——原卷每頁都疊了 iPAS 浮水印、截圖在手機上不可讀，且轉錄可搜尋可複製。**也不要寫進 `past-exams/*.json`**，那是機器產物，重跑 `parse:papers` 會全部消失（`tests/figures.test.ts` 會擋）。真正的圖表（訓練曲線、ROC）用 `kind: "chart"` 以文字描述代替。
+- **學習主題頁的工具（節點目錄、搜尋、展開收合、已讀、直達刷題）兩張證照都有**，且各證照一份：`main.ts` 的處理函式一律用 `certSectionOf(element)` 從被點的控制項往上找 `[data-cert-section]`，**不要改回用選擇器直接抓某一張證照的區塊**，否則在另一張證照上操作會改到別人的區塊。
 - **筆記條目有三種呈現型別**：`StudyNoteItem` 除了 `text` 外可帶 `table`（比較表）、`formula`（公式）、`flow`（流程），`text` 在帶 table／flow 時**是標題而非內容**。既有五科全部只用純文字，型別皆為選用，因此不受影響。表格必須留在 `.note-table-wrap` 內（`overflow-x: auto`）——寬表在手機上要自己捲，頁面本身不得橫向捲動。
 - **學習主題頁的互動一律就地操作 DOM，不呼叫 `render()`**：搜尋、全部展開／收合、考前速記、已讀標記、節點目錄跳轉全部直接改 class 或屬性。這頁很長，整頁重繪會把捲動位置與已展開的節點全部打回原形（與單頁模擬考的就地更新同一個理由）。
-- **考前速記模式靠 `data-note-section` 的 CSS 篩選**：`renderStudyNotes` 為每一節輸出穩定鍵（concept／abbr／confuse／formula／case／exam／resource），CSS 只留 formula 與 confuse。**不要改成用標題文字選取**——CSS 選不到文字內容，且標題一改就失效。
+- **考前速記模式靠 `data-note-section` 的 CSS 篩選**：`renderStudyNotes` 為每一節輸出穩定鍵（concept／abbr／confuse／formula／case／exam／resource），CSS 只留 formula 與 confuse。**不要改成用標題文字選取**——CSS 選不到文字內容，且標題一改就失效。這顆按鈕**依資料決定是否出現**：該證照的筆記若沒有 formula／confuse 分節（五科的節名是「3.3 機器學習概念」這類，全歸 other），就不渲染，避免按了整片空白。
+- **學習主題碼與題目節點碼不是同一層**：五科的學習主題是三碼評鑑主題（`L111`），題目掛在五碼評鑑內容（`L11101`）上，一個主題涵蓋數個節點；AIoT 的學習主題就是評鑑內容本身（`A1.1`）。兩者統一由 `topicMatchesGuideCode()` 以**碼的前綴**比對——「練這個主題的 N 題」的題數與題庫篩選都走它，不要退回用完整 label 相等比較。
 - **AIoT 的縮寫只有一份來源**：`aiotAbbreviations`（帶 `nodes: string[]`，可跨節點）同時生成每個節點的「重要縮寫」表與工具列的「縮寫速查」全表。**不要在筆記裡另外手寫一份縮寫**，`tests/aiotNotes.test.ts` 會比對兩者一致。
 - **節點限定刷題**：學習頁的「練這個節點的 N 題」會設 `session.topicScope` 並以篩過的題庫呼叫 `beginDrill`；`drillProgressKey()` 因此加上 `:topic:<節點碼>` 後綴（沿用既有的 `ipas-aiap-drill-progress` map，不新增 key）。⚠️ `startMode()` 與點選科目時**都必須把 `topicScope` 清掉**，否則之後的一般刷題會莫名只剩幾題。
 - **「已讀」節點的 localStorage key 為 `ipas-aiap-study-read`**，勿更名。它只記評鑑節點碼、與刷題進度完全無關。

@@ -8,7 +8,7 @@ import type { Cert, Level } from "../data/types";
 import type { Question } from "../data/types";
 import type { StudyNoteItem, StudyNoteSection, StudyNoteTable, StudyNotesBySubject } from "../data/types";
 import type { DrillFilter } from "../domain/drill";
-import { isTopicClassified } from "../domain/assessmentTopics";
+import { isTopicClassified, topicMatchesGuideCode } from "../domain/assessmentTopics";
 
 export type BankStats = { total: number; pastExam: number; generated: number; studyGuide: number };
 export type DrillCounts = Record<DrillFilter, number>;
@@ -519,8 +519,9 @@ const countNoteLeaves = (items: StudyNoteItem[]): number =>
 type StudyNotesOptions = {
   label?: string;
   /**
-   * 七個項目各自摺疊，只有第一項預設展開。一次倒出 60 條純文字會變成文字牆，
-   * 但這只對條目多的 AIoT 筆記開啟——五科的排版維持原狀。
+   * 各節各自摺疊，只有第一節預設展開。一次倒出上百條純文字會變成文字牆
+   * （五科單一主題最多有 277 則重點），因此兩張證照都開啟；
+   * 證照層級的「備考總整理」不開，那本來就是要一次讀完的。
    */
   collapsibleSections?: boolean;
 };
@@ -593,18 +594,20 @@ export const nodeAnchorId = (code: string): string => `node-${code.replace(/\./g
 const renderNodeActions = (
   subjectId: string,
   code: string,
-  title: string,
   counts: Record<string, number>,
   readNodes: ReadonlySet<string>,
 ): string => {
-  const label = `${code} ${title}`;
-  const count = counts[label] ?? 0;
+  // 一個學習主題可能涵蓋數個題目節點（五科的 L111 → L11101、L11102…），故以前綴加總。
+  const count = Object.entries(counts).reduce(
+    (sum, [topic, n]) => sum + (topicMatchesGuideCode(topic, code) ? n : 0),
+    0,
+  );
   const read = readNodes.has(code);
   return `
     <div class="node-actions">
       ${count > 0
-        ? `<button class="node-drill" data-topic-drill="${escapeHtml(subjectId)}|${escapeHtml(label)}">
-             練這個節點的 ${count} 題 →
+        ? `<button class="node-drill" data-topic-drill="${escapeHtml(subjectId)}|${escapeHtml(code)}">
+             練這個主題的 ${count} 題 →
            </button>`
         : `<span class="node-drill is-empty">尚無題目</span>`}
       <button class="node-read${read ? " active" : ""}" data-study-read="${escapeHtml(code)}"
@@ -641,15 +644,23 @@ const renderAbbrLookup = (abbreviations: AbbrEntry[]): string => {
 };
 
 /** 學習頁的工具列與節點目錄。搜尋與展開收合都由 main.ts 就地操作 DOM，不整頁重繪。 */
-const renderStudyTools = (cert: Cert, readCount: number, totalNodes: number): string => {
+const renderStudyTools = (
+  cert: Cert,
+  readCount: number,
+  totalNodes: number,
+  showCram: boolean,
+): string => {
+  const multiLevel = getLevels(cert).length > 1;
   const chips = getLevels(cert)
-    .flatMap((level) => getSubjects(cert, level))
-    .map((subject) => {
+    .flatMap((level) => getSubjects(cert, level).map((subject) => ({ level, subject })))
+    .map(({ level, subject }) => {
       const topics = getStudyGuide(subject.id)?.topics ?? [];
       if (!topics.length) return "";
+      // 兩個級別都有科目時，光看「科目1」分不出初級還是中級。
+      const groupLabel = multiLevel ? `${levelName(level)}${subject.code}` : subject.code;
       return `
         <div class="study-toc-group">
-          <span class="study-toc-label">${escapeHtml(subject.code)}</span>
+          <span class="study-toc-label">${escapeHtml(groupLabel)}</span>
           ${topics.map((t) => `
             <button class="study-toc-chip" data-study-jump="${nodeAnchorId(t.code)}"
                     title="${escapeHtml(t.title)}">${escapeHtml(t.code)}</button>
@@ -669,7 +680,7 @@ const renderStudyTools = (cert: Cert, readCount: number, totalNodes: number): st
         <span class="study-read-count" data-study-read-count>已讀 ${readCount} / ${totalNodes}</span>
         <button class="study-action" data-study-action="expand">全部展開</button>
         <button class="study-action" data-study-action="collapse">全部收合</button>
-        <button class="study-action" data-study-action="cram" aria-pressed="false">考前速記</button>
+        ${showCram ? `<button class="study-action" data-study-action="cram" aria-pressed="false">考前速記</button>` : ""}
       </div>
       <nav class="study-toc" aria-label="節點目錄">${chips}</nav>
     </div>
@@ -681,8 +692,8 @@ export type AbbrEntry = { term: string; full: string; zh?: string; nodes: string
 export type StudyViewData = {
   notes?: StudyNotesBySubject;
   examOverviews?: Partial<Record<Cert, StudyNoteSection[]>>;
-  /** 縮寫速查的資料，與筆記同屬 lazy chunk，載入前先不渲染這張表。 */
-  abbreviations?: AbbrEntry[];
+  /** 各證照的縮寫速查資料，與筆記同屬 lazy chunk；沒有資料的證照就不渲染這張表。 */
+  abbreviations?: Partial<Record<Cert, AbbrEntry[]>>;
   /** 已讀的節點碼。 */
   readNodes?: ReadonlySet<string>;
 };
@@ -701,14 +712,14 @@ export const renderStudyView = (
         // 標籤要對得上出處：五科是官方學習指引的重構，AIoT 是備考 syllabus 的整理。
         const isAiot = s.cert === "aiot";
         const notesLabel = isAiot ? "備考整理" : "學習指引整理";
-        const topicCounts = isAiot ? getTopicCounts(s.id) : {};
+        const topicCounts = getTopicCounts(s.id);
         const topics = (guide?.topics ?? [])
           .map((t) => `
             <div class="study-topic" id="${nodeAnchorId(t.code)}" data-node="${escapeHtml(t.code)}">
               <h4>${escapeHtml(t.code)}　${escapeHtml(t.title)}</h4>
               <ul class="study-contents">${t.contents.map((c) => `<li>${escapeHtml(c)}</li>`).join("")}</ul>
-              ${isAiot ? renderNodeActions(s.id, t.code, t.title, topicCounts, readNodes) : ""}
-              ${renderStudyNotes(t.notes, { label: notesLabel, collapsibleSections: isAiot })}
+              ${renderNodeActions(s.id, t.code, topicCounts, readNodes)}
+              ${renderStudyNotes(t.notes, { label: notesLabel, collapsibleSections: true })}
               <ul class="study-links">${t.links.map(renderReadingLink).join("")}</ul>
             </div>
           `)
@@ -729,14 +740,21 @@ export const renderStudyView = (
     `;
     }).join("");
     // 工具列與節點目錄目前只給 AIoT——五科的 40 個主題維持原樣，待這邊驗證後再推。
-    const nodeCodes = getLevels(cert.id)
+    const certTopics = getLevels(cert.id)
       .flatMap((level) => getSubjects(cert.id, level))
-      .flatMap((subject) => getStudyGuide(subject.id)?.topics ?? [])
-      .map((t) => t.code);
-    const tools = cert.id === "aiot"
-      ? renderStudyTools(cert.id, nodeCodes.filter((c) => readNodes.has(c)).length, nodeCodes.length)
-        + renderAbbrLookup(abbreviations ?? [])
-      : "";
+      .flatMap((subject) => getStudyGuide(subject.id, studyNotes)?.topics ?? []);
+    const nodeCodes = certTopics.map((t) => t.code);
+    // 「考前速記」靠 formula／confuse 兩節篩選；該證照的筆記若沒有這兩種節，
+    // 按了會整片空白，因此依資料決定要不要出這顆按鈕。
+    const showCram = certTopics.some((t) =>
+      (t.notes ?? []).some((section) => ["formula", "confuse"].includes(noteSectionKey(section.heading))),
+    );
+    const tools = nodeCodes.length === 0 ? "" : renderStudyTools(
+      cert.id,
+      nodeCodes.filter((c) => readNodes.has(c)).length,
+      nodeCodes.length,
+      showCram,
+    ) + renderAbbrLookup(abbreviations?.[cert.id] ?? []);
     return `
       <section class="study-cert" data-cert-section="${escapeHtml(cert.id)}">
         <h2>${escapeHtml(cert.name)}</h2>

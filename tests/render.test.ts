@@ -614,16 +614,32 @@ describe("筆記的三種呈現型別", () => {
 });
 
 describe("學習主題頁的導覽工具", () => {
-  it("AIoT 有工具列與 15 個節點的目錄，五科維持原樣", () => {
+  it("兩張證照各有一份工具列，目錄涵蓋全部主題", () => {
     const html = renderStudyView();
+    expect(html).toContain('data-cert-section="aiap"');
     expect(html).toContain('data-cert-section="aiot"');
-    expect(html).toContain("data-study-search");
-    expect(html).toContain('data-study-action="cram"');
-    const chips = html.match(/data-study-jump="node-/g) ?? [];
-    expect(chips).toHaveLength(15);
-    // 工具列只掛在 AIoT 上；五科的區塊不應出現搜尋框。
-    const aiapPart = html.slice(0, html.indexOf('data-cert-section="aiot"'));
-    expect(aiapPart).not.toContain("data-study-search");
+    expect(html.match(/data-study-search/g) ?? []).toHaveLength(2);
+    // 五科 18 個評鑑主題 + AIoT 15 個評鑑內容節點。
+    expect(html.match(/data-study-jump="node-/g) ?? []).toHaveLength(33);
+    expect(html).toContain('data-study-jump="node-L111"');
+    expect(html).toContain('data-study-jump="node-A1-1"');
+  });
+
+  it("五科的目錄籤標出級別，避免兩個「科目1」分不清", () => {
+    const html = renderStudyView();
+    expect(html).toContain("初級科目1");
+    expect(html).toContain("中級科目1");
+  });
+
+  // 考前速記靠 formula／confuse 兩節篩選，五科的筆記沒有這種分節，
+  // 按了會整片空白，因此依資料決定要不要出這顆按鈕。
+  it("只有具備公式／易混淆分節的證照才出現考前速記", async () => {
+    const { studyNotes } = await import("../src/data/studyNotes");
+    const { aiotStudyNotes } = await import("../src/data/studyNotes.aiot");
+    const html = renderStudyView({ ...studyNotes, ...aiotStudyNotes });
+    expect(html.match(/data-study-action="cram"/g) ?? []).toHaveLength(1);
+    const aiotPart = html.slice(html.indexOf('data-cert-section="aiot"'));
+    expect(aiotPart).toContain('data-study-action="cram"');
   });
 
   it("節點錨點把 . 換成 -，避開 querySelector 的跳脫問題", () => {
@@ -644,24 +660,38 @@ describe("學習主題頁的導覽工具", () => {
 });
 
 describe("節點動作列與縮寫速查", () => {
-  it("考科一九個節點有練題按鈕，考科二六個節點顯示尚無題目", () => {
+  it("有題目的主題都有練題按鈕，AIoT 考科二六個節點顯示尚無題目", () => {
     const html = renderStudyView();
-    expect(html.match(/data-topic-drill="/g) ?? []).toHaveLength(9);
+    // 五科 18 個主題全部有題，加上 AIoT 考科一的 9 個。
+    expect(html.match(/data-topic-drill="/g) ?? []).toHaveLength(27);
     expect(html.match(/node-drill is-empty/g) ?? []).toHaveLength(6);
-    expect(html).toContain("練這個節點的 10 題");
-    expect(html).toContain('data-topic-drill="aiot-junior-basics|A2.2 常見通訊協定與網路層技術"');
+    expect(html).toContain('data-topic-drill="aiot-junior-basics|A2.2"');
+    expect(html).toContain('data-topic-drill="junior-ai-basics|L111"');
+  });
+
+  // 五科的學習主題是三碼評鑑主題，題目掛在五碼評鑑內容上，一個主題涵蓋數個節點。
+  it("五科的主題題數是其下所有評鑑內容節點的總和", async () => {
+    const { getTopicCounts } = await import("../src/data/index");
+    const { topicMatchesGuideCode } = await import("../src/domain/assessmentTopics");
+    const counts = getTopicCounts("junior-ai-basics");
+    const expected = Object.entries(counts)
+      .filter(([topic]) => topicMatchesGuideCode(topic, "L113"))
+      .reduce((sum, [, n]) => sum + n, 0);
+    expect(expected).toBeGreaterThan(1);
+    expect(renderStudyView()).toContain(`練這個主題的 ${expected} 題`);
   });
 
   it("已讀節點反映在按鈕狀態與計數上", () => {
     const html = renderStudyView(undefined, undefined, { readNodes: new Set(["A1.1", "B2.3"]) });
-    expect(html).toContain("已讀 2 / 15");
+    expect(html).toContain("已讀 2 / 15");   // AIoT
+    expect(html).toContain("已讀 0 / 18");   // AI 應用規劃師
     expect(html).toContain('data-study-read="A1.1"\n              aria-pressed="true"');
   });
 
   it("有縮寫資料才渲染速查表，每列可被搜尋篩選", async () => {
     const { aiotAbbreviations } = await import("../src/data/studyNotes.aiot");
     expect(renderStudyView()).not.toContain("縮寫速查");
-    const html = renderStudyView(undefined, undefined, { abbreviations: aiotAbbreviations });
+    const html = renderStudyView(undefined, undefined, { abbreviations: { aiot: aiotAbbreviations } });
     expect(html).toContain("縮寫速查");
     expect(html.match(/data-abbr-row/g) ?? []).toHaveLength(aiotAbbreviations.length);
     expect(html).toContain("Unified Namespace");

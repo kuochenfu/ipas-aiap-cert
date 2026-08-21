@@ -138,3 +138,14 @@ export const practiceTotal = (subjectId: string): number =>
  */
 export const isTopicClassified = (topic: string): boolean =>
   /^L\d{5} /.test(topic) || /^[AB]\d\.\d /.test(topic);
+
+/**
+ * 題目的 topic 是否屬於學習主題頁上的某個主題碼。
+ *
+ * 兩張證照的層級不同，靠「碼的前綴」統一處理：
+ * - AI 應用規劃師：學習主題是三碼評鑑主題（L111），題目掛在五碼評鑑內容（L11101）上，
+ *   一個主題涵蓋數個節點。
+ * - AIoT：學習主題就是評鑑內容本身（A1.1），前綴比對等同完全相符。
+ */
+export const topicMatchesGuideCode = (questionTopic: string, guideCode: string): boolean =>
+  questionTopic.split(" ")[0].startsWith(guideCode);

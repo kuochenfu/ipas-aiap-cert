@@ -7,7 +7,7 @@ import {
 } from "./ui/render";
 import { getSubject } from "./domain/catalog";
 import { getQuestions } from "./data/index";
-import { isTopicClassified, practiceTotal } from "./domain/assessmentTopics";
+import { isTopicClassified, practiceTotal, topicMatchesGuideCode } from "./domain/assessmentTopics";
 import { scoreExam, topicStats, topicSummary, type AnswerState } from "./domain/exam";
 import { buildAttempt } from "./state/attempt";
 import { buildMockPaper, PAPER_COUNT } from "./state/mockPapers";
@@ -55,7 +55,7 @@ let timerId: number | null = null;
 type StudyContent = {
   notes: StudyNotesBySubject;
   overviews: Partial<Record<Cert, StudyNoteSection[]>>;
-  abbreviations: AbbrEntry[];
+  abbreviations: Partial<Record<Cert, AbbrEntry[]>>;
 };
 let studyNotesCache: StudyContent | null = null;
 let studyNotesPromise: Promise<StudyContent> | null = null;
@@ -292,7 +292,7 @@ async function loadStudyNotes(): Promise<StudyContent> {
   ]).then(([core, aiot]) => ({
     notes: { ...core.studyNotes, ...aiot.aiotStudyNotes },
     overviews: { aiot: aiot.aiotExamOverview } as StudyContent["overviews"],
-    abbreviations: aiot.aiotAbbreviations,
+    abbreviations: { aiot: aiot.aiotAbbreviations },
   }));
   studyNotesCache = await studyNotesPromise;
   return studyNotesCache;
@@ -302,8 +302,9 @@ async function loadStudyNotes(): Promise<StudyContent> {
 // 這些互動一律直接改 DOM，不呼叫 render()——學習頁很長，整頁重繪會把捲動位置與
 // 已展開的節點全部打回原形。
 
-function aiotSection(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('[data-cert-section="aiot"]');
+/** 工具列現在每張證照各一份，所以要從被操作的控制項往上找它所屬的證照區塊。 */
+function certSectionOf(element: HTMLElement): HTMLElement | null {
+  return element.closest<HTMLElement>("[data-cert-section]");
 }
 
 function jumpToStudyNode(anchorId: string) {
@@ -315,7 +316,7 @@ function jumpToStudyNode(anchorId: string) {
 }
 
 function runStudyAction(action: string, button: HTMLElement) {
-  const section = aiotSection();
+  const section = certSectionOf(button);
   if (!section) return;
   if (action === "expand" || action === "collapse") {
     const open = action === "expand";
@@ -337,9 +338,10 @@ function runStudyAction(action: string, button: HTMLElement) {
   }
 }
 
-function filterStudyNodes(query: string) {
-  const section = aiotSection();
+function filterStudyNodes(input: HTMLInputElement) {
+  const section = certSectionOf(input);
   if (!section) return;
+  const query = input.value;
   const needle = query.trim().toLowerCase();
   const topics = section.querySelectorAll<HTMLElement>(".study-topic[data-node]");
   let hits = 0;
@@ -369,10 +371,11 @@ function startTopicDrill(payload: string) {
   const separator = payload.indexOf("|");
   if (separator < 0) return;
   const subjectId = payload.slice(0, separator);
-  const topic = payload.slice(separator + 1);
+  const topic = payload.slice(separator + 1); // 學習主題碼，例 L111 或 A1.1
   const subject = getSubject(subjectId);
   if (!subject) return;
-  const scoped = getQuestions(subjectId).filter((question) => question.topic === topic);
+  const scoped = getQuestions(subjectId)
+    .filter((question) => topicMatchesGuideCode(question.topic, topic));
   if (!scoped.length) return;
   session.cert = subject.cert;
   session.level = subject.level;
@@ -388,7 +391,7 @@ function toggleStudyRead(code: string, button: HTMLElement) {
   button.setAttribute("aria-pressed", String(read));
   button.classList.toggle("active", read);
   button.textContent = read ? "✓ 已讀" : "標記已讀";
-  const section = aiotSection();
+  const section = certSectionOf(button);
   const counter = section?.querySelector<HTMLElement>("[data-study-read-count]");
   if (!section || !counter) return;
   const total = section.querySelectorAll("[data-study-read]").length;
@@ -399,7 +402,7 @@ function toggleStudyRead(code: string, button: HTMLElement) {
 app.addEventListener("input", (event) => {
   const target = event.target as HTMLElement;
   if (target instanceof HTMLInputElement && target.hasAttribute("data-study-search")) {
-    filterStudyNodes(target.value);
+    filterStudyNodes(target);
   }
 });
 

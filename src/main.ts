@@ -20,7 +20,7 @@ import {
 import { loadDrillProgress, saveDrillProgress, clearDrillProgress } from "./state/drillProgress";
 import type { ChoiceId, Question } from "./data/types";
 import type { Cert, Level } from "./data/types";
-import type { StudyNotesBySubject } from "./data/types";
+import type { StudyNoteSection, StudyNotesBySubject } from "./data/types";
 import type { DrillCounts } from "./ui/render";
 
 type View = "home" | "cert" | "level" | "mode" | "paper" | "play" | "result" | "review" | "study" | "topics";
@@ -50,8 +50,12 @@ type PracticeModule = typeof import("./data/practice");
 const app = document.querySelector<HTMLDivElement>("#app")!;
 let session: Session = blankSession();
 let timerId: number | null = null;
-let studyNotesCache: StudyNotesBySubject | null = null;
-let studyNotesPromise: Promise<StudyNotesBySubject> | null = null;
+type StudyContent = {
+  notes: StudyNotesBySubject;
+  overviews: Partial<Record<Cert, StudyNoteSection[]>>;
+};
+let studyNotesCache: StudyContent | null = null;
+let studyNotesPromise: Promise<StudyContent> | null = null;
 // 新題庫（200 題）獨立成自己的 chunk，只有進入初級科目的模式選單或實際開始練習時才載入。
 let practiceCache: PracticeModule | null = null;
 let practicePromise: Promise<PracticeModule> | null = null;
@@ -270,9 +274,17 @@ function readStudySection(button: HTMLButtonElement, options: { restart?: boolea
   window.speechSynthesis.speak(utterance);
 }
 
-async function loadStudyNotes(): Promise<StudyNotesBySubject> {
+// 兩個筆記模組都是獨立 chunk，只有進入「學習主題」時才載入：
+// studyNotes 是 AI 應用規劃師五科的官方指引重構，studyNotes.aiot 是 AIoT 的備考整理。
+async function loadStudyNotes(): Promise<StudyContent> {
   if (studyNotesCache) return studyNotesCache;
-  studyNotesPromise ??= import("./data/studyNotes").then((module) => module.studyNotes);
+  studyNotesPromise ??= Promise.all([
+    import("./data/studyNotes"),
+    import("./data/studyNotes.aiot"),
+  ]).then(([core, aiot]) => ({
+    notes: { ...core.studyNotes, ...aiot.aiotStudyNotes },
+    overviews: { aiot: aiot.aiotExamOverview } as StudyContent["overviews"],
+  }));
   studyNotesCache = await studyNotesPromise;
   return studyNotesCache;
 }
@@ -335,13 +347,13 @@ function renderView() {
   if (session.view === "study") {
     stopTimer();
     if (studyNotesCache) {
-      app.innerHTML = renderStudyView(studyNotesCache);
+      app.innerHTML = renderStudyView(studyNotesCache.notes, studyNotesCache.overviews);
       syncTtsControls();
     } else {
       app.innerHTML = renderStudyLoading();
-      void loadStudyNotes().then((notes) => {
+      void loadStudyNotes().then((content) => {
         if (session.view === "study") {
-          app.innerHTML = renderStudyView(notes);
+          app.innerHTML = renderStudyView(content.notes, content.overviews);
           syncTtsControls();
         }
       });

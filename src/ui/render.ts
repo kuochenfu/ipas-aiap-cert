@@ -475,12 +475,15 @@ const countNoteLeaves = (items: StudyNoteItem[]): number =>
     0,
   );
 
-const renderStudyNotes = (notes: StudyNoteSection[] | undefined): string => {
+const renderStudyNotes = (
+  notes: StudyNoteSection[] | undefined,
+  label = "學習指引整理",
+): string => {
   if (!notes?.length) return "";
   const count = notes.reduce((sum, section) => sum + countNoteLeaves(section.items), 0);
   return `
     <details class="study-notes">
-      <summary>學習指引整理 <span>${count} 則重點</span></summary>
+      <summary>${escapeHtml(label)} <span>${count} 則重點</span></summary>
       <div class="study-note-sections">
         ${notes.map((section) => `
           <section class="study-note-section">
@@ -508,18 +511,23 @@ export const renderStudyLoading = (): string => `
   </main>
 `;
 
-export const renderStudyView = (studyNotes?: StudyNotesBySubject): string => {
+export const renderStudyView = (
+  studyNotes?: StudyNotesBySubject,
+  examOverviews?: Partial<Record<Cert, StudyNoteSection[]>>,
+): string => {
   const sections = certs.map((cert) => {
     const levelsHtml = getLevels(cert.id).map((level) => {
     const subjectsHtml = getSubjects(cert.id, level)
       .map((s) => {
         const guide = getStudyGuide(s.id, studyNotes);
+        // 標籤要對得上出處：五科是官方學習指引的重構，AIoT 是備考 syllabus 的整理。
+        const notesLabel = s.cert === "aiot" ? "備考整理" : "學習指引整理";
         const topics = (guide?.topics ?? [])
           .map((t) => `
             <div class="study-topic">
               <h4>${escapeHtml(t.code)}　${escapeHtml(t.title)}</h4>
               <ul class="study-contents">${t.contents.map((c) => `<li>${escapeHtml(c)}</li>`).join("")}</ul>
-              ${renderStudyNotes(t.notes)}
+              ${renderStudyNotes(t.notes, notesLabel)}
               <ul class="study-links">${t.links.map(renderReadingLink).join("")}</ul>
             </div>
           `)
@@ -542,6 +550,7 @@ export const renderStudyView = (studyNotes?: StudyNotesBySubject): string => {
     return `
       <section class="study-cert">
         <h2>${escapeHtml(cert.name)}</h2>
+        ${renderStudyNotes(examOverviews?.[cert.id], "備考總整理")}
         ${levelsHtml}
       </section>
     `;

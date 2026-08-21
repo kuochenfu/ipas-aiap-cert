@@ -467,4 +467,55 @@ describe("學習主題頁的證照分組", () => {
     expect(html).toContain("A2.3　工業通訊標準與資訊模型");
     expect(html).toContain("B2.2　雲端環境數據收集與平台設計");
   });
+
+  it("筆記標籤反映出處：五科為學習指引整理、AIoT 為備考整理", async () => {
+    const { studyNotes } = await import("../src/data/studyNotes");
+    const { aiotStudyNotes } = await import("../src/data/studyNotes.aiot");
+    const html = renderStudyView({ ...studyNotes, ...aiotStudyNotes });
+    expect(html).toContain("學習指引整理");
+    expect(html).toContain("備考整理");
+  });
+
+  it("備考總整理掛在證照層級，且不影響沒有總整理的證照", () => {
+    const html = renderStudyView(undefined, {
+      aiot: [{ heading: "最重要的八條公式", items: [{ text: "V = I × R" }] }],
+    });
+    expect(html).toContain("備考總整理");
+    expect(html).toContain("最重要的八條公式");
+    expect(html).toContain("V = I × R");
+    // 只出現一次——AI 應用規劃師沒有總整理，不應跟著長出空的 details。
+    expect(html.match(/備考總整理/g)).toHaveLength(1);
+  });
+});
+
+describe("AIoT 備考整理內容", () => {
+  it("15 個節點都有七個項目的筆記", async () => {
+    const { aiotStudyNotes } = await import("../src/data/studyNotes.aiot");
+    const codes = [
+      ...["A1.1", "A1.2", "A2.1", "A2.2", "A2.3", "A2.4", "A2.5", "A3.1", "A3.2"]
+        .map((code) => ["aiot-junior-basics", code] as const),
+      ...["B1.1", "B1.2", "B1.3", "B2.1", "B2.2", "B2.3"]
+        .map((code) => ["aiot-junior-iot", code] as const),
+    ];
+    expect(codes).toHaveLength(15);
+    for (const [subjectId, code] of codes) {
+      const sections = aiotStudyNotes[subjectId]?.[code];
+      expect(sections, `${subjectId} ${code} 缺筆記`).toBeDefined();
+      expect(sections!.map((s) => s.heading)).toEqual([
+        "必懂觀念", "重要縮寫", "容易混淆", "公式與計算", "實務案例", "可能考法", "推薦資源",
+      ]);
+      for (const section of sections!) {
+        expect(section.items.length, `${code} 的「${section.heading}」為空`).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("節點碼與 studyGuide 的節點一一對應，沒有孤兒筆記", async () => {
+    const { aiotStudyNotes } = await import("../src/data/studyNotes.aiot");
+    const { getStudyGuide } = await import("../src/data/studyGuide");
+    for (const subjectId of ["aiot-junior-basics", "aiot-junior-iot"]) {
+      const guideCodes = getStudyGuide(subjectId)!.topics.map((t) => t.code).sort();
+      expect(Object.keys(aiotStudyNotes[subjectId]).sort()).toEqual(guideCodes);
+    }
+  });
 });

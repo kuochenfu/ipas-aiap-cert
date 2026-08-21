@@ -1,15 +1,16 @@
 import { escapeHtml } from "./escape";
 import type { Choice, QuestionFigure } from "../data/types";
 import type { Subject } from "../domain/catalog";
-import { getSubjectsByLevel, subjects } from "../domain/catalog";
-import { getBankStats } from "../data/index";
+import { certs, getLevels, getSubjects } from "../domain/catalog";
+import { getBankStats, getTopicCounts } from "../data/index";
 import { getStudyGuide } from "../data/studyGuide";
-import type { Level } from "../data/types";
+import type { Cert, Level } from "../data/types";
 import type { Question } from "../data/types";
-import type { StudyNoteItem, StudyNoteSection, StudyNotesBySubject } from "../data/types";
+import type { StudyNoteItem, StudyNoteSection, StudyNoteTable, StudyNotesBySubject } from "../data/types";
 import type { DrillFilter } from "../domain/drill";
+import { isTopicClassified, topicMatchesGuideCode } from "../domain/assessmentTopics";
 
-export type BankStats = { total: number; pastExam: number; generated: number };
+export type BankStats = { total: number; pastExam: number; generated: number; studyGuide: number };
 export type DrillCounts = Record<DrillFilter, number>;
 export type DrillControls = {
   filter: DrillFilter;
@@ -19,14 +20,39 @@ export type DrillControls = {
   hasTopics?: boolean;
 };
 
-export const renderSubjectCard = (subject: Subject, stats: BankStats): string => `
-  <button class="subject-card" data-subject="${escapeHtml(subject.id)}">
-    <span class="subject-code">${escapeHtml(subject.code)}</span>
-    <span class="subject-name">${escapeHtml(subject.name)}</span>
-    <span class="subject-stats">真題 ${stats.pastExam}　新題 ${stats.generated}　共 ${stats.total} 題</span>
-    <span class="subject-time">作答時間 ${subject.durationMinutes} 分鐘</span>
-  </button>
-`;
+/**
+ * 題數統計的敘述。三種來源分別列出，讓「官方練習評量」不會被誤讀成歷屆真題。
+ * 為 0 的來源不顯示，避免每張卡都拖著一串 0。
+ */
+const bankStatsText = (stats: BankStats): string =>
+  [
+    stats.pastExam > 0 ? `真題 ${stats.pastExam}` : "",
+    stats.generated > 0 ? `新題 ${stats.generated}` : "",
+    stats.studyGuide > 0 ? `官方練習 ${stats.studyGuide}` : "",
+    `共 ${stats.total} 題`,
+  ].filter(Boolean).join("　");
+
+export const renderSubjectCard = (subject: Subject, stats: BankStats): string => {
+  // 題數為 0 的科目（目前為 AIoT 考科二）不掛 data-subject，事件委派便不會處理它。
+  if (stats.total === 0) {
+    return `
+      <div class="subject-card is-empty" aria-disabled="true">
+        <span class="subject-code">${escapeHtml(subject.code)}</span>
+        <span class="subject-name">${escapeHtml(subject.name)}</span>
+        <span class="subject-stats">尚無題目</span>
+        <span class="subject-time">作答時間 ${subject.durationMinutes} 分鐘</span>
+      </div>
+    `;
+  }
+  return `
+    <button class="subject-card" data-subject="${escapeHtml(subject.id)}">
+      <span class="subject-code">${escapeHtml(subject.code)}</span>
+      <span class="subject-name">${escapeHtml(subject.name)}</span>
+      <span class="subject-stats">${bankStatsText(stats)}</span>
+      <span class="subject-time">作答時間 ${subject.durationMinutes} 分鐘</span>
+    </button>
+  `;
+};
 
 export type ChoiceView = { selected: boolean; reveal: boolean; correct: boolean };
 
@@ -208,40 +234,84 @@ const renderChoiceExplanations = (q: Question): string => `
   </div>
 `;
 
+const levelName = (level: Level): string => (level === "junior" ? "初級" : "中級");
+
 export const renderHome = (): string => `
-  <header class="topbar"><h1>iPAS AI 應用規劃師 練習</h1></header>
+  <header class="topbar"><h1>iPAS 能力鑑定 練習</h1></header>
   <main class="home">
-    <p class="lead">選擇級別開始練習</p>
-    <div class="level-grid">
-      <button class="level-card" data-level="junior"><h2>初級</h2><p>人工智慧基礎概論 ・ 生成式 AI 應用與規劃</p></button>
-      <button class="level-card" data-level="senior"><h2>中級</h2><p>技術應用規劃 ・ 大數據 ・ 機器學習</p></button>
+    <p class="lead">選擇證照開始練習</p>
+    <div class="cert-grid">
+      ${certs.map((cert) => `
+        <button class="cert-card" data-cert="${escapeHtml(cert.id)}">
+          <h2>${escapeHtml(cert.name)}</h2>
+          <p>${escapeHtml(cert.subtitle)}</p>
+        </button>
+      `).join("")}
     </div>
       <button class="study-entry" data-nav="study">📚 學習主題（延伸閱讀）</button>
   </main>
 `;
 
-export const renderLevel = (level: Level): string => {
-  const cards = getSubjectsByLevel(level)
-    .map((s) => renderSubjectCard(s, getBankStats(s.id)))
+/** 證照底下的級別選單。AIoT 目前只有初級，但保留這一層，日後出中級直接長出來。 */
+export const renderCert = (cert: Cert): string => {
+  const info = certs.find((c) => c.id === cert);
+  const cards = getLevels(cert)
+    .map((level) => {
+      const names = getSubjects(cert, level).map((s) => s.name).join(" ・ ");
+      return `
+        <button class="level-card" data-level="${level}">
+          <h2>${levelName(level)}</h2>
+          <p>${escapeHtml(names)}</p>
+        </button>
+      `;
+    })
     .join("");
   return `
     <header class="topbar">
       <button class="back" data-nav="home">← 返回</button>
-      <h1>${level === "junior" ? "初級" : "中級"}</h1>
+      <h1>${escapeHtml(info?.name ?? "")}</h1>
+    </header>
+    <main class="home">
+      <p class="lead">選擇級別開始練習</p>
+      <div class="level-grid">${cards}</div>
+    </main>
+  `;
+};
+
+export const renderLevel = (cert: Cert, level: Level): string => {
+  const cards = getSubjects(cert, level)
+    .map((s) => renderSubjectCard(s, getBankStats(s.id)))
+    .join("");
+  return `
+    <header class="topbar">
+      <button class="back" data-nav="back">← 返回</button>
+      <h1>${levelName(level)}</h1>
     </header>
     <main class="subject-list">${cards}</main>
   `;
 };
 
-export const renderModePicker = (
-  subjectName: string,
-  drillCount: number,
-  drillProgressText?: string,
-  practice?: { count: number; progressText?: string },
-): string => `
+export type ModePickerView = {
+  subjectName: string;
+  drillCount: number;
+  drillProgressText?: string;
+  practice?: { count: number; progressText?: string };
+  /** 省略時視為開放。AIoT 兩科為 false——官方未公告題數，模擬考規則無從訂定。 */
+  mockExam?: boolean;
+};
+
+export const renderModePicker = ({
+  subjectName,
+  drillCount,
+  drillProgressText,
+  practice,
+  mockExam = true,
+}: ModePickerView): string => `
   <header class="topbar"><button class="back" data-nav="back">← 返回</button><h1>${escapeHtml(subjectName)}</h1></header>
   <main class="mode-picker">
-    <button class="mode-card" data-mode="exam"><h2>模擬考試</h2><p>50 題・計時・100 分制・70 分及格</p></button>
+    ${mockExam
+      ? `<button class="mode-card" data-mode="exam"><h2>模擬考試</h2><p>50 題・計時・100 分制・70 分及格</p></button>`
+      : `<p class="mode-note">官方尚未公告題數與配分，暫不提供模擬考試。</p>`}
     <button class="mode-card" data-mode="drill">
       <h2>刷題練習</h2>
       <p>全部 ${drillCount} 題・即時對錯與詳解・不計時</p>
@@ -289,7 +359,7 @@ export const renderQuestion = (
     </header>
     <main class="question">
       ${drillControls ? renderDrillFilters(drillControls) : ""}
-      ${q.topic && /^L\d{5} /.test(q.topic) ? `<span class="q-topic">${escapeHtml(q.topic)}</span>` : ""}
+      ${q.topic && isTopicClassified(q.topic) ? `<span class="q-topic">${escapeHtml(q.topic)}</span>` : ""}
       <p class="prompt">${escapeHtml(q.prompt)}</p>
       ${renderFigures(q.figures)}
       <div class="choices">${choices}</div>
@@ -388,11 +458,52 @@ const speakerIcon = `
   </svg>
 `;
 
+// 比較表包一層 .note-table-wrap 由 CSS 開啟橫向捲動——寬表在手機上不能撐破版面。
+const renderNoteTable = (caption: string, table: StudyNoteTable): string => `
+  <div class="note-table-wrap">
+    <table class="note-table">
+      <caption>${escapeHtml(caption)}</caption>
+      <thead>
+        <tr>${table.headers.map((h) => `<th>${escapeHtml(h)}</th>`).join("")}</tr>
+      </thead>
+      <tbody>
+        ${table.rows.map((row) => `
+          <tr>${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>
+        `).join("")}
+      </tbody>
+    </table>
+  </div>
+`;
+
+const renderNoteFormula = (label: string, formula: { expr: string; note?: string }): string => `
+  <div class="note-formula">
+    <span class="note-formula-label">${escapeHtml(label)}</span>
+    <code class="note-formula-expr">${escapeHtml(formula.expr)}</code>
+    ${formula.note ? `<span class="note-formula-note">${escapeHtml(formula.note)}</span>` : ""}
+  </div>
+`;
+
+const renderNoteFlow = (label: string, steps: string[]): string => `
+  <div class="note-flow">
+    <span class="note-flow-label">${escapeHtml(label)}</span>
+    <ol class="note-flow-steps">
+      ${steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}
+    </ol>
+  </div>
+`;
+
+const renderNoteBody = (item: StudyNoteItem): string => {
+  if (item.table) return renderNoteTable(item.text, item.table);
+  if (item.formula) return renderNoteFormula(item.text, item.formula);
+  if (item.flow) return renderNoteFlow(item.text, item.flow);
+  return `<span class="note-text">${escapeHtml(item.text)}</span>`;
+};
+
 const renderNoteItems = (items: StudyNoteItem[]): string => `
   <ul>
     ${items.map((item) => `
-      <li>
-        <span class="note-text">${escapeHtml(item.text)}</span>
+      <li${item.table || item.formula || item.flow ? ` class="note-block"` : ""}>
+        ${renderNoteBody(item)}
         ${item.children?.length ? renderNoteItems(item.children) : ""}
       </li>
     `).join("")}
@@ -405,25 +516,60 @@ const countNoteLeaves = (items: StudyNoteItem[]): number =>
     0,
   );
 
-const renderStudyNotes = (notes: StudyNoteSection[] | undefined): string => {
+type StudyNotesOptions = {
+  label?: string;
+  /**
+   * 各節各自摺疊，只有第一節預設展開。一次倒出上百條純文字會變成文字牆
+   * （五科單一主題最多有 277 則重點），因此兩張證照都開啟；
+   * 證照層級的「備考總整理」不開，那本來就是要一次讀完的。
+   */
+  collapsibleSections?: boolean;
+};
+
+/** 供「考前速記」模式以 CSS 篩選用的穩定鍵；未列出的標題歸為 other。 */
+const NOTE_SECTION_KEYS: Record<string, string> = {
+  "必懂觀念": "concept",
+  "重要縮寫": "abbr",
+  "容易混淆": "confuse",
+  "公式與計算": "formula",
+  "實務案例": "case",
+  "可能考法": "exam",
+  "推薦資源": "resource",
+};
+
+const noteSectionKey = (heading: string): string => NOTE_SECTION_KEYS[heading] ?? "other";
+
+const renderNoteSectionBody = (section: StudyNoteSection): string => `
+  <div class="study-note-heading">
+    <h5>${escapeHtml(section.heading)}</h5>
+    <button class="tts-button" data-tts-section aria-label="朗讀 ${escapeHtml(section.heading)}" title="朗讀" aria-pressed="false">
+      ${speakerIcon}
+    </button>
+  </div>
+  ${renderNoteItems(section.items)}
+`;
+
+const renderStudyNotes = (
+  notes: StudyNoteSection[] | undefined,
+  { label = "學習指引整理", collapsibleSections = false }: StudyNotesOptions = {},
+): string => {
   if (!notes?.length) return "";
   const count = notes.reduce((sum, section) => sum + countNoteLeaves(section.items), 0);
+  const sections = notes.map((section, index) => {
+    if (!collapsibleSections) {
+      return `<section class="study-note-section" data-note-section="${noteSectionKey(section.heading)}">${renderNoteSectionBody(section)}</section>`;
+    }
+    return `
+      <details class="study-note-section is-collapsible" data-note-section="${noteSectionKey(section.heading)}"${index === 0 ? " open" : ""}>
+        <summary>${escapeHtml(section.heading)} <span>${countNoteLeaves(section.items)}</span></summary>
+        ${renderNoteSectionBody(section)}
+      </details>
+    `;
+  }).join("");
   return `
     <details class="study-notes">
-      <summary>學習指引整理 <span>${count} 則重點</span></summary>
-      <div class="study-note-sections">
-        ${notes.map((section) => `
-          <section class="study-note-section">
-            <div class="study-note-heading">
-              <h5>${escapeHtml(section.heading)}</h5>
-              <button class="tts-button" data-tts-section aria-label="朗讀 ${escapeHtml(section.heading)}" title="朗讀" aria-pressed="false">
-                ${speakerIcon}
-              </button>
-            </div>
-            ${renderNoteItems(section.items)}
-          </section>
-        `).join("")}
-      </div>
+      <summary>${escapeHtml(label)} <span>${count} 則重點</span></summary>
+      <div class="study-note-sections">${sections}</div>
     </details>
   `;
 };
@@ -438,18 +584,142 @@ export const renderStudyLoading = (): string => `
   </main>
 `;
 
-export const renderStudyView = (studyNotes?: StudyNotesBySubject): string => {
-  const sections = (["junior", "senior"] as const).map((level) => {
-    const subjectsHtml = subjects
-      .filter((s) => s.level === level)
+/** 節點碼含有 `.`，直接當 id 會讓 querySelector 需要跳脫，故一律轉成 `-`。 */
+export const nodeAnchorId = (code: string): string => `node-${code.replace(/\./g, "-")}`;
+
+/**
+ * 節點的動作列：直接練這個節點的題目、以及已讀標記。
+ * topic 對應的題數為 0 時（目前是考科二整科）不出練題按鈕，避免點了進到空題庫。
+ */
+const renderNodeActions = (
+  subjectId: string,
+  code: string,
+  counts: Record<string, number>,
+  readNodes: ReadonlySet<string>,
+): string => {
+  // 一個學習主題可能涵蓋數個題目節點（五科的 L111 → L11101、L11102…），故以前綴加總。
+  const count = Object.entries(counts).reduce(
+    (sum, [topic, n]) => sum + (topicMatchesGuideCode(topic, code) ? n : 0),
+    0,
+  );
+  const read = readNodes.has(code);
+  return `
+    <div class="node-actions">
+      ${count > 0
+        ? `<button class="node-drill" data-topic-drill="${escapeHtml(subjectId)}|${escapeHtml(code)}">
+             練這個主題的 ${count} 題 →
+           </button>`
+        : `<span class="node-drill is-empty">尚無題目</span>`}
+      <button class="node-read${read ? " active" : ""}" data-study-read="${escapeHtml(code)}"
+              aria-pressed="${read}">${read ? "✓ 已讀" : "標記已讀"}</button>
+    </div>
+  `;
+};
+
+/** 縮寫速查：15 個節點的縮寫彙整成一張表，考前查得到、搜尋也篩得到。 */
+const renderAbbrLookup = (abbreviations: AbbrEntry[]): string => {
+  if (!abbreviations.length) return "";
+  return `
+    <details class="study-notes abbr-lookup">
+      <summary>縮寫速查 <span>${abbreviations.length} 個</span></summary>
+      <div class="note-table-wrap">
+        <table class="note-table">
+          <thead>
+            <tr><th>縮寫</th><th>全名</th><th>中文</th><th>節點</th></tr>
+          </thead>
+          <tbody>
+            ${abbreviations.map((a) => `
+              <tr data-abbr-row>
+                <td>${escapeHtml(a.term)}</td>
+                <td>${escapeHtml(a.full)}</td>
+                <td>${escapeHtml(a.zh ?? "—")}</td>
+                <td>${escapeHtml(a.nodes.join("、"))}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    </details>
+  `;
+};
+
+/** 學習頁的工具列與節點目錄。搜尋與展開收合都由 main.ts 就地操作 DOM，不整頁重繪。 */
+const renderStudyTools = (
+  cert: Cert,
+  readCount: number,
+  totalNodes: number,
+  showCram: boolean,
+): string => {
+  const multiLevel = getLevels(cert).length > 1;
+  const chips = getLevels(cert)
+    .flatMap((level) => getSubjects(cert, level).map((subject) => ({ level, subject })))
+    .map(({ level, subject }) => {
+      const topics = getStudyGuide(subject.id)?.topics ?? [];
+      if (!topics.length) return "";
+      // 兩個級別都有科目時，光看「科目1」分不出初級還是中級。
+      const groupLabel = multiLevel ? `${levelName(level)}${subject.code}` : subject.code;
+      return `
+        <div class="study-toc-group">
+          <span class="study-toc-label">${escapeHtml(groupLabel)}</span>
+          ${topics.map((t) => `
+            <button class="study-toc-chip" data-study-jump="${nodeAnchorId(t.code)}"
+                    title="${escapeHtml(t.title)}">${escapeHtml(t.code)}</button>
+          `).join("")}
+        </div>
+      `;
+    })
+    .join("");
+  return `
+    <div class="study-tools">
+      <div class="study-tools-row">
+        <input class="study-search" type="search" data-study-search
+               placeholder="搜尋節點、縮寫或內文…" aria-label="搜尋 AIoT 備考整理">
+        <span class="study-search-count" data-study-count role="status" aria-live="polite"></span>
+      </div>
+      <div class="study-tools-row">
+        <span class="study-read-count" data-study-read-count>已讀 ${readCount} / ${totalNodes}</span>
+        <button class="study-action" data-study-action="expand">全部展開</button>
+        <button class="study-action" data-study-action="collapse">全部收合</button>
+        ${showCram ? `<button class="study-action" data-study-action="cram" aria-pressed="false">考前速記</button>` : ""}
+      </div>
+      <nav class="study-toc" aria-label="節點目錄">${chips}</nav>
+    </div>
+  `;
+};
+
+export type AbbrEntry = { term: string; full: string; zh?: string; nodes: string[] };
+
+export type StudyViewData = {
+  notes?: StudyNotesBySubject;
+  examOverviews?: Partial<Record<Cert, StudyNoteSection[]>>;
+  /** 各證照的縮寫速查資料，與筆記同屬 lazy chunk；沒有資料的證照就不渲染這張表。 */
+  abbreviations?: Partial<Record<Cert, AbbrEntry[]>>;
+  /** 已讀的節點碼。 */
+  readNodes?: ReadonlySet<string>;
+};
+
+export const renderStudyView = (
+  studyNotes?: StudyNotesBySubject,
+  examOverviews?: Partial<Record<Cert, StudyNoteSection[]>>,
+  extra: Pick<StudyViewData, "abbreviations" | "readNodes"> = {},
+): string => {
+  const { abbreviations, readNodes = new Set<string>() } = extra;
+  const sections = certs.map((cert) => {
+    const levelsHtml = getLevels(cert.id).map((level) => {
+    const subjectsHtml = getSubjects(cert.id, level)
       .map((s) => {
         const guide = getStudyGuide(s.id, studyNotes);
+        // 標籤要對得上出處：五科是官方學習指引的重構，AIoT 是備考 syllabus 的整理。
+        const isAiot = s.cert === "aiot";
+        const notesLabel = isAiot ? "備考整理" : "學習指引整理";
+        const topicCounts = getTopicCounts(s.id);
         const topics = (guide?.topics ?? [])
           .map((t) => `
-            <div class="study-topic">
+            <div class="study-topic" id="${nodeAnchorId(t.code)}" data-node="${escapeHtml(t.code)}">
               <h4>${escapeHtml(t.code)}　${escapeHtml(t.title)}</h4>
               <ul class="study-contents">${t.contents.map((c) => `<li>${escapeHtml(c)}</li>`).join("")}</ul>
-              ${renderStudyNotes(t.notes)}
+              ${renderNodeActions(s.id, t.code, topicCounts, readNodes)}
+              ${renderStudyNotes(t.notes, { label: notesLabel, collapsibleSections: true })}
               <ul class="study-links">${t.links.map(renderReadingLink).join("")}</ul>
             </div>
           `)
@@ -464,8 +734,33 @@ export const renderStudyView = (studyNotes?: StudyNotesBySubject): string => {
       .join("");
     return `
       <section class="study-level">
-        <h2>${level === "junior" ? "初級" : "中級"}</h2>
+        <h3 class="study-level-name">${levelName(level)}</h3>
         ${subjectsHtml}
+      </section>
+    `;
+    }).join("");
+    // 工具列與節點目錄目前只給 AIoT——五科的 40 個主題維持原樣，待這邊驗證後再推。
+    const certTopics = getLevels(cert.id)
+      .flatMap((level) => getSubjects(cert.id, level))
+      .flatMap((subject) => getStudyGuide(subject.id, studyNotes)?.topics ?? []);
+    const nodeCodes = certTopics.map((t) => t.code);
+    // 「考前速記」靠 formula／confuse 兩節篩選；該證照的筆記若沒有這兩種節，
+    // 按了會整片空白，因此依資料決定要不要出這顆按鈕。
+    const showCram = certTopics.some((t) =>
+      (t.notes ?? []).some((section) => ["formula", "confuse"].includes(noteSectionKey(section.heading))),
+    );
+    const tools = nodeCodes.length === 0 ? "" : renderStudyTools(
+      cert.id,
+      nodeCodes.filter((c) => readNodes.has(c)).length,
+      nodeCodes.length,
+      showCram,
+    ) + renderAbbrLookup(abbreviations?.[cert.id] ?? []);
+    return `
+      <section class="study-cert" data-cert-section="${escapeHtml(cert.id)}">
+        <h2>${escapeHtml(cert.name)}</h2>
+        ${tools}
+        ${renderStudyNotes(examOverviews?.[cert.id], { label: "備考總整理" })}
+        ${levelsHtml}
       </section>
     `;
   }).join("");

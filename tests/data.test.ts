@@ -3,8 +3,20 @@ import { subjects } from "../src/domain/catalog";
 import { getQuestions } from "../src/data/index";
 import { allNodes, seniorNodes, topicLabel } from "../src/domain/assessmentTopics";
 
+/**
+ * 尚無題源的科目：AIoT 考科二目前沒有官方學習指引也沒有公告真題，
+ * 刻意以「尚無題目」列在科目頁上。這份名單存在的意義是——沒列在這裡的科目
+ * 若題庫變空，下面的「題庫非空」仍會失敗，不會被靜默放過。
+ */
+const KNOWN_EMPTY = new Set(["aiot-junior-iot"]);
+
 describe("題庫完整性", () => {
-  for (const subject of subjects) {
+  it("尚無題源的科目就是名單上那些", () => {
+    const empty = subjects.filter((s) => getQuestions(s.id).length === 0).map((s) => s.id);
+    expect(empty).toEqual([...KNOWN_EMPTY]);
+  });
+
+  for (const subject of subjects.filter((s) => !KNOWN_EMPTY.has(s.id))) {
     describe(subject.id, () => {
       const questions = getQuestions(subject.id);
       it("題庫非空", () => {

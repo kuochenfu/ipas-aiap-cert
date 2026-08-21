@@ -1,3 +1,6 @@
+/** 本站涵蓋的兩張證照：AI 應用規劃師、AIoT 應用工程師。 */
+export type Cert = "aiap" | "aiot";
+
 export type Level = "junior" | "senior";
 
 export type ChoiceId = "A" | "B" | "C" | "D";
@@ -42,15 +45,25 @@ export type Question = {
   choiceFigures?: Partial<Record<ChoiceId, QuestionFigure>>;
   topic: string;
   difficulty: Difficulty;
-  source: "past-exam" | "generated";
+  source: "past-exam" | "generated" | "study-guide";
   sourceRef?: string;
 };
 
 export type ReadingLink = { title: string; url: string };
 
+/** 比較表。欄數以 headers 為準，rows 的每一列長度應與之相同。 */
+export type StudyNoteTable = { headers: string[]; rows: string[][] };
+
 export type StudyNoteItem = {
+  /** 一般條目的內容；帶 table／flow 時作為該區塊的標題。 */
   text: string;
   children?: StudyNoteItem[];
+  /** 比較表。壓成條列會逼讀者在腦中轉置回表格，故獨立成型別。 */
+  table?: StudyNoteTable;
+  /** 公式：expr 以等寬字型強調，note 放代入例或說明。 */
+  formula?: { expr: string; note?: string };
+  /** 流程／管線：以帶箭頭的步驟列呈現。 */
+  flow?: string[];
 };
 
 export type StudyNoteSection = {

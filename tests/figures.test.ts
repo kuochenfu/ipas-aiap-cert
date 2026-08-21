@@ -5,7 +5,8 @@ import { getQuestions } from "../src/data/index";
 import type { Question, QuestionFigure } from "../src/data/types";
 import { subjects } from "../src/domain/catalog";
 
-const allSubjectIds = subjects.map((s) => s.id);
+// AIoT 考科二尚無題源，沒有對應的 past-exams JSON，故不納入。
+const allSubjectIds = subjects.map((s) => s.id).filter((id) => getQuestions(id).length > 0);
 const allQuestions: Question[] = allSubjectIds.flatMap((id) => getQuestions(id));
 
 const validKinds = new Set<QuestionFigure["kind"]>(["note", "code", "output", "table", "chart"]);

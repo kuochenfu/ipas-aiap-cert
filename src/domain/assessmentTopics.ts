@@ -86,6 +86,33 @@ export const seniorNodes: Record<string, AssessmentNode[]> = {
   ],
 };
 
+/**
+ * AIoT 應用工程師（初級）的評鑑內容節點，依 115 年度簡章 2.5 節。
+ * 節點碼採兩層碼：A = 考科一 AIoT 基礎概論、B = 考科二 物聯網系統與應用。
+ * 官方沒有為此證照編五碼節點，故自訂；格式須與 isTopicClassified 一致。
+ */
+export const aiotNodes: Record<string, AssessmentNode[]> = {
+  "aiot-junior-basics": [
+    { code: "A1.1", name: "AI 基礎概念" },
+    { code: "A1.2", name: "AIoT 應用案例" },
+    { code: "A2.1", name: "物聯網架構與功能" },
+    { code: "A2.2", name: "常見通訊協定與網路層技術" },
+    { code: "A2.3", name: "工業通訊標準與資訊模型" },
+    { code: "A2.4", name: "中介軟體與平台" },
+    { code: "A2.5", name: "資安與隱私基本概念" },
+    { code: "A3.1", name: "感測技術基礎" },
+    { code: "A3.2", name: "感測訊號與通訊基礎" },
+  ],
+  "aiot-junior-iot": [
+    { code: "B1.1", name: "系統元件與架構" },
+    { code: "B1.2", name: "簡易系統故障問題判斷與排除" },
+    { code: "B1.3", name: "物聯網資訊安全" },
+    { code: "B2.1", name: "物聯網硬體設計基礎" },
+    { code: "B2.2", name: "雲端環境數據收集與平台設計" },
+    { code: "B2.3", name: "智慧製造流程優化與成本控制" },
+  ],
+};
+
 /** 全部已建目錄的節點，供回填與測試查表。 */
 export const allNodes: Record<string, AssessmentNode[]> = {
   ...Object.fromEntries(
@@ -95,6 +122,7 @@ export const allNodes: Record<string, AssessmentNode[]> = {
     ]),
   ),
   ...seniorNodes,
+  ...aiotNodes,
 };
 
 export const topicLabel = (topic: AssessmentTopic | AssessmentNode): string =>
@@ -102,3 +130,22 @@ export const topicLabel = (topic: AssessmentTopic | AssessmentNode): string =>
 
 export const practiceTotal = (subjectId: string): number =>
   (practiceTopics[subjectId] ?? []).reduce((sum, topic) => sum + topic.count, 0);
+
+/**
+ * 題目的 topic 是否已分類。兩種節點碼格式並存：
+ * AI 應用規劃師用官方五碼（L23303 …），AIoT 用兩層碼（A1.1 …）。
+ * 主題徽章與刷題的節點統計都以此判斷，務必只留這一處定義。
+ */
+export const isTopicClassified = (topic: string): boolean =>
+  /^L\d{5} /.test(topic) || /^[AB]\d\.\d /.test(topic);
+
+/**
+ * 題目的 topic 是否屬於學習主題頁上的某個主題碼。
+ *
+ * 兩張證照的層級不同，靠「碼的前綴」統一處理：
+ * - AI 應用規劃師：學習主題是三碼評鑑主題（L111），題目掛在五碼評鑑內容（L11101）上，
+ *   一個主題涵蓋數個節點。
+ * - AIoT：學習主題就是評鑑內容本身（A1.1），前綴比對等同完全相符。
+ */
+export const topicMatchesGuideCode = (questionTopic: string, guideCode: string): boolean =>
+  questionTopic.split(" ")[0].startsWith(guideCode);

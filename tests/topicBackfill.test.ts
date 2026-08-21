@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { getQuestions } from "../src/data/index";
-import { allNodes, seniorNodes, topicLabel } from "../src/domain/assessmentTopics";
+import { allNodes, isTopicClassified, seniorNodes, topicLabel } from "../src/domain/assessmentTopics";
 import { subjects } from "../src/domain/catalog";
 
-const ALL = subjects.map((s) => s.id);
+// 尚無題庫的科目（目前為 AIoT 考科二）沒有節點回填可驗，另由 data.test.ts 守住。
+const ALL = subjects.map((s) => s.id).filter((id) => getQuestions(id).length > 0);
 
 /**
  * 五科真題與新題的 `topic` 回填（backlog T7）。
@@ -22,10 +23,10 @@ describe("五科的評鑑節點回填", () => {
       expect(questions.filter((q) => q.topic === "未分類").map((q) => q.id)).toEqual([]);
     });
 
-    it(`${subjectId}：每題的 topic 都是目錄裡的節點，格式為「五碼 名稱」`, () => {
+    it(`${subjectId}：每題的 topic 都是目錄裡的節點，且格式可被辨識為已分類`, () => {
       const offenders = questions.filter((q) => !valid.has(q.topic)).map((q) => `${q.id}=${q.topic}`);
       expect(offenders).toEqual([]);
-      for (const q of questions) expect(q.topic).toMatch(/^L\d{5} /);
+      for (const q of questions) expect(isTopicClassified(q.topic)).toBe(true);
     });
 
     it(`${subjectId}：目錄裡每個節點至少有一題`, () => {
@@ -48,10 +49,12 @@ describe("五科的評鑑節點回填", () => {
     }
   });
 
-  it("節點碼前綴與科目相符（junior-ai-basics 為 L11xxx，餘類推）", () => {
+  it("節點碼前綴與科目相符（junior-ai-basics 為 L11xxx、AIoT 考科一為 Ax.x，餘類推）", () => {
+    // AIoT 官方未編五碼節點，本站自訂兩層碼（A = 考科一、B = 考科二），故走另一組前綴。
     const prefix: Record<string, string> = {
       "junior-ai-basics": "L11", "junior-genai": "L12",
       "senior-ai-tech": "L21", "senior-bigdata": "L22", "senior-ml": "L23",
+      "aiot-junior-basics": "A", "aiot-junior-iot": "B",
     };
     for (const subjectId of ALL) {
       for (const node of allNodes[subjectId]) {

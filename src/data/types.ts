@@ -1,3 +1,6 @@
+/** 本站涵蓋的兩張證照：AI 應用規劃師、AIoT 應用工程師。 */
+export type Cert = "aiap" | "aiot";
+
 export type Level = "junior" | "senior";
 
 export type ChoiceId = "A" | "B" | "C" | "D";
@@ -42,7 +45,7 @@ export type Question = {
   choiceFigures?: Partial<Record<ChoiceId, QuestionFigure>>;
   topic: string;
   difficulty: Difficulty;
-  source: "past-exam" | "generated";
+  source: "past-exam" | "generated" | "study-guide";
   sourceRef?: string;
 };
 

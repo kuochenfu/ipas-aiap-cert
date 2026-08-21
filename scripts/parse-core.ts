@@ -1,9 +1,24 @@
 import type { ChoiceId, Question } from "../src/data/types";
 
+/** 學習指引某一小節的節點碼與題數，依練習評量出現順序排列，用於回填 topic。 */
+export type GuideSection = { code: string; count: number };
+
 export type ParseContext = {
   subjectId: string;
   examCode: string;
   examLabel: string;
+  /**
+   * 學習指引的選項標記樣式。AI 應用規劃師的指引用全形「（A）」，
+   * AIoT 應用工程師的指引用半形「(A)」。省略時維持全形，既有五科行為不變。
+   */
+  choiceMarker?: "fullwidth" | "halfwidth";
+  /**
+   * 解答區塊為逐項選項解析（`(A) 錯誤。…`）而非整段散文時設為 true。
+   * 同一份指引可兩種型態混用，逐題判斷；散文題仍走原路徑。
+   */
+  perChoiceExplanations?: boolean;
+  source?: Question["source"];
+  sections?: GuideSection[];
 };
 
 const CHOICE_IDS: ChoiceId[] = ["A", "B", "C", "D"];
@@ -40,7 +55,10 @@ const isNoise = (line: string): boolean =>
 const questionStart = /^([A-DＡ-Ｄ])\s+(\d+)\.\s*(.*)$/;
 const choiceStart = /^\(([A-D])\)\s*(.*)$/;
 const guideQuestionStart = /^(\d+)\.\s+(?!Ans[（(])(.+)$/;
-const guideChoiceStart = /^（([A-D])）\s*(.*)$/;
+const GUIDE_CHOICE_START = {
+  fullwidth: /^（([A-D])）\s*(.*)$/,
+  halfwidth: /^\(([A-D])\)\s*(.*)$/,
+} as const;
 const guideAnswerStart = /^(\d+)\.\s*Ans（([A-D])）\s*(.*)$/;
 
 // 將全形英文字母 Ａ-Ｚ 正規化為半形 A-Z（僅作用於答案字母）。
@@ -182,6 +200,8 @@ type GuideAnswerDraft = {
   number: number;
   answer: ChoiceId;
   explanationParts: string[];
+  /** 逐項選項解析（`(A) 錯誤。…`）。散文型態的題目此陣列為空。 */
+  choiceParts: { id: ChoiceId; parts: string[] }[];
 };
 
 const isStudyGuideNoise = (line: string): boolean =>
@@ -212,7 +232,10 @@ const normalizeGuideText = (parts: string[]): string =>
     .replace(/解析：\s*/g, "解析：")
     .trim();
 
-const parseStudyGuideQuestionDrafts = (lines: string[]): GuideQuestionDraft[] => {
+const parseStudyGuideQuestionDrafts = (
+  lines: string[],
+  guideChoiceStart: RegExp,
+): GuideQuestionDraft[] => {
   const drafts: GuideQuestionDraft[] = [];
   let current: GuideQuestionDraft | null = null;
   let target: string[] | null = null;
@@ -257,9 +280,15 @@ const parseStudyGuideQuestionDrafts = (lines: string[]): GuideQuestionDraft[] =>
   return drafts;
 };
 
-const parseStudyGuideAnswerDrafts = (lines: string[]): GuideAnswerDraft[] => {
+const parseStudyGuideAnswerDrafts = (
+  lines: string[],
+  guideChoiceStart: RegExp,
+  perChoiceExplanations: boolean,
+): GuideAnswerDraft[] => {
   const drafts: GuideAnswerDraft[] = [];
   let current: GuideAnswerDraft | null = null;
+  // 逐項模式下，跨行延續要接到最後一個選項解析，而非整段詳解。
+  let target: string[] | null = null;
 
   for (const line of lines) {
     if (isStudyGuideNoise(line)) continue;
@@ -270,24 +299,44 @@ const parseStudyGuideAnswerDrafts = (lines: string[]): GuideAnswerDraft[] => {
         number: Number(am[1]),
         answer: am[2] as ChoiceId,
         explanationParts: am[3] ? [am[3]] : [],
+        choiceParts: [],
       };
       drafts.push(current);
+      target = current.explanationParts;
       continue;
     }
 
     if (!current) continue;
-    if (isStudyGuideBoundary(line) || guideQuestionStart.test(line) || guideChoiceStart.test(line)) {
-      current = null;
+
+    const cm = guideChoiceStart.exec(line);
+    if (cm) {
+      // 散文模式下，選項標記代表解析已結束、下一批題目開始（原行為）。
+      if (!perChoiceExplanations) {
+        current = null;
+        target = null;
+        continue;
+      }
+      const choice = { id: cm[1] as ChoiceId, parts: [cm[2]] };
+      current.choiceParts.push(choice);
+      target = choice.parts;
       continue;
     }
-    current.explanationParts.push(line);
+
+    if (isStudyGuideBoundary(line) || guideQuestionStart.test(line)) {
+      current = null;
+      target = null;
+      continue;
+    }
+    if (target) target.push(line);
   }
 
   return drafts;
 };
 
 const applyStudyGuideErrata = (questions: Question[], ctx: ParseContext): Question[] => {
-  if (ctx.subjectId !== "junior-ai-basics" || ctx.examCode !== "guide") return questions;
+  if (ctx.examCode !== "guide") return questions;
+  if (ctx.subjectId === "aiot-junior-basics") return applyAiotBasicsErrata(questions);
+  if (ctx.subjectId !== "junior-ai-basics") return questions;
 
   return questions.map((q) => {
     if (q.id === "junior-ai-basics-guide-q013") {
@@ -317,10 +366,87 @@ const applyStudyGuideErrata = (questions: Question[], ctx: ParseContext): Questi
   });
 };
 
+/**
+ * 官方學習指引 PDF 第 22 頁（3-15）的第 4 題，把四個選項誤植為解析文字
+ * （「(A) 錯誤。…」「(B) 正確。…」），等同把答案印在題目上。已調閱 PDF 原頁確認
+ * 為官方原檔錯誤，非轉檔失真；全份 320 個選項僅此一題受影響。
+ * 以下選項依該題解析內容反推還原，屬推寫內容、需人工複審，
+ * 詳見 docs/coverage/bank-defects.md。
+ */
+const applyAiotBasicsErrata = (questions: Question[]): Question[] =>
+  questions.map((q) => {
+    if (q.id !== "aiot-junior-basics-guide-q004") return q;
+    return {
+      ...q,
+      choices: [
+        { id: "A", text: "NPU 可完全取代 CPU，負責裝置上所有的通用運算（如作業系統與 I/O）" },
+        {
+          id: "B",
+          text: "NPU 專注於推論（Forward Propagation）運算，因省去訓練所需的複雜反向傳播邏輯而具備極高能效",
+        },
+        { id: "C", text: "邊緣裝置的 NPU 運算力足以取代雲端 GPU/TPU 進行大型模型訓練" },
+        { id: "D", text: "NPU 無法執行 INT8 量化模型，僅支援 FP32 浮點運算" },
+      ],
+    } satisfies Question;
+  });
+
+const CORRECT_PREFIX = /^正確[。．]\s*/;
+const WRONG_PREFIX = /^錯誤[。．]\s*/;
+
+/** 依 sections 的累計題數，決定第 index 題（0-based）落在哪個節點。 */
+const topicForIndex = (sections: GuideSection[] | undefined, index: number): string => {
+  if (!sections) return "未分類";
+  let seen = 0;
+  for (const section of sections) {
+    if (index < seen + section.count) return section.code;
+    seen += section.count;
+  }
+  return "未分類";
+};
+
+type ResolvedExplanation = {
+  explanation: string;
+  choiceExplanations?: Partial<Record<ChoiceId, string>>;
+};
+
+/**
+ * 解答區塊有兩種型態：逐項選項解析與整段散文。逐項時把「正確。」那項當詳解、
+ * 其餘三項當選項解析；散文時（或逐項模式下該題其實是散文）沿用原本的整段詳解。
+ */
+const resolveGuideExplanation = (
+  answer: GuideAnswerDraft | undefined,
+  perChoiceExplanations: boolean,
+): ResolvedExplanation => {
+  const prose = normalizeGuideText(answer?.explanationParts ?? []);
+  if (!perChoiceExplanations || !answer || answer.choiceParts.length === 0) {
+    return { explanation: prose };
+  }
+
+  const texts = new Map<ChoiceId, string>();
+  for (const choice of answer.choiceParts) {
+    texts.set(choice.id, normalizeGuideText(choice.parts));
+  }
+
+  const correct = texts.get(answer.answer);
+  const choiceExplanations: Partial<Record<ChoiceId, string>> = {};
+  for (const [id, text] of texts) {
+    if (id === answer.answer) continue;
+    choiceExplanations[id] = text.replace(WRONG_PREFIX, "");
+  }
+
+  return {
+    // 正解那項缺漏時退回散文詳解，寧可少內容也不要留空詳解。
+    explanation: correct ? correct.replace(CORRECT_PREFIX, "") : prose,
+    choiceExplanations: Object.keys(choiceExplanations).length > 0 ? choiceExplanations : undefined,
+  };
+};
+
 export const parseStudyGuide = (markdown: string, ctx: ParseContext): Question[] => {
   const lines = markdown.split("\n").map((l) => l.split("\f")[0].trim());
-  const questionDrafts = parseStudyGuideQuestionDrafts(lines);
-  const answerDrafts = parseStudyGuideAnswerDrafts(lines);
+  const guideChoiceStart = GUIDE_CHOICE_START[ctx.choiceMarker ?? "fullwidth"];
+  const perChoiceExplanations = ctx.perChoiceExplanations ?? false;
+  const questionDrafts = parseStudyGuideQuestionDrafts(lines, guideChoiceStart);
+  const answerDrafts = parseStudyGuideAnswerDrafts(lines, guideChoiceStart, perChoiceExplanations);
 
   const questions = questionDrafts.map((draft, index) => {
     const answer = answerDrafts[index];
@@ -329,16 +455,21 @@ export const parseStudyGuide = (markdown: string, ctx: ParseContext): Question[]
       return { id, text: stripTrailing(normalizeGuideText(found?.parts ?? [])) };
     });
     const number = String(index + 1).padStart(3, "0");
+    const { explanation, choiceExplanations } = resolveGuideExplanation(
+      answer,
+      perChoiceExplanations,
+    );
     return {
       id: `${ctx.subjectId}-${ctx.examCode}-q${number}`,
       subjectId: ctx.subjectId,
       prompt: normalizeGuideText(draft.promptParts),
       choices,
       answer: answer?.answer ?? "A",
-      explanation: normalizeGuideText(answer?.explanationParts ?? []),
-      topic: "未分類",
+      explanation,
+      ...(choiceExplanations ? { choiceExplanations } : {}),
+      topic: topicForIndex(ctx.sections, index),
       difficulty: "中",
-      source: "past-exam",
+      source: ctx.source ?? "past-exam",
       sourceRef: `${ctx.examLabel} 第${index + 1}題`,
     } satisfies Question;
   });

@@ -1,8 +1,12 @@
-export type PaperEntry = {
+import type { GuideSection, ParseContext } from "./parse-core";
+
+/**
+ * 一份可解析的來源檔。除了檔名之外的欄位即 `ParseContext`——
+ * 學習指引的方言設定（選項標記、逐項解析、節點對應）皆為選用，
+ * 省略時解析行為與既有五科完全相同。
+ */
+export type PaperEntry = ParseContext & {
   file: string;       // docs/markdown 下的檔名
-  subjectId: string;
-  examCode: string;   // 用於 id，例 "115-1"
-  examLabel: string;  // 顯示用，例 "115年第一次"
 };
 
 export const papers: PaperEntry[] = [
@@ -56,6 +60,23 @@ export const papers: PaperEntry[] = [
   },
 ];
 
+/**
+ * AIoT 考科一的九個評鑑內容節點與各自的練習評量題數，依指引中的出現順序排列。
+ * 節點碼採兩層碼（A = 考科一、B = 考科二），對應 115 年度簡章 2.5 節的評鑑內容。
+ * 這份表同時作為解析後的斷言依據——題數對不上就代表指引結構被改動或解析漏題。
+ */
+export const aiotBasicsSections: GuideSection[] = [
+  { code: "A1.1 AI 基礎概念", count: 5 },
+  { code: "A1.2 AIoT 應用案例", count: 5 },
+  { code: "A2.1 物聯網架構與功能", count: 10 },
+  { code: "A2.2 常見通訊協定與網路層技術", count: 10 },
+  { code: "A2.3 工業通訊標準與資訊模型", count: 10 },
+  { code: "A2.4 中介軟體與平台", count: 10 },
+  { code: "A2.5 資安與隱私基本概念", count: 10 },
+  { code: "A3.1 感測技術基礎", count: 10 },
+  { code: "A3.2 感測訊號與通訊基礎", count: 10 },
+];
+
 export const studyGuides: PaperEntry[] = [
   {
     file: "AI應用規劃師(初級)-學習指引-科目1_人工智慧基礎概論1141203_20251222172144.md",
@@ -76,5 +97,17 @@ export const studyGuides: PaperEntry[] = [
   {
     file: "AI應用規劃師(中級)-學習指引-科目3機器學習技術與應用_20251222101907.md",
     subjectId: "senior-ml", examCode: "guide", examLabel: "中級科目三學習指引參考題",
+  },
+  {
+    file: "AIoT應用工程師(初級)-學習指引-科目1_AIoT基礎概論_20260528092813.md",
+    subjectId: "aiot-junior-basics", examCode: "guide",
+    examLabel: "AIoT 初級考科一學習指引練習評量",
+    // 這份指引的選項標記為半形，且部分題目的解答區塊為逐項選項解析。
+    choiceMarker: "halfwidth",
+    perChoiceExplanations: true,
+    source: "study-guide",
+    // 練習評量附在每個評鑑內容小節之後，順序與題數即官方節點對應，
+    // 因此 topic 由出處決定、不需人工判讀。
+    sections: aiotBasicsSections,
   },
 ];

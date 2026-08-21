@@ -30,19 +30,26 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; border-ra
 }
 .back:hover, .review-btn:hover { border-color: var(--accent); background: var(--accent-soft); }
 .lead { color: var(--muted); font-size: 1.05rem; line-height: 1.7; }
-.level-grid, .mode-picker { display: grid; gap: 14px; grid-template-columns: 1fr; }
-.level-card, .mode-card, .subject-card {
+.cert-grid, .level-grid, .mode-picker { display: grid; gap: 14px; grid-template-columns: 1fr; }
+.cert-card, .level-card, .mode-card, .subject-card {
   display: flex; flex-direction: column; gap: 6px;
   background: var(--panel); padding: 18px; text-align: left;
   border: 1px solid var(--border); border-radius: 10px;
   box-shadow: 0 6px 18px rgba(18, 35, 28, 0.05);
 }
-.level-card:hover, .mode-card:hover, .subject-card:hover {
+.cert-card:hover, .level-card:hover, .mode-card:hover, .subject-card:hover {
   border-color: var(--accent); background: var(--accent-soft);
 }
-.level-card h2, .mode-card h2 { margin: 0; color: var(--accent); }
-.level-card p, .mode-card p { margin: 0; color: var(--muted); }
+.cert-card h2, .level-card h2, .mode-card h2 { margin: 0; color: var(--accent); }
+.cert-card p, .level-card p, .mode-card p { margin: 0; color: var(--muted); }
 .subject-card { width: 100%; }
+/* 尚無題源的科目：看得到但不可點入，靠透明度與游標表達，不做成看似可按的按鈕。 */
+.subject-card.is-empty { opacity: 0.55; cursor: not-allowed; }
+.subject-card.is-empty:hover { border-color: var(--border); background: var(--panel); }
+.mode-note {
+  margin: 0; padding: 14px 18px; color: var(--muted); font-size: 0.9rem;
+  border: 1px dashed var(--border); border-radius: 10px;
+}
 .subject-code { color: var(--accent); font-weight: 800; }
 .subject-name { font-size: 1.1rem; font-weight: 700; }
 .subject-stats, .subject-time { font-size: 0.85rem; color: var(--muted); }
@@ -229,8 +236,10 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; border-ra
 .tts-rate button:disabled, .tts-button:disabled {
   opacity: 0.55; cursor: not-allowed;
 }
+.study-cert { margin-bottom: 20px; }
+.study-cert > h2 { color: var(--accent); border-bottom: 2px solid var(--border); padding-bottom: 6px; }
 .study-level { margin-bottom: 8px; }
-.study-level > h2 { color: var(--accent); border-bottom: 2px solid var(--border); padding-bottom: 6px; }
+.study-level-name { margin: 14px 0 4px; font-size: 0.95rem; color: var(--muted); letter-spacing: 0.04em; }
 .study-subject {
   background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
   padding: 14px 18px; margin: 14px 0; box-shadow: 0 6px 18px rgba(18, 35, 28, 0.05);

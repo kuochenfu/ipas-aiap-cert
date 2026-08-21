@@ -1,6 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { escapeHtml } from "../src/ui/escape";
 import {
+  renderHome,
+  renderCert,
+  renderLevel,
   renderSubjectCard,
   renderChoice,
   renderStudyView,
@@ -352,32 +355,32 @@ describe("刷題跳題列", () => {
 
 describe("模式選單進度提示", () => {
   it("有進度時顯示提示並跳脫 HTML", () => {
-    const html = renderModePicker("科目<X>", 222, "上次進度：第 137 題・已作答 136 題");
+    const html = renderModePicker({ subjectName: "科目<X>", drillCount: 222, drillProgressText: "上次進度：第 137 題・已作答 136 題" });
     expect(html).toContain("上次進度：第 137 題・已作答 136 題");
     expect(html).toContain("科目&lt;X&gt;");
     expect(html).not.toContain("科目<X>");
   });
   it("沒有進度時不顯示提示區塊", () => {
-    const html = renderModePicker("科目", 222);
+    const html = renderModePicker({ subjectName: "科目", drillCount: 222 });
     expect(html).not.toContain("drill-progress-hint");
   });
 });
 
 describe("模式選單的新題庫卡", () => {
   it("有新題庫時顯示第三張卡與題數", () => {
-    const html = renderModePicker("科目", 222, undefined, { count: 100 });
+    const html = renderModePicker({ subjectName: "科目", drillCount: 222, practice: { count: 100 } });
     expect(html).toContain('data-mode="practice"');
     expect(html).toContain("新題庫練習");
     expect(html).toContain("依評鑑主題分類 100 題");
   });
 
   it("新題庫為空時不顯示第三張卡", () => {
-    expect(renderModePicker("科目", 222, undefined, { count: 0 })).not.toContain('data-mode="practice"');
-    expect(renderModePicker("科目", 222)).not.toContain('data-mode="practice"');
+    expect(renderModePicker({ subjectName: "科目", drillCount: 222, practice: { count: 0 } })).not.toContain('data-mode="practice"');
+    expect(renderModePicker({ subjectName: "科目", drillCount: 222 })).not.toContain('data-mode="practice"');
   });
 
   it("新題庫進度提示會被跳脫", () => {
-    const html = renderModePicker("科目", 222, undefined, { count: 100, progressText: "上次進度：第 3 題<x>" });
+    const html = renderModePicker({ subjectName: "科目", drillCount: 222, practice: { count: 100, progressText: "上次進度：第 3 題<x>" } });
     expect(html).toContain("第 3 題&lt;x&gt;");
     expect(html).not.toContain("第 3 題<x>");
   });
@@ -404,5 +407,64 @@ describe("renderTopicStats", () => {
   it("含返回刷題的入口且文字經跳脫", () => {
     expect(html).toContain('data-nav="back-play"');
     expect(renderTopicStats("<x>", rows, "回刷題")).toContain("&lt;x&gt;");
+  });
+});
+
+describe("證照導覽", () => {
+  it("首頁列出兩張證照，不再直接列級別", () => {
+    const html = renderHome();
+    expect(html).toContain('data-cert="aiap"');
+    expect(html).toContain('data-cert="aiot"');
+    expect(html).not.toContain('data-level="junior"');
+  });
+
+  it("AI 應用規劃師有初中級兩張級別卡", () => {
+    const html = renderCert("aiap");
+    expect(html).toContain('data-level="junior"');
+    expect(html).toContain('data-level="senior"');
+  });
+
+  it("AIoT 目前只有初級一張級別卡", () => {
+    const html = renderCert("aiot");
+    expect(html).toContain('data-level="junior"');
+    expect(html).not.toContain('data-level="senior"');
+  });
+
+  it("AIoT 初級列出兩個考科，考科二標示尚無題目且不可點入", () => {
+    const html = renderLevel("aiot", "junior");
+    expect(html).toContain("AIoT 基礎概論");
+    expect(html).toContain("物聯網系統與應用");
+    expect(html).toContain('data-subject="aiot-junior-basics"');
+    expect(html).toContain("尚無題目");
+    expect(html).not.toContain('data-subject="aiot-junior-iot"');
+  });
+
+  it("AI 應用規劃師的級別頁不受影響", () => {
+    const html = renderLevel("aiap", "senior");
+    expect(html).toContain('data-subject="senior-ml"');
+    expect(html).not.toContain("尚無題目");
+  });
+});
+
+describe("模式選單的模擬考試卡", () => {
+  it("mockExam 為 false 時不顯示模擬考試，並說明原因", () => {
+    const html = renderModePicker({ subjectName: "AIoT 基礎概論", drillCount: 80, mockExam: false });
+    expect(html).not.toContain('data-mode="exam"');
+    expect(html).toContain('data-mode="drill"');
+    expect(html).toContain("官方尚未公告題數");
+  });
+
+  it("預設仍顯示模擬考試卡", () => {
+    expect(renderModePicker({ subjectName: "科目", drillCount: 222 })).toContain('data-mode="exam"');
+  });
+});
+
+describe("學習主題頁的證照分組", () => {
+  it("先分證照，AIoT 兩科都列出官方評鑑內容", () => {
+    const html = renderStudyView();
+    expect(html).toContain("AIoT 應用工程師");
+    expect(html).toContain("AI 應用規劃師");
+    expect(html).toContain("A2.3　工業通訊標準與資訊模型");
+    expect(html).toContain("B2.2　雲端環境數據收集與平台設計");
   });
 });

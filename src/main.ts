@@ -1,13 +1,13 @@
 import "./styles.css";
 import {
-  renderHome, renderLevel, renderModePicker, renderQuestion, renderResult, renderStudyView,
+  renderHome, renderCert, renderLevel, renderModePicker, renderQuestion, renderResult, renderStudyView,
   renderTopicStats,
   renderPaperPicker, renderExamPaper, renderExamReview, renderDrillEmpty,
   renderStudyLoading,
 } from "./ui/render";
 import { getSubject } from "./domain/catalog";
 import { getQuestions } from "./data/index";
-import { practiceTotal } from "./domain/assessmentTopics";
+import { isTopicClassified, practiceTotal } from "./domain/assessmentTopics";
 import { scoreExam, topicStats, topicSummary, type AnswerState } from "./domain/exam";
 import { buildAttempt } from "./state/attempt";
 import { buildMockPaper, PAPER_COUNT } from "./state/mockPapers";
@@ -19,11 +19,11 @@ import {
 } from "./domain/drill";
 import { loadDrillProgress, saveDrillProgress, clearDrillProgress } from "./state/drillProgress";
 import type { ChoiceId, Question } from "./data/types";
-import type { Level } from "./data/types";
+import type { Cert, Level } from "./data/types";
 import type { StudyNotesBySubject } from "./data/types";
 import type { DrillCounts } from "./ui/render";
 
-type View = "home" | "level" | "mode" | "paper" | "play" | "result" | "review" | "study" | "topics";
+type View = "home" | "cert" | "level" | "mode" | "paper" | "play" | "result" | "review" | "study" | "topics";
 type Mode = "exam" | "drill";
 type Bank = "main" | "practice";
 // 模式選單的點擊 token：practice 實際上是 mode=drill + bank=practice。
@@ -31,6 +31,7 @@ type ModeToken = "exam" | "drill" | "practice";
 
 type Session = {
   view: View;
+  cert: Cert;
   level: Level;
   subjectId: string;
   mode: Mode;
@@ -62,7 +63,7 @@ let activeUtterance: SpeechSynthesisUtterance | null = null;
 
 function blankSession(): Session {
   return {
-    view: "home", level: "junior", subjectId: "", mode: "exam", bank: "main", paperIndex: 0,
+    view: "home", cert: "aiap", level: "junior", subjectId: "", mode: "exam", bank: "main", paperIndex: 0,
     questions: [], answers: {}, index: 0, reveal: false, deadline: null, drillFilter: "all",
   };
 }
@@ -83,7 +84,7 @@ function answeredCount(): number {
 // 目前初級的原題庫仍是「未分類」，只有新題庫與中級三科的原題庫帶節點碼。
 function bankHasTopics(): boolean {
   if (!session.questions.length) return false;
-  const coded = session.questions.filter((q) => /^L\d{5} /.test(q.topic)).length;
+  const coded = session.questions.filter((q) => isTopicClassified(q.topic)).length;
   return coded / session.questions.length > 0.5;
 }
 
@@ -347,7 +348,8 @@ function renderView() {
     }
     return;
   }
-  if (session.view === "level") { stopTimer(); app.innerHTML = renderLevel(session.level); return; }
+  if (session.view === "cert") { stopTimer(); app.innerHTML = renderCert(session.cert); return; }
+  if (session.view === "level") { stopTimer(); app.innerHTML = renderLevel(session.cert, session.level); return; }
   if (session.view === "mode") {
     stopTimer();
     const bank = getQuestions(session.subjectId);
@@ -375,12 +377,14 @@ function renderView() {
           : undefined,
       }
       : undefined;
-    app.innerHTML = renderModePicker(
-      getSubject(session.subjectId)?.name ?? "",
-      bank.length,
-      hintFor(bank, session.subjectId),
+    const subject = getSubject(session.subjectId);
+    app.innerHTML = renderModePicker({
+      subjectName: subject?.name ?? "",
+      drillCount: bank.length,
+      drillProgressText: hintFor(bank, session.subjectId),
       practice,
-    );
+      mockExam: subject?.mockExam ?? true,
+    });
     if (practiceCount > 0 && !practiceCache) {
       const subjectId = session.subjectId;
       void loadPractice().then(() => {
@@ -578,7 +582,7 @@ function resetDrill() {
 }
 
 app.addEventListener("click", (event) => {
-  const target = (event.target as HTMLElement).closest("[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-filter],[data-nav],[data-tts-section],[data-tts-rate]");
+  const target = (event.target as HTMLElement).closest("[data-cert],[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-filter],[data-nav],[data-tts-section],[data-tts-rate]");
   if (!(target instanceof HTMLElement)) return;
 
   if (target.hasAttribute("data-tts-section") && target instanceof HTMLButtonElement) {
@@ -591,6 +595,9 @@ app.addEventListener("click", (event) => {
     setTtsRate(Number(rate));
     return;
   }
+
+  const cert = target.getAttribute("data-cert");
+  if (cert) { session.cert = cert as Cert; session.view = "cert"; render(); return; }
 
   const level = target.getAttribute("data-level");
   if (level) { session.level = level as Level; session.view = "level"; render(); return; }
@@ -633,7 +640,8 @@ app.addEventListener("click", (event) => {
   if (!nav) return;
   if (nav === "home") { session = blankSession(); render(); return; }
   if (nav === "study") { session.view = "study"; render(); return; }
-  if (nav === "back") { session.view = "level"; render(); return; }
+  // 「返回」是往上一層走：級別頁回到證照頁，其餘（模式頁、選卷頁）回到級別頁。
+  if (nav === "back") { session.view = session.view === "level" ? "cert" : "level"; render(); return; }
   if (nav === "back-mode") { stopTimer(); session.view = "mode"; render(); return; }
   if (nav === "quit") { stopTimer(); session.view = "level"; render(); return; }
   if (nav === "prev") {

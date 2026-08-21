@@ -1,15 +1,16 @@
 import { escapeHtml } from "./escape";
 import type { Choice, QuestionFigure } from "../data/types";
 import type { Subject } from "../domain/catalog";
-import { getSubjectsByLevel, subjects } from "../domain/catalog";
+import { certs, getLevels, getSubjects } from "../domain/catalog";
 import { getBankStats } from "../data/index";
 import { getStudyGuide } from "../data/studyGuide";
-import type { Level } from "../data/types";
+import type { Cert, Level } from "../data/types";
 import type { Question } from "../data/types";
 import type { StudyNoteItem, StudyNoteSection, StudyNotesBySubject } from "../data/types";
 import type { DrillFilter } from "../domain/drill";
+import { isTopicClassified } from "../domain/assessmentTopics";
 
-export type BankStats = { total: number; pastExam: number; generated: number };
+export type BankStats = { total: number; pastExam: number; generated: number; studyGuide: number };
 export type DrillCounts = Record<DrillFilter, number>;
 export type DrillControls = {
   filter: DrillFilter;
@@ -19,14 +20,39 @@ export type DrillControls = {
   hasTopics?: boolean;
 };
 
-export const renderSubjectCard = (subject: Subject, stats: BankStats): string => `
-  <button class="subject-card" data-subject="${escapeHtml(subject.id)}">
-    <span class="subject-code">${escapeHtml(subject.code)}</span>
-    <span class="subject-name">${escapeHtml(subject.name)}</span>
-    <span class="subject-stats">真題 ${stats.pastExam}　新題 ${stats.generated}　共 ${stats.total} 題</span>
-    <span class="subject-time">作答時間 ${subject.durationMinutes} 分鐘</span>
-  </button>
-`;
+/**
+ * 題數統計的敘述。三種來源分別列出，讓「官方練習評量」不會被誤讀成歷屆真題。
+ * 為 0 的來源不顯示，避免每張卡都拖著一串 0。
+ */
+const bankStatsText = (stats: BankStats): string =>
+  [
+    stats.pastExam > 0 ? `真題 ${stats.pastExam}` : "",
+    stats.generated > 0 ? `新題 ${stats.generated}` : "",
+    stats.studyGuide > 0 ? `官方練習 ${stats.studyGuide}` : "",
+    `共 ${stats.total} 題`,
+  ].filter(Boolean).join("　");
+
+export const renderSubjectCard = (subject: Subject, stats: BankStats): string => {
+  // 題數為 0 的科目（目前為 AIoT 考科二）不掛 data-subject，事件委派便不會處理它。
+  if (stats.total === 0) {
+    return `
+      <div class="subject-card is-empty" aria-disabled="true">
+        <span class="subject-code">${escapeHtml(subject.code)}</span>
+        <span class="subject-name">${escapeHtml(subject.name)}</span>
+        <span class="subject-stats">尚無題目</span>
+        <span class="subject-time">作答時間 ${subject.durationMinutes} 分鐘</span>
+      </div>
+    `;
+  }
+  return `
+    <button class="subject-card" data-subject="${escapeHtml(subject.id)}">
+      <span class="subject-code">${escapeHtml(subject.code)}</span>
+      <span class="subject-name">${escapeHtml(subject.name)}</span>
+      <span class="subject-stats">${bankStatsText(stats)}</span>
+      <span class="subject-time">作答時間 ${subject.durationMinutes} 分鐘</span>
+    </button>
+  `;
+};
 
 export type ChoiceView = { selected: boolean; reveal: boolean; correct: boolean };
 
@@ -208,40 +234,84 @@ const renderChoiceExplanations = (q: Question): string => `
   </div>
 `;
 
+const levelName = (level: Level): string => (level === "junior" ? "初級" : "中級");
+
 export const renderHome = (): string => `
-  <header class="topbar"><h1>iPAS AI 應用規劃師 練習</h1></header>
+  <header class="topbar"><h1>iPAS 能力鑑定 練習</h1></header>
   <main class="home">
-    <p class="lead">選擇級別開始練習</p>
-    <div class="level-grid">
-      <button class="level-card" data-level="junior"><h2>初級</h2><p>人工智慧基礎概論 ・ 生成式 AI 應用與規劃</p></button>
-      <button class="level-card" data-level="senior"><h2>中級</h2><p>技術應用規劃 ・ 大數據 ・ 機器學習</p></button>
+    <p class="lead">選擇證照開始練習</p>
+    <div class="cert-grid">
+      ${certs.map((cert) => `
+        <button class="cert-card" data-cert="${escapeHtml(cert.id)}">
+          <h2>${escapeHtml(cert.name)}</h2>
+          <p>${escapeHtml(cert.subtitle)}</p>
+        </button>
+      `).join("")}
     </div>
       <button class="study-entry" data-nav="study">📚 學習主題（延伸閱讀）</button>
   </main>
 `;
 
-export const renderLevel = (level: Level): string => {
-  const cards = getSubjectsByLevel(level)
-    .map((s) => renderSubjectCard(s, getBankStats(s.id)))
+/** 證照底下的級別選單。AIoT 目前只有初級，但保留這一層，日後出中級直接長出來。 */
+export const renderCert = (cert: Cert): string => {
+  const info = certs.find((c) => c.id === cert);
+  const cards = getLevels(cert)
+    .map((level) => {
+      const names = getSubjects(cert, level).map((s) => s.name).join(" ・ ");
+      return `
+        <button class="level-card" data-level="${level}">
+          <h2>${levelName(level)}</h2>
+          <p>${escapeHtml(names)}</p>
+        </button>
+      `;
+    })
     .join("");
   return `
     <header class="topbar">
       <button class="back" data-nav="home">← 返回</button>
-      <h1>${level === "junior" ? "初級" : "中級"}</h1>
+      <h1>${escapeHtml(info?.name ?? "")}</h1>
+    </header>
+    <main class="home">
+      <p class="lead">選擇級別開始練習</p>
+      <div class="level-grid">${cards}</div>
+    </main>
+  `;
+};
+
+export const renderLevel = (cert: Cert, level: Level): string => {
+  const cards = getSubjects(cert, level)
+    .map((s) => renderSubjectCard(s, getBankStats(s.id)))
+    .join("");
+  return `
+    <header class="topbar">
+      <button class="back" data-nav="back">← 返回</button>
+      <h1>${levelName(level)}</h1>
     </header>
     <main class="subject-list">${cards}</main>
   `;
 };
 
-export const renderModePicker = (
-  subjectName: string,
-  drillCount: number,
-  drillProgressText?: string,
-  practice?: { count: number; progressText?: string },
-): string => `
+export type ModePickerView = {
+  subjectName: string;
+  drillCount: number;
+  drillProgressText?: string;
+  practice?: { count: number; progressText?: string };
+  /** 省略時視為開放。AIoT 兩科為 false——官方未公告題數，模擬考規則無從訂定。 */
+  mockExam?: boolean;
+};
+
+export const renderModePicker = ({
+  subjectName,
+  drillCount,
+  drillProgressText,
+  practice,
+  mockExam = true,
+}: ModePickerView): string => `
   <header class="topbar"><button class="back" data-nav="back">← 返回</button><h1>${escapeHtml(subjectName)}</h1></header>
   <main class="mode-picker">
-    <button class="mode-card" data-mode="exam"><h2>模擬考試</h2><p>50 題・計時・100 分制・70 分及格</p></button>
+    ${mockExam
+      ? `<button class="mode-card" data-mode="exam"><h2>模擬考試</h2><p>50 題・計時・100 分制・70 分及格</p></button>`
+      : `<p class="mode-note">官方尚未公告題數與配分，暫不提供模擬考試。</p>`}
     <button class="mode-card" data-mode="drill">
       <h2>刷題練習</h2>
       <p>全部 ${drillCount} 題・即時對錯與詳解・不計時</p>
@@ -289,7 +359,7 @@ export const renderQuestion = (
     </header>
     <main class="question">
       ${drillControls ? renderDrillFilters(drillControls) : ""}
-      ${q.topic && /^L\d{5} /.test(q.topic) ? `<span class="q-topic">${escapeHtml(q.topic)}</span>` : ""}
+      ${q.topic && isTopicClassified(q.topic) ? `<span class="q-topic">${escapeHtml(q.topic)}</span>` : ""}
       <p class="prompt">${escapeHtml(q.prompt)}</p>
       ${renderFigures(q.figures)}
       <div class="choices">${choices}</div>
@@ -439,9 +509,9 @@ export const renderStudyLoading = (): string => `
 `;
 
 export const renderStudyView = (studyNotes?: StudyNotesBySubject): string => {
-  const sections = (["junior", "senior"] as const).map((level) => {
-    const subjectsHtml = subjects
-      .filter((s) => s.level === level)
+  const sections = certs.map((cert) => {
+    const levelsHtml = getLevels(cert.id).map((level) => {
+    const subjectsHtml = getSubjects(cert.id, level)
       .map((s) => {
         const guide = getStudyGuide(s.id, studyNotes);
         const topics = (guide?.topics ?? [])
@@ -464,8 +534,15 @@ export const renderStudyView = (studyNotes?: StudyNotesBySubject): string => {
       .join("");
     return `
       <section class="study-level">
-        <h2>${level === "junior" ? "初級" : "中級"}</h2>
+        <h3 class="study-level-name">${levelName(level)}</h3>
         ${subjectsHtml}
+      </section>
+    `;
+    }).join("");
+    return `
+      <section class="study-cert">
+        <h2>${escapeHtml(cert.name)}</h2>
+        ${levelsHtml}
       </section>
     `;
   }).join("");

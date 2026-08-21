@@ -294,6 +294,78 @@ export const studyGuides: SubjectStudyGuide[] = [
       },
     ],
   },
+  // AIoT 應用工程師（初級）：官方目前只有考科一有學習指引，考科二僅有簡章的兩層大綱，
+  // 因此兩科都先只放官方評鑑內容，沒有學習筆記與延伸閱讀（links 為空陣列）。
+  {
+    subjectId: "aiot-junior-basics",
+    topics: [
+      {
+        code: "A1.1",
+        title: "AI 基礎概念",
+        contents: ["機器學習三種範式、深度學習模型（CNN、RNN/LSTM）、訓練到推論的工程流程、邊緣運算與 Edge AI、模型壓縮（量化、剪枝）、NPU 等加速器、AI 倫理與治理"],
+        links: [],
+      },
+      {
+        code: "A1.2",
+        title: "AIoT 應用案例",
+        contents: ["智慧製造、預測性維護、智慧農業、智慧城市等場域的 AIoT 導入案例與效益評估"],
+        links: [],
+      },
+      {
+        code: "A2.1",
+        title: "物聯網架構與功能",
+        contents: ["感知層、網路層、應用層的三層架構與各層職責，端、邊、雲的分工"],
+        links: [],
+      },
+      {
+        code: "A2.2",
+        title: "常見通訊協定與網路層技術",
+        contents: ["MQTT、CoAP、HTTP 等應用層協定；LoRa、NB-IoT、Zigbee、Wi-Fi、藍牙等無線技術的頻寬、耗電與涵蓋範圍取捨"],
+        links: [],
+      },
+      {
+        code: "A2.3",
+        title: "工業通訊標準與資訊模型",
+        contents: ["OPC UA、MTConnect、Modbus 等工業通訊標準，以及資訊模型（Information Model）的角色"],
+        links: [],
+      },
+      {
+        code: "A2.4",
+        title: "中介軟體與平台",
+        contents: ["訊息中介軟體、IoT 平台的裝置管理與資料匯流、雲端服務整合"],
+        links: [],
+      },
+      {
+        code: "A2.5",
+        title: "資安與隱私基本概念",
+        contents: ["資料外洩與設備入侵風險、認證與加密、由設計起始的隱私（Privacy by Design）、邊緣端去識別化"],
+        links: [],
+      },
+      {
+        code: "A3.1",
+        title: "感測技術基礎",
+        contents: ["常見感測器原理（溫度、濕度、加速度、影像等）、量測特性（靈敏度、線性度、遲滯）與選用考量"],
+        links: [],
+      },
+      {
+        code: "A3.2",
+        title: "感測訊號與通訊基礎",
+        contents: ["UART、I²C、SPI 等介面，類比數位轉換（ADC）、取樣率與解析度，串列與並列通訊的取捨"],
+        links: [],
+      },
+    ],
+  },
+  {
+    subjectId: "aiot-junior-iot",
+    topics: [
+      { code: "B1.1", title: "系統元件與架構", contents: ["物聯網系統的軟硬體元件組成與整體架構規劃"], links: [] },
+      { code: "B1.2", title: "簡易系統故障問題判斷與排除", contents: ["常見故障徵狀的判斷流程與排除方法"], links: [] },
+      { code: "B1.3", title: "物聯網資訊安全", contents: ["物聯網環境的資安威脅、防護措施與隱私權議題"], links: [] },
+      { code: "B2.1", title: "物聯網硬體設計基礎", contents: ["I/O 通訊與控制方式基礎、開源硬體的規劃與授權規範"], links: [] },
+      { code: "B2.2", title: "雲端環境數據收集與平台設計", contents: ["雲端資料交換格式、資料庫設計基礎、開源軟體規劃與授權規範"], links: [] },
+      { code: "B2.3", title: "智慧製造流程優化與成本控制", contents: ["以物聯網數據優化製造流程並控制成本"], links: [] },
+    ],
+  },
 ];
 
 export const getStudyGuide = (

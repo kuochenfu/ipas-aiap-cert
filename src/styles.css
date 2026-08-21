@@ -297,3 +297,100 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; border-ra
 .submit-bottom { width: 100%; padding: 14px; font-size: 1.05rem; }
 .your-answer { margin: 8px 0 0; color: var(--muted); font-weight: 700; }
 .exam-paper.review .explanation { margin-top: 10px; }
+
+/* ── 筆記的三種呈現型別 ───────────────────────────────── */
+.note-block { list-style: none; margin: 10px 0 10px -1.1em; }
+/* 寬表在手機上必須自己橫向捲動，頁面本身不得橫向捲動。 */
+.note-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.note-table { border-collapse: collapse; min-width: 100%; font-size: 0.9rem; }
+.note-table caption {
+  text-align: left; font-weight: 700; color: var(--text);
+  padding: 2px 0 6px; caption-side: top;
+}
+.note-table th, .note-table td {
+  border: 1px solid var(--border); padding: 6px 10px; text-align: left; white-space: nowrap;
+}
+.note-table thead th { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+.note-table tbody th, .note-table tbody td:first-child { font-weight: 600; }
+.note-formula {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px;
+  border-left: 3px solid var(--accent); background: var(--accent-soft);
+  padding: 8px 12px; border-radius: 0 8px 8px 0;
+}
+.note-formula-label { font-weight: 600; }
+.note-formula-expr {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.95rem; color: var(--accent); overflow-wrap: anywhere;
+}
+.note-formula-note { color: var(--muted); font-size: 0.85rem; }
+.note-flow-label { font-weight: 600; }
+.note-flow-steps {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
+  list-style: none; padding: 6px 0 0; margin: 0;
+}
+.note-flow-steps li {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 999px;
+  padding: 2px 10px; font-size: 0.85rem;
+}
+.note-flow-steps li + li::before { content: "→"; color: var(--muted); margin-right: 8px; }
+.study-note-section.is-collapsible { border-left: 2px solid var(--border); padding-left: 10px; }
+.study-note-section.is-collapsible > summary {
+  cursor: pointer; font-weight: 700; padding: 6px 0; color: var(--text);
+}
+.study-note-section.is-collapsible > summary span { color: var(--muted); font-weight: 400; font-size: 0.85rem; }
+.study-note-section.is-collapsible[open] > summary { color: var(--accent); }
+/* 摺疊時標題已在 summary 上，展開後不需要再重複一次同名 h5。 */
+.study-note-section.is-collapsible > .study-note-heading h5 { display: none; }
+
+/* ── 學習主題頁的工具列與節點目錄 ─────────────────────── */
+.study-tools { margin: 10px 0 16px; display: grid; gap: 8px; }
+.study-tools-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.study-search {
+  flex: 1 1 240px; min-width: 0; padding: 8px 12px; font-size: 0.95rem;
+  border: 1px solid var(--border); border-radius: 8px; background: var(--panel); color: var(--text);
+}
+.study-search:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.study-search-count { color: var(--muted); font-size: 0.85rem; }
+.study-action {
+  border: 1px solid var(--border); border-radius: 999px; background: var(--panel);
+  padding: 5px 12px; font-size: 0.85rem; color: var(--text); cursor: pointer;
+}
+.study-action:hover { border-color: var(--accent); background: var(--accent-soft); }
+.study-action.active { border-color: var(--accent); background: var(--accent); color: #fff; }
+/* 節點目錄在手機上自己橫向捲動，不讓籤列把版面撐開。 */
+.study-toc { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; }
+.study-toc-group { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; }
+.study-toc-label { color: var(--muted); font-size: 0.78rem; white-space: nowrap; }
+.study-toc-chip {
+  border: 1px solid var(--border); border-radius: 6px; background: var(--panel);
+  padding: 3px 8px; font-size: 0.8rem; font-variant-numeric: tabular-nums;
+  color: var(--accent); cursor: pointer; white-space: nowrap;
+}
+.study-toc-chip:hover { background: var(--accent-soft); border-color: var(--accent); }
+/* 考前速記：只留公式與容易混淆兩節。 */
+.study-cert.is-cram .study-note-section:not([data-note-section="formula"]):not([data-note-section="confuse"]) {
+  display: none;
+}
+.study-cert.is-cram .study-contents,
+.study-cert.is-cram .study-links { display: none; }
+/* ── 節點的動作列（練題 / 已讀）與縮寫速查 ─────────────── */
+.node-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.node-drill {
+  border: 1px solid var(--accent); border-radius: 999px; background: var(--accent-soft);
+  color: var(--accent); padding: 5px 12px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+}
+.node-drill:hover { background: var(--accent); color: #fff; }
+.node-drill.is-empty {
+  border-style: dashed; border-color: var(--border); background: transparent;
+  color: var(--muted); font-weight: 400; cursor: default;
+}
+.node-read {
+  border: 1px solid var(--border); border-radius: 999px; background: var(--panel);
+  color: var(--muted); padding: 5px 12px; font-size: 0.85rem; cursor: pointer;
+}
+.node-read:hover { border-color: var(--accent); color: var(--accent); }
+.node-read.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.study-read-count { color: var(--muted); font-size: 0.85rem; margin-right: auto; }
+.abbr-lookup { margin: 0 0 12px; }
+/* 速記模式下不需要縮寫速查與節點動作列擋在中間。 */
+.study-cert.is-cram .node-actions { display: none; }

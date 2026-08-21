@@ -11,7 +11,7 @@ import { isTopicClassified, practiceTotal } from "./domain/assessmentTopics";
 import { scoreExam, topicStats, topicSummary, type AnswerState } from "./domain/exam";
 import { buildAttempt } from "./state/attempt";
 import { buildMockPaper, PAPER_COUNT } from "./state/mockPapers";
-import { addMiss, loadMisses, removeMiss } from "./state/storage";
+import { addMiss, loadMisses, loadReadNodes, removeMiss, toggleReadNode } from "./state/storage";
 import {
   restoreDrill, parseJumpTarget, drillMatches, filteredDrillIndices, drillFilterTarget,
   practiceProgressKey,
@@ -21,7 +21,7 @@ import { loadDrillProgress, saveDrillProgress, clearDrillProgress } from "./stat
 import type { ChoiceId, Question } from "./data/types";
 import type { Cert, Level } from "./data/types";
 import type { StudyNoteSection, StudyNotesBySubject } from "./data/types";
-import type { DrillCounts } from "./ui/render";
+import type { AbbrEntry, DrillCounts } from "./ui/render";
 
 type View = "home" | "cert" | "level" | "mode" | "paper" | "play" | "result" | "review" | "study" | "topics";
 type Mode = "exam" | "drill";
@@ -36,6 +36,8 @@ type Session = {
   subjectId: string;
   mode: Mode;
   bank: Bank;               // drill 的題庫來源：原題庫或新題庫
+  /** 刷題限定在某個評鑑節點（從學習主題頁的「練這個節點」進來時設定）。 */
+  topicScope?: string;
   paperIndex: number;       // exam：第幾份試卷（0-based）
   questions: Question[];
   answers: AnswerState;
@@ -53,6 +55,7 @@ let timerId: number | null = null;
 type StudyContent = {
   notes: StudyNotesBySubject;
   overviews: Partial<Record<Cert, StudyNoteSection[]>>;
+  abbreviations: AbbrEntry[];
 };
 let studyNotesCache: StudyContent | null = null;
 let studyNotesPromise: Promise<StudyContent> | null = null;
@@ -67,7 +70,8 @@ let activeUtterance: SpeechSynthesisUtterance | null = null;
 
 function blankSession(): Session {
   return {
-    view: "home", cert: "aiap", level: "junior", subjectId: "", mode: "exam", bank: "main", paperIndex: 0,
+    view: "home", cert: "aiap", level: "junior", subjectId: "", mode: "exam", bank: "main",
+    topicScope: undefined, paperIndex: 0,
     questions: [], answers: {}, index: 0, reveal: false, deadline: null, drillFilter: "all",
   };
 }
@@ -103,7 +107,11 @@ function drillCounts(): DrillCounts {
 
 // 新題庫的進度與原刷題分開存：同一個 localStorage key 底下，科目 key 加上 :practice 後綴。
 function drillProgressKey(): string {
-  return session.bank === "practice" ? practiceProgressKey(session.subjectId) : session.subjectId;
+  const base = session.bank === "practice"
+    ? practiceProgressKey(session.subjectId)
+    : session.subjectId;
+  // 節點限定的刷題另存進度，否則會把整科的進度覆寫成只有那幾題。
+  return session.topicScope ? `${base}:topic:${session.topicScope}` : base;
 }
 
 // 只有刷題存進度；每次作答與換題後寫入。
@@ -284,10 +292,116 @@ async function loadStudyNotes(): Promise<StudyContent> {
   ]).then(([core, aiot]) => ({
     notes: { ...core.studyNotes, ...aiot.aiotStudyNotes },
     overviews: { aiot: aiot.aiotExamOverview } as StudyContent["overviews"],
+    abbreviations: aiot.aiotAbbreviations,
   }));
   studyNotesCache = await studyNotesPromise;
   return studyNotesCache;
 }
+
+// ── 學習主題頁的就地操作 ────────────────────────────────
+// 這些互動一律直接改 DOM，不呼叫 render()——學習頁很長，整頁重繪會把捲動位置與
+// 已展開的節點全部打回原形。
+
+function aiotSection(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('[data-cert-section="aiot"]');
+}
+
+function jumpToStudyNode(anchorId: string) {
+  const target = document.getElementById(anchorId);
+  if (!target) return;
+  // 捲過去卻只看到標題沒有內容會很困惑，所以順手把該節點的筆記展開。
+  target.querySelector<HTMLDetailsElement>("details.study-notes")?.setAttribute("open", "");
+  target.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function runStudyAction(action: string, button: HTMLElement) {
+  const section = aiotSection();
+  if (!section) return;
+  if (action === "expand" || action === "collapse") {
+    const open = action === "expand";
+    for (const details of section.querySelectorAll<HTMLDetailsElement>("details")) details.open = open;
+    return;
+  }
+  if (action === "cram") {
+    const on = !section.classList.contains("is-cram");
+    section.classList.toggle("is-cram", on);
+    button.setAttribute("aria-pressed", String(on));
+    button.classList.toggle("active", on);
+    // 速記模式只留公式與易混淆兩節，但它們本身可能是收合的，得幫使用者打開。
+    if (on) {
+      for (const details of section.querySelectorAll<HTMLDetailsElement>("details.study-notes")) details.open = true;
+      for (const details of section.querySelectorAll<HTMLDetailsElement>(
+        'details[data-note-section="formula"], details[data-note-section="confuse"]',
+      )) details.open = true;
+    }
+  }
+}
+
+function filterStudyNodes(query: string) {
+  const section = aiotSection();
+  if (!section) return;
+  const needle = query.trim().toLowerCase();
+  const topics = section.querySelectorAll<HTMLElement>(".study-topic[data-node]");
+  let hits = 0;
+  for (const topic of topics) {
+    // textContent 會涵蓋收合中的 <details> 內文，所以搜得到還沒展開的內容。
+    const match = needle === "" || (topic.textContent ?? "").toLowerCase().includes(needle);
+    topic.hidden = !match;
+    if (match) {
+      hits += 1;
+      // 命中但內容藏在收合區裡等於沒找到，因此搜尋時自動展開命中的節點。
+      if (needle !== "") {
+        topic.querySelector<HTMLDetailsElement>("details.study-notes")?.setAttribute("open", "");
+      }
+    }
+  }
+  // 縮寫速查表不是節點，但它是最常被拿來查關鍵字的地方，所以一併篩選列。
+  for (const row of section.querySelectorAll<HTMLElement>("[data-abbr-row]")) {
+    row.hidden = needle !== "" && !(row.textContent ?? "").toLowerCase().includes(needle);
+  }
+  const count = section.querySelector<HTMLElement>("[data-study-count]");
+  if (count) count.textContent = needle === "" ? "" : `命中 ${hits} / ${topics.length} 個節點`;
+  section.classList.toggle("is-filtering", needle !== "");
+}
+
+/** 從學習主題頁直接練某個節點：把題庫縮到該節點，其餘流程與一般刷題相同。 */
+function startTopicDrill(payload: string) {
+  const separator = payload.indexOf("|");
+  if (separator < 0) return;
+  const subjectId = payload.slice(0, separator);
+  const topic = payload.slice(separator + 1);
+  const subject = getSubject(subjectId);
+  if (!subject) return;
+  const scoped = getQuestions(subjectId).filter((question) => question.topic === topic);
+  if (!scoped.length) return;
+  session.cert = subject.cert;
+  session.level = subject.level;
+  session.subjectId = subjectId;
+  session.mode = "drill";
+  session.bank = "main";
+  session.topicScope = topic;
+  beginDrill(scoped);
+}
+
+function toggleStudyRead(code: string, button: HTMLElement) {
+  const read = toggleReadNode(code);
+  button.setAttribute("aria-pressed", String(read));
+  button.classList.toggle("active", read);
+  button.textContent = read ? "✓ 已讀" : "標記已讀";
+  const section = aiotSection();
+  const counter = section?.querySelector<HTMLElement>("[data-study-read-count]");
+  if (!section || !counter) return;
+  const total = section.querySelectorAll("[data-study-read]").length;
+  const done = section.querySelectorAll('[data-study-read][aria-pressed="true"]').length;
+  counter.textContent = `已讀 ${done} / ${total}`;
+}
+
+app.addEventListener("input", (event) => {
+  const target = event.target as HTMLElement;
+  if (target instanceof HTMLInputElement && target.hasAttribute("data-study-search")) {
+    filterStudyNodes(target.value);
+  }
+});
 
 async function loadPractice(): Promise<PracticeModule> {
   if (practiceCache) return practiceCache;
@@ -347,13 +461,19 @@ function renderView() {
   if (session.view === "study") {
     stopTimer();
     if (studyNotesCache) {
-      app.innerHTML = renderStudyView(studyNotesCache.notes, studyNotesCache.overviews);
+      app.innerHTML = renderStudyView(studyNotesCache.notes, studyNotesCache.overviews, {
+        abbreviations: studyNotesCache.abbreviations,
+        readNodes: new Set(loadReadNodes()),
+      });
       syncTtsControls();
     } else {
       app.innerHTML = renderStudyLoading();
       void loadStudyNotes().then((content) => {
         if (session.view === "study") {
-          app.innerHTML = renderStudyView(content.notes, content.overviews);
+          app.innerHTML = renderStudyView(content.notes, content.overviews, {
+            abbreviations: content.abbreviations,
+            readNodes: new Set(loadReadNodes()),
+          });
           syncTtsControls();
         }
       });
@@ -487,6 +607,8 @@ function beginDrill(bank: Question[]) {
 }
 
 function startMode(token: ModeToken) {
+  // 從模式選單正常進場一律是整科範圍；殘留的節點限定會讓題庫莫名只剩幾題。
+  session.topicScope = undefined;
   session.mode = token === "exam" ? "exam" : "drill";
   session.bank = token === "practice" ? "practice" : "main";
   if (session.mode === "exam") { session.view = "paper"; render(); return; }
@@ -594,7 +716,7 @@ function resetDrill() {
 }
 
 app.addEventListener("click", (event) => {
-  const target = (event.target as HTMLElement).closest("[data-cert],[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-filter],[data-nav],[data-tts-section],[data-tts-rate]");
+  const target = (event.target as HTMLElement).closest("[data-cert],[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-filter],[data-nav],[data-tts-section],[data-tts-rate],[data-study-jump],[data-study-action],[data-topic-drill],[data-study-read]");
   if (!(target instanceof HTMLElement)) return;
 
   if (target.hasAttribute("data-tts-section") && target instanceof HTMLButtonElement) {
@@ -608,6 +730,18 @@ app.addEventListener("click", (event) => {
     return;
   }
 
+  const jump = target.getAttribute("data-study-jump");
+  if (jump) { jumpToStudyNode(jump); return; }
+
+  const studyAction = target.getAttribute("data-study-action");
+  if (studyAction) { runStudyAction(studyAction, target); return; }
+
+  const topicDrill = target.getAttribute("data-topic-drill");
+  if (topicDrill) { startTopicDrill(topicDrill); return; }
+
+  const readNode = target.getAttribute("data-study-read");
+  if (readNode) { toggleStudyRead(readNode, target); return; }
+
   const cert = target.getAttribute("data-cert");
   if (cert) { session.cert = cert as Cert; session.view = "cert"; render(); return; }
 
@@ -615,7 +749,7 @@ app.addEventListener("click", (event) => {
   if (level) { session.level = level as Level; session.view = "level"; render(); return; }
 
   const subjectId = target.getAttribute("data-subject");
-  if (subjectId) { session.subjectId = subjectId; session.view = "mode"; render(); return; }
+  if (subjectId) { session.subjectId = subjectId; session.topicScope = undefined; session.view = "mode"; render(); return; }
 
   const mode = target.getAttribute("data-mode");
   if (mode) { startMode(mode as ModeToken); return; }

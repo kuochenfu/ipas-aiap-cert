@@ -53,12 +53,18 @@ npm run parse:papers # 從 docs/markdown/*.md 重新解析真題 → src/data/pa
 
 ## 容易踩到的點（gotchas）
 
-- **事件委派的選擇器清單**：`main.ts` 用單一 `closest("[data-cert],[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-nav],…")` 攔截點擊。**新增任何可點擊的 `data-*` 屬性時，必須把它加進這個清單**，否則點擊不會被處理（曾因漏 `data-paper` 導致選卷無反應）。反過來說，**不想被點的元素就不要掛這些屬性**——題數為 0 的科目卡（AIoT 考科二）刻意不掛 `data-subject`，因此不需要另外攔截。
+- **事件委派的選擇器清單**：`main.ts` 用單一 `closest("[data-cert],[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-nav],[data-study-jump],[data-study-action],[data-topic-drill],[data-study-read],…")` 攔截點擊。**新增任何可點擊的 `data-*` 屬性時，必須把它加進這個清單**，否則點擊不會被處理（曾因漏 `data-paper` 導致選卷無反應）。反過來說，**不想被點的元素就不要掛這些屬性**——題數為 0 的科目卡（AIoT 考科二）刻意不掛 `data-subject`，因此不需要另外攔截。
 - **單頁考試的就地更新**：exam 模式選項點擊是直接改 DOM class 與「已作答」計數、**不呼叫 `render()`**；drill 模式則每次互動重繪整題。改任一邊時注意兩者路徑不同。
 - **`reveal` 揭曉邏輯**：drill 作答後揭曉、檢討一律揭曉、考試作答中不揭曉——集中在 `revealForCurrent()` 與 render 分流，改導覽時別讓檢討翻頁丟失揭曉。
 - **錯題本 localStorage key 為 `ipas-aiap-misses`**，勿更名（會遺失現有使用者紀錄）。它只在**模擬考交卷**時寫入（`finishExam`），讀取端是**刷題的「錯題」篩選器**：`drillMatches` 的 `wrong` 會把「本次刷題答錯」與「在錯題本裡且本次刷題尚未作答」兩者聯集起來，刷題答對即從篩選中消失，「重置進度」則連同本科目的錯題本一併清除。改刷題篩選或考試結算時，兩個來源都要顧到。
 - **刷題進度 localStorage key 為 `ipas-aiap-drill-progress`**，勿更名（會遺失現有使用者紀錄）。進度記錄的是 `questionId` 而非索引，這是刻意設計——題庫會隨時間成長，用索引會在新增題目後悄悄指向錯的題目。
 - **原卷圖片一律轉錄為文字，不放圖檔**：考卷裡的「圖」幾乎都是程式碼／console 輸出／資料表的截圖，pdftotext 擷取不到。轉錄寫在 `explanations/*.ts` 的 `figures`（題幹附圖）與 `choiceFigures`（選項本身是圖），型別見 `QuestionFigure`。**不要改放圖片檔**——原卷每頁都疊了 iPAS 浮水印、截圖在手機上不可讀，且轉錄可搜尋可複製。**也不要寫進 `past-exams/*.json`**，那是機器產物，重跑 `parse:papers` 會全部消失（`tests/figures.test.ts` 會擋）。真正的圖表（訓練曲線、ROC）用 `kind: "chart"` 以文字描述代替。
+- **筆記條目有三種呈現型別**：`StudyNoteItem` 除了 `text` 外可帶 `table`（比較表）、`formula`（公式）、`flow`（流程），`text` 在帶 table／flow 時**是標題而非內容**。既有五科全部只用純文字，型別皆為選用，因此不受影響。表格必須留在 `.note-table-wrap` 內（`overflow-x: auto`）——寬表在手機上要自己捲，頁面本身不得橫向捲動。
+- **學習主題頁的互動一律就地操作 DOM，不呼叫 `render()`**：搜尋、全部展開／收合、考前速記、已讀標記、節點目錄跳轉全部直接改 class 或屬性。這頁很長，整頁重繪會把捲動位置與已展開的節點全部打回原形（與單頁模擬考的就地更新同一個理由）。
+- **考前速記模式靠 `data-note-section` 的 CSS 篩選**：`renderStudyNotes` 為每一節輸出穩定鍵（concept／abbr／confuse／formula／case／exam／resource），CSS 只留 formula 與 confuse。**不要改成用標題文字選取**——CSS 選不到文字內容，且標題一改就失效。
+- **AIoT 的縮寫只有一份來源**：`aiotAbbreviations`（帶 `nodes: string[]`，可跨節點）同時生成每個節點的「重要縮寫」表與工具列的「縮寫速查」全表。**不要在筆記裡另外手寫一份縮寫**，`tests/aiotNotes.test.ts` 會比對兩者一致。
+- **節點限定刷題**：學習頁的「練這個節點的 N 題」會設 `session.topicScope` 並以篩過的題庫呼叫 `beginDrill`；`drillProgressKey()` 因此加上 `:topic:<節點碼>` 後綴（沿用既有的 `ipas-aiap-drill-progress` map，不新增 key）。⚠️ `startMode()` 與點選科目時**都必須把 `topicScope` 清掉**，否則之後的一般刷題會莫名只剩幾題。
+- **「已讀」節點的 localStorage key 為 `ipas-aiap-study-read`**，勿更名。它只記評鑑節點碼、與刷題進度完全無關。
 - **學習筆記有兩個來源、兩種可信度**：`src/data/studyNotes.ts` 是 AI 應用規劃師五科**官方學習指引原文**的忠實重構；`src/data/studyNotes.aiot.ts` 是 AIoT 的**備考 syllabus 整理**（考科二更是以簡章大綱為骨架外加工程知識），兩者都由 `main.ts` 的 `loadStudyNotes()` 合併載入（各自是獨立的 lazy chunk，別把 AIoT 筆記搬進主 bundle）。UI 標籤刻意不同——五科顯示「學習指引整理」、AIoT 顯示「備考整理」，**改 `renderStudyView` 時不要把兩者統一成同一個字**，那會把「官方原文」與「他人整理」混為一談。跨節點的內容（建議順序、比較表、公式表）放在證照層級的 `aiotExamOverview`，不屬於任何單一節點。
 - **新題品質**：`generated/*` 由 LLM 依官方學習指引撰寫，僅有「格式」自動測試，**內容正確性需人工複審**；擴充新題前先確認複審流程。
 - **初級的解析內容散在兩個地方**：`gen-*` 共 66 題（`junior-ai-basics` 32、`junior-genai` 34）的詳解與選項解析定義在 `generated/*.ts` 的**題目物件內**，**不經** `explanations/*.ts`；真題的則在 `explanations/*.ts`。改初級解析內容時兩處都要顧到。初級兩科每一題都必須有非空詳解與**三條**錯誤選項解析（`tests/explanationsCoverage.test.ts` 強制）；選項解析**一律手寫**，舊的詞彙表自動組合機制（`glossary.ts`／`choiceAnalysis.ts`）已刪除且不得重建，緣由見 `docs/coverage/explanations-overhaul.md`。中級三科的 `choices` 幾乎都留空、走 `render.ts` 的**後備抽取器**（例外：`senior-bigdata-115-1-q49` 的選項是程式碼區塊，後備句型會把整段程式碼塞進句子裡，故已手寫）。

@@ -322,6 +322,15 @@ senior-ml 第 1 份：  未分類: 42/42 ／ 機器學習治理: 3/3 ／ 機器�
 各有七個項目（必懂觀念／重要縮寫／容易混淆／公式與計算／實務案例／可能考法／推薦資源），
 另有證照層級的「備考總整理」（建議學習順序、一句話記憶、六張比較表、八條公式、最小實作 Lab）。
 
+**已完成（2026-08-22）：2026 內容更新與學習頁體驗強化。** 15 個節點依 2026 最新的
+AI×IoT 發展逐一擴充（Matter 1.5／Thread 1.4、5G RedCap、Ambient IoT、Sparkplug B 與
+Unified Namespace、OPC UA over TSN、EU CRA 與 AI Act 時程、TinyML／MCU 內建 NPU／
+SLM 上裝置、LiteRT／ExecuTorch／ONNX Runtime、8-bit PTQ 現況、Gartner 的 agentic
+製造預測與 GE／PepsiCo 數位分身案例），並改用新的筆記型別（比較表 30 餘張、公式塊、
+流程列）。學習頁另加了節點目錄與錨點、站內搜尋、全部展開／收合、七項各自摺疊、
+節點直達刷題、縮寫速查（120 個）、已讀進度與考前速記模式。**標註「2026」的段落時效性最強，
+考季前應重新查證一次。**
+
 **仍未做：`links`（延伸閱讀）。** AIoT 兩科的 `links` 仍為空陣列，
 `tests/studyGuide.test.ts` 以 `subject.cert === "aiot"` 放行——補上連結後移除該條件，
 斷言就會重新守住它們。筆記的「推薦資源」一節已列出資源名稱，可作為補連結的清單。

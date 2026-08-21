@@ -26,3 +26,12 @@ export const getBankStats = (subjectId: string) => {
     studyGuide: list.filter((q) => q.source === "study-guide").length,
   };
 };
+
+/** 各評鑑節點的題數。學習主題頁用它決定「練這個節點的 N 題」要不要出現。 */
+export const getTopicCounts = (subjectId: string): Record<string, number> => {
+  const counts: Record<string, number> = {};
+  for (const question of getQuestions(subjectId)) {
+    counts[question.topic] = (counts[question.topic] ?? 0) + 1;
+  }
+  return counts;
+};

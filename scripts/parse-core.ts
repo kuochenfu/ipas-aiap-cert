@@ -202,6 +202,12 @@ type GuideAnswerDraft = {
   explanationParts: string[];
   /** 逐項選項解析（`(A) 錯誤。…`）。散文型態的題目此陣列為空。 */
   choiceParts: { id: ChoiceId; parts: string[] }[];
+  /**
+   * 這題的解析在第幾個 part 之後跨了頁。每一節的最後一題若不設限，會把下一節的
+   * 內文一路吃進詳解裡（原檔的節與節之間沒有可辨識的標題，pdftotext 把它們丟了），
+   * 故記下第一個跨頁位置，供組裝時裁切。
+   */
+  pageCutIndex?: number;
 };
 
 const isStudyGuideNoise = (line: string): boolean =>
@@ -291,6 +297,11 @@ const parseStudyGuideAnswerDrafts = (
   let target: string[] | null = null;
 
   for (const line of lines) {
+    // 換頁標記本身是雜訊，但「解析在這裡跨了頁」這個事實要先記下來再丟。
+    if (/^## Page \d+/.test(line) && current && current.explanationParts.length > 0
+        && current.pageCutIndex === undefined) {
+      current.pageCutIndex = current.explanationParts.length;
+    }
     if (isStudyGuideNoise(line)) continue;
 
     const am = guideAnswerStart.exec(line);
@@ -300,6 +311,7 @@ const parseStudyGuideAnswerDrafts = (
         answer: am[2] as ChoiceId,
         explanationParts: am[3] ? [am[3]] : [],
         choiceParts: [],
+        pageCutIndex: undefined,
       };
       drafts.push(current);
       target = current.explanationParts;
@@ -375,6 +387,10 @@ const applyStudyGuideErrata = (questions: Question[], ctx: ParseContext): Questi
  */
 const applyAiotBasicsErrata = (questions: Question[]): Question[] =>
   questions.map((q) => {
+    // 官方原檔的答案鍵寫 (C)「對根節點的依賴性大」，但同一頁的解析逐字引用的是
+    // 選項 (A)「易於推廣，這種結構可以延伸出很多分支和子分支…」，而「對根節點的
+    // 依賴性大」是樹狀拓樸公認的**缺點**，不可能是本題問的優點。依原檔自身的解析更正為 A。
+    if (q.id === "aiot-junior-basics-guide-q078") return { ...q, answer: "A" } satisfies Question;
     if (q.id !== "aiot-junior-basics-guide-q004") return q;
     return {
       ...q,
@@ -413,11 +429,27 @@ type ResolvedExplanation = {
  * 解答區塊有兩種型態：逐項選項解析與整段散文。逐項時把「正確。」那項當詳解、
  * 其餘三項當選項解析；散文時（或逐項模式下該題其實是散文）沿用原本的整段詳解。
  */
+/** 每一節最後一題的索引（0-based），這些題目的散文詳解需要在跨頁處截斷。 */
+const sectionEndIndices = (sections: GuideSection[] | undefined): Set<number> => {
+  const ends = new Set<number>();
+  if (!sections) return ends;
+  let seen = 0;
+  for (const section of sections) {
+    seen += section.count;
+    ends.add(seen - 1);
+  }
+  return ends;
+};
+
 const resolveGuideExplanation = (
   answer: GuideAnswerDraft | undefined,
   perChoiceExplanations: boolean,
+  cutAtPageBreak = false,
 ): ResolvedExplanation => {
-  const prose = normalizeGuideText(answer?.explanationParts ?? []);
+  const parts = cutAtPageBreak && answer?.pageCutIndex !== undefined
+    ? answer.explanationParts.slice(0, answer.pageCutIndex)
+    : answer?.explanationParts ?? [];
+  const prose = normalizeGuideText(parts);
   if (!perChoiceExplanations || !answer || answer.choiceParts.length === 0) {
     return { explanation: prose };
   }
@@ -445,6 +477,7 @@ export const parseStudyGuide = (markdown: string, ctx: ParseContext): Question[]
   const lines = markdown.split("\n").map((l) => l.split("\f")[0].trim());
   const guideChoiceStart = GUIDE_CHOICE_START[ctx.choiceMarker ?? "fullwidth"];
   const perChoiceExplanations = ctx.perChoiceExplanations ?? false;
+  const sectionEnds = sectionEndIndices(ctx.sections);
   const questionDrafts = parseStudyGuideQuestionDrafts(lines, guideChoiceStart);
   const answerDrafts = parseStudyGuideAnswerDrafts(lines, guideChoiceStart, perChoiceExplanations);
 
@@ -458,6 +491,7 @@ export const parseStudyGuide = (markdown: string, ctx: ParseContext): Question[]
     const { explanation, choiceExplanations } = resolveGuideExplanation(
       answer,
       perChoiceExplanations,
+      sectionEnds.has(index),
     );
     return {
       id: `${ctx.subjectId}-${ctx.examCode}-q${number}`,

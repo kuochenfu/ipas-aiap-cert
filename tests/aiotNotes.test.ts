@@ -76,3 +76,27 @@ describe("AIoT 筆記的型別使用", () => {
     }
   });
 });
+
+describe("AIoT 考科一的選項解析覆蓋", () => {
+  it("80 題都有三條錯誤選項解析，且不含正解", async () => {
+    const { getQuestions } = await import("../src/data/index");
+    const questions = getQuestions("aiot-junior-basics");
+    expect(questions).toHaveLength(80);
+    for (const q of questions) {
+      const ids = Object.keys(q.choiceExplanations ?? {});
+      expect(ids.sort(), `${q.id} 的錯誤選項解析不是三條`).toHaveLength(3);
+      expect(ids, `${q.id} 把正解也寫進選項解析`).not.toContain(q.answer);
+      for (const [id, text] of Object.entries(q.choiceExplanations ?? {})) {
+        // 與五科同一個門檻：擋殘句與佔位字串，不擋寫得精簡但完整的解析。
+        expect(text.trim().length, `${q.id} 的 ${id} 過短`).toBeGreaterThanOrEqual(20);
+      }
+    }
+  });
+
+  it("每題都有非空詳解", async () => {
+    const { getQuestions } = await import("../src/data/index");
+    for (const q of getQuestions("aiot-junior-basics")) {
+      expect(q.explanation.trim().length, `${q.id} 詳解為空`).toBeGreaterThan(0);
+    }
+  });
+});

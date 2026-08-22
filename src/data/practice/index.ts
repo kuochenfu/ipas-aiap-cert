@@ -1,4 +1,6 @@
 import type { Question } from "../types";
+import { practiceQuestions as aiotJuniorBasics } from "./aiot-junior-basics";
+import { practiceQuestions as aiotJuniorIot } from "./aiot-junior-iot";
 import { practiceQuestions as juniorAiBasics } from "./junior-ai-basics";
 import { practiceQuestions as juniorGenai } from "./junior-genai";
 import { practiceQuestions as seniorAiTech } from "./senior-ai-tech";
@@ -11,6 +13,8 @@ const banks: Record<string, Question[]> = {
   "senior-ai-tech": seniorAiTech,
   "senior-bigdata": seniorBigdata,
   "senior-ml": seniorMl,
+  "aiot-junior-basics": aiotJuniorBasics,
+  "aiot-junior-iot": aiotJuniorIot,
 };
 
 /** banks registry 涵蓋的科目清單，供測試等處推導，避免各處各自硬編一份、日後加科目卻漏改。 */

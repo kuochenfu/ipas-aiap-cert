@@ -47,7 +47,54 @@ export type Question = {
   difficulty: Difficulty;
   source: "past-exam" | "generated" | "study-guide";
   sourceRef?: string;
+  /** 命題設計的中繼資料；目前只有依 v2.0 規格產生的 AIoT 題庫具備。 */
+  meta?: QuestionMeta;
 };
+
+/**
+ * 命題設計的中繼資料（依 2026 iPAS AIoT 題庫生成規格 v2.0）。
+ *
+ * 存成結構化欄位而非註解，是為了讓「按認知層級抽題」「找出考生的能力缺口」
+ * 「分析錯誤模式」這些事日後做得起來——只記「這題答錯」無法回答「為什麼錯」。
+ * 也因此 `distractorTypes` 記的是每個錯誤選項的**干擾類型**，而不只是對錯。
+ */
+export type QuestionMeta = {
+  /** Bloom 認知層級：L1 記憶、L2 理解、L3 應用、L4 分析。 */
+  cognitiveLevel: "L1" | "L2" | "L3" | "L4";
+  /** 題型原型，例「Scenario Selection」「Troubleshooting」。 */
+  archetype: QuestionArchetype;
+  /** 本題涉及的概念關鍵字，供弱點分析與相似題推薦。 */
+  concepts: string[];
+  /** 情境題的工程限制條件，例 range／power／latency。 */
+  constraints?: string[];
+  /** 每個錯誤選項的干擾類型；正解不列。 */
+  distractorTypes: Partial<Record<ChoiceId, DistractorType>>;
+  /** 跨節點題目所涉及的另一個節點碼。 */
+  crossNode?: string;
+  /** 條件改變時答案如何變化——建立工程判斷的關鍵，渲染於詳解之後。 */
+  decisionBoundary?: string;
+};
+
+export type QuestionArchetype =
+  | "Direct Concept"
+  | "Concept Boundary"
+  | "Comparison"
+  | "Scenario Selection"
+  | "Constraint Change"
+  | "Troubleshooting"
+  | "Architecture"
+  | "Incorrect Statement"
+  | "Multi-Statement"
+  | "Best Engineering Decision";
+
+export type DistractorType =
+  | "Neighbor Concept"
+  | "Correct in Different Context"
+  | "Layer Confusion"
+  | "Partial Truth"
+  | "Overgeneralization"
+  | "Terminology Swap"
+  | "Wrong Trade-off";
 
 export type ReadingLink = { title: string; url: string };
 

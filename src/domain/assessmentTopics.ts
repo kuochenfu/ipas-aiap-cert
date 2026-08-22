@@ -72,6 +72,26 @@ export const practiceTopics: Record<string, AssessmentTopic[]> = {
     { code: "L23401", name: "數據隱私、安全與合規", count: 8 },
     { code: "L23402", name: "演算法偏見與公平性", count: 8 },
   ],
+  // AIoT 兩科的新題庫：依 2026 iPAS AIoT 題庫生成規格 v2.0 命題，各節點題數盡量平均。
+  "aiot-junior-basics": [
+    { code: "A1.1", name: "AI 基礎概念", count: 11 },
+    { code: "A1.2", name: "AIoT 應用案例", count: 11 },
+    { code: "A2.1", name: "物聯網架構與功能", count: 11 },
+    { code: "A2.2", name: "常見通訊協定與網路層技術", count: 12 },
+    { code: "A2.3", name: "工業通訊標準與資訊模型", count: 11 },
+    { code: "A2.4", name: "中介軟體與平台", count: 11 },
+    { code: "A2.5", name: "資安與隱私基本概念", count: 11 },
+    { code: "A3.1", name: "感測技術基礎", count: 11 },
+    { code: "A3.2", name: "感測訊號與通訊基礎", count: 11 },
+  ],
+  "aiot-junior-iot": [
+    { code: "B1.1", name: "系統元件與架構", count: 17 },
+    { code: "B1.2", name: "簡易系統故障問題判斷與排除", count: 17 },
+    { code: "B1.3", name: "物聯網資訊安全", count: 17 },
+    { code: "B2.1", name: "物聯網硬體設計基礎", count: 17 },
+    { code: "B2.2", name: "雲端環境數據收集與平台設計", count: 16 },
+    { code: "B2.3", name: "智慧製造流程優化與成本控制", count: 16 },
+  ],
 };
 
 /**

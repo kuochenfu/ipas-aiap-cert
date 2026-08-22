@@ -68,64 +68,24 @@ describe("新題庫形狀契約", () => {
   }
 });
 
-describe("junior-ai-basics 節點題數", () => {
-  it("L11101 有 11 題", () => {
-    expect(getPracticeStats("junior-ai-basics").byTopic["L11101 AI 的定義與分類"]).toBe(11);
-  });
-  it("L11102 有 11 題", () => {
-    expect(getPracticeStats("junior-ai-basics").byTopic["L11102 AI 治理概念"]).toBe(11);
-  });
-  it("L11201 有 11 題", () => {
-    expect(getPracticeStats("junior-ai-basics").byTopic["L11201 資料基本概念與來源"]).toBe(11);
-  });
-  it("L11202 有 11 題", () => {
-    expect(getPracticeStats("junior-ai-basics").byTopic["L11202 資料整理與分析流程"]).toBe(11);
-  });
-  it("L11203 有 11 題", () => {
-    expect(getPracticeStats("junior-ai-basics").byTopic["L11203 資料隱私與安全"]).toBe(11);
-  });
-  it("L11301 有 11 題", () => {
-    expect(getPracticeStats("junior-ai-basics").byTopic["L11301 機器學習基本原理"]).toBe(11);
-  });
-  it("L11302 有 12 題", () => {
-    expect(getPracticeStats("junior-ai-basics").byTopic["L11302 常見的機器學習模型"]).toBe(12);
-  });
-  it("L11401 有 11 題", () => {
-    expect(getPracticeStats("junior-ai-basics").byTopic["L11401 鑑別式 AI 與生成式 AI 的基本原理"]).toBe(11);
-  });
-  it("L11402 有 11 題", () => {
-    expect(getPracticeStats("junior-ai-basics").byTopic["L11402 鑑別式 AI 與生成式 AI 的整合應用"]).toBe(11);
-  });
-  it("整科合計 100 題", () => {
-    expect(getPracticeStats("junior-ai-basics").total).toBe(100);
-  });
-});
-
-describe("junior-genai 節點題數", () => {
-  it("L12101 有 14 題", () => {
-    expect(getPracticeStats("junior-genai").byTopic["L12101 No Code / Low Code 的基本概念"]).toBe(14);
-  });
-  it("L12102 有 14 題", () => {
-    expect(getPracticeStats("junior-genai").byTopic["L12102 No Code / Low Code 的優勢與限制"]).toBe(14);
-  });
-  it("L12201 有 15 題", () => {
-    expect(getPracticeStats("junior-genai").byTopic["L12201 生成式 AI 應用領域與常見工具"]).toBe(15);
-  });
-  it("L12202 有 15 題", () => {
-    expect(getPracticeStats("junior-genai").byTopic["L12202 如何善用生成式 AI 工具"]).toBe(15);
-  });
-  it("L12301 有 14 題", () => {
-    expect(getPracticeStats("junior-genai").byTopic["L12301 生成式 AI 導入評估"]).toBe(14);
-  });
-  it("L12302 有 14 題", () => {
-    expect(getPracticeStats("junior-genai").byTopic["L12302 生成式 AI 導入規劃"]).toBe(14);
-  });
-  it("L12303 有 14 題", () => {
-    expect(getPracticeStats("junior-genai").byTopic["L12303 生成式 AI 風險管理"]).toBe(14);
-  });
-  it("整科合計 100 題", () => {
-    expect(getPracticeStats("junior-genai").total).toBe(100);
-  });
+// 原本這裡有兩段寫死各節點題數的測試（junior-ai-basics 每節點 11 題等）。2026-08-22 的
+// 再平衡讓五科各自加了題，那些數字全部失效。改為通用檢查：每個節點的實際題數必須「精確等於」
+// assessmentTopics.ts 的配額——配額是唯一的真實來源，加題時只要同步改那裡，測試就跟著走。
+describe("各節點題數精確等於配額", () => {
+  for (const subjectId of practiceSubjectIds) {
+    it(`${subjectId}：每個節點的題數與配額相符，且無配額外的節點`, () => {
+      const stats = getPracticeStats(subjectId);
+      const quota = practiceTopics[subjectId];
+      for (const topic of quota) {
+        expect(stats.byTopic[topicLabel(topic)] ?? 0, topicLabel(topic)).toBe(topic.count);
+      }
+      const allowed = new Set(quota.map(topicLabel));
+      for (const label of Object.keys(stats.byTopic)) {
+        expect(allowed.has(label), `未知節點：${label}`).toBe(true);
+      }
+      expect(stats.total).toBe(quota.reduce((acc, t) => acc + t.count, 0));
+    });
+  }
 });
 
 describe("原題庫未受影響", () => {

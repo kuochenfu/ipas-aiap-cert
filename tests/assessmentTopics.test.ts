@@ -7,9 +7,19 @@ import {
 } from "../src/domain/assessmentTopics";
 
 describe("評鑑內容主題目錄", () => {
-  it("初級兩科各配置 100 題", () => {
-    expect(practiceTotal("junior-ai-basics")).toBe(100);
-    expect(practiceTotal("junior-genai")).toBe(100);
+  // 2026-08-22 起五科的配額不再是 100：為了把認知層級分布拉回合理區間，各科加寫了
+  // 一批 L3／L4 情境題（見 docs/backlog.md 的 A1c）。既有題目不動、只加題，因此
+  // 總數各異。這裡改成「配額總和＝各節點之和」的一致性檢查，而不是寫死某個數字。
+  it("各科的配額總和等於其各節點配額之和", () => {
+    for (const [subjectId, topics] of Object.entries(practiceTopics)) {
+      const sum = topics.reduce((acc, t) => acc + t.count, 0);
+      expect(practiceTotal(subjectId), subjectId).toBe(sum);
+    }
+  });
+
+  it("AIoT 兩科維持各 100 題", () => {
+    expect(practiceTotal("aiot-junior-basics")).toBe(100);
+    expect(practiceTotal("aiot-junior-iot")).toBe(100);
   });
 
   it("junior-ai-basics 有 9 個評鑑內容節點", () => {

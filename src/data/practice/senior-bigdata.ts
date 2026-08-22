@@ -295,6 +295,233 @@ export const practiceQuestions: Question[] = [
         "若處理時間的分布近似對稱且變異很小，平均值就足以代表整體，補上分位數的邊際價值不高。",
     },
   },
+  {
+    id: "senior-bigdata-practice-q101",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某銀行的客服報表以「平均處理時間 2.5 小時」呈現成效，主管另從客訴得知有大量案件拖過一天。若要讓報表同時反映典型值與尾端風險，下列改寫何者最完整？",
+    choices: [
+      { id: "A", text: "只呈現最大值" },
+      { id: "B", text: "改以幾何平均取代算術平均" },
+      { id: "C", text: "把單位從小時改為分鐘" },
+      { id: "D", text: "同時呈現中位數、第 90 百分位數與超時案件比例，並註明統計的分母定義" },
+    ],
+    answer: "D",
+    explanation:
+      "平均把整個分布壓成一個數字，長尾完全看不見。中位數描述典型案件、第 90 百分位與超時比例描述尾端，再加上分母定義（算全部案件還是已結案），讀者才有辦法自行判斷。",
+    choiceExplanations: {
+      A: "只看最大值會被單一極端案例主導，也失去典型值。",
+      B: "幾何平均仍是單一集中趨勢統計量，同樣掩蓋分布形狀。",
+      C: "改單位不改變資訊量，長尾一樣看不到。",
+    },
+    topic: "L22101 敘述性統計與資料摘要技術",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["集中趨勢", "分位數", "分母定義"],
+      constraints: ["quality", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Neighbor Concept",
+        C: "Layer Confusion",
+      },
+      crossNode: "L22303",
+      decisionBoundary:
+        "若處理時間近似對稱且變異很小，平均值就足以代表整體，補上分位數的邊際價值不高。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q102",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某工廠比較兩條產線的重量變異，A 線平均 500 克、標準差 10 克；B 線平均 50 克、標準差 5 克。若要判斷哪一條的相對穩定度較差，下列做法何者最正確？",
+    choices: [
+      { id: "A", text: "以變異係數（標準差除以平均）比較，A 線 2%、B 線 10%，B 線相對變異較大" },
+      { id: "B", text: "直接比較標準差，A 線 10 大於 B 線 5，A 線較差" },
+      { id: "C", text: "比較全距即可" },
+      { id: "D", text: "兩者平均不同，無法比較" },
+    ],
+    answer: "A",
+    explanation:
+      "標準差帶有單位與量級，平均差十倍的兩條線不能直接比。變異係數把標準差除以平均變成無單位的相對指標，才是公平的比較基準。",
+    choiceExplanations: {
+      B: "直接比標準差忽略了兩線的產品重量本來就差十倍，結論會反過來。",
+      C: "全距只由最大最小兩個極端值決定，穩定度的資訊更少。",
+      D: "平均不同正是要用變異係數的理由，不是無法比較的理由。",
+    },
+    topic: "L22101 敘述性統計與資料摘要技術",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["變異係數", "相對變異", "量級差異"],
+      constraints: ["quality"],
+      distractorTypes: {
+        B: "Partial Truth",
+        C: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若兩條線的產品規格與平均重量相同，直接比較標準差就足夠，變異係數不會提供額外資訊。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q103",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某教育平台的「課程完成率」在兩份報告中分別是 78% 與 34%，經查兩份都算得沒錯。下列最可能的原因與處置何者最正確？",
+    choices: [
+      { id: "A", text: "應取兩者平均作為正式數字" },
+      { id: "B", text: "其中一份必然計算錯誤，應重算" },
+      { id: "C", text: "兩份報告的資料來源不同，應刪除其中一份" },
+      { id: "D", text: "分母定義不同（有實際上課者 vs 全體註冊者），應在指標字典中明訂唯一定義並在報表標註" },
+    ],
+    answer: "D",
+    explanation:
+      "比率的意義完全取決於分子分母怎麼定義。同樣叫完成率，分母換掉就是兩個不同的指標，兩份都可以是對的。處置是建立指標字典並在報表明確標註，而不是找出誰算錯。",
+    choiceExplanations: {
+      A: "取平均得到的是一個沒有任何意義的數字，兩種定義都不對應。",
+      B: "題幹已說明兩份都算得沒錯，問題不在計算而在定義。",
+      C: "刪除一份不解決定義分歧，下次仍會再發生。",
+    },
+    topic: "L22101 敘述性統計與資料摘要技術",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["指標定義", "分母選擇", "指標字典"],
+      constraints: ["governance", "quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Overgeneralization",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L22202",
+      decisionBoundary:
+        "若兩種分母的差距極小（幾乎所有註冊者都有上課），選哪一個都不影響結論，定義的重要性也隨之下降。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q104",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某醫院分析住院天數，發現以 1.5 倍 IQR 判定會有 12% 的紀錄被標為離群值。臨床確認這些多為真實的重症長期住院。下列處置何者最正確？",
+    choices: [
+      { id: "A", text: "把住院天數改為類別欄位" },
+      { id: "B", text: "依規則刪除全部 12% 的離群值" },
+      { id: "C", text: "改以平均加減一個標準差判定" },
+      { id: "D", text: "住院天數本就厚尾，1.5 倍 IQR 的門檻不適用；應改用領域上下限或放寬倍數，並保留這些真實紀錄" },
+    ],
+    answer: "D",
+    explanation:
+      "離群值判定規則是為近似常態的資料設計的。住院天數天生厚尾，硬套 1.5 倍 IQR 會把大量真實重症紀錄誤判為異常——而這些正是臨床最需要分析的案例。",
+    choiceExplanations: {
+      A: "轉為類別會丟失天數的連續資訊，也沒有解決門檻不適用的問題。",
+      B: "刪除真實的重症紀錄會讓分析完全失去代表性。",
+      C: "平均與標準差更容易被極端值拉動，在厚尾分布下判定更不可靠。",
+    },
+    topic: "L22101 敘述性統計與資料摘要技術",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["離群值判定", "厚尾分布", "領域門檻"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L22201",
+      decisionBoundary:
+        "若這些極端值經查證是輸入錯誤（例如把小時填成天數），那就真的是錯誤資料，該修正或排除。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q105",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某農會要向理事會說明各產區的收成分布差異，資料為六個產區、每區數百筆。下列呈現方式何者最合適？",
+    choices: [
+      { id: "A", text: "以折線圖依產區編號連線" },
+      { id: "B", text: "以圓餅圖呈現六區的收成佔比" },
+      { id: "C", text: "以並排的箱型圖比較六區的中位數、四分位距與離群點" },
+      { id: "D", text: "只列出六區的平均值" },
+    ],
+    answer: "C",
+    explanation:
+      "要比較的是「分布」而不只是平均。並排箱型圖能同時呈現各區的集中位置、離散程度與極端值，一眼看出哪一區穩定、哪一區落差大。",
+    choiceExplanations: {
+      A: "產區編號沒有順序意義，用折線連起來會暗示不存在的趨勢。",
+      B: "圓餅圖呈現的是佔比組成，看不出任何區內的分布差異。",
+      D: "只有平均值會掩蓋各區內部的變異與極端狀況。",
+    },
+    topic: "L22101 敘述性統計與資料摘要技術",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["箱型圖", "分布比較", "視覺化選擇"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Neighbor Concept",
+        D: "Partial Truth",
+      },
+      crossNode: "L22303",
+      decisionBoundary:
+        "若要呈現的是各區收成佔全國的比重而非分布形狀，圓餅圖或長條圖反而才是對的選擇。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q106",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某工廠的良率報表顯示某產線本月成長率高達 200%，經查該線上月僅生產 3 件。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "刪除該產線的資料" },
+      { id: "B", text: "直接以此成長率作為績效標竿" },
+      { id: "C", text: "把成長率上限設為 100%" },
+      { id: "D", text: "成長率在基數極小時會被放大，應同時呈現絕對數量並對過小的基數加註或不計算成長率" },
+    ],
+    answer: "D",
+    explanation:
+      "3 件變 9 件就是 200% 成長，看起來驚人但實際影響微乎其微。呈現成長率時必須同時給出絕對值，或對基數過小者明確標註，否則讀者會把雜訊當成趨勢。",
+    choiceExplanations: {
+      A: "刪除資料會讓報表失去完整性，問題出在呈現方式而非資料本身。",
+      B: "以極小基數的成長率當標竿，會逼其他產線追逐一個沒有意義的數字。",
+      C: "設上限只是截斷數字，並未讓讀者知道基數過小這件事。",
+    },
+    topic: "L22101 敘述性統計與資料摘要技術",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["成長率", "基數效應", "絕對值並陳"],
+      constraints: ["quality", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Partial Truth",
+      },
+      crossNode: "L22303",
+      decisionBoundary:
+        "若各產線的基數量級相近，成長率之間就可以直接比較，這項誤讀風險也隨之消失。",
+    },
+  },
 
   // ── L22102 機率分佈與資料分佈模型（8 題）──────────────────────
   {
@@ -584,6 +811,193 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若樣本數極小（例如不到 20 筆），Q-Q 圖的點本來就會抖動，偏離直線未必代表非常態。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q107",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某工廠以卜瓦松分布建模每小時的設備故障次數，實際觀測卻發現變異數遠大於平均數（過度離散）。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應把故障次數取對數" },
+      { id: "B", text: "應改用常態分布" },
+      { id: "C", text: "應增加觀測時數直到變異數下降" },
+      { id: "D", text: "卜瓦松假設變異數等於平均數，過度離散代表故障可能彼此相關或存在未納入的異質性，應改用負二項分布或加入分群變數" },
+    ],
+    answer: "D",
+    explanation:
+      "卜瓦松的核心假設之一是變異數等於平均數。觀測到過度離散，代表事件並非彼此獨立、或不同機台的故障率本來就不同。負二項分布放寬了這個假設，加入分群變數則直接處理異質性。",
+    choiceExplanations: {
+      A: "取對數改變的是數值尺度，不改變計數資料的分布假設是否成立。",
+      B: "常態分布適用連續且對稱的變量，故障次數是非負整數且右偏。",
+      C: "過度離散是分布性質而非樣本不足，增加觀測不會讓它消失。",
+    },
+    topic: "L22102 機率分佈與資料分佈模型",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["卜瓦松假設", "過度離散", "負二項分布"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Neighbor Concept",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L22103",
+      decisionBoundary:
+        "若變異數與平均數確實相近，卜瓦松就是恰當的選擇，換成負二項只是多估一個參數。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q108",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某銀行以常態分布估計投資組合的單日最大損失，卻在市場劇烈波動時多次超出估計值。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應改以平均報酬作為風險指標" },
+      { id: "B", text: "應增加樣本數直到符合常態" },
+      { id: "C", text: "應提高信賴水準到 99.9% 即可" },
+      { id: "D", text: "金融報酬常呈厚尾，常態分布低估了極端事件的機率，應改用厚尾分布或以歷史模擬法估計尾端風險" },
+    ],
+    answer: "D",
+    explanation:
+      "常態分布下三個標準差外只佔 0.3%，但金融市場的極端事件遠比這頻繁。用常態估計尾端風險會系統性低估，換成厚尾分布或直接用歷史資料模擬才貼近實際。",
+    choiceExplanations: {
+      A: "平均報酬描述中心位置，完全不反映極端損失的風險。",
+      B: "樣本再多也不會讓厚尾的母體變成常態，這是分布性質而非估計誤差。",
+      C: "提高信賴水準只是往同一條被低估的尾巴更外面取值，偏誤依然存在。",
+    },
+    topic: "L22102 機率分佈與資料分佈模型",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["厚尾", "常態假設", "尾端風險"],
+      constraints: ["quality", "risk_priority"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Overgeneralization",
+        C: "Partial Truth",
+      },
+      decisionBoundary:
+        "若資產的報酬經檢定確實近似常態（例如高度分散的長期指數），常態假設就是合理且計算上最簡便的選擇。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q109",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某醫院的病患等候時間直方圖呈雙峰，資料團隊想直接以單一常態分布建模。下列建議何者最正確？",
+    choices: [
+      { id: "A", text: "以雙峰的中間低谷作為平均值建模" },
+      { id: "B", text: "雙峰通常代表混合了兩種不同機制的群體，應先找出區分變數（如門診別或時段）分開建模，找不到才考慮混合分布" },
+      { id: "C", text: "刪除較小的那一個峰" },
+      { id: "D", text: "提高直方圖的分箱數即可消除雙峰" },
+    ],
+    answer: "B",
+    explanation:
+      "雙峰是結構特徵而非雜訊。硬用單一常態去描述，平均值會落在兩峰之間的低谷，反而不代表任何一群。先找出造成分群的變數，才是真正解釋了這個現象。",
+    choiceExplanations: {
+      A: "低谷處的樣本最少，用它當平均值等於選了最不具代表性的位置。",
+      C: "較小的峰是真實存在的一群病患，刪除等於丟掉最有價值的線索。",
+      D: "分箱數影響的是圖形平滑度，穩定的雙峰不會因此消失。",
+    },
+    topic: "L22102 機率分佈與資料分佈模型",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["雙峰分布", "混合群體", "分群變數"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Neighbor Concept",
+      },
+      crossNode: "L22302",
+      decisionBoundary:
+        "若找不到任何能區分兩峰的變數，就只能以混合分布建模，而不是硬拆成兩群。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q110",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某教育平台想以樣本平均估計全體學生的每日學習時數，母體分布明顯右偏。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "依中央極限定理，只要樣本數夠大且獨立，樣本平均的抽樣分布仍會趨近常態，可據以建立信賴區間" },
+      { id: "B", text: "母體右偏，任何以常態為基礎的推論都不成立" },
+      { id: "C", text: "應先把母體資料取對數使其常態後才能抽樣" },
+      { id: "D", text: "樣本數越大，母體的偏態會逐漸消失" },
+    ],
+    answer: "A",
+    explanation:
+      "中央極限定理談的是「樣本平均」這個統計量的分布，而不是母體本身。母體再偏，只要樣本夠大且獨立同分布，樣本平均的抽樣分布仍會趨近常態。",
+    choiceExplanations: {
+      B: "這正是常見的誤解，把對母體的要求誤加在定理上。",
+      C: "取對數改變的是被估計的量（變成幾何平均的概念），不是抽樣的前提。",
+      D: "母體的偏態是母體的固有性質，不會因為抽了多少樣本而改變。",
+    },
+    topic: "L22102 機率分佈與資料分佈模型",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Concept Boundary",
+      concepts: ["中央極限定理", "抽樣分布", "母體偏態"],
+      constraints: ["quality"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若母體的變異數不存在（極厚尾），中央極限定理的前提就不成立，樣本平均不會趨近常態。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q111",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某農業團隊要模擬「每公頃田區在一季內出現病株的株數」，已知面積固定、病株出現率低且彼此大致獨立。最適合的分布是下列何者？",
+    choices: [
+      { id: "A", text: "均勻分布" },
+      { id: "B", text: "指數分布" },
+      { id: "C", text: "卜瓦松分布" },
+      { id: "D", text: "伯努利分布" },
+    ],
+    answer: "C",
+    explanation:
+      "固定的空間範圍內、低發生率、彼此獨立的事件計數，正是卜瓦松分布的典型適用情境——它同樣適用於單位空間而不只是單位時間。",
+    choiceExplanations: {
+      A: "均勻分布假設每個株數等機率，與低發生率的實際情形不符。",
+      B: "指數分布描述的是事件之間的間隔距離或時間，屬連續變量。",
+      D: "伯努利只描述單次試驗的成敗，無法表示一整片田區的株數。",
+    },
+    topic: "L22102 機率分佈與資料分佈模型",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["卜瓦松分布", "單位空間計數", "獨立性"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若病株會沿著灌溉渠道群聚傳染、彼此不再獨立，卜瓦松會低估群聚的株數，該改用負二項分布。",
     },
   },
 
@@ -877,6 +1291,191 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若所有嘗試過的切分方式都被完整揭露、並做了多重比較校正，那就是合法的探索性分析而不是 p 值操縱。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q112",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某教育平台的 A/B 測試檢定了 20 個指標，其中一個 p 值為 0.04，團隊據此宣稱新版有效。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "20 個檢定下至少一個偽陽性的機率約六成，該結果不足以支撐結論；應事前指定主要指標或以多重比較校正後重新判讀" },
+      { id: "B", text: "p 值小於 0.05 即可宣稱有效" },
+      { id: "C", text: "應改用單尾檢定以提高檢定力" },
+      { id: "D", text: "應增加檢定的指標數量以強化證據" },
+    ],
+    answer: "A",
+    explanation:
+      "每個檢定各有 5% 的偽陽性風險，做 20 次時「至少一個誤報」的機率接近 64%。在這種情況下挑出那個唯一顯著的指標，很可能挑到的就是雜訊。",
+    choiceExplanations: {
+      B: "單一檢定的判準不能直接套用在一整組檢定上，這正是多重比較問題。",
+      C: "改單尾只是讓同一個檢定更容易顯著，偽陽性問題反而加劇。",
+      D: "增加指標數量會讓至少一個誤報的機率更高，方向完全相反。",
+    },
+    topic: "L22103 假設檢定與統計推論",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["多重比較", "偽陽性", "主要指標"],
+      constraints: ["quality", "governance"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若這個指標是實驗前就明確指定的唯一主要指標、其餘僅供探索，0.04 就有它原本的意義，不必校正。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q113",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某醫院以百萬筆資料檢定兩種術式的併發症率差異，得到 p < 0.001，但絕對差距僅 0.02 個百分點。下列判讀何者最正確？",
+    choices: [
+      { id: "A", text: "p 值極小代表差距很大，應立即全面改用較佳術式" },
+      { id: "B", text: "統計顯著不等於臨床顯著；應以效果量與臨床可接受範圍判斷，並考慮改變術式的成本與風險" },
+      { id: "C", text: "樣本數過大導致結果不可信，應縮減樣本" },
+      { id: "D", text: "應提高顯著水準到 0.001 以下再檢定" },
+    ],
+    answer: "B",
+    explanation:
+      "樣本夠大時，再微小的差異也會達到統計顯著。0.02 個百分點在臨床上幾乎不可察覺，而改變術式牽涉訓練、器械與轉換風險——判斷要看效果量與代價，不是 p 值有沒有跨過門檻。",
+    choiceExplanations: {
+      A: "p 值反映的是證據強度與樣本數的綜合結果，不等於差異大小。",
+      C: "大樣本讓估計更精確，結論並非不可信，只是需要搭配效果量解讀。",
+      D: "調整門檻無法改變絕對差距只有 0.02 個百分點這個事實。",
+    },
+    topic: "L22103 假設檢定與統計推論",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Concept Boundary",
+      concepts: ["統計顯著", "臨床顯著", "效果量"],
+      constraints: ["quality", "governance"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若這 0.02 個百分點對應的是每年上千件手術中多出的數十例重大併發症，規模乘上去後就可能值得改變——實務意義取決於基數。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q114",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某銀行的分析師嘗試了十餘種客群切分方式，最後只在報告中呈現唯一顯著的那一種。下列判斷與防範何者最正確？",
+    choices: [
+      { id: "A", text: "這是抽樣偏誤，應重新抽樣" },
+      { id: "B", text: "這是過擬合，應簡化模型" },
+      { id: "C", text: "這是 p 值操縱，報告的 p 值嚴重低估真實偽陽性風險；應事前登錄分析計畫並揭露所有做過的檢定" },
+      { id: "D", text: "這是資料漂移，應重新蒐集資料" },
+    ],
+    answer: "C",
+    explanation:
+      "反覆嘗試不同切分直到出現顯著結果，等於做了十幾次隱形的檢定卻只報一次。防範靠制度：事前把要檢定什麼寫下來，事後把做過的全部揭露。",
+    choiceExplanations: {
+      A: "抽樣偏誤來自樣本取得方式，而此處樣本沒變、變的是分析途徑。",
+      B: "過擬合指模型過度貼合訓練資料，此處是分析與報告方式的問題。",
+      D: "資料漂移是隨時間改變，與反覆嘗試切分方式無關。",
+    },
+    topic: "L22103 假設檢定與統計推論",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["p值操縱", "事前登錄", "揭露義務"],
+      constraints: ["governance", "quality"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若所有嘗試過的切分都被完整揭露並做了多重比較校正，那就是合法的探索性分析而不是 p 值操縱。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q115",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某工廠要比較四條產線的平均良率是否有差異。若逐一做兩兩 t 檢定共六次，最主要的問題是下列何者？",
+    choices: [
+      { id: "A", text: "t 檢定無法用於良率資料" },
+      { id: "B", text: "六次檢定會累積偽陽性風險，應先以 ANOVA 檢定整體是否有差異，再以校正過的事後比較找出是哪兩組" },
+      { id: "C", text: "應改用卡方檢定" },
+      { id: "D", text: "六次檢定的樣本數會自動減半" },
+    ],
+    answer: "B",
+    explanation:
+      "兩兩比較的次數隨組數快速增加，每次都有偽陽性風險。標準流程是先用 ANOVA 一次檢定所有組別是否全部相同，若拒絕再做校正過的事後比較。",
+    choiceExplanations: {
+      A: "t 檢定可用於比較兩組平均，良率資料在樣本夠大時同樣適用。",
+      C: "卡方檢定處理的是類別變數之間的關聯，不用於比較連續變數的平均。",
+      D: "檢定次數不會改變已收集的樣本數。",
+    },
+    topic: "L22103 假設檢定與統計推論",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["ANOVA", "多重比較", "事後檢定"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Neighbor Concept",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若只有兩條產線要比，單次 t 檢定就足夠，多重比較的問題不會出現。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q116",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某農業試驗的報告寫「新肥料組平均產量較高，95% 信賴區間為 −20 至 180 公斤」。下列判讀何者最正確？",
+    choices: [
+      { id: "A", text: "應改看平均值即可，區間可忽略" },
+      { id: "B", text: "區間的上界很大，代表新肥料效果顯著" },
+      { id: "C", text: "區間涵蓋 0 代表資料有誤，應重新試驗" },
+      { id: "D", text: "區間涵蓋 0，代表在此信賴水準下無法排除「兩組沒有差異」，不宜宣稱新肥料有效" },
+    ],
+    answer: "D",
+    explanation:
+      "信賴區間涵蓋 0，意味著「沒有差異」也在合理範圍之內。此時宣稱有效並無統計依據；區間很寬則另外說明樣本量不足以做出精確估計。",
+    choiceExplanations: {
+      A: "只看平均值會讓人誤以為估計很精確，隱藏了不確定性。",
+      B: "只看上界等於忽略區間下半部，那裡包含了減產的可能。",
+      C: "涵蓋 0 是估計不夠精確的正常結果，不代表資料有錯。",
+    },
+    topic: "L22103 假設檢定與統計推論",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Concept Boundary",
+      concepts: ["信賴區間", "涵蓋零", "不確定性"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Partial Truth",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若增加試驗田區後區間收窄到 40 至 120 公斤、不再涵蓋 0，結論就會翻轉為新肥料確實有效。",
     },
   },
 
@@ -1177,6 +1776,195 @@ export const practiceQuestions: Question[] = [
         "若分析只用到歷史資料、不涉及即時決策，及時性的權重就大幅下降，重點回到完整性與正確性。",
     },
   },
+  {
+    id: "senior-bigdata-practice-q117",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某工廠的感測資料中，某測站在颱風期間全為極端值，另一測站則在同期完全無資料。下列處置何者最正確？",
+    choices: [
+      { id: "A", text: "兩者都以前後平均值填補" },
+      { id: "B", text: "兩者都視為離群值一併刪除" },
+      { id: "C", text: "兩者性質不同：極端值須與現場確認是真實事件或設備失效；完全無資料則要確認是斷線遺失還是設備關閉，兩者的標記方式與後續處理不同" },
+      { id: "D", text: "兩者都保留原樣不做任何標記" },
+    ],
+    answer: "C",
+    explanation:
+      "極端值與缺失是兩種不同的資料品質問題。極端值可能是最有價值的災害樣本、也可能是泡水失效；無資料則要區分「沒收到」與「本來就沒開機」——兩者對後續分析的意義完全不同。",
+    choiceExplanations: {
+      A: "以前後平均覆蓋極端值等於偽造資料，抹平了最關鍵的變化。",
+      B: "一併刪除會抹掉真實的極端事件，也讓缺失的原因永遠查不到。",
+      D: "不標記會讓下游分析把兩種問題混為一談，錯誤在更難追查的地方浮現。",
+    },
+    topic: "L22201 數據收集與清理",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["極端值", "缺失成因", "標記方式"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L22101",
+      decisionBoundary:
+        "若同一時段鄰近測站的讀數都正常、只有這一站爆表，設備異常的可能性就大幅上升，判斷會倒向排除。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q118",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某銀行整合三套系統的客戶資料，發現同一人在不同系統的姓名寫法、地址格式與電話樣式都不同，且沒有共用識別碼。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "先標準化各欄位格式，再以多欄位加權相似度做實體解析並設定人工複核門檻，最後建立主檔與各系統識別碼的對照" },
+      { id: "B", text: "以姓名完全相同者判定為同一人" },
+      { id: "C", text: "以電話號碼為唯一判準" },
+      { id: "D", text: "放棄整合，三套各自分析" },
+    ],
+    answer: "A",
+    explanation:
+      "沒有共用識別碼時，比對必須靠多個欄位的組合證據。先標準化格式讓比對有基礎，再以加權相似度判斷，並為介於模糊地帶者保留人工複核；建立主檔則讓日後新增系統只需多一組對照。",
+    choiceExplanations: {
+      B: "同名不同人在大量客戶中極為常見，會造成嚴重的錯誤合併。",
+      C: "電話可能共用（家戶）或更換，單一欄位不足以承擔判定責任。",
+      D: "放棄整合就無法建立單一客戶視圖，等於放棄整合專案的目的。",
+    },
+    topic: "L22201 數據收集與清理",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["實體解析", "格式標準化", "主檔對照"],
+      constraints: ["data_quality", "governance"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L22202",
+      decisionBoundary:
+        "若三套系統本來就共用同一組客戶編號，比對就退化成單純的鍵值合併，不需要相似度門檻。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q119",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某教育研究以校園網站問卷蒐集學習狀況，回收兩萬份。研究者宣稱樣本數大故結論可靠。下列質疑何者最關鍵？",
+    choices: [
+      { id: "A", text: "應改以紙本問卷提高回收率" },
+      { id: "B", text: "兩萬份樣本數不足，應再增加" },
+      { id: "C", text: "問卷題目應該用英文撰寫" },
+      { id: "D", text: "抽樣框僅涵蓋會造訪該網站的學生，樣本再多也無法代表不使用該網站的族群，覆蓋偏誤不會因樣本數增加而消失" },
+    ],
+    answer: "D",
+    explanation:
+      "樣本數解決的是隨機誤差，解決不了系統性的涵蓋不足。抽樣框與目標母體不一致時，多收十倍問卷只會讓一個有偏的估計更精確地偏。",
+    choiceExplanations: {
+      A: "紙本可能提高回收率，但若發放管道仍受限，覆蓋偏誤依舊存在。",
+      B: "再增加同一管道的樣本，涵蓋不到的族群依然涵蓋不到。",
+      C: "問卷語言與樣本代表性無關。",
+    },
+    topic: "L22201 數據收集與清理",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["覆蓋偏誤", "抽樣框", "樣本數迷思"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Wrong Trade-off",
+        C: "Layer Confusion",
+      },
+      crossNode: "L22301",
+      decisionBoundary:
+        "若目標母體本來就定義為「該網站的使用者」，抽樣框與母體一致，覆蓋偏誤就不成立。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q120",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某醫院的檢驗資料中出現大量「9999」的數值，經查是系統在檢驗未完成時寫入的預設值。下列處置何者最正確？",
+    choices: [
+      { id: "A", text: "直接把 9999 納入計算" },
+      { id: "B", text: "先辨識為哨兵值並轉為明確的缺失值，記錄轉換規則與影響筆數，再依分析目的決定填補或排除" },
+      { id: "C", text: "把所有大於 1000 的數值一律刪除" },
+      { id: "D", text: "不處理，交由模型自行判斷" },
+    ],
+    answer: "B",
+    explanation:
+      "哨兵值是偽裝成數值的缺失標記，直接參與計算會嚴重扭曲平均與變異。轉為明確缺失並記錄轉換規則，後續才有辦法重現分析與追查影響範圍。",
+    choiceExplanations: {
+      A: "9999 會把平均值拉到極高，所有統計量都失去意義。",
+      C: "以固定閾值一刀切會誤刪真實的高值檢驗結果。",
+      D: "模型不會知道 9999 是缺失標記，會把它當成真實的極端值學習。",
+    },
+    topic: "L22201 數據收集與清理",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["哨兵值", "缺失標記", "轉換紀錄"],
+      constraints: ["data_quality", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若 9999 在某些檢驗項目上其實是可能的真實數值，就不能一律當成哨兵值，判準要回到各項目的合理範圍。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q121",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某農業資料管線每日執行清理，但下游分析師常問「這筆資料為什麼不見了」。下列改善何者最直接？",
+    choices: [
+      { id: "A", text: "把清理後的資料另存一份" },
+      { id: "B", text: "停止所有清理步驟" },
+      { id: "C", text: "為每個清理步驟記錄規則、影響筆數與執行版本，並保留被排除紀錄的清單以供查詢" },
+      { id: "D", text: "要求分析師不要追問" },
+    ],
+    answer: "C",
+    explanation:
+      "清理會改變資料，沒有紀錄就無法回答「為什麼不見了」，也無法重現分析。規則、影響筆數與版本三者是可追溯性的最低要求，保留排除清單則讓個案可以直接查。",
+    choiceExplanations: {
+      A: "另存一份只保留了結果，仍然說不出某一筆是被哪一條規則刪掉的。",
+      B: "停止清理會讓錯誤資料流進下游，問題更嚴重。",
+      D: "這不是解決問題，只是拒絕面對可追溯性的缺失。",
+    },
+    topic: "L22201 數據收集與清理",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["清理紀錄", "可追溯性", "排除清單"],
+      constraints: ["governance", "data_quality"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L22203",
+      decisionBoundary:
+        "若清理完全以版本控制的程式碼執行、且原始資料不可變，那份程式碼本身就是紀錄，額外文件可以精簡。",
+    },
+  },
 
   // ── L22202 數據儲存與管理（8 題）──────────────────────────────
   {
@@ -1471,6 +2259,191 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若研究本身就需要個體層級的追蹤資料，彙總會讓研究失去意義，此時該走的是資料使用協議加安全運算環境。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q122",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某工廠的分析查詢多為「某條產線、某個月」的彙總，但目前資料表僅依日期分區，查詢仍需掃描全部產線。下列調整何者最合理？",
+    choices: [
+      { id: "A", text: "改用純文字檔儲存" },
+      { id: "B", text: "取消分區以簡化管理" },
+      { id: "C", text: "為每一台設備各建一個分區" },
+      { id: "D", text: "改以日期與產線的複合分區，讓兩個常用條件都能觸發分區裁剪，並評估分區數量避免過度切碎" },
+    ],
+    answer: "D",
+    explanation:
+      "分區裁剪只在查詢條件包含分區鍵時生效。既然產線是常用條件，就該納入分區設計；但也要控制分區數量——切得太碎會產生大量小檔，metadata 開銷反而拖慢查詢。",
+    choiceExplanations: {
+      A: "純文字檔沒有索引與分區，查詢特定範圍得掃過整個檔案。",
+      B: "取消分區會讓每次查詢都全表掃描，效能更差。",
+      C: "依設備切分會產生極大量的分區，小檔問題會讓查詢變慢。",
+    },
+    topic: "L22202 數據儲存與管理",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["複合分區", "分區裁剪", "小檔問題"],
+      constraints: ["query_latency", "storage"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若查詢條件不含分區鍵（例如依料號查全期），分區裁剪就派不上用場，該考慮的變成索引或另建彙總表。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q123",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某銀行同時有兩類負載：即時的單筆帳戶查詢與更新，以及每日的跨年度分析查詢。下列儲存架構何者最合理？",
+    choices: [
+      { id: "A", text: "兩者都改用欄式儲存" },
+      { id: "B", text: "兩者共用同一套關聯式資料庫即可" },
+      { id: "C", text: "交易負載用列式的關聯式資料庫確保單筆讀寫與一致性，分析負載另建欄式儲存的分析環境並定期同步" },
+      { id: "D", text: "兩者都改用純文字檔" },
+    ],
+    answer: "C",
+    explanation:
+      "兩類負載的存取樣態相反：交易要快速讀寫單筆完整記錄、分析只讀少數欄位但掃描大量列。硬用同一套會互相拖累——分析查詢的長掃描還可能影響交易的回應時間。",
+    choiceExplanations: {
+      A: "欄式儲存要組出單筆完整記錄必須跨多個欄位區塊拼裝，交易負載會變慢。",
+      B: "共用會讓大型分析查詢佔用資源，影響即時交易的回應。",
+      D: "純文字檔既無交易一致性也無查詢最佳化，兩類負載都不適合。",
+    },
+    topic: "L22202 數據儲存與管理",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Architecture",
+      concepts: ["交易與分析負載", "列式與欄式", "負載分離"],
+      constraints: ["query_latency", "throughput"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若資料量小到分析查詢在秒級即可完成、且不影響交易，共用同一套資料庫反而省下同步的複雜度。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q124",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某醫院的報表數字被質疑有誤，追查時發現無人說得清該欄位經過哪些轉換、來自哪個來源系統。下列改善何者最關鍵？",
+    choices: [
+      { id: "A", text: "建立資料血緣，記錄每個欄位從來源、經過哪些轉換、到最終報表的完整路徑，並支援反向的影響分析" },
+      { id: "B", text: "增加報表的更新頻率" },
+      { id: "C", text: "為報表加上浮水印" },
+      { id: "D", text: "把所有中間資料表刪除以簡化架構" },
+    ],
+    answer: "A",
+    explanation:
+      "血緣記錄的是資料的來龍去脈。數字有疑問時能沿著它往上追到來源與每一步轉換；反過來，來源異動時也能評估會影響哪些下游報表。",
+    choiceExplanations: {
+      B: "更新更頻繁不會讓轉換過程變得可追溯。",
+      C: "浮水印屬於文件安全，與資料的加工歷程無關。",
+      D: "刪除中間表會讓追溯更困難，也可能破壞既有的管線。",
+    },
+    topic: "L22202 數據儲存與管理",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["資料血緣", "影響分析", "可追溯性"],
+      constraints: ["governance", "maintainability"],
+      distractorTypes: {
+        B: "Layer Confusion",
+        C: "Layer Confusion",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若管線只有一步、來源與報表一對一，血緣的價值有限；步驟越多、分支越廣，它才越不可或缺。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q125",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某教育平台要保存十年的學習影片，其中近三個月常被觀看、其餘極少存取，但法規要求全部保留。下列儲存策略何者最合理？",
+    choices: [
+      { id: "A", text: "依存取頻率分層，熱資料放高效能層、冷資料移至低成本封存層，並確認封存層的取回時間符合可能的調閱需求" },
+      { id: "B", text: "全部放在最高效能的儲存層" },
+      { id: "C", text: "超過三個月的一律刪除" },
+      { id: "D", text: "全部壓縮成單一檔案" },
+    ],
+    answer: "A",
+    explanation:
+      "分層儲存讓成本隨存取頻率下降，但選擇封存層時要確認取回時間——若某天需要在數小時內調閱，取回要一天的深度封存就不適用。",
+    choiceExplanations: {
+      B: "把極少存取的十年資料留在昂貴儲存層，成本會不斷累積。",
+      C: "法規要求全部保留，刪除直接違規。",
+      D: "壓縮成單一檔案會讓任何一次調閱都得解壓整包，反而更慢。",
+    },
+    topic: "L22202 數據儲存與管理",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["分層儲存", "取回時間", "法規保存"],
+      constraints: ["cost", "governance"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若冷資料完全不需要臨時調閱、只在稽核時提前數週申請，最便宜的深度封存層就完全適用。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q126",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某農業平台的感測資料每秒數萬筆寫入，查詢幾乎都是「某測站最近 24 小時的趨勢」。下列儲存選擇何者最合理？",
+    choices: [
+      { id: "A", text: "圖形資料庫" },
+      { id: "B", text: "時間序列資料庫，並依測站與時間分區、設定舊資料的降頻與保存政策" },
+      { id: "C", text: "未建索引的關聯式資料庫" },
+      { id: "D", text: "文件資料庫，每筆一份文件" },
+    ],
+    answer: "B",
+    explanation:
+      "高頻寫入、依時間範圍查詢、幾乎不更新——這正是時序資料庫最佳化的存取樣態，它提供高壓縮、時間分區與降採樣等針對性功能。",
+    choiceExplanations: {
+      A: "圖形資料庫擅長節點與關係的遍歷，感測讀值之間沒有這種結構。",
+      C: "未建索引時查詢會全表掃描，資料量一大就不可行。",
+      D: "每筆一份文件會產生海量小文件，metadata 開銷遠大於資料本身。",
+    },
+    topic: "L22202 數據儲存與管理",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["時序資料庫", "分區", "保存政策"],
+      constraints: ["data_volume", "query_latency"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若查詢改為跨測站、跨作物的複雜關聯與交易一致性需求，關聯式資料庫才是正確選擇。",
     },
   },
 
@@ -1769,6 +2742,192 @@ export const practiceQuestions: Question[] = [
         "若影像已在運算節點本地、且格式已壓縮，瓶頸就可能轉移到解碼運算——瓶頸位置要實測而不是假設。",
     },
   },
+  {
+    id: "senior-bigdata-practice-q127",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某銀行的分散式作業中，某個任務執行時間是其他任務的數十倍，導致整批作業被拖住。已知分區鍵為「分行代碼」，而總行的交易量佔了全部的四成。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "增加叢集節點數量即可" },
+      { id: "B", text: "這是資料傾斜；應對熱門鍵加鹽或改用複合分區鍵，把總行的資料打散到多個任務" },
+      { id: "C", text: "把分區鍵改為交易金額" },
+      { id: "D", text: "減少總行的交易紀錄" },
+    ],
+    answer: "B",
+    explanation:
+      "分區鍵取值極度不均時，單一熱門鍵會落在同一個任務上。加鹽（在鍵後附加隨機後綴）或改用複合鍵能把它切開，讓負載重新分散。",
+    choiceExplanations: {
+      A: "增加節點無法讓同一個鍵的資料被拆開，那個任務仍然獨自扛四成資料。",
+      C: "以金額分區同樣可能不均，且與業務查詢的常用條件不符。",
+      D: "刪減真實交易紀錄會破壞資料完整性，是不可接受的做法。",
+    },
+    topic: "L22203 數據處理技術與工具",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["資料傾斜", "加鹽", "複合分區鍵"],
+      constraints: ["throughput"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L22202",
+      decisionBoundary:
+        "若各節點的處理量相近但整體都很慢，那是資源不足或演算法問題，不是傾斜——傾斜的特徵是少數任務拖住整批。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q128",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某教育平台的資料管線因上游延遲而重跑，結果當日統計被重複累加成兩倍。下列設計何者最能根本避免？",
+    choices: [
+      { id: "A", text: "把統計改為每週執行一次" },
+      { id: "B", text: "禁止任何重跑" },
+      { id: "C", text: "重跑後手動把數字除以二" },
+      { id: "D", text: "把寫入設計為冪等——以覆寫該日分區取代追加，或以批次識別碼去重，使重跑結果與跑一次相同" },
+    ],
+    answer: "D",
+    explanation:
+      "分散式環境中重試是常態，若重跑會累加，錯誤就會被放大。把寫入改成覆寫分區或以批次識別碼去重，重試就變得安全，不必依賴人不出錯。",
+    choiceExplanations: {
+      A: "改變頻率不改變重跑會累加的本質，只是把問題變得更難察覺。",
+      B: "禁止重跑會讓暫時性失敗變成永久性資料缺漏。",
+      C: "手動修正無法規模化，且重跑次數不固定時除以二也不對。",
+    },
+    topic: "L22203 數據處理技術與工具",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["冪等性", "覆寫分區", "批次去重"],
+      constraints: ["reliability", "data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若作業本質上是「寄送通知」這類無法覆寫的動作，就得改以去重鍵記錄已處理的批次，而不是靠寫法達成冪等。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q129",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某工廠的即時告警需求為「每五分鐘計算一次平均並比對門檻」，但感測資料常因網路延遲而遲到數分鐘。下列設計何者最合理？",
+    choices: [
+      { id: "A", text: "以事件時間而非到達時間分窗，並設定容許遲到的水位線，逾期才到的資料另行處理或更新已發布的結果" },
+      { id: "B", text: "以資料到達的時間分窗即可" },
+      { id: "C", text: "把窗口拉長到一小時以吸收延遲" },
+      { id: "D", text: "丟棄所有遲到的資料" },
+    ],
+    answer: "A",
+    explanation:
+      "若以到達時間分窗，遲到的資料會被算進錯誤的窗口，統計失真。正確做法是依事件本身的時間戳分窗，並設定水位線界定「等多久」，逾期者另行處理。",
+    choiceExplanations: {
+      B: "以到達時間分窗會讓網路延遲直接扭曲統計結果。",
+      C: "拉長窗口會犧牲告警的即時性，且遲到超過一小時時問題依舊。",
+      D: "直接丟棄會讓統計低估，且遲到的資料可能正是異常時段產生的。",
+    },
+    topic: "L22203 數據處理技術與工具",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["事件時間", "水位線", "遲到資料"],
+      constraints: ["latency", "data_quality"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若網路穩定、資料幾乎不會遲到，以到達時間分窗的簡單做法就足夠，水位線的複雜度可以省下。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q130",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某醫院的資料管線每日凌晨執行，但上游檢驗系統偶爾延遲，導致當日報表為空。下列改善何者最直接？",
+    choices: [
+      { id: "A", text: "把執行時間改到更早" },
+      { id: "B", text: "在管線加入資料到齊檢查與重試機制，未到齊則延後執行並告警" },
+      { id: "C", text: "照常發送空報表" },
+      { id: "D", text: "改為人工每日確認後手動執行" },
+    ],
+    answer: "B",
+    explanation:
+      "問題根源是「不管上游到了沒都照跑」。加入到齊檢查讓管線先確認來源就緒，未就緒則等待、重試並告警，就能避免產出空報表。",
+    choiceExplanations: {
+      A: "更早執行只會讓上游更來不及，問題加劇而非緩解。",
+      C: "空報表會讓臨床人員誤以為當日無異常，比不發更危險。",
+      D: "人工確認增加負擔，且人也可能忘記或誤判是否到齊。",
+    },
+    topic: "L22203 數據處理技術與工具",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["資料到齊檢查", "重試", "告警"],
+      constraints: ["reliability"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若上游永遠不會延遲、只是偶爾整批缺漏，該做的就不是等待重試而是資料完整性檢核與補件流程。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q131",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某農業團隊每日處理數 TB 的空拍影像，發現運算節點多半在等待資料傳輸。下列優化方向何者最直接？",
+    choices: [
+      { id: "A", text: "改用更長的變數名稱" },
+      { id: "B", text: "增加程式碼的註解" },
+      { id: "C", text: "提高影像的解析度" },
+      { id: "D", text: "提高資料本地化——讓運算盡量在資料所在節點執行，並改用壓縮的欄式或分塊格式減少傳輸量" },
+    ],
+    answer: "D",
+    explanation:
+      "處理 TB 等級資料時，瓶頸通常不在運算而在把資料搬到運算節點。讓運算靠近資料、並減少要搬的位元組數，是最直接的兩個方向。",
+    choiceExplanations: {
+      A: "變數名稱長度在執行時不影響效率。",
+      B: "註解在執行時不佔資源，對效能沒有影響。",
+      C: "提高解析度會讓傳輸量更大，方向完全相反。",
+    },
+    topic: "L22203 數據處理技術與工具",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["資料本地化", "傳輸瓶頸", "儲存格式"],
+      constraints: ["throughput", "data_volume"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Layer Confusion",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若影像已在運算節點本地、且格式已壓縮，瓶頸就可能轉移到解碼運算——瓶頸位置要實測而不是假設。",
+    },
+  },
 
   // ── L22301 統計學在大數據中的應用（7 題）──────────────────────
   {
@@ -2025,6 +3184,195 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若平台曾隨機指派部分學生額外的觀看提醒，就有了實驗變異可用，因果推論才站得住腳。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q132",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某醫院想評估新療法的效果，但病患是否接受新療法由醫師依病情決定，無法隨機分派。直接比較兩組存活率顯示新療法較差。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應只分析療效最好的病患" },
+      { id: "B", text: "新療法確實較差，應停止使用" },
+      { id: "C", text: "應增加樣本數直到差異消失" },
+      { id: "D", text: "病情較重者更可能被指派新療法，兩組基線不同；應以傾向分數配對或其他因果推論方法平衡可觀察特徵後再比較" },
+    ],
+    answer: "D",
+    explanation:
+      "這是典型的選擇效應：重症者被指派新療法，結果自然較差。直接比較把「病情差異」誤當成「療效差異」。要先讓兩組在可觀察特徵上可比，才談得上比較療效。",
+    choiceExplanations: {
+      A: "只看療效最好的病患是嚴重的選樣偏誤，會大幅高估療效。",
+      B: "未排除基線差異就下結論，可能讓一個有效的療法被錯誤停用。",
+      C: "樣本再多也不會消除系統性的組間差異，只會讓有偏的估計更精確地偏。",
+    },
+    topic: "L22301 統計學在大數據中的應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["選擇效應", "傾向分數配對", "基線平衡"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L22103",
+      decisionBoundary:
+        "若影響醫師決定的關鍵因素根本沒被記錄下來，傾向分數也配不掉那個偏誤——它只能平衡有觀察到的特徵。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q133",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某教育平台發現「使用討論區的學生成績較好」，欲據此要求全體學生使用討論區。下列質疑何者最關鍵？",
+    choices: [
+      { id: "A", text: "成績資料一定有錯" },
+      { id: "B", text: "討論區的使用時數無法測量" },
+      { id: "C", text: "可能是學習動機同時驅動了兩者，或成績好帶來信心而更常發言；要支持因果需要實驗或準實驗設計" },
+      { id: "D", text: "樣本數一定不足" },
+    ],
+    answer: "C",
+    explanation:
+      "相關可能來自共同原因（動機）或反向因果（成績好才敢發言）。要主張「使用討論區能提升成績」，必須有隨機指派或至少能模擬它的設計，否則政策可能完全無效。",
+    choiceExplanations: {
+      A: "沒有證據顯示成績資料有誤，問題出在因果解讀。",
+      B: "平台可以精確記錄使用行為，測量並非問題。",
+      D: "線上平台的樣本通常很大，問題不在數量而在推論方式。",
+    },
+    topic: "L22301 統計學在大數據中的應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["共同原因", "反向因果", "因果設計"],
+      constraints: ["quality", "governance"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Layer Confusion",
+        D: "Overgeneralization",
+      },
+      crossNode: "L22103",
+      decisionBoundary:
+        "若平台曾隨機對部分學生推送討論區提醒，就有了實驗變異可用，因果推論才站得住腳。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q134",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某工廠分析製程溫度與良率，線性迴歸的係數接近零且不顯著，但工程師確信溫度有影響。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "先以散佈圖檢視關係形狀；若呈倒 U 形，線性模型的正負斜率會互相抵消，應加入平方項或改用非線性模型" },
+      { id: "B", text: "增加樣本數直到係數顯著" },
+      { id: "C", text: "刪除溫度這個特徵" },
+      { id: "D", text: "提高顯著水準到 0.1" },
+    ],
+    answer: "A",
+    explanation:
+      "線性迴歸只能捕捉單調的線性關係。當溫度過低或過高良率都差時，兩側的斜率互相抵消，係數自然接近零——這時該檢查關係形狀而不是懷疑工程師的判斷。",
+    choiceExplanations: {
+      B: "若關係本質非線性，樣本再多線性係數仍會接近零。",
+      C: "刪除一個真正有影響的特徵，會讓模型失去重要資訊。",
+      D: "放寬門檻只是讓一個本來就抓不到的效果勉強過關，並未修正模型設定。",
+    },
+    topic: "L22301 統計學在大數據中的應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["非線性關係", "模型設定", "視覺檢視"],
+      constraints: ["quality"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L22303",
+      decisionBoundary:
+        "若製程的實際操作範圍只落在曲線的單側，該區間內近似線性，線性迴歸就仍然堪用。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q135",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某銀行以千萬筆資料建立迴歸模型，多數係數都達統計顯著。主管詢問這代表什麼。下列說明何者最正確？",
+    choices: [
+      { id: "A", text: "代表資料品質極高" },
+      { id: "B", text: "代表模型的預測能力極強" },
+      { id: "C", text: "大樣本使標準誤極小，微小的關聯也會顯著；判斷是否值得行動應改看效果量與實務意義" },
+      { id: "D", text: "代表不需要再做驗證" },
+    ],
+    answer: "C",
+    explanation:
+      "標準誤隨樣本數增加而縮小，檢定統計量因此變大、p 值變小。在大數據下應把重點從「是否顯著」轉向「效果有多大、值不值得據以行動」。",
+    choiceExplanations: {
+      A: "資料量大不代表品質好，反而常伴隨更多雜訊與偏誤。",
+      B: "係數顯著與整體預測能力是兩回事，R² 可能仍然很低。",
+      D: "顯著與否不能取代以獨立資料驗證模型的預測表現。",
+    },
+    topic: "L22301 統計學在大數據中的應用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Concept Boundary",
+      concepts: ["大樣本", "標準誤", "效果量"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      crossNode: "L22103",
+      decisionBoundary:
+        "若樣本雖大但抽樣有系統性偏誤，標準誤縮小反而讓錯誤的估計看起來更確定——精確不等於準確。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q136",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某農業試驗把二十塊田區隨機分派到兩種施肥方案，事後發現其中一組的田區恰好多為坡地。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "忽略地形差異，隨機分派已保證公平" },
+      { id: "B", text: "樣本數少時隨機分派仍可能失衡；應改以地形分層後再於各層內隨機分派，或在分析時把地形納入控制變數" },
+      { id: "C", text: "重新隨機分派直到看起來平衡為止" },
+      { id: "D", text: "刪除坡地田區的資料" },
+    ],
+    answer: "B",
+    explanation:
+      "隨機分派保證的是期望上的平衡，樣本少時單次分派仍可能明顯失衡。分層隨機能在設計上避免，把地形納入分析則是事後的補救——兩者都比假裝沒事好。",
+    choiceExplanations: {
+      A: "隨機性只在多次重複的期望上成立，單次二十塊田區的失衡是真實存在的。",
+      C: "反覆重抽到「看起來平衡」為止，會破壞隨機性本身的統計性質。",
+      D: "刪除資料會使樣本更小，也可能引入新的選樣偏誤。",
+    },
+    topic: "L22301 統計學在大數據中的應用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["隨機分派", "分層設計", "控制變數"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若田區數量達數百塊，隨機分派的失衡幅度會小到可忽略，分層的必要性隨之下降。",
     },
   },
 
@@ -2319,6 +3667,193 @@ export const practiceQuestions: Question[] = [
         "若商品是低頻高價（如家電），Frequency 幾乎沒有鑑別力，RFM 就要調整權重或改用其他分級方式。",
     },
   },
+  {
+    id: "senior-bigdata-practice-q137",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某銀行以關聯規則探勘找出「申辦房貸者也常申辦信用卡」的規則，支持度 0.5%、信賴度 80%、提升度 1.02。下列判讀何者最正確？",
+    choices: [
+      { id: "A", text: "提升度僅略高於 1，代表兩者幾乎獨立；高信賴度只是反映信用卡本身普及率高，不宜據此做交叉銷售決策" },
+      { id: "B", text: "信賴度 80% 很高，應立即推動交叉銷售" },
+      { id: "C", text: "支持度低代表規則不可信，應提高支持度門檻" },
+      { id: "D", text: "三個指標中只需看支持度" },
+    ],
+    answer: "A",
+    explanation:
+      "信賴度高可能只是因為後項本來就很常見。提升度把這個基礎率除掉，1.02 表示申辦房貸幾乎沒有提高申辦信用卡的機會——這條規則沒有可利用的關聯。",
+    choiceExplanations: {
+      B: "只看信賴度會被高普及率的商品誤導，這正是提升度存在的理由。",
+      C: "支持度低確實代表規則覆蓋的樣本少，但此處的關鍵問題是提升度接近 1。",
+      D: "三個指標衡量不同面向，只看其一必然誤判。",
+    },
+    topic: "L22302 常見的大數據分析方法",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["提升度", "信賴度", "基礎率"],
+      constraints: ["quality"],
+      distractorTypes: {
+        B: "Partial Truth",
+        C: "Partial Truth",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若提升度達 2.5 而支持度仍為 0.5%，關聯是真的但覆蓋太小，該評估的就變成「值不值得為這麼少的客戶設計方案」。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q138",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某醫院以分群分析劃分病患，輪廓係數在 k=2 時最高，但臨床上明確存在四種病程型態。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "改用監督式分類" },
+      { id: "B", text: "以輪廓係數為唯一依據，採用 k=2" },
+      { id: "C", text: "直接指定 k=4 並忽略所有指標" },
+      { id: "D", text: "指標只是輔助，最終群數應同時考量臨床可解釋性；可檢視 k=4 的分群是否對應臨床型態，並回頭檢查特徵是否足以區分它們" },
+    ],
+    answer: "D",
+    explanation:
+      "輪廓係數衡量的是幾何上的分離程度，不知道臨床意義。兩者衝突時，該做的是檢視 k=4 的結果能否對應臨床型態；若不能，很可能是特徵不足以區分它們，那才是真正要補的。",
+    choiceExplanations: {
+      A: "若已有明確的四種型態標籤，監督式分類確實可行，但題幹並未說明有標籤可用。",
+      B: "純以指標決定會得到一個臨床上無法使用的分群。",
+      C: "完全忽略指標會失去對分群品質的客觀檢核。",
+    },
+    topic: "L22302 常見的大數據分析方法",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["群數選擇", "輪廓係數", "領域可解釋性"],
+      constraints: ["quality", "explainability"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L22401",
+      decisionBoundary:
+        "若院方其實已有每位病患的病程型態標註，問題就從分群變成監督式分類，指標的角色也隨之改變。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q139",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某工廠以主成分分析把上百個感測特徵降到十維後建模，效能不錯。但稽核要求說明「是哪一顆感測器異常」時無法回答。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "增加主成分的數量即可回答" },
+      { id: "B", text: "主成分是原始特徵的線性組合、已失去物理意義；若需指出個別感測器，應改用特徵篩選保留原始欄位，或另建可回溯的診斷模型" },
+      { id: "C", text: "把主成分重新命名為感測器名稱" },
+      { id: "D", text: "放棄稽核要求" },
+    ],
+    answer: "B",
+    explanation:
+      "降維與可回溯是互相拉扯的兩個目標。主成分把上百顆感測器混在一起，本來就指不回單一來源。要滿足稽核，就得保留原始欄位——用篩選取代降維，或另外建一個負責定位的模型。",
+    choiceExplanations: {
+      A: "增加主成分數量不會讓每個主成分對應到單一感測器。",
+      C: "重新命名是誤導，主成分實際上仍是多顆感測器的加權組合。",
+      D: "稽核要求是合理的營運需求，放棄不是工程選項。",
+    },
+    topic: "L22302 常見的大數據分析方法",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["PCA", "可回溯性", "特徵篩選"],
+      constraints: ["explainability"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L22401",
+      decisionBoundary:
+        "若稽核只需知道「異常大致來自哪一組製程」而非單顆感測器，主成分的載荷分析就可能已經足夠。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q140",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某教育平台要預測未來三個月的每週活躍人數，資料呈現明顯的學期週期與長期成長。下列方法何者最合適？",
+    choices: [
+      { id: "A", text: "分群分析" },
+      { id: "B", text: "關聯規則探勘" },
+      { id: "C", text: "時間序列分析，明確建模趨勢與季節成分後外推" },
+      { id: "D", text: "主成分分析" },
+    ],
+    answer: "C",
+    explanation:
+      "資料依時間排列且同時具趨勢與週期，正是時間序列分析的對象。把兩種成分分別建模後再外推，比直接用整體平均或線性外推準確得多。",
+    choiceExplanations: {
+      A: "分群把樣本分組，不預測時間軸上的走勢。",
+      B: "關聯規則找的是同時出現的項目組合，無法產生未來的數值預測。",
+      D: "主成分分析用於降維，不做時序預測。",
+    },
+    topic: "L22302 常見的大數據分析方法",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["時間序列", "趨勢", "季節性"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若下學期將改變學制、活躍模式出現結構性斷裂，純外推的模型就會失準，需要加入干預變數。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q141",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某農業單位想找出「哪些鄉鎮的病害發生呈空間群聚」。下列分析取向何者最合適？",
+    choices: [
+      { id: "A", text: "空間分析，明確把地理鄰近關係納入模型以檢定空間自相關" },
+      { id: "B", text: "把各鄉鎮視為完全獨立的樣本做一般迴歸" },
+      { id: "C", text: "文字情感分析" },
+      { id: "D", text: "關聯規則探勘" },
+    ],
+    answer: "A",
+    explanation:
+      "地理相鄰的鄉鎮往往因氣候與土壤相似而彼此關聯。忽略這種空間自相關會低估標準誤、做出過度自信的推論；空間分析方法明確把鄰近關係納入。",
+    choiceExplanations: {
+      B: "把有空間關聯的樣本當成獨立，會違反獨立性假設而導致推論失準。",
+      C: "情感分析處理文本觀點，與病害的空間分布無關。",
+      D: "關聯規則找的是項目共現，不處理地理鄰近性。",
+    },
+    topic: "L22302 常見的大數據分析方法",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["空間分析", "空間自相關", "鄰近性"],
+      constraints: ["quality"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若各鄉鎮的病害由完全不同的獨立因素決定、彼此無關，一般迴歸就足夠，空間項反而是多餘的複雜度。",
+    },
+  },
 
   // ── L22303 數據可視化工具（7 題）──────────────────────────────
   {
@@ -2575,6 +4110,193 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若所有項目的基數量級相近，成長率之間就可以直接比較，這項誤讀風險也隨之消失。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q142",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某銀行的簡報以長條圖比較兩季營收，Y 軸從 95 開始，使 3% 的差距看起來像三倍。稽核認為有誤導之虞。下列改善何者最正確？",
+    choices: [
+      { id: "A", text: "把圖表改成 3D 以增加視覺效果" },
+      { id: "B", text: "長條圖以長度編碼數值，Y 軸原則上應從 0 起算；若確需聚焦小差異，應改用折線圖或明確標示軸已截斷" },
+      { id: "C", text: "提高圖表解析度" },
+      { id: "D", text: "把數字改用更大的字體" },
+    ],
+    answer: "B",
+    explanation:
+      "長條圖的長度就是數值，截斷基線會讓長度比例失真。要嘛回到 0 起算，要嘛改用以位置編碼的折線圖——後者截斷基線是可接受的慣例。",
+    choiceExplanations: {
+      A: "3D 效果會讓長度判讀更困難，誤導程度反而加劇。",
+      C: "解析度影響清晰度，不改變長度所傳達的比例關係。",
+      D: "放大字體不會修正圖形本身造成的視覺誤導。",
+    },
+    topic: "L22303 數據可視化工具",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["座標軸截斷", "長度編碼", "視覺誤導"],
+      constraints: ["governance", "quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      crossNode: "L22101",
+      decisionBoundary:
+        "若圖表改為折線圖，截斷 Y 軸是可接受的慣例——長條圖以長度編碼、折線圖以位置編碼，兩者對基線的要求不同。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q143",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某工廠的戰情室儀表板放了二十八個指標，現場主管反映「看不出現在到底該處理什麼」。下列改善何者最正確？",
+    choices: [
+      { id: "A", text: "再增加指標數量以求完整" },
+      { id: "B", text: "把所有指標加上動畫以吸引注意" },
+      { id: "C", text: "為每個指標使用不同的配色規則以便區分" },
+      { id: "D", text: "依決策需求分層：最上方只放需要立即行動的少數指標並以一致的顏色語意標示狀態，其餘移到次層供追查" },
+    ],
+    answer: "D",
+    explanation:
+      "儀表板的目的是讓人在幾秒內決定要不要動作。二十八個指標一起呈現會稀釋注意力，真正重要的訊號反而被淹沒。分層加上一致的顏色語意，才能降低認知負擔。",
+    choiceExplanations: {
+      A: "增加指標會讓問題更嚴重，與現場的抱怨背道而馳。",
+      B: "動畫無助於判讀，反而分散注意力並增加載入負擔。",
+      C: "配色規則不一致會讓同一個顏色在不同圖表代表不同意義，極易誤判。",
+    },
+    topic: "L22303 數據可視化工具",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["儀表板分層", "認知負擔", "顏色語意"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若使用者是需要深入排查的分析師而非現場主管，資訊密度可以提高，但顏色語意一致這條仍然成立。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q144",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某醫院的面量圖以顏色深淺呈現各行政區的就診人數，結果面積廣大的偏鄉在視覺上壓過人口密集的市區。下列改善何者最正確？",
+    choices: [
+      { id: "A", text: "改用圓餅圖" },
+      { id: "B", text: "把偏鄉的顏色調淡" },
+      { id: "C", text: "改以每萬人就診率取代絕對人數，或改用等值點圖、依人口變形的地圖，避免面積主導視覺判讀" },
+      { id: "D", text: "提高地圖的解析度" },
+    ],
+    answer: "C",
+    explanation:
+      "面量圖以區域面積承載顏色，面積大的區域自然吸引更多視覺權重。改用比率消除人口規模的影響，或換成不以面積編碼的呈現方式，才能讓判讀對應到真實的密集程度。",
+    choiceExplanations: {
+      A: "圓餅圖無法表達地理位置，完全失去地圖的用途。",
+      B: "人為調整顏色是竄改呈現，會誤導讀者對實際數值的判斷。",
+      D: "解析度不改變面積與視覺權重之間的關係。",
+    },
+    topic: "L22303 數據可視化工具",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["面量圖", "面積偏誤", "比率化"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Layer Confusion",
+      },
+      crossNode: "L22101",
+      decisionBoundary:
+        "若各行政區的面積相近，面量圖的面積偏誤就大幅降低，直接呈現絕對人數也不至於誤導。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q145",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某教育單位要在圖表中以顏色區分五種課程類別，並希望色覺障礙者也能判讀。下列做法何者最合理？",
+    choices: [
+      { id: "A", text: "避免僅以紅綠區分，並輔以形狀、直接標籤或明度差異，讓資訊不依賴單一視覺通道" },
+      { id: "B", text: "使用飽和度更高的紅色與綠色" },
+      { id: "C", text: "把五種類別都改用同一色系的不同深淺" },
+      { id: "D", text: "只用顏色不加任何文字標示" },
+    ],
+    answer: "A",
+    explanation:
+      "紅綠色覺障礙相對常見，若資訊只由紅綠承載，這些使用者將完全無法區辨。加上形狀、直接標籤或明顯的明度差，才能讓資訊不依賴單一通道。",
+    choiceExplanations: {
+      B: "提高飽和度不會讓無法區辨紅綠的人變得能區辨。",
+      C: "五種同色系深淺對所有使用者都難以精確區分，尤其在小面積時。",
+      D: "只靠顏色是最典型的無障礙缺陷，正是應該避免的做法。",
+    },
+    topic: "L22303 數據可視化工具",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["色覺無障礙", "多重編碼", "直接標籤"],
+      constraints: ["quality"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若圖表只有兩類且已用形狀與直接標籤區分，配色的限制就放寬——關鍵是資訊不能只由單一通道承載。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q146",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某農業團隊要呈現三十萬筆「施肥量與產量」的觀測點，散佈圖畫出來糊成一片。下列改善何者最合理？",
+    choices: [
+      { id: "A", text: "只畫前一百筆" },
+      { id: "B", text: "把點的尺寸放大" },
+      { id: "C", text: "改用圓餅圖" },
+      { id: "D", text: "改用熱力圖或二維密度圖呈現點的密集程度，必要時搭配抽樣與透明度處理" },
+    ],
+    answer: "D",
+    explanation:
+      "點過度重疊時，散佈圖無法表達密集程度。熱力圖或密度圖以顏色深淺呈現每個區域有多少觀測，正好解決重疊；抽樣與透明度則是輔助手段。",
+    choiceExplanations: {
+      A: "只畫前一百筆會遺漏絕大部分資料，且前一百筆未必具代表性。",
+      B: "放大點會讓重疊更嚴重，圖面更糊。",
+      C: "圓餅圖無法表達兩個連續變數的關係。",
+    },
+    topic: "L22303 數據可視化工具",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["過度繪製", "熱力圖", "密度呈現"],
+      constraints: ["quality", "data_volume"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若觀測點只有數百筆、幾乎不重疊，散佈圖直接呈現每一筆反而保留了最多資訊。",
     },
   },
 
@@ -2869,6 +4591,195 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若只有一個模型、且特徵在訓練與服務端由同一份程式碼計算，特徵存放區的維運成本就換不到相應效益。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q147",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某工廠的模型在離線評估表現優異，上線後明顯較差。追查發現線上與離線的特徵由不同程式計算，其中「近七日平均」的定義一個含當日、一個不含。下列處置何者最能根本解決？",
+    choices: [
+      { id: "A", text: "改用更大的模型" },
+      { id: "B", text: "要求兩邊團隊每週開會對齊" },
+      { id: "C", text: "把離線評估的門檻調低" },
+      { id: "D", text: "把特徵定義集中到單一實作（特徵存放區或共用函式庫），讓訓練與線上推論共用同一份計算邏輯" },
+    ],
+    answer: "D",
+    explanation:
+      "訓練與服務各自實作一套特徵計算，是模型上線後不如預期的典型成因。開會對齊只能維持一時，把定義集中到單一實作才能從結構上消除分歧。",
+    choiceExplanations: {
+      A: "更大的模型仍然吃到不同的特徵值，落差依舊存在。",
+      B: "會議能發現問題但無法防止再度分歧，特徵一多就守不住。",
+      C: "調低門檻是掩蓋落差，線上表現並沒有變好。",
+    },
+    topic: "L22401 大數據與機器學習",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["訓練與服務一致性", "特徵存放區", "單一實作"],
+      constraints: ["maintainability", "integration"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Partial Truth",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L22203",
+      decisionBoundary:
+        "若只有一個模型、且特徵在訓練與服務端本來就由同一份程式碼計算，特徵存放區的維運成本就換不到相應效益。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q148",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某銀行的訓練資料量從一千萬筆增加到一億筆後，模型表現幾乎沒有改善。下列判斷何者最可能？",
+    choices: [
+      { id: "A", text: "應改用更小的模型" },
+      { id: "B", text: "應再增加到十億筆" },
+      { id: "C", text: "新增資料可能與既有資料高度重複、或品質不佳；應檢視新資料的分布與標註品質，而非假設量增必然帶來改善" },
+      { id: "D", text: "應刪除舊資料只留新資料" },
+    ],
+    answer: "C",
+    explanation:
+      "資料量的邊際效益會遞減，尤其當新增的樣本與既有的高度相似時。品質差或標註錯誤的資料更可能拖累表現——量增沒有帶來改善時，該檢查的是新資料本身。",
+    choiceExplanations: {
+      A: "若模型容量本來就足夠，縮小反而可能降低表現。",
+      B: "在未確認新資料是否有效之前繼續加量，只是重複同樣的投入。",
+      D: "刪除舊資料會失去已被驗證有效的樣本，風險更高。",
+    },
+    topic: "L22401 大數據與機器學習",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["邊際效益遞減", "資料品質", "樣本多樣性"],
+      constraints: ["data_quality", "cost"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L22201",
+      decisionBoundary:
+        "若新增資料涵蓋了原本完全沒有的客群或情境，量增就會帶來明顯改善——關鍵在於它補上了什麼，而不是多了多少。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q149",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某醫院的模型訓練資料超過單機記憶體數十倍，且含大量罕見病例。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "以小批次或分散式訓練處理規模問題；若考慮抽樣，須確認抽樣後罕見病例仍有足夠代表性" },
+      { id: "B", text: "隨機抽取一成資料訓練即可" },
+      { id: "C", text: "把所有資料強制載入記憶體" },
+      { id: "D", text: "刪除罕見病例以縮小資料量" },
+    ],
+    answer: "A",
+    explanation:
+      "規模問題有標準解法（小批次、分散式）。真正要小心的是抽樣——隨機抽一成會讓本來就稀少的罕見病例更稀少，可能直接消失，而那往往是最需要模型判斷的情況。",
+    choiceExplanations: {
+      B: "隨機抽樣會讓罕見病例的絕對數量大幅減少，模型可能完全學不到。",
+      C: "資料量遠超記憶體時強行載入會直接失敗或觸發大量交換而癱瘓。",
+      D: "刪除罕見病例等於放棄模型在最關鍵情境的能力。",
+    },
+    topic: "L22401 大數據與機器學習",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["分散式訓練", "抽樣代表性", "罕見類別"],
+      constraints: ["compute", "memory", "data_quality"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L22402",
+      decisionBoundary:
+        "若採用分層抽樣、確保罕見病例全數保留而只抽減常見病例，抽樣就成為兼顧規模與代表性的合理選擇。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q150",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某教育平台建模前跳過探索性資料分析直接訓練，結果發現有一個欄位九成是缺值、另一個欄位全部相同。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應直接增加訓練輪數" },
+      { id: "B", text: "這些問題模型會自行處理" },
+      { id: "C", text: "探索性資料分析能在建模前發現分布、缺失與零變異等問題，跳過往往造成後續大量返工" },
+      { id: "D", text: "應改用更複雜的模型" },
+    ],
+    answer: "C",
+    explanation:
+      "零變異的欄位不帶任何資訊、九成缺值的欄位需要特別處理，這些用幾張圖與幾行統計就能看出來。跳過這一步，問題會在訓練後才浮現，代價高得多。",
+    choiceExplanations: {
+      A: "訓練再久也無法從全部相同的欄位中學到任何東西。",
+      B: "多數模型不會主動剔除零變異欄位，缺值處理也需要人為決定策略。",
+      D: "模型複雜度無法彌補資料本身沒有資訊這個事實。",
+    },
+    topic: "L22401 大數據與機器學習",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["探索性資料分析", "零變異欄位", "缺值檢視"],
+      constraints: ["data_quality", "cost"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L22201",
+      decisionBoundary:
+        "若資料來自既有管線且每日都有品質監控報表，探索可以精簡為檢視監控結果，但不能完全省略。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q151",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某農業模型在表格式的感測與氣象資料上，樹系集成表現優於深度神經網路。下列說明何者最正確？",
+    choices: [
+      { id: "A", text: "深度網路一定劣於樹模型" },
+      { id: "B", text: "樹系集成對特徵尺度不敏感、能自然處理類別與缺失值，在中小型表格資料上通常優於需要大量樣本的深度網路" },
+      { id: "C", text: "這代表資料量太少，應停止建模" },
+      { id: "D", text: "應改用影像模型" },
+    ],
+    answer: "B",
+    explanation:
+      "沒有一種演算法在所有問題上都最好。表格資料的特徵之間沒有影像那樣的空間結構，深度網路的歸納偏置用不上，而樹模型的分割機制正好契合。",
+    choiceExplanations: {
+      A: "在大規模或含高基數類別的表格資料上，深度網路仍可能勝出，並無普遍優劣。",
+      C: "樹模型表現良好代表資料是可用的，不是停止的理由。",
+      D: "輸入是數值表格而非影像，模型類型不對應。",
+    },
+    topic: "L22401 大數據與機器學習",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Comparison",
+      concepts: ["樹系集成", "歸納偏置", "表格資料"],
+      constraints: ["data_volume"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若資料改為空拍影像或自由文字，深度網路的特徵萃取能力就重新勝出，樹模型反而難以處理。",
     },
   },
 
@@ -3166,6 +5077,193 @@ export const practiceQuestions: Question[] = [
         "若精確率與召回率的重要性不對等（例如召回更重要），該改用加權的 F-beta 而不是等權的 F1。",
     },
   },
+  {
+    id: "senior-bigdata-practice-q152",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某銀行的詐欺偵測模型 AUC 高達 0.95，但實際上線後每攔下一筆真詐欺就誤擋二十筆正常交易。已知詐欺佔比僅萬分之五。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "AUC 0.95 已很高，誤擋是可接受的代價" },
+      { id: "B", text: "負樣本極多時 ROC 會過度樂觀；應改看 PR 曲線與在目標召回下的精確率，並依誤擋成本重新選定門檻" },
+      { id: "C", text: "應提高召回率以攔下更多詐欺" },
+      { id: "D", text: "應改用準確率作為主要指標" },
+    ],
+    answer: "B",
+    explanation:
+      "偽陽性率的分母是龐大的正常交易，幾千筆誤擋除以數百萬仍是很小的比例，ROC 因此看起來漂亮。精確率直接回答「攔下來的有多少是真的」，才反映客戶實際感受。",
+    choiceExplanations: {
+      A: "二十比一的誤擋率會嚴重影響客戶體驗，不能因為 AUC 好看就接受。",
+      C: "提高召回會讓誤擋更多，與問題方向相反。",
+      D: "在萬分之五的不平衡下，全部放行就有 99.95% 準確率，這個指標毫無鑑別力。",
+    },
+    topic: "L22402 大數據在鑑別式 AI 中的應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["ROC 侷限", "PR 曲線", "門檻與成本"],
+      constraints: ["quality", "cost"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若正負樣本比例接近，ROC 與 PR 給出的結論通常一致，此時 ROC 的門檻無關性反而更方便比較。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q153",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某工廠的瑕疵分類模型效能始終無法突破八成，追查發現同一張影像由不同檢驗員標註的結果常不一致。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "標籤雜訊會壓低模型的效能上限；應先統一標註規範、以重疊標註量測一致性，必要時重新標註後再談模型調校" },
+      { id: "B", text: "應增加模型的參數量" },
+      { id: "C", text: "應延長訓練時間" },
+      { id: "D", text: "應改用更複雜的架構" },
+    ],
+    answer: "A",
+    explanation:
+      "同一張影像被標成不同結果時，模型無論怎麼學都會有一部分樣本判錯——效能上限被標註一致性卡住。此時調校模型是徒勞的，該先修的是標籤本身。",
+    choiceExplanations: {
+      B: "參數量增加只會讓模型更精確地擬合互相矛盾的標籤。",
+      C: "訓練再久也無法在矛盾的訊號中學到一致的規律。",
+      D: "架構複雜度無法突破由標籤品質決定的上限。",
+    },
+    topic: "L22402 大數據在鑑別式 AI 中的應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["標籤雜訊", "標註一致性", "效能上限"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L22201",
+      decisionBoundary:
+        "若不一致只發生在少數邊界模糊的樣本上，影響有限；一旦連明確的瑕疵都判法不同，上限就會被壓得很低。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q154",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某教育平台的輔導名單模型把某一整個班級全部判為高風險。下列排查順序何者最合理？",
+    choices: [
+      { id: "A", text: "提高模型的參數量" },
+      { id: "B", text: "直接接受結果並全班列入輔導" },
+      { id: "C", text: "隨機剔除一半學生以降低名單人數" },
+      { id: "D", text: "先檢視特徵清單是否含班級層級的識別欄位造成捷徑學習，再對照該班是否確實有外部證據支持整體風險偏高" },
+    ],
+    answer: "D",
+    explanation:
+      "整班同判通常代表模型抓到了班級層級的共同特徵，甚至可能把班級編號當成強預測因子。但也不能排除該班確實整體狀況不佳——所以要同時查特徵與外部證據。",
+    choiceExplanations: {
+      A: "參數量與是否學到捷徑無關，反而可能更容易依賴捷徑特徵。",
+      B: "若成因是捷徑學習，全班列入會浪費輔導資源也標籤化學生。",
+      C: "隨機剔除沒有依據，會讓真正需要輔導的學生被漏掉。",
+    },
+    topic: "L22402 大數據在鑑別式 AI 中的應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["捷徑學習", "群組特徵", "外部證據"],
+      constraints: ["fairness", "data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L22404",
+      decisionBoundary:
+        "若該班確實整體學習狀況不佳、其他證據也支持，整班高風險就是正確判斷而非捷徑學習。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q155",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某醫院的篩檢模型要求「寧可誤報也不能漏掉真正患者」，但複檢為侵入性檢查且成本高。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "維持 0.5 的預設門檻" },
+      { id: "B", text: "把門檻壓到最低以最大化召回率" },
+      { id: "C", text: "依漏診與侵入性複檢的實際成本比推導最適門檻，而非單方面把門檻壓到最低" },
+      { id: "D", text: "以隨機方式決定是否轉介複檢" },
+    ],
+    answer: "C",
+    explanation:
+      "「不能漏掉」不代表門檻可以無限下調——當複檢本身具侵入性且昂貴時，誤報也有真實代價。最適門檻由兩類錯誤的成本比決定，而不是由其中一方的口號決定。",
+    choiceExplanations: {
+      A: "0.5 只是預設值，未反映此案兩類錯誤成本的不對稱。",
+      B: "門檻壓到最低會讓大量健康者接受侵入性檢查，代價可能超過漏診的期望損失。",
+      D: "隨機決定會讓模型完全失去辨別能力，不具任何臨床價值。",
+    },
+    topic: "L22402 大數據在鑑別式 AI 中的應用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["門檻選擇", "錯誤成本", "召回與精確"],
+      constraints: ["quality", "safety", "cost"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若複檢改為非侵入性且極便宜，誤報的代價大幅下降，門檻就可以往提高召回的方向大幅調整。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q156",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某農業病害分類模型的整體準確率 96%，但其中一種罕見病害的召回率僅 20%。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "只回報整體準確率即可" },
+      { id: "B", text: "以分群指標分別檢視各類別的表現，並針對該病害補樣本或調整類別權重" },
+      { id: "C", text: "把該病害併入其他類別" },
+      { id: "D", text: "提高整體準確率的目標到 99%" },
+    ],
+    answer: "B",
+    explanation:
+      "整體準確率會被多數類別主導，罕見病害即使幾乎抓不到也看不出來。分群檢視讓問題現形，補樣本或加權則讓模型重新為它調整。",
+    choiceExplanations: {
+      A: "只看整體正是讓問題被掩蓋的原因，不是解法。",
+      C: "併入其他類別等於放棄辨識它，而罕見病害往往危害最大。",
+      D: "提高整體目標可能讓模型更專注於多數類別，罕見病害反而更被忽略。",
+    },
+    topic: "L22402 大數據在鑑別式 AI 中的應用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["分群評估", "類別不平衡", "類別權重"],
+      constraints: ["quality", "data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若該病害在現實中就極罕見、樣本無從補充，就只能以加權並明確標示模型在該類別上的適用限制。",
+    },
+  },
 
   // ── L22403 大數據在生成式 AI 中的應用（7 題）──────────────────
   {
@@ -3423,6 +5521,193 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若嵌入模型與語料的領域差距太大（例如以通用語料嵌入專業醫學名詞），向量空間的語意關係就會失準，需要領域特化的嵌入模型。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q157",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某銀行的 RAG 系統在回答條款細節時常取到相近但不對的條文。已知文件以固定 500 字切塊、無重疊。下列調整何者最合理？",
+    choices: [
+      { id: "A", text: "依條文的自然邊界切塊並加入重疊，避免把一條完整規定切斷；同時導入重排序以提升取回的精準度" },
+      { id: "B", text: "把切塊大小改為 5000 字" },
+      { id: "C", text: "把切塊大小改為 50 字" },
+      { id: "D", text: "停用檢索改由模型直接回答" },
+    ],
+    answer: "A",
+    explanation:
+      "固定字數切塊會把一條完整規定攔腰截斷，兩半的向量都不完整。依自然邊界切並加入重疊能保住語意完整性；重排序則在初步召回後再篩一次，提升精準度。",
+    choiceExplanations: {
+      B: "塊太大會摻雜多個主題，向量變得模糊而更難精準匹配。",
+      C: "塊太小會把單一條文切得更碎，上下文完全喪失。",
+      D: "停用檢索會讓模型完全失去依據，錯得更嚴重。",
+    },
+    topic: "L22403 大數據在生成式 AI 中的應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["切塊策略", "重疊", "重排序"],
+      constraints: ["quality"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若文件本來就是結構清楚的短條目（如問答對），依條目切塊即可，重疊與大小的調校就不再是關鍵。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q158",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某醫院以內部病歷微調語言模型，紅隊測試發現特定提問能誘出真實病患姓名。下列處置何者最完整？",
+    choices: [
+      { id: "A", text: "提高模型的參數量" },
+      { id: "B", text: "在系統提示中要求模型不要說出姓名" },
+      { id: "C", text: "訓練前先去識別化並對重複內容去重，重訓後再以紅隊測試驗證；若無法重訓則需評估下架或加上輸出過濾" },
+      { id: "D", text: "延長訓練時間讓模型學得更好" },
+    ],
+    answer: "C",
+    explanation:
+      "記憶風險與資料中是否含敏感內容、該內容重複幾次高度相關。從源頭去識別化與去重是根本解法，紅隊測試則是驗證手段；若已上線且無法重訓，就只剩輸出過濾這道較弱的補救。",
+    choiceExplanations: {
+      A: "參數量越大記憶能力通常越強，風險反而上升。",
+      B: "提示層的約束容易被繞過，姓名仍在權重裡。",
+      D: "訓練越久越容易逐字記憶，與降低風險的目標相反。",
+    },
+    topic: "L22403 大數據在生成式 AI 中的應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["訓練資料記憶", "去識別化", "紅隊測試"],
+      constraints: ["privacy", "security"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Partial Truth",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L22404",
+      decisionBoundary:
+        "若改以 RAG 檢索這些病歷而不是微調，敏感內容就不會被寫進模型權重，風險焦點會轉為檢索階段的權限控管。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q159",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某工廠以生成式模型合成瑕疵影像補足訓練資料，數個世代後發現生成影像逐漸單一、下游判別模型也隨之退步。追查發現每一代都以前一代的合成影像繼續訓練。下列處置何者最正確？",
+    choices: [
+      { id: "A", text: "這是以自身產出反覆訓練造成的多樣性衰退；應在每一代固定混入足量的新真實影像作為錨點" },
+      { id: "B", text: "提高生成模型的參數量" },
+      { id: "C", text: "增加每一代的合成影像數量" },
+      { id: "D", text: "改用更複雜的判別模型" },
+    ],
+    answer: "A",
+    explanation:
+      "當訓練資料主要來自前一代自己的產出，原本存在的多樣性會逐代流失、細節逐漸模糊。要打斷這個循環，只能靠持續注入真實資料當錨點。",
+    choiceExplanations: {
+      B: "參數量增加無法補回訓練資料中已經流失的多樣性。",
+      C: "增加合成數量只是把同樣單一的樣式產生得更多。",
+      D: "判別模型再複雜，吃到的仍是逐代失真的資料。",
+    },
+    topic: "L22403 大數據在生成式 AI 中的應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["合成資料反覆訓練", "多樣性衰退", "真實資料錨點"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L22402",
+      decisionBoundary:
+        "若每一代都固定混入足量的新真實影像，多樣性就有錨點可回歸——關鍵在真實資料的比例，不在模型多大。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q160",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某教育平台的 RAG 系統答錯後，團隊想知道問題出在檢索還是生成。下列評估設計何者最合理？",
+    choices: [
+      { id: "A", text: "只看回應速度" },
+      { id: "B", text: "只看最終答案的正確率" },
+      { id: "C", text: "只看生成文字的長度" },
+      { id: "D", text: "分別量測檢索命中率與排序位置，以及在檢索正確時答案是否忠於證據，兩段分開評估" },
+    ],
+    answer: "D",
+    explanation:
+      "RAG 的品質可以拆成檢索與生成兩段，處方完全不同。只看最終答案對錯，無法知道該調檢索參數還是改生成設定；分開量測才修得對。",
+    choiceExplanations: {
+      A: "回應速度是效能指標，與品質診斷無關。",
+      B: "最終正確率是綜合結果，看不出責任落在哪一段。",
+      C: "文字長度與答案是否正確或是否忠於證據都無關。",
+    },
+    topic: "L22403 大數據在生成式 AI 中的應用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["RAG 分段評估", "檢索命中率", "證據忠實度"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Partial Truth",
+        C: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若檢索已確認帶回正確段落、答案卻仍然錯，問題就在生成階段，該量測的變成答案是否忠於檢索到的證據。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q161",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某農業知識庫每日新增數十份技術文件，目前每次更新都全量重建向量索引，耗時數小時。下列改善何者最直接？",
+    choices: [
+      { id: "A", text: "改為每月更新一次" },
+      { id: "B", text: "改為增量索引，僅針對異動的文件片段重新計算並更新向量" },
+      { id: "C", text: "放棄向量索引，每次把全部文件貼入提示詞" },
+      { id: "D", text: "把重建作業改到夜間執行" },
+    ],
+    answer: "B",
+    explanation:
+      "每天只有數十份文件異動，卻重算整個索引，絕大部分運算是重複的。增量索引只處理變動的部分，能把數小時壓到數分鐘。",
+    choiceExplanations: {
+      A: "降低更新頻率會讓使用者查到過時的技術資訊。",
+      C: "全部文件遠超過上下文長度，且成本更高。",
+      D: "改時段只是把耗時挪走，運算量本身沒有減少。",
+    },
+    topic: "L22403 大數據在生成式 AI 中的應用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["增量索引", "更新成本", "向量資料庫"],
+      constraints: ["cost", "maintainability"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Partial Truth",
+      },
+      decisionBoundary:
+        "若文件之間存在大量交叉引用、改一份會牽動許多片段的語意，增量更新的邊界難以界定，全量重建反而穩妥。",
     },
   },
 
@@ -3684,6 +5969,191 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若外洩已經結束且範圍確定，第一步就從「止血」轉為「評估影響範圍與通報」，但保全證據的優先順序不變。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q162",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某醫院釋出去識別化的病歷供研究，已確保每個準識別欄位組合至少對應五筆紀錄。研究者卻發現某一組五筆全部罹患同一罕見疾病。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "k-匿名無法防止敏感屬性同質造成的洩漏；應再以 l-多樣性等機制確保每組的敏感值有足夠變異" },
+      { id: "B", text: "已滿足 k=5，無需再處理" },
+      { id: "C", text: "應把 k 提高到 10 即可" },
+      { id: "D", text: "應改回提供原始資料" },
+    ],
+    answer: "A",
+    explanation:
+      "k-匿名保證的是「分不出是組裡的哪一個人」，但如果組內所有人的敏感值都相同，知道某人在這組就等於知道他的病。這正是 k-匿名的已知缺口，要靠 l-多樣性補上。",
+    choiceExplanations: {
+      B: "k=5 只保證組內有五筆，未保證敏感值有差異，洩漏依然成立。",
+      C: "提高 k 若組內仍全是同一疾病，同質性問題不會消失。",
+      D: "提供原始資料是往反方向走，隱私風險更高。",
+    },
+    topic: "L22404 大數據隱私保護、安全與合規",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["k-匿名", "l-多樣性", "敏感屬性同質"],
+      constraints: ["privacy", "governance"],
+      distractorTypes: {
+        B: "Partial Truth",
+        C: "Partial Truth",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若組內的疾病分布本來就分散、沒有任何一種佔多數，k-匿名提供的保護就已經足夠。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q163",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某銀行的統計查詢介面已導入差分隱私，但研究者反覆查詢同一批資料數千次後，仍逐步逼近了個別客戶的數值。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應提高每次查詢加入的雜訊量到無限大" },
+      { id: "B", text: "差分隱私失效，應改用加密" },
+      { id: "C", text: "差分隱私的保證是累積的；應設定並強制執行隱私預算，預算耗盡後拒絕後續查詢" },
+      { id: "D", text: "應限制只有主管可以查詢" },
+    ],
+    answer: "C",
+    explanation:
+      "每次查詢都會消耗一部分隱私保護額度，反覆查詢會讓雜訊被平均掉。差分隱私的完整實作必須包含隱私預算的追蹤與強制執行——沒有預算上限，單次的保證撐不住累積的查詢。",
+    choiceExplanations: {
+      A: "雜訊無限大等於輸出毫無用處，失去了查詢介面的意義。",
+      B: "加密保護的是靜態或傳輸中的資料，解密後查詢仍可能推知個體資訊。",
+      D: "限制查詢者是存取控制，無法防止有權者從統計結果反推。",
+    },
+    topic: "L22404 大數據隱私保護、安全與合規",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["差分隱私", "隱私預算", "累積洩漏"],
+      constraints: ["privacy"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若介面只允許每位研究者查詢有限次數且全程記錄，預算機制就自然成立，累積洩漏的路徑被切斷。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q164",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某跨國製造集團要把台灣廠的產線資料送到歐洲總部分析，其中含員工的工號與班別。下列評估重點何者最完整？",
+    choices: [
+      { id: "A", text: "只要總部要求就可以傳" },
+      { id: "B", text: "應確認跨境傳輸的法律依據、當地是否要求資料在地化、以及能否先去識別化到不含員工資訊的程度再傳輸" },
+      { id: "C", text: "加密後傳輸即無合規問題" },
+      { id: "D", text: "只要不含姓名就不算個資" },
+    ],
+    answer: "B",
+    explanation:
+      "跨境傳輸個資牽涉三件事：有沒有法律依據、目的地與來源地的在地化要求、以及能不能根本不傳個資。最後一項往往最有效——不含員工資訊的產線統計，合規負擔會低得多。",
+    choiceExplanations: {
+      A: "內部要求不能取代法律依據，違反可能面臨高額裁罰。",
+      C: "加密保護的是傳輸過程的機密性，不解除跨境傳輸本身的法遵要求。",
+      D: "工號可與人事系統連結而識別到特定個人，仍屬個人資料。",
+    },
+    topic: "L22404 大數據隱私保護、安全與合規",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["跨境傳輸", "資料在地化", "去識別化"],
+      constraints: ["privacy", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Partial Truth",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若送出的只是不含任何員工欄位的機台層級統計，跨境傳輸個資的問題就不成立，評估範圍縮小到營業秘密。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q165",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某教育平台為分析學習成效，規劃蒐集學生的完整瀏覽紀錄、裝置識別碼與地理位置。下列評估何者最符合資料最小化原則？",
+    choices: [
+      { id: "A", text: "只要加密儲存就可以蒐集全部欄位" },
+      { id: "B", text: "先全部蒐集，日後再視需要刪除" },
+      { id: "C", text: "蒐集越多欄位，分析結果越準確" },
+      { id: "D", text: "逐項檢視每個欄位對分析目標是否必要，只保留必要者；地理位置若非分析所需就不應蒐集" },
+    ],
+    answer: "D",
+    explanation:
+      "資料最小化的核心是「沒蒐集的資料就不會外洩」。逐欄位檢視必要性會迫使團隊先想清楚目的，也直接降低了合規負擔與資安風險。",
+    choiceExplanations: {
+      A: "加密保護的是儲存安全，不能正當化蒐集超出必要範圍的資料。",
+      B: "「先收再說」正是此原則要避免的做法，會累積不必要的風險。",
+      C: "欄位多寡與準確度沒有必然關係，無關欄位只會增加雜訊與風險。",
+    },
+    topic: "L22404 大數據隱私保護、安全與合規",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["資料最小化", "必要性檢視", "目的限制"],
+      constraints: ["privacy", "governance"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Wrong Trade-off",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若分析目標明確包含「不同地區的學習資源落差」，地理位置就成為必要欄位，但仍應粗化到縣市層級而非精確座標。",
+    },
+  },
+  {
+    id: "senior-bigdata-practice-q166",
+    subjectId: "senior-bigdata",
+    prompt:
+      "某農業平台發生資料外洩，維運人員第一時間想先刪除相關日誌以免被追究。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "先刪除日誌再對外說明" },
+      { id: "B", text: "應立即阻斷外洩途徑並保全日誌作為鑑識證據，再依規定通報；刪除日誌可能構成更嚴重的責任" },
+      { id: "C", text: "等事件自行結束後再評估" },
+      { id: "D", text: "對外宣稱沒有外洩" },
+    ],
+    answer: "B",
+    explanation:
+      "應變順序是止血、保全證據、依法通報。日誌是鑑識與究責的唯一依據，刪除它不僅摧毀了追查的可能，本身也可能構成湮滅證據等更重的責任。",
+    choiceExplanations: {
+      A: "刪除日誌會讓事件無從釐清，且行為本身即是新的違失。",
+      C: "資料外洩不會自行結束，拖延只會擴大損害並錯過法定通報時限。",
+      D: "不實陳述會在事實揭露後造成更嚴重的法律與商譽後果。",
+    },
+    topic: "L22404 大數據隱私保護、安全與合規",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["事故應變", "證據保全", "通報義務"],
+      constraints: ["security", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若外洩已經結束且範圍確定，第一步就從止血轉為評估影響範圍與通報，但保全證據的優先順序不變。",
     },
   },
 ];

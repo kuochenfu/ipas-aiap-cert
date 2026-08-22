@@ -517,6 +517,120 @@ export const practiceQuestions: Question[] = [
         "若學籍系統本身就提供現成連接器，Low-Code 的客製串接也可以省掉，全案就退回純 No-Code。",
     },
   },
+  {
+    id: "junior-genai-practice-q101",
+    subjectId: "junior-genai",
+    prompt:
+      "某銀行三個部門同時提出需求：法遵要一張內部連署表單、風控要串接核心系統即時取數、行銷要一套能隨活動改版的活動頁。資訊部只有兩名具基礎程式能力的人力。下列配置何者最合理？",
+    choices: [
+      { id: "A", text: "三案都交由 No-Code 讓各部門自建，資訊部不介入" },
+      { id: "B", text: "三案都由資訊部以傳統開發承接" },
+      { id: "C", text: "連署表單走 No-Code 自建、核心系統串接走 Low-Code 由資訊部處理、活動頁視改版頻率決定，並先訂上線審核機制" },
+      { id: "D", text: "三案都採 Low-Code，統一技術棧最好維護" },
+    ],
+    answer: "C",
+    explanation:
+      "三案的技術門檻與風險等級不同：表單無外部串接、風險低，適合部門自建；核心系統串接牽涉權限與資料正確性，必須由具技術能力者以 Low-Code 處理。同時開放自建就要先有審核機制，否則會重演治理失控。",
+    choiceExplanations: {
+      A: "核心系統串接超出 No-Code 的能力範圍，且完全不介入會讓風險無人把關。",
+      B: "兩名人力承接三案會成為瓶頸，也浪費了 No-Code 能分擔的部分。",
+      D: "連署表單用 Low-Code 是殺雞用牛刀，反而佔用稀缺的技術人力。",
+    },
+    topic: "L12101 No Code / Low Code 的基本概念",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["No-Code", "Low-Code", "人力配置", "上線審核"],
+      constraints: ["skill_level", "integration", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L12102",
+      decisionBoundary:
+        "若資訊部人力充足且核心系統的串接規格複雜多變，把該案改為傳統開發反而更能長期維護。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q102",
+    subjectId: "junior-genai",
+    prompt:
+      "某工廠以工作流工具串接了 ERP、MES 與通訊軟體共十二個節點。半年後每次上游欄位一改，就要逐一點開節點檢查，且沒人說得清楚改動會影響哪些流程。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "這是工具選錯，應改用傳統開發" },
+      { id: "B", text: "這是節點數過多，應限制每條流程不得超過五個節點" },
+      { id: "C", text: "應把十二個節點合併成一個以簡化維護" },
+      { id: "D", text: "視覺化降低了建置門檻，卻沒有自動帶來版本控管與影響分析，應補上流程文件、變更紀錄與相依關係盤點" },
+    ],
+    answer: "D",
+    explanation:
+      "拖放式工具解決的是「怎麼做出來」，沒有解決「日後怎麼知道改了會影響誰」。缺的是版本控管、變更紀錄與相依關係的盤點——這些在傳統開發裡由程式碼與版控自然提供，在低程式碼環境要另外建立。",
+    choiceExplanations: {
+      A: "改用傳統開發會失去快速調整的優勢，而缺少的治理措施在傳統開發同樣要建立。",
+      B: "節點數不是問題根源，五個節點若沒有相依盤點同樣說不清影響範圍。",
+      C: "合併成單一節點會讓流程更難讀、也更難局部調整，維護只會更糟。",
+    },
+    topic: "L12101 No Code / Low Code 的基本概念",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["工作流工具", "變更管理", "相依關係"],
+      constraints: ["maintainability", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Neighbor Concept",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L12102",
+      decisionBoundary:
+        "若該平台本身就提供版本快照與相依圖，缺的就只是使用紀律，補文件的必要性隨之下降。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q103",
+    subjectId: "junior-genai",
+    prompt:
+      "某教育局推動公民開發者計畫一年，成果是各校自建了四十多個小工具，但其中十餘個已無人維護、原開發教師已調校。下列處置何者最能兼顧成效與永續？",
+    choices: [
+      { id: "A", text: "要求每位教師調校前必須自行重寫應用" },
+      { id: "B", text: "停止公民開發者計畫，全部收回資訊中心" },
+      { id: "C", text: "建立應用登錄與交接機制，明訂每個應用的負責人、用途與退場條件，並定期盤點停用無人維護者" },
+      { id: "D", text: "保留全部應用，無人維護也不影響其他人" },
+    ],
+    answer: "C",
+    explanation:
+      "公民開發的價值在於降低門檻，代價是應用的生命週期跟著個人流動。解法不是收回權限，而是補上「誰負責、做什麼用、什麼時候該退場」的登錄與交接，讓無主應用能被發現並下架。",
+    choiceExplanations: {
+      A: "重寫是額外負擔且與調校時程衝突，實務上不會被遵守。",
+      B: "全部收回會抹殺計畫帶來的效率，也讓資訊中心成為新的瓶頸。",
+      D: "無人維護的應用仍在存取資料、可能出錯或成為資安缺口，放著不管是風險累積。",
+    },
+    topic: "L12101 No Code / Low Code 的基本概念",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["公民開發者", "應用生命週期", "退場機制"],
+      constraints: ["governance", "maintainability"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L12102",
+      decisionBoundary:
+        "若這些小工具都只讀公開資料、不寫入任何系統，無人維護的風險就低到可以放寬為定期清查即可。",
+    },
+  },
   // ── L12102 No Code / Low Code 的優勢與限制（14 題）──────────────────
   {
     id: "junior-genai-practice-q015",
@@ -1033,6 +1147,119 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若那些自組裝的應用完全不接觸客戶資料、也不寫回核心系統，資安稽核的介入程度可以大幅降低。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q104",
+    subjectId: "junior-genai",
+    prompt:
+      "某銀行以 No-Code 平台建置的審核流程，月費在用量成長後已達自建系統三年攤提成本的兩倍。技術主管要決定是否遷移。下列評估何者最完整？",
+    choices: [
+      { id: "A", text: "月費較高就應立即遷移" },
+      { id: "B", text: "應繼續使用，因為已經投入的建置成本不能浪費" },
+      { id: "C", text: "應同時評估遷移成本、資料與流程能否帶得走（有無標準 API 與開放格式）、遷移期間的雙軌風險，再與未來三年的用量預測比較" },
+      { id: "D", text: "應要求平台商降價，其餘不必評估" },
+    ],
+    answer: "C",
+    explanation:
+      "遷移不是只比月費：要看資料能不能帶得走（這正是供應商鎖定的判準）、遷移本身要花多少、以及雙軌期間的風險。這些加起來才是真正的比較基準，而未來用量才決定價差會擴大還是收斂。",
+    choiceExplanations: {
+      A: "只比月費會忽略遷移成本與鎖定風險，可能換來更貴的總帳。",
+      B: "已投入的是沉沒成本，不應成為繼續付高月費的理由。",
+      D: "議價可作為選項之一，但不能取代對可攜性與長期成本的評估。",
+    },
+    topic: "L12102 No Code / Low Code 的優勢與限制",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["供應商鎖定", "總持有成本", "遷移風險"],
+      constraints: ["cost", "maintainability", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Partial Truth",
+      },
+      crossNode: "L12301",
+      decisionBoundary:
+        "若平台提供標準 API 與開放格式匯出、遷移成本極低，議價的籌碼就在自己手上，續留反而是理性的選擇。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q105",
+    subjectId: "junior-genai",
+    prompt:
+      "某工廠的 No-Code 儀表板在資料量成長到每日千萬筆後開始逾時。工程師發現平台會把整份資料載入後才篩選。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "加大平台的雲端方案即可解決" },
+      { id: "B", text: "這是平台底層框架難以深度最佳化的先天限制，應把彙總與篩選移到資料庫端，只把結果送進平台" },
+      { id: "C", text: "應改用更漂亮的圖表元件" },
+      { id: "D", text: "應把資料保存期限縮短到一天" },
+    ],
+    answer: "B",
+    explanation:
+      "問題出在執行路徑無法調整——平台先載入再篩選，這一點使用者改不了。務實的做法是把重活留在資料庫：先彙總、先篩選，只把小量結果送進儀表板，繞開平台的先天限制而不是硬撐。",
+    choiceExplanations: {
+      A: "加大方案能提升整體吞吐，但無法改變「先載入全部再篩選」這條執行路徑。",
+      C: "圖表元件影響呈現，與資料處理量無關。",
+      D: "縮短保存期限會犧牲趨勢分析的價值，是把需求砍掉而非解決問題。",
+    },
+    topic: "L12102 No Code / Low Code 的優勢與限制",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["效能天花板", "下推運算", "先天限制"],
+      constraints: ["throughput", "latency"],
+      distractorTypes: {
+        A: "Partial Truth",
+        C: "Layer Confusion",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若平台支援把篩選條件下推到來源資料庫，這個限制就不成立，調整設定即可解決。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q106",
+    subjectId: "junior-genai",
+    prompt:
+      "某醫院各科室以 No-Code 自建了多套病患追蹤工具，稽核發現同名的「回診率」在不同工具中定義不同，且部分工具直接讀取病歷資料庫。下列處置的優先順序何者最合理？",
+    choices: [
+      { id: "A", text: "先統一「回診率」的定義，其餘之後再說" },
+      { id: "B", text: "先要求各科室補寫使用說明書" },
+      { id: "C", text: "先把所有工具停用，再逐一審查" },
+      { id: "D", text: "先處理直接讀取病歷資料庫的存取權限問題，再建立指標定義與上線審核機制" },
+    ],
+    answer: "D",
+    explanation:
+      "兩個問題的性質不同：指標定義不一致造成的是報表對不起來，可以逐步收斂；未經控管地直接讀取病歷則是持續進行中的個資風險，每多一天就多一分暴露。先止血，再談一致性。",
+    choiceExplanations: {
+      A: "定義統一重要但不緊急，把個資存取的風險排在後面是錯誤的優先序。",
+      B: "補說明書無助於降低存取風險，也解決不了定義不一致。",
+      C: "全部停用會影響臨床作業，且多數工具的風險並不需要立即停機。",
+    },
+    topic: "L12102 No Code / Low Code 的優勢與限制",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["治理失控", "存取控制", "優先序"],
+      constraints: ["privacy", "governance", "risk_priority"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L12303",
+      decisionBoundary:
+        "若那些工具讀取的其實是已去識別化的統計檢視表，個資風險大幅下降，優先序就會翻轉為先統一指標定義。",
     },
   },
   // ── L12201 生成式AI 應用領域與常見工具（15 題）──────────────────
@@ -1585,6 +1812,120 @@ export const practiceQuestions: Question[] = [
         "若第三項改成「把講師的中文講稿翻成英文語音」，就要再串上翻譯與語音合成，工具鏈會從兩段變三段。",
     },
   },
+  {
+    id: "junior-genai-practice-q107",
+    subjectId: "junior-genai",
+    prompt:
+      "某醫院要把每日約兩百通的衛教諮詢電話轉為文字並自動摘要重點，同時保留原始錄音備查。已知院內網路可用但錄音不得外流。下列工具鏈設計何者最合理？",
+    choices: [
+      { id: "A", text: "以文字對話工具直接處理錄音檔" },
+      { id: "B", text: "錄音上傳外部語音服務轉文字，摘要在院內處理" },
+      { id: "C", text: "以可地端部署的語音辨識轉文字，摘要則由院內部署的模型處理，錄音與逐字稿全程留在院內" },
+      { id: "D", text: "改由人工逐通聽打並摘要" },
+    ],
+    answer: "C",
+    explanation:
+      "限制是「錄音不得外流」，而語音辨識這一段正是最容易忽略的外流點——很多團隊只想到摘要模型要地端，卻把錄音送出去轉檔。兩段都必須留在院內，工具鏈才真的符合限制。",
+    choiceExplanations: {
+      A: "文字對話工具處理的是文字輸入，無法直接讀取錄音檔。",
+      B: "錄音上傳外部服務的那一刻就已經外流，後段再地端也補不回來。",
+      D: "每日兩百通的人工聽打成本極高，也失去導入的意義。",
+    },
+    topic: "L12201 生成式 AI 應用領域與常見工具",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["語音辨識", "地端部署", "工具鏈外流點"],
+      constraints: ["privacy", "cost"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Partial Truth",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L12303",
+      decisionBoundary:
+        "若錄音在轉檔前就已去除可識別資訊、且院方評估風險可接受，外部語音服務的成本與品質優勢就重新成立。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q108",
+    subjectId: "junior-genai",
+    prompt:
+      "某工廠導入 Agentic Coding 工具協助維護產線程式，資安主管要求列出與一般程式碼助手不同的控制點。下列列舉何者最完整？",
+    choices: [
+      { id: "A", text: "僅需限制它能存取哪些檔案" },
+      { id: "B", text: "與一般程式碼助手相同，不需額外控制" },
+      { id: "C", text: "須同時限制可存取的檔案範圍、可執行的指令白名單、對正式環境的寫入權限，並保留完整操作紀錄與人工核准關卡" },
+      { id: "D", text: "只要產出的程式碼能通過編譯即可" },
+    ],
+    answer: "C",
+    explanation:
+      "一般助手只提供建議、由人決定要不要採用；Agentic 工具會自己動手改檔案、跑指令、送出變更。控制點因此從「看產出」擴大到「限制它能做什麼、做了什麼有沒有留痕、要不要人點頭」。",
+    choiceExplanations: {
+      A: "限制檔案範圍只擋住一部分，執行指令與寫入正式環境的風險仍在。",
+      B: "能主動執行動作，可能造成的實質損害遠高於只給建議的助手。",
+      D: "能編譯只代表語法正確，不保證指令安全或邏輯正確。",
+    },
+    topic: "L12201 生成式 AI 應用領域與常見工具",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["Agentic Coding", "權限白名單", "操作稽核"],
+      constraints: ["security", "governance"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L12303",
+      decisionBoundary:
+        "若工具被限制成唯讀、只能產出修改建議而不能自行提交，控制點就回落到一般程式碼助手的等級。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q109",
+    subjectId: "junior-genai",
+    prompt:
+      "某教育平台要讓學生上傳手寫作業照片並取得逐步回饋，同時要求系統在辨識不清時明確說「看不清楚」而非猜測。下列設計何者最能達成後半項要求？",
+    choices: [
+      { id: "A", text: "改用更大的語言模型" },
+      { id: "B", text: "在提示詞中要求語言模型「不確定時要說不知道」" },
+      { id: "C", text: "提高語言模型的生成溫度以增加保守性" },
+      { id: "D", text: "在辨識階段取得每個字的信心分數，低於門檻即中止並回報無法辨識，不進入後續的語言模型" },
+    ],
+    answer: "D",
+    explanation:
+      "這是串接式流程，錯誤會沿著管線累積。辨識失準時語言模型收到的已是錯的文字，它無從知道上游出過錯，因此把關必須放在辨識這一段，用信心分數決定要不要往下走。",
+    choiceExplanations: {
+      A: "更大的模型同樣看不到原始影像，仍是在錯誤文字上作答。",
+      B: "語言模型只看得到辨識後的文字，那段文字本身看起來完全通順，它沒有理由說不知道。",
+      C: "提高溫度會讓輸出更發散而非更保守，方向相反。",
+    },
+    topic: "L12201 生成式 AI 應用領域與常見工具",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["串接式流程", "誤差累積", "信心門檻"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Partial Truth",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L12202",
+      decisionBoundary:
+        "若改用能直接讀取影像的多模態模型、不經文字中介，這條累積路徑就消失，把關可以移回單一模型的輸出端。",
+    },
+  },
   // ── L12202 如何善用生成式AI 工具（15 題）──────────────────
   {
     id: "junior-genai-practice-q044",
@@ -2134,6 +2475,120 @@ export const practiceQuestions: Question[] = [
         "若系統只把病患的話轉成文字、交由人工去掛號，函數呼叫那一層就不存在——關鍵在模型有沒有觸發實際動作。",
     },
   },
+  {
+    id: "junior-genai-practice-q110",
+    subjectId: "junior-genai",
+    prompt:
+      "某銀行的 RAG 法遵問答系統上線後仍偶爾答錯。抽查發現：三成錯誤是文件本身已過期、四成是檢索沒取到正確條文、三成是取到了卻沒依它作答。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "提高生成溫度以增加多樣性" },
+      { id: "B", text: "停用系統改為人工回覆" },
+      { id: "C", text: "換一個更大的語言模型即可全部解決" },
+      { id: "D", text: "三種失敗分屬不同層次，應分別以文件更新流程、檢索參數與重排序、以及要求引用出處的生成設定處理" },
+    ],
+    answer: "D",
+    explanation:
+      "三成、四成、三成分別對應來源、檢索、生成三個層次，處方完全不同：過期文件要靠更新流程、檢索失準要調參數或加重排序、忽略證據要靠要求標註出處並檢查引用。混在一起處理必然有一部分修不到。",
+    choiceExplanations: {
+      A: "提高溫度會讓輸出更發散，答錯的機率上升。",
+      B: "三種失敗都有明確可處理的成因，直接停用放棄了系統的價值。",
+      C: "更大的模型解決不了文件過期，也不保證檢索取得到正確條文。",
+    },
+    topic: "L12202 如何善用生成式 AI 工具",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["RAG 失敗模式", "分層診斷", "出處引用"],
+      constraints: ["quality", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Overgeneralization",
+      },
+      crossNode: "L12303",
+      decisionBoundary:
+        "若抽查顯示錯誤幾乎全部集中在同一層（例如都是檢索沒取到），就該把資源集中在那一層，而不是三線並進。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q111",
+    subjectId: "junior-genai",
+    prompt:
+      "某教育平台的學習助理要同時滿足：品牌語氣固定、教材每週更新、且能查詢學生當下的選課狀態。下列技術組合何者最合理？",
+    choices: [
+      { id: "A", text: "語氣以提示工程或微調固定、教材以 RAG 檢索最新版本、選課狀態以工具呼叫即時查詢" },
+      { id: "B", text: "三者都以微調處理，統一在模型內" },
+      { id: "C", text: "三者都以 RAG 處理" },
+      { id: "D", text: "三者都寫進系統提示詞" },
+    ],
+    answer: "A",
+    explanation:
+      "三項需求的變動頻率完全不同：語氣穩定不變、教材每週更新、選課狀態每分鐘都可能變。穩定的用提示或微調固定、會更新的用檢索、要當下即時的用工具呼叫——用錯層次就會出現「改一次要重訓一次」或「答案永遠慢一步」。",
+    choiceExplanations: {
+      B: "教材每週更新若靠微調，等於每週重訓，成本與時間差都不可行。",
+      C: "RAG 不直接控制語氣，選課狀態也不是可事先檢索的靜態內容。",
+      D: "提示詞長度有上限，教材一多就塞不下，選課狀態更是每次都不同。",
+    },
+    topic: "L12202 如何善用生成式 AI 工具",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["提示工程", "微調", "RAG", "工具呼叫"],
+      constraints: ["cost", "maintainability", "latency"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Partial Truth",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L12301",
+      decisionBoundary:
+        "若教材一年只改一次且份量極小，直接寫進系統提示詞反而最省事，RAG 的建置成本就不划算。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q112",
+    subjectId: "junior-genai",
+    prompt:
+      "某醫院的問診助理在長對話中開始遺漏病患早先提到的過敏史。技術人員確認應用層每次都有把完整對話送入。下列推論何者最可能？",
+    choices: [
+      { id: "A", text: "模型故障，應重新訓練" },
+      { id: "B", text: "對話長度已超出模型的上下文視窗，較早的內容被截斷，應改為摘要保留關鍵事實或以結構化欄位另存" },
+      { id: "C", text: "應提高生成溫度" },
+      { id: "D", text: "應改用更小的模型以加快速度" },
+    ],
+    answer: "B",
+    explanation:
+      "應用層確實有送、模型卻不記得，最可能是送進去的內容超過了上下文視窗而被截掉。這時光是「全部送」已經不夠，要改為主動萃取關鍵事實（如過敏史）另外保存並每次帶上。",
+    choiceExplanations: {
+      A: "模型無狀態是正常設計，此處也沒有異常行為的跡象，重訓無從對症。",
+      C: "溫度影響輸出的隨機性，與記不記得先前內容無關。",
+      D: "更小的模型上下文視窗通常更短，問題只會更嚴重。",
+    },
+    topic: "L12202 如何善用生成式 AI 工具",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["上下文視窗", "截斷", "關鍵事實萃取"],
+      constraints: ["memory", "safety"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Layer Confusion",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L12303",
+      decisionBoundary:
+        "若對話長度遠低於視窗上限卻仍遺漏，那就不是截斷，該回頭檢查應用層是否真的每次都附上了完整歷史。",
+    },
+  },
   // ── L12301 生成式AI 導入評估（14 題）──────────────────
   {
     id: "junior-genai-practice-q059",
@@ -2653,6 +3108,119 @@ export const practiceQuestions: Question[] = [
         "若小工具的情境過於邊緣、無法代表核心業務，PoC 即使成功也推論不到正式導入——範圍要小，但仍須具代表性。",
     },
   },
+  {
+    id: "junior-genai-practice-q113",
+    subjectId: "junior-genai",
+    prompt:
+      "某工廠評估兩個生成式 AI 題目：甲是「自動撰寫每日生產日報」，人工現需 30 分鐘、規則清晰、錯了可修改；乙是「即時判斷是否停機」，攸關人員安全。若只能先做一項，下列判斷何者最合理？",
+    choices: [
+      { id: "A", text: "先做乙，因為價值最高" },
+      { id: "B", text: "先做甲，它規則清晰、重複性高且錯誤可逆；乙涉及人身安全且需即時反應，不適合作為第一個標的" },
+      { id: "C", text: "兩案同時進行以節省時程" },
+      { id: "D", text: "依主管偏好決定" },
+    ],
+    answer: "B",
+    explanation:
+      "第一個標的要選「錯了還能修」的。甲每天省 30 分鐘、規則清楚、產出可人工覆核；乙一旦誤判涉及人身安全，且即時控制本來就不該交給逐字生成的模型。先在低風險場景累積經驗與信任，才有條件談高風險應用。",
+    choiceExplanations: {
+      A: "價值高但不可逆且攸關安全，作為第一個導入標的風險過高。",
+      C: "同時進行會讓資源分散，且乙的風險並不因為並行而降低。",
+      D: "主管偏好屬於推力，不能取代對風險與可逆性的評估。",
+    },
+    topic: "L12301 生成式 AI 導入評估",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["導入選題", "可逆性", "風險等級"],
+      constraints: ["risk_priority", "safety"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L12303",
+      decisionBoundary:
+        "若乙改成「事後分析停機原因並寫成報告」，即時性與安全性的限制消失，它就成為合適的候選。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q114",
+    subjectId: "junior-genai",
+    prompt:
+      "某銀行核算生成式 AI 客服的效益，只計入「客服人力減少三人」與「API 月費」兩項即宣稱一年回本。稽核認為不完整。下列補充何者最關鍵？",
+    choices: [
+      { id: "A", text: "應補上專案簡報的製作工時" },
+      { id: "B", text: "應補上辦公室水電費" },
+      { id: "C", text: "應補上維運與監控人力、提示與知識庫的持續維護、模型升級的重測成本，以及誤答造成的客訴處理成本" },
+      { id: "D", text: "不需補充，兩項已足夠" },
+    ],
+    answer: "C",
+    explanation:
+      "生成式 AI 上線只是開始：知識庫要有人維護、效能要有人監控、模型一升級整套提示與流程都要重測，誤答還會製造新的客訴成本。這些持續性支出往往超過 API 月費，卻最常被漏算。",
+    choiceExplanations: {
+      A: "簡報工時是一次性的行政成本，金額與影響都極小。",
+      B: "水電屬於一般營運間接成本，不因導入與否而顯著改變。",
+      D: "只算人力節省與月費會嚴重高估效益，正是稽核質疑的原因。",
+    },
+    topic: "L12301 生成式 AI 導入評估",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["總持有成本", "維運成本", "隱性成本"],
+      constraints: ["cost", "governance"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Layer Confusion",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L12302",
+      decisionBoundary:
+        "若採用的是完全託管、知識庫由供應商維護的訂閱服務，內部維運成本大幅下降，但供應商的月費會反映這部分。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q115",
+    subjectId: "junior-genai",
+    prompt:
+      "某醫院比較自建開源模型與商用 API：自建可讓病歷不外流但需兩名工程師維運；商用 API 品質較佳但對話內容須送出。院方另查得供應商提供「不留存資料的專屬部署」方案。下列評估何者最合理？",
+    choices: [
+      { id: "A", text: "專屬部署若經確認資料確實不外流且合約可稽核，它同時解除了外流顧慮與維運負擔，應納入比較而非只在自建與一般 API 之間二選一" },
+      { id: "B", text: "一律選自建，只有自建才安全" },
+      { id: "C", text: "一律選商用 API，品質最重要" },
+      { id: "D", text: "依供應商知名度決定" },
+    ],
+    answer: "A",
+    explanation:
+      "原本的二選一是因為把選項限縮成兩個。專屬部署把「資料不外流」與「不必自己養團隊」這兩件事同時滿足，前提是能確認合約與實際落地方式——所以要納入比較並實質查證，而不是先排除。",
+    choiceExplanations: {
+      B: "自建同樣有風險（維運不足、更新落後），且未評估就排除其他方案並不理性。",
+      C: "品質再好，若違反病歷不得外流的要求就無法上線。",
+      D: "知名度不能替代對資料流向與合約條款的實質查證。",
+    },
+    topic: "L12301 生成式 AI 導入評估",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["自建與商用", "專屬部署", "選項盤點"],
+      constraints: ["privacy", "cost", "maintainability"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若法規明訂病歷不得由第三方以任何形式處理，專屬部署也不符合，選項就真的回到自建一途。",
+    },
+  },
   // ── L12302 生成式AI 導入規劃（14 題）──────────────────
   {
     id: "junior-genai-practice-q073",
@@ -3170,6 +3738,118 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若準確率只在統計雜訊範圍內波動、樣本數又太小，貿然回退也可能是誤判——要先確認差異在統計上站得住腳。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q116",
+    subjectId: "junior-genai",
+    prompt:
+      "某教育局的 AI 批改工具試辦三個月，一致性指標達標但教師採用率僅一成。專案會議上有人主張「指標已達標，可全面推廣」。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應強制教師使用以拉高採用率" },
+      { id: "B", text: "應立即全面推廣，採用率會隨時間自然上升" },
+      { id: "C", text: "技術指標達標但業務指標未達，全面推廣只會複製低採用；應先釐清教師不用的原因並據以調整" },
+      { id: "D", text: "應放棄專案" },
+    ],
+    answer: "C",
+    explanation:
+      "一致性達標只說明模型會算，採用率一成說明它沒被用。推廣一個沒人用的工具只是把問題放大。要先找出原因——是不信任、流程不順、還是根本不需要——才知道該調模型、調流程還是調範圍。",
+    choiceExplanations: {
+      A: "強制使用可能讓教師敷衍應付，數字好看但實質效益仍然沒有。",
+      B: "採用率不會因為推廣範圍變大而自然改善，阻力的成因並未消除。",
+      D: "試辦的目的正是找出問題，一成採用率是有價值的訊號而非結案理由。",
+    },
+    topic: "L12302 生成式 AI 導入規劃",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["技術指標", "業務指標", "採用率"],
+      constraints: ["governance", "quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L12301",
+      decisionBoundary:
+        "若調查顯示未使用的原因是「這學期沒有作文課」這類與工具無關的因素，採用率就不構成推廣的阻礙。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q117",
+    subjectId: "junior-genai",
+    prompt:
+      "某農業單位的病害辨識模型上線一年後準確率下滑。資料團隊發現輸入影像的年齡、機型分布與訓練期相近，但新品種與新興病害已出現。下列診斷與處置何者最正確？",
+    choices: [
+      { id: "A", text: "屬標籤雜訊，應重新標註舊資料" },
+      { id: "B", text: "屬資料漂移，應重新校正相機" },
+      { id: "C", text: "屬硬體效能不足，應升級伺服器" },
+      { id: "D", text: "屬概念漂移——輸入分布未變但輸入與正確答案的關係已改變，應補入新品種與新病害的標註樣本並重訓" },
+    ],
+    answer: "D",
+    explanation:
+      "輸入分布沒變而正確答案變了，這是概念漂移的定義。新品種與新病害代表同樣的影像特徵現在對應到不同的判定，補入涵蓋新類別的標註樣本並重訓才是對症。",
+    choiceExplanations: {
+      A: "舊資料的標註在當時是正確的，重標舊資料無法讓模型認得新病害。",
+      B: "資料漂移指輸入特徵分布改變，而題幹明確說明分布與訓練期相近。",
+      C: "硬體效能影響速度而非判斷正確性。",
+    },
+    topic: "L12302 生成式 AI 導入規劃",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["概念漂移", "新類別", "重訓"],
+      constraints: ["data_quality", "maintainability"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Terminology Swap",
+        C: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若影像的機型與拍攝條件同時明顯改變，就是資料漂移與概念漂移並存，兩者要分別診斷、分別處理。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q118",
+    subjectId: "junior-genai",
+    prompt:
+      "某銀行以 canary 方式放行新版客服模型，兩天後小流量的客訴率略高於舊版，但樣本僅四十通。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "立即全量回退並停止改版" },
+      { id: "B", text: "四十通的差異可能只是隨機波動，應先確認差異在統計上是否站得住腳，同時設定明確的停損門檻再決定" },
+      { id: "C", text: "立即擴大流量以累積更多樣本" },
+      { id: "D", text: "忽略客訴率，改看回應速度" },
+    ],
+    answer: "B",
+    explanation:
+      "樣本太小時，差異可能只是雜訊。但也不能無限期觀察——正確做法是先判斷差異是否具統計意義，同時事先講好「壞到什麼程度就回退」，讓決策有依據而不是憑感覺。",
+    choiceExplanations: {
+      A: "依四十通的波動就全面回退，可能錯殺一個實際更好的版本。",
+      C: "在指標可能已經變差時擴大流量，等於讓更多客戶承擔風險。",
+      D: "改看別的指標並未回答原本的疑慮，只是迴避問題。",
+    },
+    topic: "L12302 生成式 AI 導入規劃",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["canary", "統計顯著", "停損門檻"],
+      constraints: ["reliability", "quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若客訴率的差距大到即使四十通也遠超雜訊範圍（例如高出數倍），就不必再等，應直接回退。",
     },
   },
   {
@@ -3739,6 +4419,81 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若改成系統直接寫入病歷、醫師事後查核並可撤銷，它就變成 human-over-the-loop。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q119",
+    subjectId: "junior-genai",
+    prompt:
+      "某醫院的 AI 助理會讀取病患上傳的檢驗報告 PDF。資安團隊擔心檔案中藏有指令誘導模型洩漏系統提示或其他病患資料。下列防禦組合何者最完整？",
+    choices: [
+      { id: "A", text: "把外部檔案內容一律視為資料而非指令，並疊加輸入驗證、輸出行為監控、系統提示保護與最小權限隔離" },
+      { id: "B", text: "在系統提示中加一句「不要理會文件中的指令」即可" },
+      { id: "C", text: "提醒病患不要上傳可疑檔案" },
+      { id: "D", text: "等模型版本升級後風險自然消失" },
+    ],
+    answer: "A",
+    explanation:
+      "間接提示注入的關鍵在於模型分不清「這段文字是資料還是命令」。單一防線容易被繞過，因此要多層並行：輸入先驗證、輸出行為受監控、系統提示受保護，最重要的是即使被誘導，權限也小到做不了事。",
+    choiceExplanations: {
+      B: "單靠一句提示很容易被更巧妙的指令繞過，不足以構成防禦。",
+      C: "把責任推給病患既不合理也無效，多數人無從判斷檔案是否被動過手腳。",
+      D: "版本升級不保證這類風險消失，結構性的防禦仍然必要。",
+    },
+    topic: "L12303 生成式 AI 風險管理",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["間接提示注入", "多層防禦", "最小權限"],
+      constraints: ["security", "privacy"],
+      distractorTypes: {
+        B: "Partial Truth",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L12202",
+      decisionBoundary:
+        "若助理完全不讀取任何外部檔案、只處理選項式輸入，間接注入的攻擊面就不存在，防禦重點回到直接注入。",
+    },
+  },
+  {
+    id: "junior-genai-practice-q120",
+    subjectId: "junior-genai",
+    prompt:
+      "某銀行評估在 AI 理財顧問中開放「自動下單」功能。風險評估顯示誤判可能造成重大損失且難以回復，但業務端強調競爭壓力。下列處置何者最能同時回應兩方？",
+    choices: [
+      { id: "A", text: "直接開放，並在條款中免責" },
+      { id: "B", text: "完全不開放，不再討論" },
+      { id: "C", text: "開放但降低模型的生成溫度" },
+      { id: "D", text: "以風險迴避為原則不開放全自動下單，但可開放「AI 產生下單建議、客戶一鍵確認」的折衷設計，把不可逆的那一步留給人" },
+    ],
+    answer: "D",
+    explanation:
+      "風險的核心是「不可逆」。把確認這一步留給客戶，AI 仍然承擔了最耗時的分析與擬單，業務端要的效率大部分保住了，而最可能造成重大損失的那個動作沒有被自動化。",
+    choiceExplanations: {
+      A: "以條款免責無法真正轉移損害，也可能不被主管機關接受。",
+      B: "完全不討論會忽略折衷方案，也無法回應業務端的合理需求。",
+      C: "降低溫度只影響輸出的隨機性，不改變誤判時無法回復的本質。",
+    },
+    topic: "L12303 生成式 AI 風險管理",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["風險迴避", "不可逆動作", "人類確認"],
+      constraints: ["risk_priority", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若下單改成有 24 小時無條件撤銷期、且設有單筆上限，動作就從不可逆變成可逆，自動化的門檻可以放寬。",
     },
   },
 ];

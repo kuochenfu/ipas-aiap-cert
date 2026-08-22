@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getPracticeQuestions, practiceSubjectIds } from "../src/data/practice";
-import { practiceTopics, topicLabel } from "../src/domain/assessmentTopics";
+import { practiceTopics, practiceTotal, topicLabel } from "../src/domain/assessmentTopics";
 import type { Question } from "../src/data/types";
 
 // 七科的新題庫現在都帶命題後設資料（meta）。契約分兩層：
@@ -16,19 +16,24 @@ const specSubjectIds = ["aiot-junior-basics", "aiot-junior-iot"] as const;
 const subjectIds = specSubjectIds;
 
 /**
- * 五科補標 meta 時的實測分布（2026-08-22），作為回歸基線而非目標。
- * 每個值是「該層級／原型至少要有幾題」或「至多幾題」，容差 ±5 題。
- * 這些數字若要往 AIoT 的區間靠，正確做法是**改寫題目**（增加情境與取捨型題），
- * 而不是改標籤——標籤要如實反映題目在測什麼。
+ * AI 應用規劃師五科的分布契約（方案 C）。
+ *
+ * 這五科原本是在沒有題型約束下寫成的，2026-08-22 補標 meta 時實測偏重記憶與理解
+ * （L4 一度只有 1%、跨節點近乎為零）。後續以**加題稀釋**的方式再平衡：既有題目一題不動，
+ * 另外補寫 215 題 L3／L4 的情境取捨與跨節點題，把分布拉進下列區間（見 docs/backlog.md 的 A1d）。
+ *
+ * 區間比 AIoT 兩科寬鬆是刻意的——要完全對齊 AIoT 的規格需再多寫約 160 題，而其中多數
+ * 只是為了把記憶題的佔比從 19% 壓到 15%，對使用者的實質幫助遠小於「L4 從 1% 拉到 15%」
+ * 與「跨節點從 0% 拉到 15%」這兩項。取捨的理由記在 docs/question-authoring.md。
  */
-const BASELINE: Record<string, { l1Max: number; l3Min: number; directConceptMax: number }> = {
-  "junior-ai-basics": { l1Max: 32, l3Min: 18, directConceptMax: 32 },
-  "junior-genai": { l1Max: 21, l3Min: 40, directConceptMax: 22 },
-  "senior-ai-tech": { l1Max: 33, l3Min: 37, directConceptMax: 33 },
-  "senior-bigdata": { l1Max: 36, l3Min: 24, directConceptMax: 38 },
-  "senior-ml": { l1Max: 26, l3Min: 24, directConceptMax: 26 },
-};
-
+const AIAP_BANDS = { l1Max: 20, l2Max: 35, l3Min: 33, l4Min: 15, dcMax: 20, crossMin: 15 };
+const AIAP_SUBJECTS = [
+  "junior-ai-basics",
+  "junior-genai",
+  "senior-ai-tech",
+  "senior-bigdata",
+  "senior-ml",
+] as const;
 const bank = (subjectId: string): Question[] => getPracticeQuestions(subjectId);
 
 const share = (questions: Question[], predicate: (q: Question) => boolean): number =>
@@ -52,7 +57,8 @@ describe("新題庫：全七科的 meta 結構契約", () => {
     const questions = bank(subjectId);
 
     it(`${subjectId}：每題都有完整的命題後設資料`, () => {
-      expect(questions).toHaveLength(100);
+      // 題數以配額為準（五科在 2026-08-22 的再平衡中各自加題，不再都是 100）。
+      expect(questions).toHaveLength(practiceTotal(subjectId));
       for (const q of questions) {
         expect(q.meta, q.id).toBeDefined();
         expect(q.meta!.cognitiveLevel, q.id).toMatch(/^L[1-4]$/);
@@ -88,16 +94,24 @@ describe("新題庫：全七科的 meta 結構契約", () => {
     });
   }
 
-  // 五科的分布以基線快照守住，避免日後擴充時悄悄退步。
-  for (const [subjectId, base] of Object.entries(BASELINE)) {
-    it(`${subjectId}：分布不得劣於補標當時的基線`, () => {
+  // 五科的分布契約。任一項退步都會被擋下——日後擴充題庫時，新題必須維持這個結構。
+  for (const subjectId of AIAP_SUBJECTS) {
+    it(`${subjectId}：認知層級與題型分布符合方案 C 的區間`, () => {
       const questions = bank(subjectId);
-      const l1 = questions.filter((q) => q.meta!.cognitiveLevel === "L1").length;
-      const l3 = questions.filter((q) => q.meta!.cognitiveLevel === "L3").length;
-      const direct = questions.filter((q) => q.meta!.archetype === "Direct Concept").length;
-      expect(l1, `L1 ${l1} 題，記憶型過多`).toBeLessThanOrEqual(base.l1Max);
-      expect(l3, `L3 ${l3} 題，應用型過少`).toBeGreaterThanOrEqual(base.l3Min);
-      expect(direct, `Direct Concept ${direct} 題`).toBeLessThanOrEqual(base.directConceptMax);
+      const pct = (predicate: (q: Question) => boolean) =>
+        (questions.filter(predicate).length / questions.length) * 100;
+      const l1 = pct((q) => q.meta!.cognitiveLevel === "L1");
+      const l2 = pct((q) => q.meta!.cognitiveLevel === "L2");
+      const l3 = pct((q) => q.meta!.cognitiveLevel === "L3");
+      const l4 = pct((q) => q.meta!.cognitiveLevel === "L4");
+      const direct = pct((q) => q.meta!.archetype === "Direct Concept");
+      const cross = pct((q) => Boolean(q.meta!.crossNode));
+      expect(l1, `L1 ${l1.toFixed(1)}%`).toBeLessThanOrEqual(AIAP_BANDS.l1Max);
+      expect(l2, `L2 ${l2.toFixed(1)}%`).toBeLessThanOrEqual(AIAP_BANDS.l2Max);
+      expect(l3, `L3 ${l3.toFixed(1)}%`).toBeGreaterThanOrEqual(AIAP_BANDS.l3Min);
+      expect(l4, `L4 ${l4.toFixed(1)}%`).toBeGreaterThanOrEqual(AIAP_BANDS.l4Min);
+      expect(direct, `純記憶型 ${direct.toFixed(1)}%`).toBeLessThanOrEqual(AIAP_BANDS.dcMax);
+      expect(cross, `跨節點 ${cross.toFixed(1)}%`).toBeGreaterThanOrEqual(AIAP_BANDS.crossMin);
     });
   }
 });

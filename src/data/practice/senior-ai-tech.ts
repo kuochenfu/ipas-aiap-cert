@@ -406,6 +406,196 @@ export const practiceQuestions: Question[] = [
         "若法遵要的是「整體核准率是否對特定族群不利」，該提供的就是群體層級的統計，而不是逐案的關鍵文句。",
     },
   },
+  {
+    id: "senior-ai-tech-practice-q101",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某銀行的客訴分類模型在測試集 F1 達 0.92，上線三個月後降到 0.71。檢查發現客訴文字的用詞分布與訓練期相近，但新增了一類「數位帳戶開戶失敗」的客訴，且該類在訓練資料中不存在。下列處置何者最正確？",
+    choices: [
+      { id: "A", text: "改用更長的上下文視窗" },
+      { id: "B", text: "調高分類門檻即可" },
+      { id: "C", text: "提高模型參數量" },
+      { id: "D", text: "這是新類別出現而非分布漂移，應補上該類的標註樣本並重新定義類別體系，同時為未涵蓋的客訴保留「其他」出口" },
+    ],
+    answer: "D",
+    explanation:
+      "用詞分布沒變、但出現了訓練時不存在的類別，模型只能把它硬塞進既有類別而拉低整體表現。要補的是類別體系與標註樣本，並設「其他」出口讓未涵蓋的內容不被強行歸類。",
+    choiceExplanations: {
+      A: "上下文長度影響能讀多少字，與類別涵蓋範圍是兩回事。",
+      B: "門檻調整只改變判定的鬆緊，無法讓模型認得一個它從未見過的類別。",
+      C: "參數量與能否辨識新類別無關，沒有樣本就學不到。",
+    },
+    topic: "L21101 自然語言處理技術與應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["新類別", "類別體系", "其他出口"],
+      constraints: ["data_quality", "quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L21301",
+      decisionBoundary:
+        "若用詞分布同時明顯改變（例如新客群用語不同），就是新類別與資料漂移並存，補樣本之外還要重新檢視特徵表示。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q102",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某醫院要從病歷抽取用藥資訊，需求包含：抽出藥名與劑量、判斷該次用藥是否為「停用」、且結果須可追溯到原文位置。下列技術組合何者最合理？",
+    choices: [
+      { id: "A", text: "以文本分類判斷整份病歷是否提及停藥" },
+      { id: "B", text: "以生成式模型直接輸出一段用藥摘要" },
+      { id: "C", text: "以關鍵字比對抽出藥名即可" },
+      { id: "D", text: "以命名實體辨識抽出藥名劑量並保留字元位移，再以關係或屬性分類判斷停用與否；兩段都輸出原文位置以供追溯" },
+    ],
+    answer: "D",
+    explanation:
+      "三項需求要分開對應：抽取結構化欄位靠實體辨識、判斷停用與否是在抽出的實體上再做屬性分類、可追溯則要求全程保留字元位移。生成式摘要雖然可讀，卻無法保證每個劑量精確且指得回原文。",
+    choiceExplanations: {
+      A: "整份分類只回答「有沒有提到」，無法對應到個別藥品。",
+      B: "生成摘要可能改寫或遺漏數字，也不保證能對應回原文的確切位置。",
+      C: "關鍵字比對抓不到劑量與停用語境，同名不同劑型也無法區分。",
+    },
+    topic: "L21101 自然語言處理技術與應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["實體辨識", "屬性分類", "可追溯性"],
+      constraints: ["quality", "explainability"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Wrong Trade-off",
+        C: "Partial Truth",
+      },
+      crossNode: "L21203",
+      decisionBoundary:
+        "若只需要一份給醫師快速瀏覽的摘要、不進入結構化欄位也不需追溯，生成式模型的可讀性優勢就重新勝出。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q103",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某工廠的維修單語意搜尋上線後，工程師抱怨「查料號 A-1203 卻找不到那張單」。技術人員確認該單確實存在且含此料號。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應提高向量的維度" },
+      { id: "B", text: "向量檢索比對的是語意而非字面，精確字串容易被相近但不同的內容擠掉，應改為關鍵字與向量混合檢索" },
+      { id: "C", text: "應改用更大的嵌入模型" },
+      { id: "D", text: "應把所有維修單重新切塊" },
+    ],
+    answer: "B",
+    explanation:
+      "料號這種字面字串在向量空間裡沒有語意鄰居，A-1203 與 A-1204 的向量幾乎一樣近。這正是純向量檢索的盲區，處方是混合檢索：關鍵字負責精確匹配，向量負責語意召回。",
+    choiceExplanations: {
+      A: "提高維度不會讓相近料號在語意上被區分開。",
+      C: "更大的嵌入模型同樣無法把 A-1203 與 A-1204 的語意拉開。",
+      D: "重新切塊改變的是檢索單位大小，精確字串仍然不是向量擅長的。",
+    },
+    topic: "L21101 自然語言處理技術與應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["向量檢索", "關鍵字檢索", "混合檢索"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Neighbor Concept",
+      },
+      crossNode: "L21103",
+      decisionBoundary:
+        "若查詢多為「機台過熱怎麼辦」這類自然語言描述、極少出現精確代號，純向量檢索就完全足夠。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q104",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某教育平台的作文評分模型對某一縣市學生的分數系統性偏低。追查發現該縣市學生的用詞與訓練語料的來源學校差異明顯。下列處置何者最正確？",
+    choices: [
+      { id: "A", text: "提高模型的生成溫度" },
+      { id: "B", text: "為該縣市的分數統一加上補償分" },
+      { id: "C", text: "停用該縣市的評分功能" },
+      { id: "D", text: "這是訓練語料代表性不足造成的系統性偏差，應補入該縣市的樣本並以分群評估持續追蹤各縣市的分數分布" },
+    ],
+    answer: "D",
+    explanation:
+      "根因是訓練語料沒涵蓋這群學生的表達方式，模型把「不熟悉」誤判成「寫得不好」。補入樣本才是對症；而分群評估要成為常規，否則下一個沒被涵蓋的群體同樣會被埋沒在整體平均裡。",
+    choiceExplanations: {
+      A: "評分模型的問題在於代表性，與生成的隨機性無關。",
+      B: "統一加分是掩蓋而非修正，個別學生的相對排序仍然錯，且加多少沒有依據。",
+      C: "停用等於放棄該縣市學生的服務，把問題轉嫁給他們承擔。",
+    },
+    topic: "L21101 自然語言處理技術與應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["語料代表性", "系統性偏差", "分群評估"],
+      constraints: ["fairness", "data_quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L21203",
+      decisionBoundary:
+        "若分數差距在補入樣本後仍然存在、且與實際寫作品質一致，那就不是偏差而是真實差異，處置方向會轉為教學支援。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q105",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某農會要建立能回答補助辦法的問答系統，辦法每季修訂且回答必須標明依據條號。下列架構何者最合理？",
+    choices: [
+      { id: "A", text: "以通用模型直接回答" },
+      { id: "B", text: "每季以最新辦法微調模型一次" },
+      { id: "C", text: "把辦法全文寫進系統提示詞" },
+      { id: "D", text: "以檢索增強生成檢索最新辦法條文，並要求模型在回答中標註引用的條號" },
+    ],
+    answer: "D",
+    explanation:
+      "季度更新與出處標註這兩項需求同時指向檢索：更新文件即生效、檢索到的條文本身就是可引用的依據。微調與寫死提示詞都會讓「更新」變成一次工程作業。",
+    choiceExplanations: {
+      A: "通用模型不知道這份辦法的內容，且無從標註條號。",
+      B: "每季重訓與評估的成本高，且更新有時間差，條號也不會自動附上。",
+      C: "辦法全文可能超出提示詞長度上限，每次修訂還要改程式並重測。",
+    },
+    topic: "L21101 自然語言處理技術與應用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["RAG", "知識更新", "出處標註"],
+      constraints: ["governance", "maintainability"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L21103",
+      decisionBoundary:
+        "若辦法只有兩頁且一年才修一次，整份放進提示詞反而最省事，RAG 的索引維運成本就不划算。",
+    },
+  },
 
   // ── L21102 電腦視覺技術與應用（11 題）──────────────────────────
   {
@@ -808,6 +998,195 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若校方允許影像離開校園、且無即時性需求，雲端推論在成本與模型能力上都更有優勢。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q106",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某工廠的瑕疵偵測模型召回率達 98%，但產線人員反映「常常把正常的水漬判成瑕疵」，複檢量暴增到人力無法負荷。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "增加模型參數量" },
+      { id: "B", text: "降低召回率目標到 90% 以減少複檢" },
+      { id: "C", text: "取消複檢流程" },
+      { id: "D", text: "依複檢量能與漏檢成本重新定出門檻，並補入水漬樣本作為負樣本訓練；必要時分級處理，高信心瑕疵直接下線、低信心才複檢" },
+    ],
+    answer: "D",
+    explanation:
+      "98% 召回是靠大量誤報換來的，而複檢量能是真實的硬限制。處置有兩層：資料層補入水漬的負樣本讓模型學會區分，流程層依信心分級，把人力集中在真正拿不準的案例上。",
+    choiceExplanations: {
+      A: "參數量增加不會讓模型自動學會區分水漬與瑕疵，缺的是樣本。",
+      B: "直接降召回等於放更多瑕疵流出，把問題轉嫁給客戶端。",
+      C: "取消複檢會讓誤報直接變成報廢或錯放，兩種錯誤都無人攔截。",
+    },
+    topic: "L21102 電腦視覺技術與應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["精確率與召回率", "門檻校準", "分級處理"],
+      constraints: ["quality", "cost"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L21301",
+      decisionBoundary:
+        "若漏檢會造成客戶端重大損失、而複檢人力可以增補，取捨就會往維持高召回、擴充複檢量能的方向移動。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q107",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某醫院的影像模型在 A 院表現良好，移到 B 院明顯退步。已知兩院造影設備廠牌不同。下列處置的優先順序何者最合理？",
+    choices: [
+      { id: "A", text: "忽略落差，兩院共用同一模型" },
+      { id: "B", text: "直接以 B 院資料從零重新訓練" },
+      { id: "C", text: "要求 B 院更換為與 A 院相同廠牌的設備" },
+      { id: "D", text: "先以 B 院的少量標註影像評估落差幅度，再依落差決定是做影像正規化、以 B 院資料微調，還是重新訓練" },
+    ],
+    answer: "D",
+    explanation:
+      "處置強度應與落差幅度相稱。先量出差多少，才知道是靠正規化把成像特性拉近就夠、還是需要微調甚至重訓。跳過量測直接重訓，可能花了最大的代價解一個正規化就能解的問題。",
+    choiceExplanations: {
+      A: "忽略落差會讓 B 院病患承擔較差的判讀品質。",
+      B: "重訓成本最高且需要大量 B 院標註，在還沒確認落差幅度前就投入並不合理。",
+      C: "更換設備的成本遠高於調整模型，且不具可推廣性。",
+    },
+    topic: "L21102 電腦視覺技術與應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["分布偏移", "影像正規化", "處置強度"],
+      constraints: ["data_quality", "cost"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L21301",
+      decisionBoundary:
+        "若量測後發現落差來自 B 院獨有的病患組成而非成像特性，正規化就幫不上忙，只能靠補樣本。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q108",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某校園要部署即時人流計算，限制包含：影像不得離開校園、單台設備要涵蓋四個出入口、且不得辨識個人身分。下列設計何者最合理？",
+    choices: [
+      { id: "A", text: "影像上傳雲端計算後刪除" },
+      { id: "B", text: "在校內以人臉辨識計數，確保不重複計算" },
+      { id: "C", text: "在校內邊緣裝置以物件偵測計數，不做人臉辨識也不保存原始影像，只上傳各出入口的人數統計" },
+      { id: "D", text: "保存全部影像以備日後查核" },
+    ],
+    answer: "C",
+    explanation:
+      "三項限制分別對應三個設計決定：不得外流 → 端側推論；不得辨識身分 → 用物件偵測而非人臉辨識；至於不保存原始影像，則讓「日後被翻出來」的風險從源頭消失。",
+    choiceExplanations: {
+      A: "上傳雲端的那一刻影像已離開校園，事後刪除補不回來。",
+      B: "人臉辨識直接違反不得辨識個人身分的限制，即使目的只是去重。",
+      D: "保存原始影像會持續累積可識別資料的風險，且與需求無關。",
+    },
+    topic: "L21102 電腦視覺技術與應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["邊緣推論", "物件偵測", "資料最小化"],
+      constraints: ["privacy", "connectivity", "governance"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L21302",
+      decisionBoundary:
+        "若需求改成「找出未經授權的入侵者」，就必須辨識身分，設計會轉為嚴格的權限控管與保存期限，而不是避免辨識。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q109",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某農場的空拍病害辨識模型在測試集表現良好，實地飛行時卻大幅退步。已知測試影像來自晴天正午、實地飛行涵蓋各種天候與時段。下列處置何者最正確？",
+    choices: [
+      { id: "A", text: "提高空拍機的飛行高度" },
+      { id: "B", text: "要求只在晴天正午飛行" },
+      { id: "C", text: "增加模型層數" },
+      { id: "D", text: "測試集與部署環境不同分布，應補入各時段與天候的實地影像重建測試集，並在前處理加入亮度與色彩正規化" },
+    ],
+    answer: "D",
+    explanation:
+      "測試集只涵蓋單一拍攝條件，測得的分數自然無法代表實地。要做兩件事：重建能代表部署環境的測試集，否則永遠量不準；以及在前處理消除與任務無關的光照變異。",
+    choiceExplanations: {
+      A: "飛行高度改變的是解析度與涵蓋範圍，與光照差異無關。",
+      B: "限制飛行條件是把需求砍掉，且多數農務無法配合單一時段。",
+      C: "增加層數無助於面對訓練時未見過的光照條件。",
+    },
+    topic: "L21102 電腦視覺技術與應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["測試集代表性", "光照正規化", "部署環境"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L21301",
+      decisionBoundary:
+        "若模型的目的正是判斷日照是否充足，亮度就成了有效訊號，正規化反而會把要預測的東西抹掉。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q110",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某銀行要辨識存摺影本上的手寫金額並填入欄位，影像常有摺痕與陰影。下列處理順序何者最合理？",
+    choices: [
+      { id: "A", text: "以物件偵測框出整張存摺" },
+      { id: "B", text: "直接進行文字辨識，辨識不出來就跳過" },
+      { id: "C", text: "以影像分類判斷影本是否清晰即可" },
+      { id: "D", text: "先做影像增強與去陰影等前處理，再進行文字辨識，並對低信心的欄位標記為需人工確認" },
+    ],
+    answer: "D",
+    explanation:
+      "摺痕與陰影會直接壓低辨識率，前處理是提高輸入品質的最直接手段；而金額攸關帳務，低信心的結果必須交由人確認而不是靜默跳過。",
+    choiceExplanations: {
+      A: "框出整張存摺無助於取得金額數字。",
+      B: "跳過會讓欄位留白，且沒有任何提示，錯誤會在下游才被發現。",
+      C: "判斷清晰與否不產生金額，需求沒有被滿足。",
+    },
+    topic: "L21102 電腦視覺技術與應用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["影像前處理", "OCR", "信心門檻"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Wrong Trade-off",
+        C: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若影本品質本來就良好、辨識率已達九成九，前處理帶來的邊際效益就有限，重點會回到低信心欄位的處理流程。",
     },
   },
 
@@ -1216,6 +1595,196 @@ export const practiceQuestions: Question[] = [
         "若模型是以完全授權或自有資料訓練，重現受保護內容的風險大幅下降，但仍應保留相似度比對這道關卡。",
     },
   },
+  {
+    id: "senior-ai-tech-practice-q111",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某銀行的理財建議書生成系統已導入檢索增強生成並標註出處，仍出現一份建議書把兩檔商品的費率互相對調。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應改用更大的模型" },
+      { id: "B", text: "應提高生成溫度以增加多樣性" },
+      { id: "C", text: "檢索保證的是有依據，不保證推論與對應正確；應加上結構化欄位比對，把費率等關鍵數值改由程式從來源直接填入而非由模型敘述" },
+      { id: "D", text: "應停用檢索增強生成" },
+    ],
+    answer: "C",
+    explanation:
+      "RAG 解決的是「有沒有依據」，但模型仍可能在多份文件之間把數值對錯對象。關鍵數值不該讓模型敘述，而該由程式從來源欄位直接帶入，模型只負責串接文字。",
+    choiceExplanations: {
+      A: "更大的模型仍可能在多份相似文件之間混淆對應關係。",
+      B: "提高溫度會讓輸出更發散，對調的機率上升。",
+      D: "停用檢索會讓模型完全失去依據，錯得更嚴重。",
+    },
+    topic: "L21103 生成式 AI 技術與應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["RAG 侷限", "結構化填值", "數值正確性"],
+      constraints: ["quality", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L21203",
+      decisionBoundary:
+        "若建議書中根本不含任何數值、只有定性描述，這個風險就不存在，RAG 加出處標註已經足夠。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q112",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某醫院要讓 AI 助理能查詢病患當下的檢驗值並據以回答。已知檢驗值每小時更新、且系統須記錄每次查詢。下列設計何者最合理？",
+    choices: [
+      { id: "A", text: "為模型提供受權限控管的查詢工具，由模型決定何時呼叫，並在工具層記錄每次查詢的病患、時間與呼叫者" },
+      { id: "B", text: "每小時把全院檢驗值匯入提示詞" },
+      { id: "C", text: "以檢索增強生成檢索昨日的檢驗報告" },
+      { id: "D", text: "讓模型依訓練知識推估檢驗值" },
+    ],
+    answer: "A",
+    explanation:
+      "要當下的值就必須即時查詢，而查詢紀錄要留在工具層——因為那是真正發生存取的地方，也才擋得住越權。把權限與稽核放在工具層，模型換了也不影響。",
+    choiceExplanations: {
+      B: "全院檢驗值遠超過提示詞長度，且把所有病患的資料塞給每一次對話違反最小權限。",
+      C: "昨日報告無法回答「當下」的檢驗值，時效不符。",
+      D: "檢驗值是個別病患的實測數據，模型無從推估，硬答就是幻覺。",
+    },
+    topic: "L21103 生成式 AI 技術與應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["工具呼叫", "權限控管", "稽核紀錄"],
+      constraints: ["privacy", "latency", "governance"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Partial Truth",
+        D: "Overgeneralization",
+      },
+      crossNode: "L21302",
+      decisionBoundary:
+        "若檢驗值一天只更新一次、且查詢對象固定為當前看診的病患，把當日快照放進上下文就夠了，不必付出工具呼叫的複雜度。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q113",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某教育機構要讓生成式模型穩定產出固定格式的評語，同時內容須反映每週更新的教材。團隊爭論該用微調還是檢索。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "格式與語氣屬穩定需求，適合以微調或提示模板固定；教材內容每週變動，適合以檢索引入——兩者分工而非二選一" },
+      { id: "B", text: "全部以微調處理，每週重訓一次" },
+      { id: "C", text: "全部以檢索處理，格式也交給檢索" },
+      { id: "D", text: "兩者都不需要，提高溫度即可" },
+    ],
+    answer: "A",
+    explanation:
+      "判準是變動頻率：不會變的（格式、語氣）寫進模型或模板最省；會變的（教材）留在可即時更新的檢索索引。把兩者混在同一種手段上，就會出現「改一次要重訓一次」或「格式時好時壞」。",
+    choiceExplanations: {
+      B: "每週重訓的成本與時間差都不可行，教材一改就過時。",
+      C: "檢索提供的是知識來源，不直接控制輸出格式與語氣的一致性。",
+      D: "提高溫度會讓格式更不穩定，方向相反。",
+    },
+    topic: "L21103 生成式 AI 技術與應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["微調", "檢索", "變動頻率"],
+      constraints: ["cost", "maintainability"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Partial Truth",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L21202",
+      decisionBoundary:
+        "若格式需求只是「正式一點」這種簡單約束，提示模板就夠了，微調的訓練成本換不到相應效益。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q114",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某工廠的設備手冊問答助理，同一問題在不同時間得到措辭不同但內容一致的答案，操作員反映困惑。技術人員已調低生成溫度仍未完全解決。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "把手冊重新撰寫" },
+      { id: "B", text: "再把溫度調到 0 即可" },
+      { id: "C", text: "改用更大的模型" },
+      { id: "D", text: "對高頻問題建立經審核的固定回覆，由分類器命中後直接回傳，僅在未命中時才走生成" },
+    ],
+    answer: "D",
+    explanation:
+      "調低溫度能減少隨機性，但只要走生成路徑，措辭就仍可能因提示或檢索片段的細微差異而變動。對答案固定的高頻問題，最可靠的做法是繞開生成，直接回傳審核過的內容。",
+    choiceExplanations: {
+      A: "手冊內容並非問題所在，重寫成本極高也無法解決生成的變異。",
+      B: "即使溫度為 0，檢索到的片段不同仍會導致措辭變化，且已試過未解決。",
+      C: "更大的模型不保證措辭穩定，成本卻上升。",
+    },
+    topic: "L21103 生成式 AI 技術與應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["輸出一致性", "固定回覆", "分類前置"],
+      constraints: ["quality", "latency"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Partial Truth",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L21302",
+      decisionBoundary:
+        "若問題幾乎不重複、每次情境都不同，固定回覆的命中率會極低，投資就不划算。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q115",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某農業單位要以生成式模型撰寫對外的補助說明文案，並要求上線前確認不含錯誤資訊。下列流程何者最合理？",
+    choices: [
+      { id: "A", text: "以文字長度判斷內容是否完整" },
+      { id: "B", text: "模型產出後直接發布，有錯再更正" },
+      { id: "C", text: "以另一個生成式模型檢查前一個的輸出即可" },
+      { id: "D", text: "由模型產出草稿、承辦人員逐項核對數字與條件後才發布，並保留核對紀錄" },
+    ],
+    answer: "D",
+    explanation:
+      "對外文案涉及民眾權益，事實正確性只能由知道正確答案的人確認。保留核對紀錄則讓日後發生爭議時，責任與流程都說得清楚。",
+    choiceExplanations: {
+      A: "長度與正確性無關，長的文案一樣可能寫錯金額。",
+      B: "錯誤資訊一旦發布就可能造成民眾誤解與申請失敗，事後更正補不回來。",
+      C: "第二個生成式模型同樣可能產生看似合理的錯誤，無法取代對事實的查核。",
+    },
+    topic: "L21103 生成式 AI 技術與應用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["人工核對", "事實正確性", "紀錄保留"],
+      constraints: ["quality", "governance"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L21203",
+      decisionBoundary:
+        "若產出的只是內部腦力激盪用的想法清單、不對外發布，核對強度就可以大幅放寬。",
+    },
+  },
 
   // ── L21104 多模態人工智慧應用（11 題）──────────────────────────
   {
@@ -1615,6 +2184,195 @@ export const practiceQuestions: Question[] = [
         B: "Wrong Trade-off",
         C: "Wrong Trade-off",
         D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若氣象站密度高到每塊田區都有一座，就不必往上聚合，可直接以較細的空間解析度建模。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q116",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某醫院的多模態診斷輔助系統整合影像、檢驗值與病歷文字。上線後發現當檢驗值缺漏時整體判斷品質急遽下滑。已知該系統採早期融合。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "以隨機值填補缺漏的檢驗值" },
+      { id: "B", text: "改為晚期融合或加入模態缺失偵測與備援路徑，讓缺哪一個模態就以其餘模態的分支給出判斷並標示可信度下降" },
+      { id: "C", text: "拒絕處理任何缺少模態的案例" },
+      { id: "D", text: "提高影像模態的權重" },
+    ],
+    answer: "B",
+    explanation:
+      "早期融合把各模態的特徵拼接後一起學，缺一段就等於輸入殘缺。晚期融合讓每個模態各有分支，缺哪個就略過哪個；同時要讓系統誠實回報「這次的判斷可信度較低」。",
+    choiceExplanations: {
+      A: "隨機填值等於注入雜訊，在醫療場域可能導向完全錯誤的建議。",
+      C: "真實病歷缺項極為常見，一律拒絕會讓系統在多數情境下無法使用。",
+      D: "提高影像權重只是換一種依賴，檢驗值缺漏時仍然沒有補上資訊。",
+    },
+    topic: "L21104 多模態人工智慧應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["早期融合", "晚期融合", "模態缺失"],
+      constraints: ["reliability", "data_quality", "safety"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Partial Truth",
+      },
+      crossNode: "L21203",
+      decisionBoundary:
+        "若檢驗值幾乎不會缺漏、而模態間的細緻互動才是判斷關鍵，早期融合仍然較佳——晚期融合是以互動資訊換韌性。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q117",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某工廠整合振動訊號（每秒千筆）與熱影像（每分鐘一張）判斷設備健康。建模前最關鍵的處理是下列何者？",
+    choices: [
+      { id: "A", text: "把熱影像轉為灰階" },
+      { id: "B", text: "決定共同的時間粒度並把兩種資料對齊到同一時間窗，例如把振動彙總為每分鐘的統計特徵" },
+      { id: "C", text: "把振動訊號降頻到每分鐘一筆取樣值" },
+      { id: "D", text: "兩種資料分別建模且永不整合" },
+    ],
+    answer: "B",
+    explanation:
+      "兩種資料的取樣頻率差了六萬倍，不先對齊到同一時間單位，每一筆訓練樣本的兩個模態就描述著不同時刻。彙總為統計特徵能在對齊的同時保留振動的波動資訊。",
+    choiceExplanations: {
+      A: "轉灰階會丟失熱影像最關鍵的溫度色彩資訊，且與對齊無關。",
+      C: "每分鐘只取一個瞬間值會丟掉振動的波動特性，不如彙總統計量。",
+      D: "不整合就無法產生綜合判斷，違背多模態的目的。",
+    },
+    topic: "L21104 多模態人工智慧應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["時間對齊", "取樣頻率", "特徵彙總"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        C: "Partial Truth",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L21301",
+      decisionBoundary:
+        "若要偵測的是毫秒級的瞬間衝擊，往分鐘彙總會把訊號抹平，此時該提高熱影像的取樣頻率而不是降低振動的粒度。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q118",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某銀行的多模態身分驗證同時比對人臉與聲紋。資安團隊指出近年偽造技術可同時產生影像與語音。下列強化方向何者最合理？",
+    choices: [
+      { id: "A", text: "加入活體偵測等與偽造管道不同的驗證因子，因為兩種模態若能被同一段偽造影片一次騙過，多模態的獨立性假設就不成立" },
+      { id: "B", text: "提高人臉比對的相似度門檻" },
+      { id: "C", text: "增加聲紋樣本的長度" },
+      { id: "D", text: "改為只用人臉單一模態" },
+    ],
+    answer: "A",
+    explanation:
+      "多模態之所以更安全，前提是兩個模態要分別被攻破。一旦同一段偽造影片能同時提供臉與聲，兩者就不再獨立，安全增益大幅縮水。要補的是走另一條管道的因子，例如活體偵測或裝置綁定。",
+    choiceExplanations: {
+      B: "提高門檻會增加正常使用者被拒的機率，對高品質偽造仍可能通過。",
+      C: "樣本更長對同步偽造的影片沒有幫助，偽造語音同樣可以更長。",
+      D: "減少模態只會讓攻擊面更集中，安全性下降。",
+    },
+    topic: "L21104 多模態人工智慧應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["多因子獨立性", "活體偵測", "偽造風險"],
+      constraints: ["security"],
+      distractorTypes: {
+        B: "Partial Truth",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L21203",
+      decisionBoundary:
+        "若驗證發生在臨櫃、有行員在場目視，實體在場本身就是一個獨立因子，遠端偽造的風險大幅下降。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q119",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某教育單位規劃多模態學習分析，擬蒐集學生課堂影像與發言錄音。專案啟動會議上，技術團隊已排定架構與模型選型。下列提醒何者最關鍵？",
+    choices: [
+      { id: "A", text: "應先設計儀表板的配色" },
+      { id: "B", text: "應先決定使用哪一種融合策略" },
+      { id: "C", text: "應先採購足夠的 GPU" },
+      { id: "D", text: "未成年人的影像與語音屬高敏感個資，蒐集的法律依據與監護人同意是能否進行的前提，應在技術規劃之前確認" },
+    ],
+    answer: "D",
+    explanation:
+      "合法性是前提而不是其中一個項目。若蒐集本身不被允許，後面的架構、模型與硬體全部作廢。這類問題必須排在技術規劃之前確認，而不是等系統做完才發現不能上線。",
+    choiceExplanations: {
+      A: "配色屬於呈現層細節，與能否合法蒐集無關。",
+      B: "融合策略是技術選擇，前提不成立時沒有意義。",
+      C: "硬體採購同樣建立在專案能執行的前提上。",
+    },
+    topic: "L21104 多模態人工智慧應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["未成年個資", "法律依據", "前提確認"],
+      constraints: ["privacy", "governance"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Layer Confusion",
+        C: "Layer Confusion",
+      },
+      crossNode: "L21203",
+      decisionBoundary:
+        "若改為只蒐集作答紀錄這類非生物特徵資料，法律門檻大幅降低，規劃重點就回到技術面。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q120",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某農業團隊要結合衛星影像（每像素 10 公尺）與氣象站資料（每站涵蓋數十公里）預測田區收成。下列處理何者最必要？",
+    choices: [
+      { id: "A", text: "捨棄空間資訊，全部視為單一點" },
+      { id: "B", text: "把衛星影像插值放大到與氣象站數量相同" },
+      { id: "C", text: "先決定以田區為分析單元，把衛星像素聚合到田區、並把最近氣象站的資料對應到該田區" },
+      { id: "D", text: "把兩種資料的數值直接相加" },
+    ],
+    answer: "C",
+    explanation:
+      "兩種資料的空間解析度差距極大，必須先統一分析單元，同一筆樣本的各欄位才會描述同一塊土地。以田區為單元既符合實際的管理與決策粒度，也讓兩者都能對應上。",
+    choiceExplanations: {
+      A: "捨棄空間資訊會讓不同田區的差異全部消失，無法做田區級預測。",
+      B: "插值放大不會增加真實資訊，也沒有解決粒度對齊的問題。",
+      D: "兩者的單位與物理意義完全不同，相加沒有任何意義。",
+    },
+    topic: "L21104 多模態人工智慧應用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["空間粒度", "分析單元", "多來源對齊"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
       },
       decisionBoundary:
         "若氣象站密度高到每塊田區都有一座，就不必往上聚合，可直接以較細的空間解析度建模。",
@@ -2028,6 +2786,196 @@ export const practiceQuestions: Question[] = [
         "若現況根本沒有量測、也無法回溯，就必須先花時間建立基準期，否則之後任何成效宣稱都無法驗證。",
     },
   },
+  {
+    id: "senior-ai-tech-practice-q121",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某工廠評估四個 AI 題目，資料可得性與商業價值皆相近，但技術可行性差異大。若要在三個月內產出可驗證的成果，下列篩選邏輯何者最合理？",
+    choices: [
+      { id: "A", text: "優先選技術最困難的，因為挑戰大成果才顯著" },
+      { id: "B", text: "優先選技術可行性最高、且失敗後果可承受的題目，先建立基準與信任，再處理難度高的" },
+      { id: "C", text: "四案並行，三個月後比較誰先做出來" },
+      { id: "D", text: "依提案部門的層級決定" },
+    ],
+    answer: "B",
+    explanation:
+      "時程只有三個月時，能不能做出來比值不值得做更關鍵——後者四案本來就相近。先在可行性高的題目上做出可驗證的成果，組織的信任與經驗都會成為下一題的資本。",
+    choiceExplanations: {
+      A: "難度高的題目在三個月內做不出成果的機率大，失敗還會消耗組織對 AI 的信心。",
+      C: "四案並行會讓資源稀釋，很可能四案都做不完。",
+      D: "部門層級是政治因素，與專案能否成功沒有因果關係。",
+    },
+    topic: "L21201 AI 導入評估",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["技術可行性", "題目篩選", "時程限制"],
+      constraints: ["risk_priority", "cost"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L21202",
+      decisionBoundary:
+        "若組織已有多次成功導入的經驗與充足人力，就不必再從最容易的題目開始，可以直接挑戰價值最高的。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q122",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某醫院評估 AI 判讀專案，發現導入後單件處理時間從 30 秒增加到 45 秒，但夜間可提供原本沒有的初步判讀。下列評估何者最正確？",
+    choices: [
+      { id: "A", text: "應取消人工複核以把時間補回來" },
+      { id: "B", text: "因為變慢了，應直接否決" },
+      { id: "C", text: "效率不是此案的效益來源，應改以「夜間覆蓋率」與「夜間到隔日確診的時間縮短」等指標重新定義價值主張" },
+      { id: "D", text: "應改用更快但較不準確的模型" },
+    ],
+    answer: "C",
+    explanation:
+      "導入後變慢，代表效率不是它的價值所在。但「原本夜間沒有判讀、現在有了」是真實的效益，只是要用對的指標去衡量——衡量錯了，一個有價值的專案會被誤判為失敗。",
+    choiceExplanations: {
+      A: "取消複核會把風險轉嫁給病患，且並未回應價值主張的問題。",
+      B: "以效率為唯一判準會漏掉夜間覆蓋這項真正的效益。",
+      D: "犧牲準確度在醫療判讀上代價過高，也不是效益的來源。",
+    },
+    topic: "L21201 AI 導入評估",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["價值主張", "指標選擇", "效益來源"],
+      constraints: ["governance", "quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L21202",
+      decisionBoundary:
+        "若醫院本來就有夜間值班醫師、判讀從不延遲，夜間覆蓋這項效益就不存在，該案的價值主張確實站不住。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q123",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某銀行評估 AI 專案時只核算了模型授權費與伺服器成本，稽核認為低估。下列補充項目中，通常金額最大且最常被漏算的是何者？",
+    choices: [
+      { id: "A", text: "名片印刷費" },
+      { id: "B", text: "專案啟動會議的場地費" },
+      { id: "C", text: "官方網站的網域費用" },
+      { id: "D", text: "上線後的持續監控、資料管線維護、定期重訓與模型升級的重測人力" },
+    ],
+    answer: "D",
+    explanation:
+      "模型上線只是開始：資料會漂移、內容會更新、效能要有人盯、模型一升級整套流程要重測。這些長期人力支出往往超過授權費本身，卻因為分散在各期而最容易在初期預算中被忽略。",
+    choiceExplanations: {
+      A: "名片印刷與專案成本結構無關。",
+      B: "場地費是一次性且金額極小的行政成本。",
+      C: "網域費用一年僅數千元，對成本結構影響微乎其微。",
+    },
+    topic: "L21201 AI 導入評估",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["總持有成本", "維運人力", "重訓成本"],
+      constraints: ["cost", "maintainability"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Layer Confusion",
+        C: "Layer Confusion",
+      },
+      crossNode: "L21302",
+      decisionBoundary:
+        "若採用完全託管的服務、監控與重訓都由供應商負責，內部維運成本會大幅下降，但供應商月費會反映這一段。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q124",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某教育機構評估兩個候選流程：甲每年執行兩萬次、規則清晰但已有規則引擎處理且錯誤率極低；乙每年執行三千次、判斷依據難以窮舉成規則、目前全靠三位資深人員經驗。下列判斷何者最合理？",
+    choices: [
+      { id: "A", text: "乙較適合——AI 的價值在於處理難以寫成規則的判斷；甲已有低錯誤率的規則引擎，導入 AI 的邊際效益有限" },
+      { id: "B", text: "甲較適合，因為執行次數多" },
+      { id: "C", text: "兩者都不適合" },
+      { id: "D", text: "應依哪個部門先提案決定" },
+    ],
+    answer: "A",
+    explanation:
+      "次數多不等於值得導入。甲的規則已經寫得出來且錯誤率低，AI 能改善的空間很小；乙的判斷寫不成規則、又高度依賴少數人的經驗，正是機器學習最能發揮也最能降低組織風險的地方。",
+    choiceExplanations: {
+      B: "執行次數只反映規模，甲的既有解法已經夠好，替換的效益有限。",
+      C: "乙符合「難以規則化且有經驗可學」的條件，是合適的候選。",
+      D: "提案順序與專案價值無關。",
+    },
+    topic: "L21201 AI 導入評估",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["導入適用性", "規則化難度", "邊際效益"],
+      constraints: ["cost", "risk_priority"],
+      distractorTypes: {
+        B: "Partial Truth",
+        C: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L21301",
+      decisionBoundary:
+        "若乙的三位資深人員從未留下任何決策紀錄，就沒有可學的標籤，適用性會反過來由甲勝出。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q125",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某農會的 AI 專案評估報告寫「預期提升作業效率」，未列現況數值。若要讓此報告可被驗收，最關鍵的補充是下列何者？",
+    choices: [
+      { id: "A", text: "把報告翻譯成英文" },
+      { id: "B", text: "補上模型架構圖" },
+      { id: "C", text: "補上供應商簡介" },
+      { id: "D", text: "以相同口徑量測現況作為基準線，並明確定義驗收時要比較的指標、期間與達標門檻" },
+    ],
+    answer: "D",
+    explanation:
+      "沒有基準線就沒有比較的起點——上線後不論結果如何都可以宣稱有改善，也可以被質疑沒有改善。基準、指標、期間、門檻四者齊備，驗收才有客觀依據。",
+    choiceExplanations: {
+      A: "語言不影響評估的實質品質。",
+      B: "架構圖有助理解實作，但缺少它不會讓成效無法驗證。",
+      C: "供應商簡介屬於採購資訊，與成效驗收無關。",
+    },
+    topic: "L21201 AI 導入評估",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["基準線", "驗收標準", "可量測"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Neighbor Concept",
+        C: "Layer Confusion",
+      },
+      crossNode: "L21202",
+      decisionBoundary:
+        "若現況根本沒有量測也無法回溯，就必須先安排一段基準期，否則之後任何成效宣稱都無法驗證。",
+    },
+  },
 
   // ── L21202 AI 導入規劃（11 題）────────────────────────────────
   {
@@ -2432,6 +3380,196 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若業務指標的回饋週期長達一年，就必須先以技術指標與短期代理指標把關，不能等一年才知道成敗。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q126",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某醫院的 AI 專案在單一科別試行成效良好，擴大到全院後表現明顯下滑。追查發現各科的病歷書寫慣例差異很大。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "這是模型容量不足，應改用更大的模型" },
+      { id: "B", text: "試行範圍不具代表性——擴大前應先評估各科的資料異質性，並以涵蓋多科的樣本重新驗證與調整" },
+      { id: "C", text: "應要求全院統一病歷書寫格式後再上線" },
+      { id: "D", text: "應退回只服務原本那一科" },
+    ],
+    answer: "B",
+    explanation:
+      "試行的意義在於「小範圍但可推論到全體」。這裡的試行範圍雖小卻不具代表性，成功的結論因此推不出去。正確的處置是先量出各科的異質性，再決定要補樣本、分科建模，還是統一前處理。",
+    choiceExplanations: {
+      A: "模型再大也補不上訓練時完全沒見過的書寫慣例。",
+      C: "要求全院改變書寫慣例的推動成本極高，且不應由 AI 專案來承擔。",
+      D: "退回原科等於放棄擴大的效益，也沒有解決可推論性的問題。",
+    },
+    topic: "L21202 AI 導入規劃",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["試行代表性", "資料異質性", "可推論性"],
+      constraints: ["data_quality", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L21301",
+      decisionBoundary:
+        "若各科的書寫慣例本來就高度一致，單科試行的結果就能安全推論到全院，擴大前的額外驗證可以精簡。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q127",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某銀行的 AI 客服規劃驗收標準時，業務端要求「準確率 95% 以上」，技術端指出這無法反映實際體驗。下列改寫何者最合理？",
+    choices: [
+      { id: "A", text: "改為在獨立測試集上「意圖分類召回率不低於 92%、誤答率不高於 3%、且低信心時轉真人的比例不超過 20%」等多項可量測條件" },
+      { id: "B", text: "改為「使用者覺得好用」" },
+      { id: "C", text: "改為「模型訓練不出錯」" },
+      { id: "D", text: "維持單一準確率門檻即可" },
+    ],
+    answer: "A",
+    explanation:
+      "單一準確率會讓模型有動機在不確定時硬答。把驗收拆成召回、誤答與轉人工比例三項，就同時綁住了「要抓得到」「不能亂答」「不能什麼都推給人」三個方向，任何一項被犧牲都會被發現。",
+    choiceExplanations: {
+      B: "主觀感受無法量測，雙方對它的解讀必然不同。",
+      C: "訓練能跑完只是最基本的技術前提，完全不代表模型有用。",
+      D: "單一門檻正是技術端指出的問題所在，維持不變等於沒有處理。",
+    },
+    topic: "L21202 AI 導入規劃",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["驗收標準", "多指標", "轉人工比例"],
+      constraints: ["quality", "governance"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L21203",
+      decisionBoundary:
+        "若轉人工的成本極低、且客服人力充足，轉人工比例的上限就可以放寬，驗收重心會集中在誤答率。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q128",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某工廠的 AI 品檢專案由資料科學家獨力完成標註規範，上線後與現場判定屢屢不一致。下列處置何者最能從根本改善？",
+    choices: [
+      { id: "A", text: "增加訓練輪數" },
+      { id: "B", text: "要求現場人員一律以模型判定為準" },
+      { id: "C", text: "由領域專家與現場人員共同界定標註規則與模糊案例的判準，並以重疊標註量測一致性後再重新標註" },
+      { id: "D", text: "改用更複雜的模型架構" },
+    ],
+    answer: "C",
+    explanation:
+      "模型學到的就是標註定義的東西。標註規則由不熟悉現場的人單獨制定，模型自然會與現場的實務判準脫節。要修的是規則本身，並用重疊標註把「大家其實看法不同」這件事量出來。",
+    choiceExplanations: {
+      A: "訓練再久，學到的仍是同一套有問題的標註定義。",
+      B: "以模型為準等於把錯誤的定義固定下來，現場的專業判斷被否定。",
+      D: "架構再複雜也無法修正標註本身的定義偏差。",
+    },
+    topic: "L21202 AI 導入規劃",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["標註規範", "領域專家", "標註者一致性"],
+      constraints: ["data_quality", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L21301",
+      decisionBoundary:
+        "若判定標準已由客戶規格逐條寫明、沒有模糊地帶，不一致就不是定義問題，該回頭查模型或影像品質。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q129",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某教育局的 AI 工具上線後，第一線教師的抗拒明顯。調查顯示教師擔心評分建議會被用來評鑑自己的教學表現。下列處置何者最能對症？",
+    choices: [
+      { id: "A", text: "明確承諾並以制度落實「本工具的輸出不作為教師考評依據」，同時讓教師參與後續調整" },
+      { id: "B", text: "加強說明模型的技術原理" },
+      { id: "C", text: "要求教師必須使用並納入考評" },
+      { id: "D", text: "停用工具" },
+    ],
+    answer: "A",
+    explanation:
+      "抗拒的根源不是不懂技術，而是擔心資料被轉用來評鑑自己。這種疑慮只能用制度回應——明確界定用途邊界並落實，再讓使用者參與調整以建立信任。",
+    choiceExplanations: {
+      B: "技術說明無法回應「這會不會被拿來考核我」的疑慮。",
+      C: "納入考評正好坐實了教師的擔憂，抗拒只會加劇。",
+      D: "停用放棄了工具的價值，且問題出在用途界定而非工具本身。",
+    },
+    topic: "L21202 AI 導入規劃",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["變革管理", "用途邊界", "使用者信任"],
+      constraints: ["governance"],
+      distractorTypes: {
+        B: "Partial Truth",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L21203",
+      decisionBoundary:
+        "若抗拒的原因其實是建議品質太差、常常評錯，制度承諾就治不了本，該做的是回頭修模型。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q130",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某農業單位規劃模型上線後的維運，但實際收成結果要一整季後才揭曉。下列監控設計何者最合理？",
+    choices: [
+      { id: "A", text: "不需監控，每年重訓一次" },
+      { id: "B", text: "只在季末量測一次準確率即可" },
+      { id: "C", text: "只監控伺服器的 CPU 使用率" },
+      { id: "D", text: "以輸入特徵分布與預測分布的漂移作為早期警訊，季末再以實際收成回頭校準模型效能" },
+    ],
+    answer: "D",
+    explanation:
+      "標籤延遲一整季時，等真實結果才發現問題已經來不及。分布漂移是可以立即量測的替代訊號——輸入或輸出的分布一變，就先示警；等實際收成回來，再拿來校準效能與重訓。",
+    choiceExplanations: {
+      A: "沒有監控就不知道何時該重訓，一年的間隔在季節性明顯的農業中太長。",
+      B: "季末才量測，中間三個月的錯誤預測已經影響了農務決策。",
+      C: "CPU 使用率反映系統負載，模型全部答錯時它可能完全正常。",
+    },
+    topic: "L21202 AI 導入規劃",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["標籤延遲", "分布漂移監控", "早期警訊"],
+      constraints: ["maintainability", "data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Layer Confusion",
+      },
+      crossNode: "L21302",
+      decisionBoundary:
+        "若能即時取得部分實際結果（例如提前採收的樣區），就該直接監控準確率，它比分布漂移更靈敏也更直接。",
     },
   },
 
@@ -2842,6 +3980,155 @@ export const practiceQuestions: Question[] = [
         "若輸入含高度敏感個資、不宜長期保存，就要改為保存去識別化後的摘要或雜湊，在可追溯與隱私之間取得平衡。",
     },
   },
+  {
+    id: "senior-ai-tech-practice-q131",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某銀行的 AI 貸款模型上線後，稽核發現對特定郵遞區號的核准率明顯偏低。模型並未使用族裔或性別欄位。下列處置的順序何者最合理？",
+    choices: [
+      { id: "A", text: "對該區申請人統一放寬門檻" },
+      { id: "B", text: "立即移除郵遞區號欄位即可" },
+      { id: "C", text: "先比較條件相同者在各區的待遇是否一致以確認是否為間接歧視，若成立再從特徵、重新加權或門檻調整三個層次選擇介入方式" },
+      { id: "D", text: "因為未使用敏感欄位，可判定無歧視並結案" },
+    ],
+    answer: "C",
+    explanation:
+      "核准率有差距不必然是歧視——也可能反映真實的還款能力差異。要先比較「條件相同的人」是否待遇一致，確認確實存在間接歧視後，再依模型是否還能重訓來選擇介入的時機與手段。",
+    choiceExplanations: {
+      A: "統一放寬門檻是掩蓋而非修正，還可能製造出新的不公平。",
+      B: "移除欄位可能讓其他特徵繼續扮演代理變數，且未先確認問題是否存在。",
+      D: "未使用敏感欄位不代表沒有間接歧視，這正是無感知即公平的誤解。",
+    },
+    topic: "L21203 AI 風險管理",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["間接歧視", "代理變數", "公平性介入時機"],
+      constraints: ["fairness", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Partial Truth",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若模型已上線且短期內無法重訓，可用的介入就只剩後處理的門檻調整——介入手段受限於模型還能不能動。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q132",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某醫院的 AI 判讀系統誤判導致醫療爭議。院方檢討時發現無法還原當時使用的是哪一版模型、輸入了什麼。下列改善何者最關鍵？",
+    choices: [
+      { id: "A", text: "改用準確率更高的模型" },
+      { id: "B", text: "建立每次推論的完整紀錄（輸入、模型版本、輸出、時間、操作者），並與程式碼與訓練資料版本綁定以確保可重現" },
+      { id: "C", text: "增加伺服器的儲存空間" },
+      { id: "D", text: "要求醫師簽署免責同意書" },
+    ],
+    answer: "B",
+    explanation:
+      "爭議發生時要回答的是「那一天為什麼判成這樣」。缺少輸入、版本與輸出的對應紀錄，責任與改進都無從談起；而只有版本號還不夠，程式碼與訓練資料也要一併固定才重現得出來。",
+    choiceExplanations: {
+      A: "更準的模型仍會出錯，且無助於還原已發生的個案。",
+      C: "儲存空間是實作條件，不等於建立了紀錄機制。",
+      D: "免責同意書無法取代對事故的追溯與改進，也未必有效。",
+    },
+    topic: "L21203 AI 風險管理",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["可追溯性", "版本綁定", "可重現性"],
+      constraints: ["governance", "safety"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Layer Confusion",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L21302",
+      decisionBoundary:
+        "若輸入含高度敏感的完整病歷、不宜長期保存，就要改存去識別化後的摘要或雜湊，在可追溯與隱私之間取得平衡。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q133",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某工廠的 AI 品檢模型上線後，操作員逐漸養成「模型說good就直接放行」的習慣，即使肉眼可見異常也不再攔下。下列處置何者最能對症？",
+    choices: [
+      { id: "A", text: "提高模型的準確率即可" },
+      { id: "B", text: "要求操作員必須採信模型判定" },
+      { id: "C", text: "隱藏模型的信心分數以免干擾" },
+      { id: "D", text: "在介面呈現模型的信心程度與判斷依據，並保留操作員否決的權限與紀錄，同時設計不定期的盲測樣本檢驗人的警覺度" },
+    ],
+    answer: "D",
+    explanation:
+      "這是自動化偏誤：人看到答案就不再獨立判斷。要讓人重新進入迴圈，得同時做三件事——讓人知道模型有多確定、保障否決權不被責難、並用盲測讓警覺度可被量測與維持。",
+    choiceExplanations: {
+      A: "準確率再高仍會出錯，而問題在於人已經不看了。",
+      B: "強制採信直接取消了人的判斷，風險完全轉嫁給模型。",
+      C: "隱藏不確定性會讓使用者高估模型可靠度，加重過度依賴。",
+    },
+    topic: "L21203 AI 風險管理",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["自動化偏誤", "信心呈現", "盲測"],
+      constraints: ["safety", "quality"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若模型的信心分數本身校準不良，呈現它反而會誤導操作員——先確認分數可信，這個設計才成立。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q134",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某教育平台的 AI 推薦系統被發現會把資源集中推給少數已經表現優異的學生。追查發現模型以點擊率為訓練目標，而點擊回饋又成為下一輪的訓練資料。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "這代表模型正確識別了優秀學生" },
+      { id: "B", text: "這是資料漂移，重訓即可" },
+      { id: "C", text: "這是回饋迴路造成的偏誤自我強化，應引入不受歷史點擊污染的評估資料，並在推薦中保留一定比例的探索" },
+      { id: "D", text: "應提高點擊率的權重以強化訓練訊號" },
+    ],
+    answer: "C",
+    explanation:
+      "模型推給誰、誰才有機會點擊，點擊又回頭成為訓練資料——這條迴路會讓初始的微小偏好被不斷放大。打破它需要兩件事：用不受污染的資料評估真實效果，以及在推薦中保留探索的比例。",
+    choiceExplanations: {
+      A: "沒有被推薦的學生根本沒有機會產生點擊，這不能推論為他們表現較差。",
+      B: "單純重訓只會把已被放大的偏誤再學一次，迴路本身沒有被切斷。",
+      D: "提高點擊率權重會讓迴路收得更緊，偏誤放大得更快。",
+    },
+    topic: "L21203 AI 風險管理",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["回饋迴路", "偏誤放大", "探索保留"],
+      constraints: ["fairness", "data_quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Neighbor Concept",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若推薦結果不會回流成為訓練資料（例如每期都用固定的外部評估集重訓），迴路就被切斷，偏誤不會自我放大。",
+    },
+  },
 
   // ── L21301 數據準備與模型選擇（11 題）──────────────────────────
   {
@@ -3247,6 +4534,157 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若這一千筆是以分層隨機抽樣取得、各科別與時期比例與母體一致，取樣的便利性就不再造成偏誤。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q135",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某醫院的再入院預測模型以隨機切分建立訓練與測試集，AUC 達 0.91。上線後大幅下滑。已知同一位病患在資料中常有多次住院紀錄。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應提高 AUC 的門檻標準" },
+      { id: "B", text: "應增加模型參數量" },
+      { id: "C", text: "同一病患的紀錄同時落在訓練與測試兩邊造成資訊洩漏，應改以病患為單位切分並重新評估" },
+      { id: "D", text: "應改用準確率作為指標" },
+    ],
+    answer: "C",
+    explanation:
+      "同一位病患的多次紀錄高度相關，隨機切分會讓模型在測試時遇到「這個人它已經見過」。若目標是預測新病患，切分就必須以病患為單位，否則測得的分數在上線時完全無法重現。",
+    choiceExplanations: {
+      A: "提高門檻只是換一個數字，虛高的分數依然虛高。",
+      B: "參數量與切分造成的評估失真無關。",
+      D: "換指標不會消除資訊洩漏，準確率同樣會被高估。",
+    },
+    topic: "L21301 數據準備與模型選擇",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["群組切分", "資訊洩漏", "相關樣本"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Neighbor Concept",
+      },
+      crossNode: "L21201",
+      decisionBoundary:
+        "若目標是預測「同一位病患的下次住院」而非推廣到新病患，依時間切分同一人的紀錄反而才是正確設計。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q136",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某銀行的風控模型有上千個候選特徵，其中不少彼此高度相關。若需求同時包含「向監理說明個別特徵的影響方向」與「控制推論延遲」，下列處理何者最合理？",
+    choices: [
+      { id: "A", text: "先以相關性與領域知識收斂特徵集、處理共線性，再選用本質可解釋的模型，讓係數方向穩定且推論輕量" },
+      { id: "B", text: "保留全部特徵並改用深層網路" },
+      { id: "C", text: "隨機挑選一百個特徵" },
+      { id: "D", text: "以主成分分析降維後直接說明各主成分的影響" },
+    ],
+    answer: "A",
+    explanation:
+      "共線性會讓係數不穩甚至符號反轉，「說明影響方向」因此失真；上千特徵也讓推論變重。先收斂特徵並處理共線性，再用可解釋模型，才能同時滿足說明與延遲兩項限制。",
+    choiceExplanations: {
+      B: "深層網路的個別特徵影響難以說明，延遲也更高，兩項限制都惡化。",
+      C: "隨機挑選可能剛好丟掉最關鍵的特徵，也沒有解決共線性。",
+      D: "主成分是原始特徵的線性組合，已失去可向監理說明的物理意義。",
+    },
+    topic: "L21301 數據準備與模型選擇",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["特徵收斂", "共線性", "可解釋模型"],
+      constraints: ["explainability", "latency", "governance"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Partial Truth",
+      },
+      crossNode: "L21203",
+      decisionBoundary:
+        "若監理只要求說明整體使用了哪些因子，主成分搭配載荷分析也可能過關——要求的解釋粒度決定了處理方式。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q137",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某工廠的模型訓練資料中，「最終品質等級」欄位是產品出貨檢驗後才填寫，而模型要在製程中途預測品質。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應把該欄位轉為類別型" },
+      { id: "B", text: "應把該欄位標準化後使用" },
+      { id: "C", text: "應增加該欄位的權重" },
+      { id: "D", text: "該欄位是標籤而非特徵，若被當成輸入即構成資料洩漏；應盤點所有欄位的產生時點，只保留預測時點之前可取得者" },
+    ],
+    answer: "D",
+    explanation:
+      "這個欄位就是要預測的答案本身，把它放進輸入等於給模型看考卷。真正該做的是逐欄位盤點產生時點——這個檢查一次做完，能一併找出其他同樣在預測後才產生的欄位。",
+    choiceExplanations: {
+      A: "轉換型別同樣不改變它是答案的事實。",
+      B: "標準化只改變數值尺度，答案仍然在輸入裡。",
+      C: "提高權重會讓模型更依賴這個上線時取不到的欄位。",
+    },
+    topic: "L21301 數據準備與模型選擇",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["資料洩漏", "欄位產生時點", "標籤與特徵"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Layer Confusion",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L21202",
+      decisionBoundary:
+        "若製程中途就有一份初步品質評等可取得，它就是合法特徵——判準是預測當下取不取得到。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q138",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某農業團隊的訓練資料中，特定品種的樣本僅佔 2%，而該品種正是最需要準確預測的對象。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "刪除該品種的樣本以簡化問題" },
+      { id: "B", text: "針對該品種補充樣本或以重新加權提高其在損失中的比重，並以分群評估單獨檢視該品種的表現" },
+      { id: "C", text: "只看整體準確率即可" },
+      { id: "D", text: "把該品種併入最相近的品種一起訓練" },
+    ],
+    answer: "B",
+    explanation:
+      "佔比 2% 的類別會被整體損失淹沒，模型幾乎不會為它調整。補樣本或加權能讓它重新被看見，而分群評估則確保改善有沒有真的發生——否則整體指標好看，它仍然是被犧牲的那一群。",
+    choiceExplanations: {
+      A: "刪除的正是最需要準確預測的對象，與目標完全相反。",
+      C: "整體準確率會被 98% 的其他品種主導，完全反映不出該品種的表現。",
+      D: "併入相近品種會讓它的獨特特徵被抹平，預測反而更不準。",
+    },
+    topic: "L21301 數據準備與模型選擇",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["類別不平衡", "重新加權", "分群評估"],
+      constraints: ["data_quality", "fairness"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若該品種在現實中就極為罕見、樣本無從補充，就只能改以重新加權並明確標示模型在該品種上的適用限制。",
     },
   },
 
@@ -3693,6 +5131,156 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若下游的決策絕對不能使用預設值（例如用藥劑量），正確的降級就是明確中止並轉人工，而不是給一個看似合理的替代值。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q139",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某銀行的模型服務在尖峰時段延遲飆高，且偶爾回傳空值導致下游系統中斷。下列處置的優先順序何者最合理？",
+    choices: [
+      { id: "A", text: "先在介面層定義錯誤語意與預設行為讓下游能安全降級，再處理延遲——中斷的影響範圍遠大於變慢" },
+      { id: "B", text: "先水平擴展解決延遲，空值之後再說" },
+      { id: "C", text: "要求下游關閉錯誤處理以免中斷" },
+      { id: "D", text: "把空值直接寫入資料庫" },
+    ],
+    answer: "A",
+    explanation:
+      "兩個問題的嚴重度不同：延遲只是變慢，中斷會讓整條下游停擺。先讓下游能安全承接異常（明確的錯誤語意加降級行為），把影響範圍縮住，再回頭處理效能。",
+    choiceExplanations: {
+      B: "擴展能緩解延遲，但空值造成的中斷仍會發生，影響更嚴重。",
+      C: "關閉錯誤處理會讓異常直接擴散，與目標完全相反。",
+      D: "寫入空值只是把問題往後推，後續查詢與分析同樣會出錯。",
+    },
+    topic: "L21302 AI 技術系統集成與部署",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["降級處理", "錯誤語意", "故障擴散"],
+      constraints: ["reliability", "latency", "integration"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若下游的決策絕對不能使用預設值（例如轉帳金額），正確的降級就是明確中止並轉人工，而不是給一個看似合理的替代值。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q140",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某醫院要把新版判讀模型上線，但新舊版的效能差異要累積數週的臨床追蹤才知道。下列部署策略何者最合理？",
+    choices: [
+      { id: "A", text: "新舊版各服務一半流量並長期並行" },
+      { id: "B", text: "直接全量切換到新版" },
+      { id: "C", text: "以 canary 放行後兩天內決定" },
+      { id: "D", text: "先以影子模式讓新版與舊版同時推論但只採用舊版結果，累積比對資料後再以小流量灰度放行" },
+    ],
+    answer: "D",
+    explanation:
+      "當差異要數週才顯現，灰度期間看不出結論。影子模式讓新版在真實流量上跑但不影響病患，累積足夠的比對資料後再談放行——這是把「等待期」與「風險期」分開的做法。",
+    choiceExplanations: {
+      A: "長期並行會讓一半病患持續承受不確定的版本，且沒有收斂的機制。",
+      B: "全量切換一旦新版較差，所有病患立即受影響，且要數週後才發現。",
+      C: "兩天的樣本不足以反映需數週才顯現的差異，容易做出錯誤決定。",
+    },
+    topic: "L21302 AI 技術系統集成與部署",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["影子模式", "灰度發布", "標籤延遲"],
+      constraints: ["reliability", "safety"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L21202",
+      decisionBoundary:
+        "若效能差異在數小時內就能從自動指標看出，就不必付出影子模式的雙倍推論成本，直接灰度即可。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q141",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某工廠要把模型部署到產線旁的邊緣裝置，限制包含：裝置僅 2GB 記憶體、須在 100 毫秒內回應、且產線網路常中斷。下列處置組合何者最合理？",
+    choices: [
+      { id: "A", text: "以量化與剪枝壓縮模型到可載入的體積，端側完成推論以不依賴網路，並保留本地緩衝於恢復連線時補傳結果" },
+      { id: "B", text: "維持原模型並改以雲端推論" },
+      { id: "C", text: "提高裝置的螢幕更新率" },
+      { id: "D", text: "延長模型的訓練時間" },
+    ],
+    answer: "A",
+    explanation:
+      "三項限制各自對應一個處置：記憶體不足 → 壓縮；延遲要求與網路不穩 → 端側推論；網路中斷期間的結果不能掉 → 本地緩衝補傳。少做任何一項，都會有一項限制沒被滿足。",
+    choiceExplanations: {
+      B: "雲端推論在網路中斷時完全無法運作，且往返延遲難以滿足 100 毫秒。",
+      C: "螢幕更新率屬於顯示規格，與推論資源無關。",
+      D: "訓練時間屬於離線階段，對部署限制沒有任何幫助。",
+    },
+    topic: "L21302 AI 技術系統集成與部署",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["模型壓縮", "端側推論", "本地緩衝"],
+      constraints: ["memory", "latency", "connectivity"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若壓縮後準確率掉到無法接受，就得改用專為端側設計的小模型重新訓練，而不是繼續壓既有的大模型。",
+    },
+  },
+  {
+    id: "senior-ai-tech-practice-q142",
+    subjectId: "senior-ai-tech",
+    prompt:
+      "某教育平台的模型服務由三個團隊分別維護資料管線、模型訓練與線上推論。近期上線後表現不如離線評估，追查發現線上與離線的特徵計算邏輯不一致。下列處置何者最能從根本解決？",
+    choices: [
+      { id: "A", text: "要求三個團隊每週開會對齊" },
+      { id: "B", text: "建立集中管理的特徵定義（特徵存放區或共用函式庫），讓訓練與線上推論使用同一份實作" },
+      { id: "C", text: "改用更大的模型" },
+      { id: "D", text: "把離線評估的門檻調低" },
+    ],
+    answer: "B",
+    explanation:
+      "訓練與服務各自實作一套特徵計算，是模型上線後不如預期的典型成因。靠開會對齊只能維持一時，把定義集中到單一實作才能從結構上消除分歧。",
+    choiceExplanations: {
+      A: "會議能發現問題但無法防止再度分歧，隨著特徵增加只會更難維持。",
+      C: "更大的模型仍然吃到不同的特徵值，落差依舊存在。",
+      D: "調低門檻是掩蓋落差，線上表現並沒有變好。",
+    },
+    topic: "L21302 AI 技術系統集成與部署",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["訓練與服務一致性", "特徵存放區", "單一實作"],
+      constraints: ["maintainability", "integration"],
+      distractorTypes: {
+        A: "Partial Truth",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L21301",
+      decisionBoundary:
+        "若只有一個模型、且特徵在訓練與服務端本來就由同一份程式碼計算，特徵存放區的維運成本就換不到相應效益。",
     },
   },
 ];

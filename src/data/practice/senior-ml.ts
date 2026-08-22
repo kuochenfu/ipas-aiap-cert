@@ -331,6 +331,157 @@ export const practiceQuestions: Question[] = [
         "若兩組的曝光量差距懸殊，直接比較比例仍會被雜訊主導，該先確認樣本數是否足以偵測預期的效果量。",
     },
   },
+  {
+    id: "senior-ml-practice-q101",
+    subjectId: "senior-ml",
+    prompt:
+      "某醫院的篩檢模型在盛行率 1% 的社區驗證時陽性預測值僅 17%，移到盛行率 20% 的高風險族群後躍升至八成。模型本身未改變。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應提高分類門檻以改善社區的陽性預測值" },
+      { id: "B", text: "模型在高風險族群變準了，應只在該族群使用" },
+      { id: "C", text: "這代表原本的驗證有誤" },
+      { id: "D", text: "敏感度與特異度是模型的性質、不隨盛行率改變，但陽性預測值會隨盛行率大幅變動；部署到不同族群時必須重新評估其臨床意義" },
+    ],
+    answer: "D",
+    explanation:
+      "敏感度與特異度是在已知真實狀態下計算的，與族群組成無關；陽性預測值則要把盛行率算進去。同一個模型在不同盛行率的族群中，陽性者實際患病的機率可以差好幾倍。",
+    choiceExplanations: {
+      A: "提高門檻能提升陽性預測值，但會犧牲召回率，且並未解釋現象本身。",
+      B: "模型並未變準，變的是族群的先驗機率；在社區使用仍有價值，只是要理解陽性的意義不同。",
+      C: "兩次驗證都正確，差異來自盛行率而非計算錯誤。",
+    },
+    topic: "L23101 機率／統計之機器學習基礎應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Concept Boundary",
+      concepts: ["陽性預測值", "盛行率", "敏感度與特異度"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+      },
+      crossNode: "L23303",
+      decisionBoundary:
+        "若兩個族群的盛行率相同，陽性預測值就不會有這種落差，差異才會真的反映模型能力的改變。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q102",
+    subjectId: "senior-ml",
+    prompt:
+      "某銀行的模型輸出信用違約機率，風控要依機率乘上曝險金額計算期望損失。下列前提何者最關鍵？",
+    choices: [
+      { id: "A", text: "模型的 AUC 必須大於 0.9" },
+      { id: "B", text: "模型的機率輸出必須經過校準——輸出 0.2 的那些客戶中應約有兩成實際違約，否則期望損失的計算基礎就不成立" },
+      { id: "C", text: "模型的參數量必須足夠大" },
+      { id: "D", text: "模型必須使用深度學習" },
+    ],
+    answer: "B",
+    explanation:
+      "要拿機率去乘金額算期望值，這個機率就必須是誠實的。排序能力再好（AUC 高），若輸出的數值系統性偏高或偏低，期望損失就會整體失真。",
+    choiceExplanations: {
+      A: "AUC 衡量的是排序能力，與輸出數值是否誠實無關；AUC 高的模型仍可能校準很差。",
+      C: "參數量與機率是否校準沒有關係。",
+      D: "模型類型不決定校準品質，簡單模型往往校準得更好。",
+    },
+    topic: "L23101 機率／統計之機器學習基礎應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Concept Boundary",
+      concepts: ["機率校準", "期望損失", "排序與校準"],
+      constraints: ["quality", "governance"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      crossNode: "L23303",
+      decisionBoundary:
+        "若下游只用排序（例如挑出風險最高的前一百名客戶），校準就不重要，AUC 這類排序指標才是重點。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q103",
+    subjectId: "senior-ml",
+    prompt:
+      "某工廠以單純貝氏分類維修單，發現同一個故障描述中反覆出現的同義詞讓模型過度自信。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應提高分類門檻" },
+      { id: "B", text: "應增加訓練資料量" },
+      { id: "C", text: "條件獨立假設被嚴重違反——高度相關的特徵讓同一份證據被重複計算，機率因此被推向極端；應合併同義詞或改用不依賴此假設的模型" },
+      { id: "D", text: "應改用高斯版本的單純貝氏" },
+    ],
+    answer: "C",
+    explanation:
+      "單純貝氏把各特徵的機率相乘，前提是它們在給定類別下互相獨立。同義詞高度相關時，等於同一個證據被乘了好幾次，機率被推到接近 0 或 1。",
+    choiceExplanations: {
+      A: "提高門檻只改變判定的鬆緊，不修正機率被扭曲這件事。",
+      B: "資料再多也不會讓同義詞變得互相獨立，過度自信依舊。",
+      D: "高斯版本針對的是連續特徵的分布假設，與條件獨立是不同的假設。",
+    },
+    topic: "L23101 機率／統計之機器學習基礎應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["條件獨立假設", "特徵相關", "過度自信"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Wrong Trade-off",
+        D: "Neighbor Concept",
+      },
+      crossNode: "L23301",
+      decisionBoundary:
+        "若特徵之間確實近乎獨立（例如經過去相關處理），單純貝氏的機率就相當可信，速度優勢也就值得。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q104",
+    subjectId: "senior-ml",
+    prompt:
+      "某農業團隊以極少樣本估計新品種的平均產量，並想量化估計的不確定性。下列做法何者最正確？",
+    choices: [
+      { id: "A", text: "以最大值作為估計值" },
+      { id: "B", text: "只報告平均值" },
+      { id: "C", text: "以樣本標準差作為平均數的估計誤差" },
+      { id: "D", text: "報告平均值時同時給出信賴區間，並以標準誤（樣本標準差除以根號 n）而非樣本標準差描述估計誤差" },
+    ],
+    answer: "D",
+    explanation:
+      "樣本標準差描述的是個體之間的變異，而估計「平均數」有多準要看標準誤——它會隨樣本數增加而縮小。樣本少時區間會很寬，這正是要誠實呈現的資訊。",
+    choiceExplanations: {
+      A: "最大值是極端觀測，完全不能代表平均水準。",
+      B: "只給平均值會讓人誤以為估計很精確，隱藏了抽樣誤差。",
+      C: "樣本標準差不隨樣本數縮小，用它會嚴重高估平均數的不確定性。",
+    },
+    topic: "L23101 機率／統計之機器學習基礎應用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Concept Boundary",
+      concepts: ["標準誤", "信賴區間", "不確定性量化"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若樣本數極大、區間窄到可忽略，只報點估計的資訊損失就很小——區間的必要性隨樣本數減少而上升。",
+    },
+  },
 
   // ── L23102 線性代數之機器學習基礎應用（9 題）──────────────────
   {
@@ -660,6 +811,156 @@ export const practiceQuestions: Question[] = [
         "若各特徵本來就同單位、同量級（例如都是 0 到 1 的比例），標準化帶來的效益就很有限。",
     },
   },
+  {
+    id: "senior-ml-practice-q105",
+    subjectId: "senior-ml",
+    prompt:
+      "某銀行的線性模型中，兩個高度相關的財務比率係數一正一負且絕對值極大，換一批訓練資料後符號還會互換。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "這是資料洩漏" },
+      { id: "B", text: "這是過擬合，應加強 L1 正則化以產生稀疏解" },
+      { id: "C", text: "這是共線性的典型徵狀——多組係數組合都能得到相近的擬合，估計因此極不穩定；若需解釋個別係數應先移除或合併相關特徵，或改用嶺迴歸穩定估計" },
+      { id: "D", text: "這是欠擬合，應增加特徵" },
+    ],
+    answer: "C",
+    explanation:
+      "共線性讓多組係數組合幾乎等價，估計對資料的微小變動極度敏感，符號甚至可能反轉。整體預測往往仍堪用，受害的是個別係數的解釋——而這正是本案需要的。",
+    choiceExplanations: {
+      A: "資料洩漏會讓測試分數虛高，與係數符號不穩是不同的徵狀。",
+      B: "L1 會從相關特徵中任選一個保留，選哪一個同樣不穩定，解釋問題並未解決。",
+      D: "欠擬合的徵狀是訓練與驗證誤差都高，與此處描述不符。",
+    },
+    topic: "L23102 線性代數之機器學習基礎應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["共線性", "係數穩定性", "嶺迴歸"],
+      constraints: ["explainability"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Partial Truth",
+        D: "Terminology Swap",
+      },
+      crossNode: "L23304",
+      decisionBoundary:
+        "若模型只用於預測、不需要解釋個別係數，共線性的危害就小得多，整體預測往往仍然堪用。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q106",
+    subjectId: "senior-ml",
+    prompt:
+      "某教育平台以餘弦相似度比對學生的學習向量，發現學習時數極多與極少的兩位學生被判定為高度相似。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應改用更大的嵌入模型" },
+      { id: "B", text: "這代表兩人確實相似，結果正確" },
+      { id: "C", text: "應提高向量的維度" },
+      { id: "D", text: "餘弦相似度只看方向、不看長度；若學習量的絕對值本身有意義，應改用歐氏距離或先保留長度資訊" },
+    ],
+    answer: "D",
+    explanation:
+      "餘弦把向量的長度除掉，只比較各科目之間的相對比例。兩人若在各科的分配比例一致，即使總量差十倍也會被判為相似——當總量本身重要時，這個特性就成了缺陷。",
+    choiceExplanations: {
+      A: "換模型不改變餘弦相似度忽略長度這個數學性質。",
+      B: "在關心學習量的情境下，把總量差十倍的兩人視為相似並不合理。",
+      C: "提高維度不會讓餘弦開始考慮長度。",
+    },
+    topic: "L23102 線性代數之機器學習基礎應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["餘弦相似度", "歐氏距離", "長度資訊"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Overgeneralization",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若比較的是文件主題而文件長短不該影響判斷，餘弦忽略長度正是想要的性質。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q107",
+    subjectId: "senior-ml",
+    prompt:
+      "某工廠以 PCA 把上百個感測特徵降到十維，前十個主成分僅解釋 45% 的變異，模型效能也不佳。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應直接減少到五維以簡化模型" },
+      { id: "B", text: "變異解釋比例偏低代表資料的主要結構可能非線性，或本來就需要更多維度；應檢視累積解釋變異曲線並考慮核 PCA 或非線性降維" },
+      { id: "C", text: "PCA 一定能保留大部分資訊，效能不佳與降維無關" },
+      { id: "D", text: "應把主成分重新命名為感測器名稱" },
+    ],
+    answer: "B",
+    explanation:
+      "十個主成分只解釋 45% 的變異，代表被丟掉的一半資訊裡可能有重要訊號。這通常有兩種原因：真實維度本來就高，或結構是非線性的而線性投影抓不到。",
+    choiceExplanations: {
+      A: "減到五維會丟掉更多資訊，效能只會更差。",
+      C: "PCA 保留多少資訊由解釋變異比例決定，45% 明確說明損失很大。",
+      D: "重新命名是誤導，主成分是多顆感測器的加權組合。",
+    },
+    topic: "L23102 線性代數之機器學習基礎應用",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["累積解釋變異", "非線性結構", "核 PCA"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L23301",
+      decisionBoundary:
+        "若前十個主成分就解釋了九成變異，降維幾乎沒有資訊損失，效能不佳的原因就要往別處找。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q108",
+    subjectId: "senior-ml",
+    prompt:
+      "某醫院的推薦系統以矩陣分解預測病患對衛教內容的偏好，但新加入的病患完全沒有任何互動紀錄。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "以全體平均評分填補該病患的所有缺值" },
+      { id: "B", text: "把該病患的潛在因子設為全零" },
+      { id: "C", text: "增加潛在因子的維度" },
+      { id: "D", text: "這是冷啟動問題——潛在因子無從估計，應改以年齡、疾病類別等內容特徵給出初始推薦，累積互動後再切換" },
+    ],
+    answer: "D",
+    explanation:
+      "矩陣分解從互動紀錄學潛在因子，沒有互動就沒有可學的東西。此時只能靠內容特徵（人口統計、疾病類別）先給出合理的初始推薦，等累積夠了再轉回協同過濾。",
+    choiceExplanations: {
+      A: "以全體平均填補等於把所有新病患都推薦相同內容，且會扭曲模型學習。",
+      B: "設為全零等於給出一個沒有任何偏好的向量，推薦結果毫無個人化。",
+      C: "增加維度需要更多互動才估得準，在零互動時只會更糟。",
+    },
+    topic: "L23102 線性代數之機器學習基礎應用",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["矩陣分解", "冷啟動", "內容特徵"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若新病患在註冊時就填寫了偏好問卷，那份資料就能作為初始的潛在因子估計基礎，冷啟動的嚴重度大幅下降。",
+    },
+  },
 
   // ── L23103 數值優化技術與方法（8 題）──────────────────────────
   {
@@ -952,6 +1253,156 @@ export const practiceQuestions: Question[] = [
         "若模型是決策樹或梯度提升樹這類依門檻切分的模型，尺度差異不影響收斂，標準化就不會帶來改善。",
     },
   },
+  {
+    id: "senior-ml-practice-q109",
+    subjectId: "senior-ml",
+    prompt:
+      "某教育平台的模型訓練損失在下降一段時間後開始劇烈震盪且不再改善。下列排查順序何者最合理？",
+    choices: [
+      { id: "A", text: "直接增加模型層數" },
+      { id: "B", text: "先確認學習率是否過大（可嘗試調降或加入調度），再檢查批次大小與資料中是否有極端值造成梯度爆炸" },
+      { id: "C", text: "直接增加訓練資料量" },
+      { id: "D", text: "直接改用更大的批次" },
+    ],
+    answer: "B",
+    explanation:
+      "震盪的典型成因是步伐太大，在最佳解附近來回跨越。學習率是最先該調的參數；若調降無效，再往批次大小與資料中的極端值查，後者會造成偶發的巨大梯度。",
+    choiceExplanations: {
+      A: "增加層數會讓最佳化更困難，震盪可能加劇。",
+      C: "資料量與單步更新是否過大無關，震盪不會因此消失。",
+      D: "更大的批次能平滑梯度，但在未確認學習率之前貿然調整，可能同時改變兩個變因而難以歸因。",
+    },
+    topic: "L23103 數值優化技術與方法",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["學習率", "梯度爆炸", "排查順序"],
+      constraints: ["compute"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Partial Truth",
+      },
+      decisionBoundary:
+        "若損失是緩慢下降到某個值後就不動，那是學習率過小或已達局部最小，與過大造成的震盪徵狀完全不同。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q110",
+    subjectId: "senior-ml",
+    prompt:
+      "某銀行把批次大小從 32 提高到 2048 以加速訓練，結果訓練更快收斂但驗證表現變差。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "批次大小與泛化無關，應往別處查" },
+      { id: "B", text: "維持大批次並延長訓練時間" },
+      { id: "C", text: "大批次減少了梯度雜訊、可能收斂到泛化較差的解；應按比例調高學習率並加入暖身，或適度縮小批次，兩者搭配調整" },
+      { id: "D", text: "把批次大小提高到 8192" },
+    ],
+    answer: "C",
+    explanation:
+      "小批次帶來的梯度雜訊有助於跳離較差的解，大批次把這個效果拿掉了。實務上批次大小不能單獨調整——要同時按比例調整學習率並加暖身，泛化的劣勢才補得回來。",
+    choiceExplanations: {
+      A: "批次大小確實影響泛化，這是已知且常見的現象。",
+      B: "延長訓練不會改變它收斂到的那個解的性質。",
+      D: "繼續放大只會讓泛化劣勢更明顯，記憶體壓力也更大。",
+    },
+    topic: "L23103 數值優化技術與方法",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["批次大小", "梯度雜訊", "學習率縮放"],
+      constraints: ["compute", "memory", "quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L23304",
+      decisionBoundary:
+        "若同時按比例調高學習率並加上暖身後泛化已經追平，大批次的速度優勢就可以放心拿。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q111",
+    subjectId: "senior-ml",
+    prompt:
+      "某工廠訓練深層網路時，靠近輸入端的層權重幾乎不再更新。下列處置組合何者最合理？",
+    choices: [
+      { id: "A", text: "這是梯度爆炸，應加入梯度裁剪" },
+      { id: "B", text: "這是梯度消失；可改用 ReLU 系激活、加入批次正規化與殘差連接，讓梯度有捷徑回傳" },
+      { id: "C", text: "應大幅提高學習率讓前層動起來" },
+      { id: "D", text: "應刪除前面幾層" },
+    ],
+    answer: "B",
+    explanation:
+      "反向傳播時梯度逐層相乘，若每層都小於 1，傳到前幾層已趨近於零。三種對策分別從激活函數、層輸入分布與連接結構三個角度緩解這個相乘衰減。",
+    choiceExplanations: {
+      A: "梯度爆炸的徵狀是數值溢位或損失發散，與前層停滯相反。",
+      C: "提高學習率會讓後層更不穩定，前層的梯度仍然接近零。",
+      D: "刪除前層會失去低階特徵的萃取能力，並未解決最佳化問題。",
+    },
+    topic: "L23103 數值優化技術與方法",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["梯度消失", "殘差連接", "批次正規化"],
+      constraints: ["compute"],
+      distractorTypes: {
+        A: "Terminology Swap",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L23203",
+      decisionBoundary:
+        "若梯度反而逐層放大到數值溢位，那是梯度爆炸，對策換成梯度裁剪而不是換激活函數。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q112",
+    subjectId: "senior-ml",
+    prompt:
+      "某農業模型的驗證損失在第 30 輪達到最低，之後持續上升但訓練損失仍在下降。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "改以訓練損失作為停止依據" },
+      { id: "B", text: "繼續訓練直到訓練損失為零" },
+      { id: "C", text: "以驗證損失為準採用早停並取回第 30 輪的權重，同時視情況加強正則化" },
+      { id: "D", text: "把驗證集併入訓練集" },
+    ],
+    answer: "C",
+    explanation:
+      "訓練損失持續下降而驗證損失回升，正是過擬合的訊號。在驗證損失的最低點停止並取回該輪權重，是最簡單有效的正則化手段。",
+    choiceExplanations: {
+      A: "訓練損失幾乎總是持續下降，用它當停止依據等於永不停止。",
+      B: "訓練損失趨零通常代表把雜訊也背了下來，過擬合更嚴重。",
+      D: "併入驗證集後就失去了偵測過擬合的能力，問題被掩蓋而非解決。",
+    },
+    topic: "L23103 數值優化技術與方法",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["早停", "過擬合", "驗證損失"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若驗證集太小、損失曲線本身抖動劇烈，早停容易誤觸發，需要加上耐心值或改用交叉驗證。",
+    },
+  },
 
   // ── L23201 機器學習原理與技術（8 題）──────────────────────────
   {
@@ -1241,6 +1692,157 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若下游任務的標註資料本來就充足，自監督預訓練帶來的增益會明顯收斂——它的價值來自未標註資料遠多於標註資料。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q113",
+    subjectId: "senior-ml",
+    prompt:
+      "某醫院把在成人影像上預訓練的模型微調到兒童影像，結果兒童表現提升但成人表現大幅退步。下列判斷與處置何者最正確？",
+    choices: [
+      { id: "A", text: "這是正常現象，應接受成人表現的退步" },
+      { id: "B", text: "這是過擬合，應加強正則化" },
+      { id: "C", text: "這是資料漂移，應重新蒐集資料" },
+      { id: "D", text: "這是災難性遺忘；若兩種能力都要保留，可降低學習率、凍結部分層或在微調時混入成人樣本" },
+    ],
+    answer: "D",
+    explanation:
+      "微調時權重被新任務的梯度大幅改寫，舊任務所依賴的表示因而被覆蓋。若兩種能力都要，就得限制改寫的幅度或讓舊任務的樣本繼續參與訓練。",
+    choiceExplanations: {
+      A: "若醫院仍需服務成人病患，接受退步等於讓一群人承擔品質下降。",
+      B: "過擬合的徵狀是新任務本身在驗證集上變差，而非舊任務退步。",
+      C: "資料漂移是隨時間改變，此處是微調造成的立即變化。",
+    },
+    topic: "L23201 機器學習原理與技術",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["災難性遺忘", "凍結層", "樣本混入"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+      },
+      crossNode: "L23302",
+      decisionBoundary:
+        "若成人影像日後完全不再需要判讀，遺忘就不是問題而是預期行為——它只在需要同時保有兩種能力時才構成缺陷。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q114",
+    subjectId: "senior-ml",
+    prompt:
+      "某銀行的模型在乾淨資料上以 Boosting 表現最佳，但換到含大量錯誤標註的新資料集後表現急遽下滑，反而 Bagging 較穩。下列說明何者最正確？",
+    choices: [
+      { id: "A", text: "Boosting 會不斷加重前一輪判錯樣本的權重，錯誤標註因此被反覆放大；Bagging 以獨立取樣再平均，對標籤雜訊較穩健" },
+      { id: "B", text: "Boosting 一定劣於 Bagging" },
+      { id: "C", text: "這代表新資料集的樣本數不足" },
+      { id: "D", text: "應增加 Boosting 的樹數量" },
+    ],
+    answer: "A",
+    explanation:
+      "Boosting 的機制是專注於還沒學好的樣本，而錯誤標註的樣本永遠學不好，於是權重不斷被推高，模型被少數錯誤標籤帶著走。Bagging 的獨立取樣加平均則會把這種影響稀釋掉。",
+    choiceExplanations: {
+      B: "在乾淨資料上 Boosting 通常勝出，並無普遍優劣。",
+      C: "問題出在標籤品質而非樣本數量。",
+      D: "增加樹數量會讓錯誤標註的權重被推得更高，情況更糟。",
+    },
+    topic: "L23201 機器學習原理與技術",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Comparison",
+      concepts: ["Boosting", "Bagging", "標籤雜訊"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Neighbor Concept",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L23202",
+      decisionBoundary:
+        "若能先清理錯誤標註或加入對雜訊穩健的損失函數，Boosting 的優勢就會重新顯現。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q115",
+    subjectId: "senior-ml",
+    prompt:
+      "某教育平台以 CNN 處理學生成績與出缺勤的表格資料，效果不如樹模型。下列說明何者最正確？",
+    choices: [
+      { id: "A", text: "應把表格資料轉成影像再用 CNN" },
+      { id: "B", text: "CNN 一定劣於樹模型" },
+      { id: "C", text: "CNN 的歸納偏置假設輸入具有局部性與位移不變性，表格資料的欄位順序並無此結構，因此假設用不上" },
+      { id: "D", text: "應增加 CNN 的層數" },
+    ],
+    answer: "C",
+    explanation:
+      "每種模型都內建一組假設。CNN 假設相鄰的輸入彼此相關且特徵可平移，這在影像上成立、在欄位順序任意的表格上不成立——假設與問題結構不符時，內建偏置反而變成阻礙。",
+    choiceExplanations: {
+      A: "把表格硬排成影像不會創造出真正的空間關係，欄位順序仍是任意的。",
+      B: "在影像與序列資料上 CNN 明顯優於樹模型，並無普遍優劣。",
+      D: "增加層數不會讓不成立的假設變成成立。",
+    },
+    topic: "L23201 機器學習原理與技術",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Concept Boundary",
+      concepts: ["歸納偏置", "局部性", "模型與問題匹配"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L23302",
+      decisionBoundary:
+        "若輸入改為每位學生逐週的成績序列，時間軸上的局部性就成立，卷積或序列模型的假設也就派得上用場。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q116",
+    subjectId: "senior-ml",
+    prompt:
+      "某工廠有大量未標註的感測資料與少量標註樣本，標註需停機檢查、成本極高。下列學習策略何者最合適？",
+    choices: [
+      { id: "A", text: "以強化式學習透過與產線互動累積獎勵" },
+      { id: "B", text: "先以自監督式學習從未標註資料學到通用表示，再以少量標註樣本微調" },
+      { id: "C", text: "堅持全部標註完成後才開始" },
+      { id: "D", text: "只用少量標註樣本從零訓練" },
+    ],
+    answer: "B",
+    explanation:
+      "自監督從資料本身構造預測任務（如遮蔽一段訊號讓模型還原），不需要人工標籤就能學到通用表示；接著只需少量標註即可微調到目標任務，正好對應標註昂貴而原始資料充足的情境。",
+    choiceExplanations: {
+      A: "在真實產線上反覆試錯取得獎勵，成本與風險都不可接受。",
+      C: "全部標註正是成本上做不到的事，與題幹前提衝突。",
+      D: "少量樣本從零訓練幾乎必然過擬合，也浪費了大量未標註資料。",
+    },
+    topic: "L23201 機器學習原理與技術",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["自監督式學習", "預訓練與微調", "標註成本"],
+      constraints: ["labeled_data_scarcity", "cost"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若下游任務的標註資料本來就充足，自監督預訓練帶來的增益會明顯收斂——它的價值來自未標註遠多於標註。",
     },
   },
 
@@ -1568,6 +2170,157 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若各群的密度差異很大，單一組 eps 與 minPts 無法同時適配，此時要改用 HDBSCAN 或分層處理。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q117",
+    subjectId: "senior-ml",
+    prompt:
+      "某醫院要以高維度的基因表現資料（數萬特徵、僅數百樣本）建立分類模型。下列選型與理由何者最合理？",
+    choices: [
+      { id: "A", text: "優先考慮支援向量機或含強正則化的線性模型——高維小樣本正是它們的適用場景，同時搭配特徵篩選降低過擬合風險" },
+      { id: "B", text: "優先使用深層神經網路，因為特徵數量多" },
+      { id: "C", text: "優先使用 KNN，直接比對樣本距離" },
+      { id: "D", text: "優先使用未剪枝的深樹" },
+    ],
+    answer: "A",
+    explanation:
+      "數萬特徵配數百樣本，任何高容量模型都會嚴重過擬合。SVM 以最大化邊界的方式在高維中仍有良好表現，強正則化的線性模型則直接壓抑係數，兩者都是這個情境的標準選擇。",
+    choiceExplanations: {
+      B: "深層網路需要大量樣本才能發揮，在數百樣本下必然過擬合。",
+      C: "高維空間中樣本間距離趨於一致，KNN 失去鑑別力。",
+      D: "未剪枝的深樹能把數百樣本完全記住，泛化極差。",
+    },
+    topic: "L23202 常見機器學習演算法",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["高維小樣本", "SVM", "正則化"],
+      constraints: ["data_volume", "quality"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L23301",
+      decisionBoundary:
+        "若樣本數成長到數十萬，SVM 的核矩陣運算會變得不可行，此時該改用線性模型或梯度提升樹。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q118",
+    subjectId: "senior-ml",
+    prompt:
+      "某銀行的梯度提升樹模型在訓練集近乎完美、驗證集表現平庸。已知學習率 0.3、樹數 2000、無深度限制。下列調整組合何者最合理？",
+    choices: [
+      { id: "A", text: "移除所有正則化參數" },
+      { id: "B", text: "再增加樹的數量到 5000" },
+      { id: "C", text: "提高學習率以加速收斂" },
+      { id: "D", text: "調低學習率並相應增加樹數、限制樹深與葉節點最小樣本數，並加入早停以驗證集為準" },
+    ],
+    answer: "D",
+    explanation:
+      "高學習率配上無深度限制的兩千棵樹，等於讓模型有充分的自由把訓練集背下來。調低學習率讓每棵樹只做小幅修正、限制樹的複雜度、再以早停在驗證集轉壞前停下，三者一起才收得住。",
+    choiceExplanations: {
+      A: "移除正則化等於拿掉唯一的約束，方向完全相反。",
+      B: "樹更多只會讓過擬合更嚴重。",
+      C: "提高學習率會讓每棵樹的修正幅度更大，過擬合加劇。",
+    },
+    topic: "L23202 常見機器學習演算法",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["梯度提升調參", "學習率與樹數", "早停"],
+      constraints: ["quality", "compute"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L23304",
+      decisionBoundary:
+        "若學習率調低但樹的數量沒有相應增加，模型會停在欠擬合——這兩個參數必須成對調整。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q119",
+    subjectId: "senior-ml",
+    prompt:
+      "某工廠以 K-means 分群設備行為，但群集呈細長帶狀且密度不均，分群結果與現場認知不符。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "把細長群集的樣本刪除" },
+      { id: "B", text: "增加 K 值直到符合現場認知" },
+      { id: "C", text: "K-means 依到中心的距離分配，偏好大小相近的球形群；應改用密度式分群並允許標示雜訊點，必要時選用可處理多層密度的變形" },
+      { id: "D", text: "改用監督式分類" },
+    ],
+    answer: "C",
+    explanation:
+      "問題出在演算法的假設而非參數。K-means 的距離分配天生偏好球形且大小相近的群，細長或密度不均的結構它抓不到；密度式分群直接以密度定義群集，正好對應。",
+    choiceExplanations: {
+      A: "刪除樣本會丟掉真實存在的設備行為型態。",
+      B: "增加 K 會把細長群切成多段，仍然無法還原它原本的形狀。",
+      D: "題幹並未說明有既定的分類標籤可用，監督式的前提不成立。",
+    },
+    topic: "L23202 常見機器學習演算法",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["K-means 假設", "密度式分群", "群集形狀"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Partial Truth",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若各群的密度差異也很大，單一組鄰域參數同樣無法適配，此時要改用可處理多層密度的變形演算法。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q120",
+    subjectId: "senior-ml",
+    prompt:
+      "某教育平台要在中小型表格資料上做分類，並希望開發週期短、調參門檻低。下列選型何者最合理？",
+    choices: [
+      { id: "A", text: "先以大型 Transformer 建立基準" },
+      { id: "B", text: "先以梯度提升樹或隨機森林建立基準，它們對特徵尺度不敏感、能處理類別與缺失值且調參門檻較低" },
+      { id: "C", text: "先以生成對抗網路建立基準" },
+      { id: "D", text: "先以 K-means 建立基準" },
+    ],
+    answer: "B",
+    explanation:
+      "樹系集成在中小型表格資料上通常表現優異，且不需要標準化、能自然處理類別與缺失值，訓練快、超參數也相對寬容——作為第一個基準的性價比最高。",
+    choiceExplanations: {
+      A: "Transformer 需要大量資料才能發揮，在中小型表格資料上常不敵樹模型。",
+      C: "生成對抗網路用於生成資料，不是分類任務的工具。",
+      D: "K-means 是非監督分群，不產生分類預測。",
+    },
+    topic: "L23202 常見機器學習演算法",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["樹系集成", "基準模型", "調參成本"],
+      constraints: ["data_volume", "cost"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Layer Confusion",
+        D: "Terminology Swap",
+      },
+      crossNode: "L23302",
+      decisionBoundary:
+        "若資料改為影像、文字或語音這類非結構化輸入，樹模型的優勢消失，深度網路才是合理的起點。",
     },
   },
 
@@ -1899,6 +2652,156 @@ export const practiceQuestions: Question[] = [
         "若目標資料量充足、且與預訓練領域差距很大，全模型微調通常表現更好——凍結是資料稀少時的保護措施。",
     },
   },
+  {
+    id: "senior-ml-practice-q121",
+    subjectId: "senior-ml",
+    prompt:
+      "某銀行的序列模型要處理長達數萬個 token 的交易紀錄，訓練時記憶體不足。已知使用標準自注意力。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "自注意力的運算與記憶體隨序列長度平方成長；應改用稀疏或線性注意力的變形，或先分段摘要再輸入" },
+      { id: "B", text: "應增加模型層數以提高效率" },
+      { id: "C", text: "應提高學習率" },
+      { id: "D", text: "應改用更大的批次" },
+    ],
+    answer: "A",
+    explanation:
+      "標準自注意力要計算每一對位置之間的關聯，長度加倍記憶體就變四倍。數萬 token 時這是硬限制，解法是換成複雜度更低的注意力變形，或先把序列壓縮。",
+    choiceExplanations: {
+      B: "增加層數會讓記憶體需求更高，方向相反。",
+      C: "學習率與記憶體用量無關。",
+      D: "更大的批次會讓記憶體壓力更嚴重。",
+    },
+    topic: "L23203 深度學習原理與框架",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["自注意力複雜度", "長序列", "稀疏注意力"],
+      constraints: ["memory", "compute"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Layer Confusion",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若序列長度只有數百個 token，平方成長的代價完全可以承受，標準自注意力的表現通常最好。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q122",
+    subjectId: "senior-ml",
+    prompt:
+      "某醫院的深度模型因記憶體限制只能使用批次大小 2，訓練極不穩定。已知模型含批次正規化層。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應把批次正規化層全部移除且不做任何替代" },
+      { id: "B", text: "批次過小時批次統計量本身極不穩定，批次正規化反而有害；應改用層正規化或群組正規化" },
+      { id: "C", text: "應提高學習率補償" },
+      { id: "D", text: "應增加模型層數" },
+    ],
+    answer: "B",
+    explanation:
+      "批次正規化以該批次的統計量做標準化，批次只有 2 時這個估計幾乎是雜訊。層正規化與群組正規化改為在單一樣本內部計算，不受批次大小影響。",
+    choiceExplanations: {
+      A: "直接移除會失去正規化帶來的訓練穩定性，應改用不依賴批次的替代方案。",
+      C: "提高學習率會讓不穩定的訓練更容易發散。",
+      D: "增加層數會讓最佳化更困難，也加重記憶體壓力。",
+    },
+    topic: "L23203 深度學習原理與框架",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["批次正規化", "層正規化", "小批次"],
+      constraints: ["memory", "compute"],
+      distractorTypes: {
+        A: "Partial Truth",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L23103",
+      decisionBoundary:
+        "若記憶體允許把批次提高到 32 以上，批次統計量就穩定了，批次正規化的優勢重新成立。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q123",
+    subjectId: "senior-ml",
+    prompt:
+      "某教育平台的模型在訓練時加入 Dropout 後，訓練與驗證表現雙雙下降。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應在推論時也保持 Dropout 開啟" },
+      { id: "B", text: "Dropout 一定能提升表現，應提高丟棄率" },
+      { id: "C", text: "模型原本可能就處於欠擬合，Dropout 進一步降低了有效容量；應先確認是否過擬合再決定是否使用正則化" },
+      { id: "D", text: "應把 Dropout 換成更強的 L1 正則化" },
+    ],
+    answer: "C",
+    explanation:
+      "Dropout 是治過擬合的藥，不是通用補品。若模型本來就學不動（訓練與驗證都差），再降低有效容量只會更糟——用藥之前要先確認症狀。",
+    choiceExplanations: {
+      A: "推論時應關閉 Dropout，開啟會讓輸出帶有不必要的隨機性。",
+      B: "提高丟棄率會讓有效容量更低，兩邊表現繼續下降。",
+      D: "換成另一種正則化同樣是在欠擬合時繼續收緊，方向仍然錯誤。",
+    },
+    topic: "L23203 深度學習原理與框架",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["Dropout", "欠擬合", "正則化適用時機"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Terminology Swap",
+        B: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L23304",
+      decisionBoundary:
+        "若訓練表現極佳而驗證明顯落後，那才是 Dropout 的適用場景，加入後驗證通常會改善。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q124",
+    subjectId: "senior-ml",
+    prompt:
+      "某農業團隊的網路使用多層堆疊但未加入任何非線性激活函數。下列後果何者最正確？",
+    choices: [
+      { id: "A", text: "表達力會比加了激活函數更強" },
+      { id: "B", text: "網路會自動變成卷積網路" },
+      { id: "C", text: "訓練會直接失敗無法計算" },
+      { id: "D", text: "線性轉換的複合仍是線性轉換，整個網路等價於單層線性模型，深度完全失去意義" },
+    ],
+    answer: "D",
+    explanation:
+      "多個線性層相乘仍然是一個線性映射。少了非線性，一百層的網路與一層在表達力上完全相同——這正是激活函數不可或缺的理由。",
+    choiceExplanations: {
+      A: "表達力不但沒有更強，反而被壓縮成線性模型的能力範圍。",
+      B: "卷積是特定的連接結構，與是否使用激活函數無關。",
+      C: "計算完全可以進行，只是結果等價於單層線性模型。",
+    },
+    topic: "L23203 深度學習原理與框架",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Concept Boundary",
+      concepts: ["非線性激活", "線性複合", "表達力"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Layer Confusion",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若任務的真實關係本來就是線性的，退化成線性模型並非缺陷——問題只在於白白付出了多層的計算成本。",
+    },
+  },
 
   // ── L23301 數據準備與特徵工程（8 題）──────────────────────────
   {
@@ -2189,6 +3092,118 @@ export const practiceQuestions: Question[] = [
         A: "Layer Confusion",
         C: "Overgeneralization",
         D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若資料量極大、模型也有足夠容量自行學到該關係，手工衍生特徵的邊際效益就明顯下降。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q125",
+    subjectId: "senior-ml",
+    prompt:
+      "某銀行以目標編碼處理數萬個商戶代碼，交叉驗證分數極佳但上線後大幅下滑。已知編碼是在全部訓練資料上一次算完的。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應提高模型的正則化強度" },
+      { id: "B", text: "應改用 One-hot 編碼" },
+      { id: "C", text: "應增加交叉驗證的折數" },
+      { id: "D", text: "編碼時包含了樣本自己的標籤，等於把答案偷渡進特徵；應改以折外方式計算，並對出現次數極少的商戶加入平滑" },
+    ],
+    answer: "D",
+    explanation:
+      "目標編碼以該類別的標籤平均取代原值，若計算時包含了樣本自己，那筆樣本的答案就進了它的特徵。折外計算切斷這條路徑；平滑則處理只出現一兩次的商戶，避免編碼值等同於單一樣本的標籤。",
+    choiceExplanations: {
+      A: "正則化無法消除特徵中已經含有答案這個事實。",
+      B: "數萬個商戶用 One-hot 會產生數萬維的稀疏矩陣，記憶體與效率都難以承受。",
+      C: "折數再多，只要編碼仍在全部資料上算，洩漏依然存在。",
+    },
+    topic: "L23301 數據準備與特徵工程",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["目標編碼", "折外計算", "平滑"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L23303",
+      decisionBoundary:
+        "若某商戶在訓練集中只出現一兩次，即使折外計算，編碼值仍極不穩定，需要以全域平均平滑或直接歸為「其他」。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q126",
+    subjectId: "senior-ml",
+    prompt:
+      "某工廠以感測資料預測設備故障，同一台設備相鄰時點的讀值幾乎相同。若以隨機切分建立訓練與測試集，最可能的後果是下列何者？",
+    choices: [
+      { id: "A", text: "資料總量會減少" },
+      { id: "B", text: "模型無法完成訓練" },
+      { id: "C", text: "幾乎相同的樣本被分到兩邊，測試分數虛高而無法反映對新設備或新時段的表現；應改以時間或設備為單位切分" },
+      { id: "D", text: "特徵數量會增加" },
+    ],
+    answer: "C",
+    explanation:
+      "相鄰時點的讀值高度相關，隨機切分等於讓模型在測試時遇到「幾乎同一筆」的資料。分數看似極好，實際上只是記住了訓練樣本。",
+    choiceExplanations: {
+      A: "切分方式不改變資料總量。",
+      B: "模型仍然可以訓練，問題出在評估失真而非無法運作。",
+      D: "切分不會產生新的特徵欄位。",
+    },
+    topic: "L23301 數據準備與特徵工程",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["自相關", "群組切分", "評估失真"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Overgeneralization",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若目標是預測「這台設備的下一秒」而非推廣到新設備，依時間切分同一台的資料就是正確設計，不構成洩漏。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q127",
+    subjectId: "senior-ml",
+    prompt:
+      "某醫院要把身高與體重轉為對臨床更有意義的特徵。下列處理何者最能體現領域知識的價值？",
+    choices: [
+      { id: "A", text: "把身高與體重分別標準化即可" },
+      { id: "B", text: "衍生出 BMI 等具臨床意義的比值，把已知的非線性關係直接提供給模型" },
+      { id: "C", text: "把兩者相加成單一欄位" },
+      { id: "D", text: "刪除其中一個欄位以避免共線性" },
+    ],
+    answer: "B",
+    explanation:
+      "模型要自己從身高與體重學到 BMI 這種非線性比值需要大量樣本。直接把領域知識注入成衍生特徵，等於幫模型省下摸索成本，在中小型資料上效益尤其明顯。",
+    choiceExplanations: {
+      A: "標準化只調整尺度，並未提供兩者之間的關係資訊。",
+      C: "身高與體重相加沒有任何臨床或物理意義。",
+      D: "兩者相關但都帶有獨立資訊，刪除會損失訊號。",
+    },
+    topic: "L23301 數據準備與特徵工程",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["領域知識特徵", "衍生變數", "樣本效率"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Partial Truth",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
       },
       decisionBoundary:
         "若資料量極大、模型也有足夠容量自行學到該關係，手工衍生特徵的邊際效益就明顯下降。",
@@ -2489,6 +3504,119 @@ export const practiceQuestions: Question[] = [
         "若變異大的那個模型平均表現明顯更好、且差距遠超過折間波動，就值得承擔不確定性——穩定性優先的前提是「平均相當」。",
     },
   },
+  {
+    id: "senior-ml-practice-q128",
+    subjectId: "senior-ml",
+    prompt:
+      "某醫院比較兩個模型：甲的五折交叉驗證平均 AUC 0.86、折間標準差 0.01；乙平均 0.87、標準差 0.09。下列選擇與理由何者最合理？",
+    choices: [
+      { id: "A", text: "選乙，因為平均較高" },
+      { id: "B", text: "傾向選甲——平均僅差 0.01 而乙的折間變異大九倍，代表它對資料切分極度敏感，上線表現的不確定性高" },
+      { id: "C", text: "選乙在單折表現最好的那一版" },
+      { id: "D", text: "兩者隨機選一個" },
+    ],
+    answer: "B",
+    explanation:
+      "平均只差 0.01，遠在乙自己的波動範圍之內；而折間標準差 0.09 代表換一批資料表現就可能明顯不同。在平均相當時，穩定性是更可靠的選擇依據。",
+    choiceExplanations: {
+      A: "0.01 的平均差距落在乙的波動範圍內，不足以支撐它更好的結論。",
+      C: "單折最高分可能只是運氣好，用它做決策等於挑選雜訊。",
+      D: "隨機選擇放棄了手上的評估資訊，是不負責任的做法。",
+    },
+    topic: "L23302 模型選擇與架構設計",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["折間變異", "穩定性", "模型選擇"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Partial Truth",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L23303",
+      decisionBoundary:
+        "若乙的平均高出 0.10、遠超過折間波動，就值得承擔它的不穩定性——穩定性優先的前提是平均相當。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q129",
+    subjectId: "senior-ml",
+    prompt:
+      "某工廠的即時判斷有 50 毫秒的硬性延遲上限，候選模型中準確率最高者需 200 毫秒。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "先以延遲上限篩掉不可行的選項，再在可行集合中比較準確率；必要時以量化、剪枝或蒸餾把高準確率模型壓進預算內" },
+      { id: "B", text: "選準確率最高的模型並要求產線接受 200 毫秒" },
+      { id: "C", text: "只比較訓練時間" },
+      { id: "D", text: "依模型的知名度決定" },
+    ],
+    answer: "A",
+    explanation:
+      "延遲上限是硬性約束，超過就無法上線——先篩掉不可行的，再在可行集合中挑最好的。壓縮技術則是在品質與速度之間換取空間的第三條路。",
+    choiceExplanations: {
+      B: "超過硬性上限的模型根本不能用，選了也是白選。",
+      C: "訓練時間是開發成本，與線上服務能否達標無關。",
+      D: "知名度不是工程指標，無法保證符合本專案的約束。",
+    },
+    topic: "L23302 模型選擇與架構設計",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["硬性約束", "可行集合", "模型壓縮"],
+      constraints: ["latency", "quality"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Layer Confusion",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若延遲上限其實有彈性（例如可先回傳暫時結果再更新），約束就從硬性變成軟性，模型選擇的空間也隨之放寬。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q130",
+    subjectId: "senior-ml",
+    prompt:
+      "某教育平台以堆疊集成組合三個基模型，上層模型的訓練輸入是三者的預測值。若這些預測值是各基模型在自己的訓練資料上產生的，最可能的後果是下列何者？",
+    choices: [
+      { id: "A", text: "堆疊集成不需要任何額外處理" },
+      { id: "B", text: "上層模型會訓練失敗" },
+      { id: "C", text: "基模型在自己看過的資料上預測偏樂觀，上層模型學到被記憶過的答案，形成洩漏而在新資料上失準" },
+      { id: "D", text: "應增加基模型的數量" },
+    ],
+    answer: "C",
+    explanation:
+      "基模型對自己訓練過的樣本本來就預測得特別準，上層模型看到的因此是一組過度樂觀的輸入。正確做法是以折外方式產生基模型的預測，讓上層看到的接近它在新資料上的真實表現。",
+    choiceExplanations: {
+      A: "折外預測正是堆疊集成必須處理的關鍵細節。",
+      B: "訓練可以完成，問題出在上層學到的關係是失真的。",
+      D: "增加基模型數量不會消除洩漏，只會讓失真的輸入更多。",
+    },
+    topic: "L23302 模型選擇與架構設計",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["堆疊集成", "折外預測", "洩漏"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L23303",
+      decisionBoundary:
+        "若基模型的預測是以折外方式產生，上層看到的就是接近真實的表現，堆疊的互補優勢才發揮得出來。",
+    },
+  },
 
   // ── L23303 模型訓練、評估與驗證（8 題）────────────────────────
   {
@@ -2786,6 +3914,118 @@ export const practiceQuestions: Question[] = [
         "若某個子群體的樣本數太少，分群指標本身的波動會大過真實差異，此時要先累積樣本或合併相近群體再看。",
     },
   },
+  {
+    id: "senior-ml-practice-q131",
+    subjectId: "senior-ml",
+    prompt:
+      "某銀行以交叉驗證選出最佳超參數後，直接以同一份交叉驗證分數對外宣稱模型效能。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "應增加折數即可解決" },
+      { id: "B", text: "分數會被低估，應向上調整" },
+      { id: "C", text: "交叉驗證不能用於超參數選擇" },
+      { id: "D", text: "該分數已被用於選擇，帶有樂觀偏誤；應以完全未參與選擇的獨立測試集重新評估，或採用巢狀交叉驗證" },
+    ],
+    answer: "D",
+    explanation:
+      "用來挑選的分數等於已經「看過」那份資料，挑出的往往是剛好在該切分上運氣好的組合。要得到誠實的估計，必須用一份完全沒參與選擇的資料，或用巢狀交叉驗證把選擇與評估分開。",
+    choiceExplanations: {
+      A: "增加折數不改變「同一份資料既用於選擇又用於評估」這個問題。",
+      B: "偏誤的方向是高估而非低估。",
+      C: "交叉驗證正是超參數選擇的標準工具，問題在於別拿同一份分數當最終成績。",
+    },
+    topic: "L23303 模型訓練、評估與驗證",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["選擇偏誤", "巢狀交叉驗證", "獨立測試集"],
+      constraints: ["quality", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若只試過一組超參數、沒有挑選的動作，那份交叉驗證分數就沒有被污染，可以直接引用。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q132",
+    subjectId: "senior-ml",
+    prompt:
+      "某醫院的模型整體 AUC 0.90，但拆開來看某一年齡層僅 0.62。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "只回報整體 AUC" },
+      { id: "B", text: "把分群評估納入常規並針對該年齡層補樣本或調整權重，整體指標不能取代對子群體的檢視" },
+      { id: "C", text: "把該年齡層的資料刪除" },
+      { id: "D", text: "提高整體 AUC 的目標到 0.95" },
+    ],
+    answer: "B",
+    explanation:
+      "整體指標會被多數群體主導，某個群體即使表現極差也看不出來。分群評估既是公平性的基本要求，也常是發現資料代表性不足的第一線索。",
+    choiceExplanations: {
+      A: "只看整體正是讓問題被掩蓋的原因，不是解法。",
+      C: "刪除該年齡層等於放棄為這群病患服務。",
+      D: "提高整體目標可能讓模型更專注於多數群體，該年齡層反而更被忽略。",
+    },
+    topic: "L23303 模型訓練、評估與驗證",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["分群評估", "子群體劣化", "代表性"],
+      constraints: ["fairness", "quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L23402",
+      decisionBoundary:
+        "若該年齡層的樣本數太少、指標本身波動就大過真實差異，要先累積樣本或合併相近群體再判讀。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q133",
+    subjectId: "senior-ml",
+    prompt:
+      "某農業模型的實際收成結果要一整季後才揭曉，團隊想在期間內掌握模型是否仍然可靠。下列做法何者最合理？",
+    choices: [
+      { id: "A", text: "以輸入特徵分布與預測分布的漂移作為早期警訊，季末再以實際收成回頭校準效能" },
+      { id: "B", text: "只在季末量測一次準確率" },
+      { id: "C", text: "只監控伺服器的 CPU 使用率" },
+      { id: "D", text: "以模型的呼叫次數作為品質指標" },
+    ],
+    answer: "A",
+    explanation:
+      "標籤延遲一整季時，等真實結果才發現問題已經來不及。分布漂移可以立即量測——輸入或輸出的分布一變就先示警，等實際收成回來再拿來校準。",
+    choiceExplanations: {
+      B: "季末才量測，中間三個月的錯誤預測已經影響了農務決策。",
+      C: "CPU 使用率反映系統負載，模型全部答錯時它可能完全正常。",
+      D: "呼叫次數只說明使用量，與預測品質無關。",
+    },
+    topic: "L23303 模型訓練、評估與驗證",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["標籤延遲", "分布漂移監控", "早期警訊"],
+      constraints: ["maintainability", "data_quality"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Layer Confusion",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若能即時取得部分實際結果（例如提前採收的樣區），直接監控準確率會比分布漂移更靈敏也更直接。",
+    },
+  },
 
   // ── L23304 模型調整與優化（8 題）──────────────────────────────
   {
@@ -3078,6 +4318,118 @@ export const practiceQuestions: Question[] = [
         C: "Wrong Trade-off",
         D: "Wrong Trade-off",
       },
+      decisionBoundary:
+        "若模型的機率輸出未經校準，依成本推導出的門檻也會偏掉，此時要先做校準再選門檻。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q134",
+    subjectId: "senior-ml",
+    prompt:
+      "某工廠把模型剪枝後參數量減少七成，但在既有硬體上的推論速度幾乎沒有改善。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "非結構化剪枝產生的稀疏權重需要硬體或函式庫支援才會加速；若無支援應改用結構化剪枝（整個通道或神經元）" },
+      { id: "B", text: "剪枝一定能加速，應再剪更多" },
+      { id: "C", text: "應改用量化即可" },
+      { id: "D", text: "應增加批次大小" },
+    ],
+    answer: "A",
+    explanation:
+      "參數變少不等於運算變快。非結構化剪枝把權重打成稀疏矩陣，但一般硬體仍以稠密矩陣運算執行，沒有支援就享受不到加速。結構化剪枝直接移除整個通道，矩陣真的變小。",
+    choiceExplanations: {
+      B: "繼續剪只會損害準確率，速度問題的根源沒有被處理。",
+      C: "量化是另一種壓縮手段，可以並用，但沒有解釋剪枝為何沒加速。",
+      D: "批次大小影響吞吐量，不改變稀疏運算無法加速這個事實。",
+    },
+    topic: "L23304 模型調整與優化",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["結構化剪枝", "稀疏運算", "硬體支援"],
+      constraints: ["compute"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Partial Truth",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若部署硬體與推論框架明確支援稀疏運算，非結構化剪枝就能真的換到速度，壓縮率也更高。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q135",
+    subjectId: "senior-ml",
+    prompt:
+      "某銀行要在有限的運算預算下調整六個超參數，其中只有兩個真正重要但事前不知道是哪兩個。下列搜尋策略何者最合理？",
+    choices: [
+      { id: "A", text: "只調整學習率一個參數" },
+      { id: "B", text: "網格搜尋，逐一窮舉所有組合" },
+      { id: "C", text: "隨機搜尋——相同預算下每次嘗試都在各維度取到不同值，較可能覆蓋到重要超參數的有效範圍" },
+      { id: "D", text: "隨意手動嘗試幾組" },
+    ],
+    answer: "C",
+    explanation:
+      "網格搜尋在不重要的維度上浪費大量嘗試——每個不重要的維度都會讓重要維度的取樣點被重複。隨機搜尋讓每次嘗試在所有維度上都取到新值，相同預算下效率明顯較高。",
+    choiceExplanations: {
+      A: "若重要的兩個不包含學習率，就完全找不到好的組合。",
+      B: "六個超參數的網格組合數量爆炸，在有限預算下只能取極粗的格點。",
+      D: "手動嘗試缺乏系統性，也難以重現與比較。",
+    },
+    topic: "L23304 模型調整與優化",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["隨機搜尋", "網格搜尋", "搜尋效率"],
+      constraints: ["compute", "cost"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若只有兩三個超參數、每個又只有少數幾種合理取值，網格搜尋能窮盡所有組合，反而比隨機更可靠。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q136",
+    subjectId: "senior-ml",
+    prompt:
+      "某教育平台要調整分類門檻，已知漏判需輔導的學生成本遠高於誤判。下列做法何者最合理？",
+    choices: [
+      { id: "A", text: "隨機選一個門檻" },
+      { id: "B", text: "一律使用 0.5" },
+      { id: "C", text: "在測試集上反覆嘗試直到分數最好" },
+      { id: "D", text: "依兩類錯誤的實際成本比在驗證集上推導最適門檻，再到測試集驗證一次" },
+    ],
+    answer: "D",
+    explanation:
+      "門檻本質上是商業決策：兩種錯誤的代價不同，最適門檻就不會是 0.5。應在驗證集上依成本函數選定，再到測試集驗證一次以確認沒有過度貼合驗證集。",
+    choiceExplanations: {
+      A: "隨機選門檻放棄了所有可用資訊，結果不可預期。",
+      B: "0.5 只是預設值，只有在兩種錯誤代價相同且機率校準良好時才恰當。",
+      C: "在測試集上反覆調整等於把測試集當驗證集用，分數會失去公正性。",
+    },
+    topic: "L23304 模型調整與優化",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["門檻選擇", "錯誤成本", "驗證集"],
+      constraints: ["quality", "cost"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Overgeneralization",
+        C: "Wrong Trade-off",
+      },
+      crossNode: "L23303",
       decisionBoundary:
         "若模型的機率輸出未經校準，依成本推導出的門檻也會偏掉，此時要先做校準再選門檻。",
     },
@@ -3380,6 +4732,118 @@ export const practiceQuestions: Question[] = [
         "四者齊全仍未必能重現——若相依套件版本或隨機種子沒有一併固定，同一份程式碼也可能訓出不同的模型。",
     },
   },
+  {
+    id: "senior-ml-practice-q137",
+    subjectId: "senior-ml",
+    prompt:
+      "某醫院的模型被發現可透過反覆查詢判斷某位病患是否在訓練集中。下列處置組合何者最合理？",
+    choices: [
+      { id: "A", text: "應延長訓練時間" },
+      { id: "B", text: "應提高模型的參數量" },
+      { id: "C", text: "這是成員推斷攻擊；應降低模型對訓練樣本的過度自信（正則化、早停），並考慮在訓練中加入差分隱私與限制查詢頻率" },
+      { id: "D", text: "應公開模型權重以示透明" },
+    ],
+    answer: "C",
+    explanation:
+      "這類攻擊利用的是模型對訓練樣本比對未見樣本更有信心的差距。縮小這個差距（正則化、早停）能直接削弱攻擊；差分隱私提供可量化的保證，限制查詢則減少累積推論的機會。",
+    choiceExplanations: {
+      A: "訓練越久越容易對訓練樣本過度自信，風險加劇。",
+      B: "參數量越大記憶能力通常越強，攻擊成功率反而上升。",
+      D: "公開權重會讓攻擊者取得更多資訊，風險大幅升高。",
+    },
+    topic: "L23401 數據隱私、安全與合規",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["成員推斷攻擊", "過度自信", "差分隱私"],
+      constraints: ["privacy", "security"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若模型對訓練樣本與未見樣本的信心分布幾乎相同（泛化良好、無過擬合），這種攻擊的成功率就趨近隨機猜測。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q138",
+    subjectId: "senior-ml",
+    prompt:
+      "某銀行的模型訓練資料由外部合作夥伴提供，資安團隊擔心其中被植入惡意樣本。下列防範重點何者最正確？",
+    choices: [
+      { id: "A", text: "縮短模型的訓練時間" },
+      { id: "B", text: "加強傳輸加密即可" },
+      { id: "C", text: "提高模型的參數量" },
+      { id: "D", text: "這是資料毒化風險；防範重點在資料來源的可信度驗證、異常樣本偵測，以及訓練前後的行為比對" },
+    ],
+    answer: "D",
+    explanation:
+      "毒化發生在訓練階段：只要能影響訓練資料來源，就能植入後門或整體降低模型品質。防線因此要架在資料進入訓練之前——來源可信度、異常樣本篩檢，以及比對訓練前後模型行為是否出現異常變化。",
+    choiceExplanations: {
+      A: "縮短訓練時間不會讓惡意樣本失效。",
+      B: "傳輸加密防的是路上被竄改，擋不住來源本身就送來惡意樣本。",
+      C: "參數量與是否被植入惡意樣本無關。",
+    },
+    topic: "L23401 數據隱私、安全與合規",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["資料毒化", "來源可信度", "異常樣本偵測"],
+      constraints: ["security", "data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Layer Confusion",
+        C: "Layer Confusion",
+      },
+      crossNode: "L23301",
+      decisionBoundary:
+        "若訓練資料完全來自內部受控系統、外人無從投入樣本，毒化的攻擊面就不存在，防護重點會轉向推論階段的對抗樣本。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q139",
+    subjectId: "senior-ml",
+    prompt:
+      "某工廠要與同業共同訓練瑕疵模型，各方皆不願提供原始影像，且擔心從模型更新反推出對方的製程細節。下列技術組合何者最合理？",
+    choices: [
+      { id: "A", text: "聯邦學習讓影像留在各廠，並疊加安全彙總使中央只看得到彙總後的更新，必要時再加入差分隱私" },
+      { id: "B", text: "各方把影像加密後集中訓練" },
+      { id: "C", text: "各方自行訓練後不做任何整合" },
+      { id: "D", text: "各方把影像降低解析度後集中" },
+    ],
+    answer: "A",
+    explanation:
+      "三層防護對應三個顧慮：聯邦學習讓原始影像不出廠、安全彙總讓中央看不到個別廠的更新、差分隱私再限制單一參與者可被推論的資訊量。",
+    choiceExplanations: {
+      B: "集中即使加密，訓練時仍需解密使用，影像實質上已離開各廠。",
+      C: "不整合就沒有協作效益，等於各做各的。",
+      D: "降低解析度只是減少資訊量，影像仍然離開了各廠。",
+    },
+    topic: "L23401 數據隱私、安全與合規",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["聯邦學習", "安全彙總", "差分隱私"],
+      constraints: ["privacy", "security"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Partial Truth",
+      },
+      decisionBoundary:
+        "若各廠的瑕疵型態差異極大，聯邦學習訓出的全域模型可能對誰都不夠好，此時要改為各自微調的個人化聯邦。",
+    },
+  },
 
   // ── L23402 演算法偏見與公平性（8 題）──────────────────────────
   {
@@ -3676,6 +5140,118 @@ export const practiceQuestions: Question[] = [
       },
       decisionBoundary:
         "若審核結果不會回流成為下一輪的訓練資料（例如每年都用固定的外部評估資料重訓），回饋迴路就被切斷，偏誤不會自我放大。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q140",
+    subjectId: "senior-ml",
+    prompt:
+      "某銀行的模型已達成各群體的核准率相同（人口比例均等），但稽核發現在同樣具還款能力的申請人中，某群體的核准率仍明顯偏低。下列判斷何者最正確？",
+    choices: [
+      { id: "A", text: "人口比例均等與機會均等是不同的公平準則；若基礎率不同，兩者無法同時滿足，應依情境選定要守住哪一個並說明理由" },
+      { id: "B", text: "核准率相同即代表公平，稽核的質疑無據" },
+      { id: "C", text: "應把兩個準則都調到完全相等" },
+      { id: "D", text: "公平性只需在上線後由申訴處理" },
+    ],
+    answer: "A",
+    explanation:
+      "人口比例均等看的是各群體拿到多少核准，機會均等看的是「有還款能力的人被核准的機會」是否一致。當各群體的基礎率不同時，這兩者在數學上無法同時成立，必須明確選擇並說明。",
+    choiceExplanations: {
+      B: "核准率相同不保證有資格者被平等對待，這正是稽核發現的問題。",
+      C: "已有理論結果指出在基礎率不同時多個公平定義無法同時成立。",
+      D: "偏誤在資料與設計階段就已埋入，等到申訴才處理，受影響的決定已經發生。",
+    },
+    topic: "L23402 演算法偏見與公平性",
+    difficulty: "難",
+    source: "generated",
+    sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Concept Boundary",
+      concepts: ["人口比例均等", "機會均等", "不可相容性"],
+      constraints: ["fairness", "governance"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若各群體的基礎率恰好相同，多個公平性定義就可能同時成立——不可相容性來自基礎率的差異，不是定義本身互相矛盾。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q141",
+    subjectId: "senior-ml",
+    prompt:
+      "某教育平台的模型已上線且短期內無法重訓，但發現對某群體的錄取建議率偏低。下列可行的介入手段何者最合理？",
+    choices: [
+      { id: "A", text: "以重新加權調整訓練資料" },
+      { id: "B", text: "以後處理方式依群體調整決策門檻或校準輸出，因為前處理與訓練中介入都需要重訓" },
+      { id: "C", text: "在損失函數加入公平性約束" },
+      { id: "D", text: "不做任何處理，等下次重訓" },
+    ],
+    answer: "B",
+    explanation:
+      "公平性介入依時機分成前處理、訓練中處理與後處理三類。前兩者都需要重新訓練，模型不能動時就只剩後處理——調整門檻或校準輸出，在推論之後動手。",
+    choiceExplanations: {
+      A: "重新加權屬於前處理，必須重訓才會生效。",
+      C: "在損失函數加入約束屬於訓練中處理，同樣需要重訓。",
+      D: "問題已被發現且有可行的後處理手段，放著不管會讓受影響者持續承擔。",
+    },
+    topic: "L23402 演算法偏見與公平性",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["後處理", "介入時機", "門檻調整"],
+      constraints: ["fairness", "maintainability"],
+      distractorTypes: {
+        A: "Correct in Different Context",
+        C: "Correct in Different Context",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若模型可以隨時重訓，前處理與訓練中介入通常更根本，效果也比事後調門檻更好。",
+    },
+  },
+  {
+    id: "senior-ml-practice-q142",
+    subjectId: "senior-ml",
+    prompt:
+      "某醫院的模型對某族群表現較差，追查發現該族群在訓練資料中僅佔 1%，且現實中確實罕見、樣本難以補充。下列處置何者最合理？",
+    choices: [
+      { id: "A", text: "刪除該族群的樣本" },
+      { id: "B", text: "以重新加權提高該族群在損失中的比重，並在文件中明確標示模型在該族群上的適用限制與已知落差" },
+      { id: "C", text: "只回報整體表現" },
+      { id: "D", text: "增加模型層數" },
+    ],
+    answer: "B",
+    explanation:
+      "樣本無從補充時，加權能讓模型至少不完全忽略這 1%。但更重要的是誠實揭露——把已知的落差寫進文件，使用者才知道在什麼情況下不該完全信賴模型的判斷。",
+    choiceExplanations: {
+      A: "刪除等於讓模型對該族群完全無能力，把問題變成徹底的忽視。",
+      C: "只看整體正是讓問題被掩蓋的原因，也讓使用者無從得知風險。",
+      D: "增加容量無法補足資料中根本不存在的族群資訊。",
+    },
+    topic: "L23402 演算法偏見與公平性",
+    difficulty: "中",
+    source: "generated",
+    sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["重新加權", "適用限制揭露", "代表性不足"],
+      constraints: ["fairness", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L23303",
+      decisionBoundary:
+        "若能透過跨院合作把該族群的樣本補到足夠比例，補樣本就會比加權更根本也更有效。",
     },
   },
 ];

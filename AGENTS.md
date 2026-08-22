@@ -15,7 +15,7 @@
 - **模擬考試**：選 **3 份固定試卷**（`src/state/mockPapers.ts`，依 `subjectId + 份次` seed，決定性可重現）→ **單頁** 50 題作答（點選即時就地更新 DOM，**不整頁重繪**以保留捲動）→ 計時（初級 75／中級 90 分，時間到自動交卷）→ 成績 → **單頁逐題檢討**。
 - **刷題練習**：放入該科**整個題庫、依考卷原序**（不打散），逐題卡片、作答後即時揭曉對錯與詳解、不計時。
 - 模式選單的刷題題數為**動態顯示**（該科實際題數），勿再寫死數字。
-- **新題庫（`src/data/practice/`）**：依官方評鑑內容節點分類的補充題，配額定義於 `src/domain/assessmentTopics.ts`；**不得併入 `getQuestions`**——與原題庫是兩個完全獨立的資料來源。目前僅初級兩科（`junior-ai-basics`、`junior-genai`）各 100 題，中級三科未建置。其刷題進度存於既有 key `ipas-aiap-drill-progress` 底下、同一 map 內以 `${subjectId}:practice` 為 key（與原刷題的 `subjectId` key 分開，互不覆蓋）。模式選單第三張卡以 `data-mode="practice"` 觸發，實際上是 `session.mode = "drill"` ＋ `session.bank = "practice"`（沿用既有刷題流程與 UI，只是換題庫來源）；只有這兩科的模式選單會顯示第三張卡。
+- **新題庫（`src/data/practice/`）**：依官方評鑑內容節點分類的補充題，配額定義於 `src/domain/assessmentTopics.ts`；**不得併入 `getQuestions`**——與原題庫是兩個完全獨立的資料來源。目前**七科各 100 題**（AI 應用規劃師五科、AIoT 兩科）。**新增或擴充新題庫前必讀 `docs/question-authoring.md`**——命題規格、產出流程，以及四個型別檢查抓不到的坑（換位時漏搬 `meta.distractorTypes`、詳解裡指名的選項字母、同長度節點共用答案序列、序列太整齊）。其刷題進度存於既有 key `ipas-aiap-drill-progress` 底下、同一 map 內以 `${subjectId}:practice` 為 key（與原刷題的 `subjectId` key 分開，互不覆蓋）。模式選單第三張卡以 `data-mode="practice"` 觸發，實際上是 `session.mode = "drill"` ＋ `session.bank = "practice"`（沿用既有刷題流程與 UI，只是換題庫來源）；七科的模式選單都會顯示第三張卡。
 
 ### 錯題本
 - 存於 **localStorage**，key 固定為 `ipas-aiap-misses`。

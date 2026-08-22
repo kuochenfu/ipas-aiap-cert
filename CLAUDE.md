@@ -49,7 +49,7 @@ npm run parse:papers # 從 docs/markdown/*.md 重新解析真題 → src/data/pa
 
 **渲染走 `innerHTML` 字串樣板**：所有動態文字一律先經 `src/ui/escape.ts` 的 `escapeHtml`，外部連結加 `target="_blank" rel="noopener noreferrer"`。
 
-更深入的模組職責見 `docs/architecture.md`；不變式與操作守則見 `AGENTS.md`；各功能的設計與計畫見 `docs/superpowers/specs/` 與 `docs/superpowers/plans/`；**待辦清單見 `docs/backlog.md`**（2026-08-17 全面複盤，每項附量測數字與相依關係）；專案回顧見 `docs/retrospective-*.md`（最新一份為 `docs/retrospective-2026-08-17-senior-115-1-and-figures.md`，記錄了原卷圖片的處理決策與解析器的靜默缺陷；`docs/retrospective-2026-08-14-explanations-overhaul.md` 的「最重要的一課」一節則記錄了寫詳解時最容易出錯的句型與檢查法）；已知的題目瑕疵與待複審內容見 `docs/coverage/`（尤其 `bank-defects.md` 與 `explanations-overhaul.md`）。
+更深入的模組職責見 `docs/architecture.md`；不變式與操作守則見 `AGENTS.md`；**新增新題庫前必讀 `docs/question-authoring.md`**（命題規格、資料形狀、產出流程，以及四個型別檢查抓不到的坑）；各功能的設計與計畫見 `docs/superpowers/specs/` 與 `docs/superpowers/plans/`；**待辦清單見 `docs/backlog.md`**（2026-08-17 全面複盤，每項附量測數字與相依關係）；專案回顧見 `docs/retrospective-*.md`（最新一份為 `docs/retrospective-2026-08-22-aiot-cert-and-question-banks.md`，記錄了 AIoT 證照上架與 640 題新題庫的六課；`docs/retrospective-2026-08-17-senior-115-1-and-figures.md` 記錄了原卷圖片的處理決策與解析器的靜默缺陷；`docs/retrospective-2026-08-14-explanations-overhaul.md` 的「最重要的一課」一節則記錄了寫詳解時最容易出錯的句型與檢查法）；已知的題目瑕疵與待複審內容見 `docs/coverage/`（尤其 `bank-defects.md` 與 `explanations-overhaul.md`）。
 
 ## 容易踩到的點（gotchas）
 

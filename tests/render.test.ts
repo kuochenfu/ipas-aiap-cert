@@ -430,13 +430,14 @@ describe("證照導覽", () => {
     expect(html).not.toContain('data-level="senior"');
   });
 
-  it("AIoT 初級列出兩個考科，考科二標示尚無題目且不可點入", () => {
+  it("AIoT 初級兩個考科都可點入，且題數來源分別標示", () => {
     const html = renderLevel("aiot", "junior");
-    expect(html).toContain("AIoT 基礎概論");
-    expect(html).toContain("物聯網系統與應用");
     expect(html).toContain('data-subject="aiot-junior-basics"');
-    expect(html).toContain("尚無題目");
-    expect(html).not.toContain('data-subject="aiot-junior-iot"');
+    expect(html).toContain('data-subject="aiot-junior-iot"');
+    // 考科一是官方學習指引的練習評量，考科二是自編新題，兩者的來源標示必須不同。
+    expect(html).toContain("官方練習 80");
+    expect(html).toContain("新題 60");
+    expect(html).not.toContain("尚無題目");
   });
 
   it("AI 應用規劃師的級別頁不受影響", () => {
@@ -660,12 +661,12 @@ describe("學習主題頁的導覽工具", () => {
 });
 
 describe("節點動作列與縮寫速查", () => {
-  it("有題目的主題都有練題按鈕，AIoT 考科二六個節點顯示尚無題目", () => {
+  it("15 個 AIoT 節點與 18 個五科主題全部都有練題按鈕", () => {
     const html = renderStudyView();
-    // 五科 18 個主題全部有題，加上 AIoT 考科一的 9 個。
-    expect(html.match(/data-topic-drill="/g) ?? []).toHaveLength(27);
-    expect(html.match(/node-drill is-empty/g) ?? []).toHaveLength(6);
+    expect(html.match(/data-topic-drill="/g) ?? []).toHaveLength(33);
+    expect(html.match(/node-drill is-empty/g) ?? []).toHaveLength(0);
     expect(html).toContain('data-topic-drill="aiot-junior-basics|A2.2"');
+    expect(html).toContain('data-topic-drill="aiot-junior-iot|B2.3"');
     expect(html).toContain('data-topic-drill="junior-ai-basics|L111"');
   });
 
@@ -705,6 +706,8 @@ describe("getTopicCounts", () => {
     expect(counts["A1.1 AI 基礎概念"]).toBe(5);
     expect(counts["A2.2 常見通訊協定與網路層技術"]).toBe(10);
     expect(Object.keys(counts)).toHaveLength(9);
-    expect(getTopicCounts("aiot-junior-iot")).toEqual({});
+    const iot = getTopicCounts("aiot-junior-iot");
+    expect(Object.keys(iot)).toHaveLength(6);
+    expect(iot["B2.3 智慧製造流程優化與成本控制"]).toBe(10);
   });
 });

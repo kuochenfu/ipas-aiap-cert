@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { getQuestions } from "../src/data/index";
 import type { Question, QuestionFigure } from "../src/data/types";
 import { subjects } from "../src/domain/catalog";
 
-// AIoT 考科二尚無題源，沒有對應的 past-exams JSON，故不納入。
-const allSubjectIds = subjects.map((s) => s.id).filter((id) => getQuestions(id).length > 0);
+// 只有「經解析器產生過 JSON」的科目才需要檢查機器產物；純自編題庫的科目
+// （AIoT 考科二）沒有 past-exams 檔案，納入會直接讀檔失敗。
+const allSubjectIds = subjects
+  .map((s) => s.id)
+  .filter((id) => existsSync(join(__dirname, "..", "src/data/past-exams", `${id}.json`)));
 const allQuestions: Question[] = allSubjectIds.flatMap((id) => getQuestions(id));
 
 const validKinds = new Set<QuestionFigure["kind"]>(["note", "code", "output", "table", "chart"]);

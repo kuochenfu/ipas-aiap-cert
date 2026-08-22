@@ -69,6 +69,66 @@ describe("parseStudyGuide（AIoT dialect）", () => {
     expect(q.choiceExplanations?.B).toBeUndefined();
   });
 
+  // 每一節的最後一題若不設限，會把下一節的內文一路吃進詳解裡——原檔的節標題被
+  // pdftotext 丟掉了，沒有可辨識的邊界，只能靠「解析不會跨頁延續到下一節」這條規則。
+  it("每節最後一題的散文詳解在跨頁處截斷，不吃進下一節內文", () => {
+    const fixture = `# guide
+
+1. 只有一題的節？
+(A) 甲
+(B) 乙
+(C) 丙
+(D) 丁
+
+1. Ans（B）
+乙才對，理由到此為止。
+
+## Page 99
+
+ 第四章 下一節開始
+4-1
+這裡是下一節的內文，完全不屬於上一題的解析，不應該被吃進去。
+`;
+    const [q] = parseStudyGuide(fixture, {
+      ...AIOT_CTX,
+      sections: [{ code: "A1.1 AI 基礎概念", count: 1 }],
+    });
+    expect(q.explanation).toBe("乙才對，理由到此為止。");
+    expect(q.explanation).not.toContain("下一節的內文");
+  });
+
+  it("非最後一題的詳解不受跨頁截斷影響", () => {
+    const fixture = `# guide
+
+1. 第一題？
+(A) 甲
+(B) 乙
+(C) 丙
+(D) 丁
+2. 第二題？
+(A) 甲
+(B) 乙
+(C) 丙
+(D) 丁
+
+1. Ans（A）
+這段解析寫到一半
+
+## Page 99
+
+ 第三章 AI 基礎知識與應用
+3-9
+就換頁了，但後面這句仍屬於同一題。
+2. Ans（B）
+第二題的解析。
+`;
+    const [first] = parseStudyGuide(fixture, {
+      ...AIOT_CTX,
+      sections: [{ code: "A1.1 AI 基礎概念", count: 2 }],
+    });
+    expect(first.explanation).toContain("就換頁了，但後面這句仍屬於同一題");
+  });
+
   it("解答區塊為散文時沿用原行為，不產生 choiceExplanations", () => {
     const fixture = `# guide
 

@@ -5,6 +5,7 @@ import { questions as seniorAiTech } from "./senior-ai-tech";
 import { questions as seniorBigdata } from "./senior-bigdata";
 import { questions as seniorMl } from "./senior-ml";
 import { questions as aiotJuniorBasics } from "./aiot-junior-basics";
+import { questions as aiotJuniorIot } from "./aiot-junior-iot";
 
 const banks: Record<string, Question[]> = {
   "junior-ai-basics": juniorAiBasics,
@@ -13,6 +14,7 @@ const banks: Record<string, Question[]> = {
   "senior-bigdata": seniorBigdata,
   "senior-ml": seniorMl,
   "aiot-junior-basics": aiotJuniorBasics,
+  "aiot-junior-iot": aiotJuniorIot,
 };
 
 export const getQuestions = (subjectId: string): Question[] => banks[subjectId] ?? [];

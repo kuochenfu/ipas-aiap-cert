@@ -1,10 +1,12 @@
 import type { Question } from "../types";
 import { practiceQuestions as juniorAiBasics } from "./junior-ai-basics";
 import { practiceQuestions as juniorGenai } from "./junior-genai";
+import { practiceQuestions as seniorAiTech } from "./senior-ai-tech";
 
 const banks: Record<string, Question[]> = {
   "junior-ai-basics": juniorAiBasics,
   "junior-genai": juniorGenai,
+  "senior-ai-tech": seniorAiTech,
 };
 
 /** banks registry 涵蓋的科目清單，供測試等處推導，避免各處各自硬編一份、日後加科目卻漏改。 */

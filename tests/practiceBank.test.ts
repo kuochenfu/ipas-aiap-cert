@@ -45,8 +45,13 @@ describe("新題庫形狀契約", () => {
       }
     });
 
-    it(`${subjectId}：sourceRef 為五大產業之一`, () => {
-      const industries = ["金融", "醫療", "工廠", "教育", "農業"];
+    // AI 應用規劃師的題目以官方學習指引的五大產業情境命製。AIoT 兩科的評鑑內容另外涵蓋
+    // 家庭、交通與能源（智慧家庭、車聯網、智慧電網皆在大綱內），故其清單是五大產業的超集。
+    // 分成兩份而不是直接放寬同一份，是為了不讓 AIoT 的額外場域鬆掉五科既有的情境約束。
+    it(`${subjectId}：sourceRef 為該證照允許的情境之一`, () => {
+      const industries = subjectId.startsWith("aiot-")
+        ? ["金融", "醫療", "工廠", "教育", "農業", "家庭", "交通", "能源"]
+        : ["金融", "醫療", "工廠", "教育", "農業"];
       for (const q of getPracticeQuestions(subjectId)) {
         expect(industries, q.id).toContain(q.sourceRef);
       }

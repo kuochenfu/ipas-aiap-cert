@@ -127,6 +127,14 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; border-ra
 .answer-summary.is-correct { background: var(--correct-soft); border-color: var(--correct); }
 .answer-summary.is-wrong { background: var(--wrong-soft); border-color: var(--wrong); }
 .answer-summary strong { color: var(--text); }
+/* 判斷分界：與詳解區隔開，用虛線邊框暗示「這裡談的是另一種情況」。 */
+.decision-boundary {
+  margin-top: 12px; padding: 12px 14px; border-radius: 8px;
+  border: 1px dashed var(--accent); background: var(--panel);
+  line-height: 1.75; color: var(--muted);
+}
+.decision-boundary strong { display: block; margin-bottom: 6px; color: var(--text); }
+.decision-boundary p { margin: 0; }
 .choice-explanations {
   margin-top: 12px; background: var(--panel); border: 1px solid var(--border);
   border-radius: 8px; padding: 14px;

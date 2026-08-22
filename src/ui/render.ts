@@ -215,6 +215,17 @@ const fallbackChoiceExplanation = (q: Question, choice: Choice): string => {
   return `此選項不是本題答案；它描述的是「${choice.text}」，但本題正解應判斷為「${q.answer}. ${correctText}」。請對照完整詳解，確認題目情境與關鍵概念的差異。`;
 };
 
+/**
+ * 「判斷分界」：條件變成什麼樣時，同一題的答案就會換人。AIoT 兩科的新題庫每題都寫了
+ * 一句（`meta.decisionBoundary`），它是這批題目最有價值的部分——只背答案的人拿不到它。
+ * 其餘題庫沒有 meta，這裡就整段不輸出，不會在畫面上留下空殼。
+ */
+const renderDecisionBoundary = (q: Question): string => {
+  const text = q.meta?.decisionBoundary?.trim();
+  if (!text) return "";
+  return `<div class="decision-boundary"><strong>判斷分界</strong><p>${escapeHtml(text)}</p></div>`;
+};
+
 const renderChoiceExplanations = (q: Question): string => `
   <div class="choice-explanations">
     <strong>選項解析</strong>
@@ -345,6 +356,7 @@ export const renderQuestion = (
       ${renderAnswerSummary(q, selected)}
       <div class="explanation"><strong>詳解</strong><p>${escapeHtml(q.explanation || "（尚無詳解）")}</p></div>
       ${renderChoiceExplanations(q)}
+      ${renderDecisionBoundary(q)}
     `
     : "";
   // 刷題作答不需要交卷；檢討模式保留回成績入口。
@@ -859,6 +871,7 @@ export const renderExamReview = (
         <p class="your-answer">${escapeHtml(yours)}</p>
         <div class="explanation"><strong>詳解</strong><p>${escapeHtml(q.explanation || "（尚無詳解）")}</p></div>
         ${q.choiceExplanations ? renderChoiceExplanations(q) : ""}
+        ${renderDecisionBoundary(q)}
       </section>`;
   }).join("");
   return `

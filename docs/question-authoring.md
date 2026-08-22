@@ -148,8 +148,16 @@ AIoT 兩科的評鑑內容另涵蓋家庭／交通／能源，故其清單是五
 }
 ```
 
-型別在 `src/data/types.ts`（`Question`、`QuestionMeta`）。五科的新題庫**沒有** `meta`，
-`renderDecisionBoundary` 因此整段不輸出，不會在畫面上留空殼。
+型別在 `src/data/types.ts`（`Question`、`QuestionMeta`）。**七科的新題庫現在都帶 `meta`**
+（AIoT 兩科在命題時就依規格寫入，AI 應用規劃師五科於 2026-08-22 補標）。
+
+**補標與原生命製不同，這個差別必須誠實記錄。** 五科的題目是在沒有題型約束的情況下先寫好的，
+事後補標只能如實反映它們在測什麼——實測偏重記憶與理解（L1 16–31%、L3 23–45%、
+Direct Concept 17–33%），達不到 §2.2 的區間。因此 `tests/questionBankMeta.test.ts` 把契約分成兩層：
+結構檢查適用七科，分布區間只適用 AIoT 兩科，五科改以**基線快照**守住不再退步。
+
+**要讓五科的分布往上走，正確做法是改寫題目**（把定義題改成情境取捨題），不是調整標籤。
+把明顯的 L1 標成 L3 只會讓這份後設資料失去意義。
 
 ---
 
@@ -205,7 +213,7 @@ npm run build && npm run test
 `choiceExplanations` 改了、`distractorTypes` 沒改 → 畫面上「干擾類型」標到別的選項。
 兩者都是 `Record<string, string>`，型別完全合法。
 
-**擋法**：`tests/aiotQuestionBank.test.ts` 斷言兩者的鍵相等，且恰為三個錯誤選項。
+**擋法**：`tests/questionBankMeta.test.ts` 斷言兩者的鍵相等，且恰為三個錯誤選項。
 
 ### 坑 2：詳解裡指名的選項字母
 
@@ -215,7 +223,7 @@ npm run build && npm run test
 實際發生 **8 次**，其中 **3 次在早先已經「驗過」的題庫裡**——因為當時只檢查了鍵的一致性，
 沒有檢查散文裡的字母。
 
-**擋法**：`tests/aiotQuestionBank.test.ts` 掃 `explanation`、`decisionBoundary` 與所有
+**擋法**：`tests/questionBankMeta.test.ts` 掃 `explanation`、`decisionBoundary` 與所有
 `choiceExplanations`，凡出現「選項 X」就斷言 X 等於該題的 `answer`。
 
 > 推論：**寫詳解時盡量不要指名字母。** 用「把它改成⋯」而不是「把選項 C 改成⋯」，
@@ -227,7 +235,7 @@ npm run build && npm run test
 實測讓 `aiot-junior-basics` 的 D 只剩 **19 題**，其餘三個字母各 27。
 
 **擋法**：序列**逐節點**生成（`scripts/rebalance-answers.ts` 已是如此），
-且 `tests/aiotQuestionBank.test.ts` 斷言每個字母 20–30 題。
+且 `tests/questionBankMeta.test.ts` 斷言每個字母 20–30 題。
 
 ### 坑 4：序列太「整齊」
 
@@ -244,7 +252,7 @@ npm run build && npm run test
 | 測試 | 守住 |
 |---|---|
 | `tests/practiceBank.test.ts` | 形狀契約（四選項、恰三條選項解析、節點合法且不超額）、`sourceRef` 情境清單、答案序列的週期與區塊檢查 |
-| `tests/aiotQuestionBank.test.ts` | 節點配額精確相符、認知層級與難度分布區間、Direct Concept ≤15%、跨節點 ≥20%、干擾類型鍵一致、判斷分界非空、字母各 20–30 題、詳解指名字母須指向正解 |
+| `tests/questionBankMeta.test.ts` | 節點配額精確相符、認知層級與難度分布區間、Direct Concept ≤15%、跨節點 ≥20%、干擾類型鍵一致、判斷分界非空、字母各 20–30 題、詳解指名字母須指向正解 |
 | `tests/assessmentTopics.test.ts` | 節點碼格式（兩套編碼體系）與不重複 |
 
 **這些測試只驗形狀，驗不了內容對錯。** 分布達標的題庫仍然可能整題寫錯。

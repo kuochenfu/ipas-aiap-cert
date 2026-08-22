@@ -27,6 +27,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["No Code", "拖放組裝", "非技術使用者"],
+      constraints: ["skill_level"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Neighbor Concept",
+        D: "Correct in Different Context",
+      },
+      decisionBoundary:
+        "若日後需要與校務系統做客製欄位轉換，需求就跨過 No Code 的界線，該改用 Low Code。",
+    },
   },
   {
     id: "junior-genai-practice-q002",
@@ -51,6 +64,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["Low Code", "API 串接", "客製擴充"],
+      constraints: ["skill_level", "integration"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Wrong Trade-off",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若只是要一張報名表、完全不碰外部 API，Low Code 的程式擴充能力就用不上，No Code 更快也更便宜。",
+    },
   },
   {
     id: "junior-genai-practice-q003",
@@ -75,6 +101,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["平台選型", "團隊技術能力", "串接彈性"],
+      constraints: ["skill_level", "integration"],
+      distractorTypes: {
+        A: "Partial Truth",
+        C: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若團隊完全沒有程式概念，即使串接需求存在，也該先考慮 No Code 加現成連接器，或補足人力再談 Low Code。",
+    },
   },
   {
     id: "junior-genai-practice-q004",
@@ -99,6 +138,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["資料模型", "欄位", "關聯規則"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若步驟改成「決定超過三天要轉給誰」，那就是條件分支而不是資料模型——資料模型描述的是資料長什麼樣，不是流程怎麼走。",
+    },
   },
   {
     id: "junior-genai-practice-q005",
@@ -123,6 +174,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["條件分支", "流程走向"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若判斷不在平台內部做、而是由外部系統在事件發生時把結果推送進來，那條路徑就變成 Webhook。",
+    },
   },
   {
     id: "junior-genai-practice-q006",
@@ -147,6 +210,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["Webhook", "事件觸發", "主動推送"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若改成平台每五分鐘去問一次感測器目前濕度，它就是輪詢——差別在誰主動發起。",
+    },
   },
   {
     id: "junior-genai-practice-q007",
@@ -171,6 +246,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["整合能力", "API", "開放架構"],
+      constraints: ["integration"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若這套工具只給行政人員做內部表單、完全不碰 ERP，範本數量與易用性反而才是該優先評估的。",
+    },
   },
   {
     id: "junior-genai-practice-q008",
@@ -195,6 +283,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["公民開發者"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若那位教師其實是資訊組人員、只是選用了 No-Code 工具，他就不是公民開發者——判準是背景，不是用了什麼工具。",
+    },
   },
   {
     id: "junior-genai-practice-q009",
@@ -219,6 +319,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["AI 民主化", "技術門檻"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若平台雖便宜但仍需資料科學知識才能操作，門檻沒有真正下降，就談不上民主化。",
+    },
   },
   {
     id: "junior-genai-practice-q010",
@@ -243,6 +355,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["No-Code", "AutoML", "分工"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Terminology Swap",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若品保部門改用平台內建的現成預測元件、不自行訓練模型，AutoML 那一層就不存在，全案退回成單純的 No-Code 組裝。",
+    },
   },
   {
     id: "junior-genai-practice-q011",
@@ -267,6 +391,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["工作流自動化", "節點串接", "n8n"],
+      constraints: ["skill_level", "integration"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若只要串接一套系統、且該系統已有現成連接器，節點式的彈性就是多餘的，純 No-Code 更省事。",
+    },
   },
   {
     id: "junior-genai-practice-q012",
@@ -291,6 +428,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Comparison",
+      concepts: ["Vibe Coding", "Low-Code", "程式碼審查"],
+      constraints: ["quality", "security"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若團隊沒有能力審查 AI 生成的程式碼，Vibe Coding 的彈性優勢就轉為風險——它的前提是有人看得懂產出。",
+    },
   },
   {
     id: "junior-genai-practice-q013",
@@ -315,6 +465,20 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["AI 民主化", "使用者教育", "規範"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      crossNode: "L12102",
+      decisionBoundary:
+        "若那些小工具只用於個人整理資料、不影響產線決策，誤用的後果有限，教育與規範的必要性也隨之下降。",
+    },
   },
   {
     id: "junior-genai-practice-q014",
@@ -339,6 +503,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Architecture",
+      concepts: ["No-Code", "Low-Code", "分工搭配"],
+      constraints: ["integration"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若學籍系統本身就提供現成連接器，Low-Code 的客製串接也可以省掉，全案就退回純 No-Code。",
+    },
   },
   // ── L12102 No Code / Low Code 的優勢與限制（14 題）──────────────────
   {
@@ -364,6 +541,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["降低門檻", "開發時程"],
+      constraints: ["time_to_market"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若那張表單涉及跨部門的法遵審核邏輯，快速自建反而會繞過既有的控制點——速度優勢的前提是風險夠低。",
+    },
   },
   {
     id: "junior-genai-practice-q016",
@@ -388,6 +578,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["雛形驗證", "縮短上市時間"],
+      constraints: ["time_to_market"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若這套儀表板一開始就確定要長期上線並承接關鍵決策，雛形之後仍須重寫，快速組裝省下的只是評估階段的時間。",
+    },
   },
   {
     id: "junior-genai-practice-q017",
@@ -412,6 +615,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["供應商鎖定", "專有格式", "資料可攜"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若平台提供標準 API 與開放格式匯出，即使是專有平台也不構成鎖定——判準是資料能不能帶走。",
+    },
   },
   {
     id: "junior-genai-practice-q018",
@@ -436,6 +651,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["資料可攜性", "選型條件", "供應商鎖定"],
+      constraints: ["governance", "maintainability"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Wrong Trade-off",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若這套系統確定只用一年、資料到期即銷毀，可攜性的權重就大幅下降，選型可以更看重開發速度。",
+    },
   },
   {
     id: "junior-genai-practice-q019",
@@ -460,6 +688,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Constraint Change",
+      concepts: ["依用量計費", "成本結構", "用量預測"],
+      constraints: ["cost", "data_volume"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        C: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若用量長期維持在低檔，依用量計費反而比自建划算——這個取捨的分界就在預估用量會不會越過損益兩平點。",
+    },
   },
   {
     id: "junior-genai-practice-q020",
@@ -484,6 +725,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["效能天花板", "高吞吐", "先天限制"],
+      constraints: ["throughput", "latency"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Partial Truth",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若把即時停機判斷留在 PLC 或邊緣裝置、只把彙整後的統計送進 No-Code 平台，平台就重新適用。",
+    },
   },
   {
     id: "junior-genai-practice-q021",
@@ -508,6 +762,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["整合測試", "元件測試", "驗證層級"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若流程完全在平台內部、不跨任何外部系統，測試範圍可以縮小，但流程邏輯本身仍然要驗。",
+    },
   },
   {
     id: "junior-genai-practice-q022",
@@ -532,6 +799,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["服務虛擬化", "mock", "第三方相依"],
+      constraints: ["testability"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若 mock 的行為與檢驗所真實系統有落差，測試會通過但上線仍出錯——mock 取代的是穩定性，不能取代至少一次的真實串接驗證。",
+    },
   },
   {
     id: "junior-genai-practice-q023",
@@ -556,6 +836,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["邊緣裝置", "運算資源", "模型輕量化"],
+      constraints: ["compute", "power"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若延遲只在網路壅塞時出現、裝置閒置時推論很快，那就真的是頻寬問題而不是運算資源不足。",
+    },
   },
   {
     id: "junior-genai-practice-q024",
@@ -580,6 +873,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["模型壓縮", "量化", "邊緣部署"],
+      constraints: ["compute", "power"],
+      distractorTypes: {
+        B: "Layer Confusion",
+        C: "Wrong Trade-off",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若裝置有穩定電源與網路、且延遲容許數百毫秒，把推論搬回雲端反而比壓縮模型更省事。",
+    },
   },
   {
     id: "junior-genai-practice-q025",
@@ -604,6 +910,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["治理失控", "欄位定義", "功能重複"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若各分行一開始就共用總行定義的資料模型與欄位字典，功能重複仍可能發生，但報表至少對得起來。",
+    },
   },
   {
     id: "junior-genai-practice-q026",
@@ -628,6 +947,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["上線審核機制", "影子IT", "治理"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若那套小工具完全不寫入既有系統、只讀資料自用，風險等級下降，審查可以簡化為登記備查。",
+    },
   },
   {
     id: "junior-genai-practice-q027",
@@ -652,6 +984,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["平台適用邊界", "核心系統", "權限控管"],
+      constraints: ["security", "integration"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若要建的只是病歷系統外圍的衛教內容管理、權限單純且不碰核心資料庫，No-Code 就重新適用。",
+    },
   },
   {
     id: "junior-genai-practice-q028",
@@ -676,6 +1021,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["互補分工", "架構設計", "資安稽核"],
+      constraints: ["governance", "security"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若那些自組裝的應用完全不接觸客戶資料、也不寫回核心系統，資安稽核的介入程度可以大幅降低。",
+    },
   },
   // ── L12201 生成式AI 應用領域與常見工具（15 題）──────────────────
   {
@@ -701,6 +1059,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["對話式生成工具", "文字輸入輸出"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若需求改成「把上課錄音整理成逐字稿」，該用的就不是對話式工具而是語音辨識。",
+    },
   },
   {
     id: "junior-genai-practice-q030",
@@ -725,6 +1095,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["文字轉圖像", "生成工具分類"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        C: "Partial Truth",
+      },
+      decisionBoundary:
+        "若行銷人員已有一張草稿、只想改變風格，需求就從文字生圖轉為圖生圖，工具選用與提示寫法都不同。",
+    },
   },
   {
     id: "junior-genai-practice-q031",
@@ -749,6 +1131,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["語音辨識", "語音合成", "轉換方向"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Terminology Swap",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若還要把長輩的台語提問轉成文字，語音辨識就得再加上方言模型的支援——同樣是 ASR，語種決定可行性。",
+    },
   },
   {
     id: "junior-genai-practice-q032",
@@ -773,6 +1167,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["文字轉影片", "擴散模型", "時間一致性"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若只要求把既有素材依腳本剪接，擴散模型就是殺雞用牛刀，一般剪輯自動化工具即可勝任。",
+    },
   },
   {
     id: "junior-genai-practice-q033",
@@ -797,6 +1203,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["程式碼助手", "上下文建議"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        C: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若工具改成只在存檔後檢查排版與語法，它就是 linter 而不是程式碼助手。",
+    },
   },
   {
     id: "junior-genai-practice-q034",
@@ -821,6 +1239,20 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["程式碼審查", "安全疏漏", "AI 產出品質"],
+      constraints: ["quality", "security"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      crossNode: "L12303",
+      decisionBoundary:
+        "若那段程式碼只用於一次性的資料轉換、跑完即丟且不接觸正式環境，審查強度可以放寬。",
+    },
   },
   {
     id: "junior-genai-practice-q035",
@@ -845,6 +1277,20 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["Agentic Coding", "可執行動作", "權限管控"],
+      constraints: ["security", "governance"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Terminology Swap",
+        D: "Overgeneralization",
+      },
+      crossNode: "L12303",
+      decisionBoundary:
+        "若把工具限制成唯讀、只能提出修改建議而不能自行提交，風險就回落到一般程式碼助手的等級。",
+    },
   },
   {
     id: "junior-genai-practice-q036",
@@ -869,6 +1315,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["工作流自動化", "AI 應用建構平台", "知識庫"],
+      constraints: ["integration"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Terminology Swap",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若對話助理只回答固定的十來個問題、不需檢索知識庫，用工作流工具串一個關鍵字比對也就夠了。",
+    },
   },
   {
     id: "junior-genai-practice-q037",
@@ -893,6 +1352,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["Agent 建構平台", "工具整合"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若只需要單輪問答、不呼叫任何外部工具，Agent 建構平台的能力就用不上，一般對話 API 即可。",
+    },
   },
   {
     id: "junior-genai-practice-q038",
@@ -917,6 +1388,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["即時語音互動", "低延遲", "雙向對話"],
+      constraints: ["latency"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Partial Truth",
+        D: "Partial Truth",
+      },
+      decisionBoundary:
+        "若容許病患等待數秒，把語音辨識、對話模型、語音合成三段串起來就夠了；要接近真人節奏才需要端到端的即時語音模型。",
+    },
   },
   {
     id: "junior-genai-practice-q039",
@@ -941,6 +1425,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["草稿產出", "人工核對", "分工"],
+      constraints: ["quality", "governance"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Wrong Trade-off",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若產出的是內部腦力激盪用的想法清單、不對外發布，核對強度可以大幅放寬。",
+    },
   },
   {
     id: "junior-genai-practice-q040",
@@ -965,6 +1462,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Architecture",
+      concepts: ["語音辨識", "文字摘要", "工具鏈"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Terminology Swap",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若模型本身就支援直接輸入音訊（多模態），兩步可以併成一步，但摘要品質仍受轉錄正確率影響。",
+    },
   },
   {
     id: "junior-genai-practice-q041",
@@ -989,6 +1498,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["生成式AI適用範圍", "即時控制", "風險等級"],
+      constraints: ["latency", "safety"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若把生成式 AI 的角色改成「事後分析停機原因並寫成報告」，即時性要求消失，它就完全適用。",
+    },
   },
   {
     id: "junior-genai-practice-q042",
@@ -1013,6 +1535,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Concept Boundary",
+      concepts: ["文字轉圖像", "數據精確性", "生成機制"],
+      constraints: ["quality"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若改用能產生繪圖程式碼（如 matplotlib）的工具再執行，數據就精確了——關鍵在於數字是被畫出來還是被算出來。",
+    },
   },
   {
     id: "junior-genai-practice-q043",
@@ -1037,6 +1572,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["工具類別對應", "文字", "影像", "語音"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Terminology Swap",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若第三項改成「把講師的中文講稿翻成英文語音」，就要再串上翻譯與語音合成，工具鏈會從兩段變三段。",
+    },
   },
   // ── L12202 如何善用生成式AI 工具（15 題）──────────────────
   {
@@ -1062,6 +1609,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["零樣本提示", "少樣本提示"],
+      distractorTypes: {
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若附上的不是範例而是「請先列出評分項目再逐項給分」的步驟要求，那就變成思維鏈提示。",
+    },
   },
   {
     id: "junior-genai-practice-q045",
@@ -1086,6 +1645,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["思維鏈提示", "逐步推理"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若這筆案件需要同時展開多種授信條件組合再比較優劣，單一線性推理就不夠，該升級成思維樹提示。",
+    },
   },
   {
     id: "junior-genai-practice-q046",
@@ -1110,6 +1681,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["思維樹提示", "多路徑比較"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若問題只有一條合理的推導路徑，展開多條分支只是多餘的成本，思維鏈反而更有效率。",
+    },
   },
   {
     id: "junior-genai-practice-q047",
@@ -1134,6 +1717,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["Graph Prompting", "條件交互關聯"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若各項條件彼此獨立、可分開評分再加總，網絡化的呈現就沒有必要，線性的思維鏈更清楚。",
+    },
   },
   {
     id: "junior-genai-practice-q048",
@@ -1158,6 +1753,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["角色扮演提示", "語氣視角"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若目的不是語氣而是專業判斷的品質，指定「你是資深律師」通常幫助有限——角色提示改變的是表達，不是知識。",
+    },
   },
   {
     id: "junior-genai-practice-q049",
@@ -1182,6 +1789,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["少樣本提示", "範例代表性", "泛化"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若補上數個東南亞市場的真實對話當範例，泛化問題通常就緩解——關鍵是代表性，不是數量或字數。",
+    },
   },
   {
     id: "junior-genai-practice-q050",
@@ -1206,6 +1826,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["上下文工程", "提示工程", "token 預算"],
+      constraints: ["cost"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        C: "Partial Truth",
+      },
+      decisionBoundary:
+        "若應用只有單輪問答、沒有歷史狀態也不呼叫工具，上下文工程就退化成提示工程。",
+    },
   },
   {
     id: "junior-genai-practice-q051",
@@ -1230,6 +1863,20 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["temperature", "隨機性", "一致性"],
+      constraints: ["quality"],
+      distractorTypes: {
+        B: "Terminology Swap",
+        C: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      crossNode: "L12303",
+      decisionBoundary:
+        "若法遵問答出現的是「引用了不存在的條文」，調低溫度救不了——那要靠 RAG 提供可追溯的來源。",
+    },
   },
   {
     id: "junior-genai-practice-q052",
@@ -1254,6 +1901,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["無狀態模型", "對話歷史", "應用層"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若對話已長到超出上下文視窗，光把歷史全部送進去也不夠，得先摘要或篩選要保留哪些片段。",
+    },
   },
   {
     id: "junior-genai-practice-q053",
@@ -1278,6 +1937,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["RAG", "Chunking", "向量檢索"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若知識量小到能整份塞進上下文、且幾乎不更新，直接貼入提示詞反而更簡單，RAG 的檢索成本就不划算。",
+    },
   },
   {
     id: "junior-genai-practice-q054",
@@ -1302,6 +1973,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["增量索引", "向量資料庫", "更新成本"],
+      constraints: ["cost", "maintainability"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Partial Truth",
+      },
+      decisionBoundary:
+        "若文件之間存在大量交叉引用、改一份會牽動許多片段的語意，增量更新的邊界難以界定，全量重建反而穩妥。",
+    },
   },
   {
     id: "junior-genai-practice-q055",
@@ -1326,6 +2010,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["RAG 失敗模式", "檢索品質", "證據依循"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若模型拿到的是正確段落卻仍答錯，問題在生成階段（忽略證據），調整檢索參數不會有幫助——三種失敗要分開量測才修得對。",
+    },
   },
   {
     id: "junior-genai-practice-q056",
@@ -1350,6 +2047,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["提示工程", "微調", "RAG", "分工"],
+      constraints: ["cost", "maintainability"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Partial Truth",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若語氣需求只是「正式一點」這種簡單約束，提示工程就夠了，微調的訓練成本換不到相應效益。",
+    },
   },
   {
     id: "junior-genai-practice-q057",
@@ -1374,6 +2084,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Comparison",
+      concepts: ["RAG", "MCP", "靜態知識與即時狀態"],
+      constraints: ["integration"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Terminology Swap",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若選課名額改成每天匯出一次快照存進知識庫，它就退回成 RAG 可處理的靜態內容——分野在於資料需不需要當下即時。",
+    },
   },
   {
     id: "junior-genai-practice-q058",
@@ -1398,6 +2121,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["函數呼叫", "結構化參數", "觸發動作"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若系統只把病患的話轉成文字、交由人工去掛號，函數呼叫那一層就不存在——關鍵在模型有沒有觸發實際動作。",
+    },
   },
   // ── L12301 生成式AI 導入評估（14 題）──────────────────
   {
@@ -1423,6 +2158,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["痛點識別", "As-Is/To-Be", "導入標的"],
+      constraints: ["governance"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Neighbor Concept",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若某流程規則清晰、重複性也高，卻牽涉不可逆的高風險決策，它仍不適合當第一個標的——先導入的應該是錯了還能修的流程。",
+    },
   },
   {
     id: "junior-genai-practice-q060",
@@ -1447,6 +2195,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["KPI", "可量化指標", "篩選條件"],
+      constraints: ["governance"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若某流程的效益真實存在卻難以量化（例如降低醫護心理負擔），它未必該被排除，但要另外設計替代的觀察指標。",
+    },
   },
   {
     id: "junior-genai-practice-q061",
@@ -1471,6 +2232,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["吞吐量", "延遲", "效能面向"],
+      constraints: ["latency", "throughput"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Layer Confusion",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若尖峰時段連請求都排隊送不進去，那才真的是吞吐量不足——兩者的徵狀不同，處方也不同。",
+    },
   },
   {
     id: "junior-genai-practice-q062",
@@ -1495,6 +2269,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["技術效能指標", "延遲", "任務準確度"],
+      constraints: ["quality", "latency"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Layer Confusion",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若評估的是導入是否成功而不只是系統好不好，滿意度與使用率就該納入——指標組合取決於問的是哪一層問題。",
+    },
   },
   {
     id: "junior-genai-practice-q063",
@@ -1519,6 +2306,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["TCO", "成本與效益之分"],
+      constraints: ["cost"],
+      distractorTypes: {
+        A: "Terminology Swap",
+        B: "Partial Truth",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若把省下的加班費放進效益欄再與 TCO 相比，得到的就是回收期——效益與成本必須分列，混在一起兩個數字都會失真。",
+    },
   },
   {
     id: "junior-genai-practice-q064",
@@ -1543,6 +2343,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["ROI", "無形效益", "隱性成本"],
+      constraints: ["cost"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若無形效益難以估值，實務上會改以區間或情境分析呈現，而不是直接當成零——當成零等於預設它不存在。",
+    },
   },
   {
     id: "junior-genai-practice-q065",
@@ -1567,6 +2380,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["Token Economics", "推論用量計費"],
+      constraints: ["cost"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Partial Truth",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若改用固定月費的方案，用量與費用就脫鉤，核算重點會轉為「有沒有用滿額度」。",
+    },
   },
   {
     id: "junior-genai-practice-q066",
@@ -1591,6 +2417,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["思考預算", "推理型模型", "品質與成本"],
+      constraints: ["cost", "quality"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Wrong Trade-off",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若案件單純、調高預算也換不到判斷品質的提升，那筆多花的推論成本就是純粹浪費——預算該隨複雜度而動。",
+    },
   },
   {
     id: "junior-genai-practice-q067",
@@ -1615,6 +2454,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Comparison",
+      concepts: ["自建開源", "商用API", "資料落地"],
+      constraints: ["privacy", "cost", "maintainability"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若供應商提供不留存資料的專屬部署或地端方案，資料外流的顧慮下降，取捨就回到成本與維運能力。",
+    },
   },
   {
     id: "junior-genai-practice-q068",
@@ -1639,6 +2491,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Comparison",
+      concepts: ["自建開源", "隱性成本", "維運人力"],
+      constraints: ["cost", "maintainability"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若企業本來就有維運模型的團隊、且該團隊有閒置產能，自建的邊際人力成本大幅下降，取捨會倒向自建。",
+    },
   },
   {
     id: "junior-genai-practice-q069",
@@ -1663,6 +2528,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["地端部署", "資料外傳風險", "維運責任"],
+      constraints: ["privacy", "cost"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Terminology Swap",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若資料本身不敏感（例如公開的產品型錄問答），地端的隱私優勢就換不到相應的硬體與維運代價。",
+    },
   },
   {
     id: "junior-genai-practice-q070",
@@ -1687,6 +2565,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["資料密級", "隔離環境", "模型一致性"],
+      constraints: ["security", "maintainability"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若機密文件的用量極小、且人工處理成本可接受，完全不讓 AI 碰它反而是最簡單也最安全的選擇。",
+    },
   },
   {
     id: "junior-genai-practice-q071",
@@ -1711,6 +2602,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["PoC", "範圍聚焦", "治理框架"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若 PoC 一開始就要接觸真實個資或對外服務，治理規範就必須提前到 PoC 階段——範圍決定治理何時要到位。",
+    },
   },
   {
     id: "junior-genai-practice-q072",
@@ -1735,6 +2639,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["PoC 選題", "風險可控", "利害關係人"],
+      constraints: ["risk_priority"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Overgeneralization",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若小工具的情境過於邊緣、無法代表核心業務，PoC 即使成功也推論不到正式導入——範圍要小，但仍須具代表性。",
+    },
   },
   // ── L12302 生成式AI 導入規劃（14 題）──────────────────
   {
@@ -1760,6 +2677,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Direct Concept",
+      concepts: ["導入步驟", "目標與KPI", "技術選型"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Terminology Swap",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若手上已有現成且格式一致的資料，資料蒐集那一步可以壓縮，但 KPI 仍必須排在技術選型之前。",
+    },
   },
   {
     id: "junior-genai-practice-q074",
@@ -1784,6 +2714,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["KPI 缺失", "驗收依據", "技術選型偏離"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若專案本來就只是探索性質、不打算評估成效，缺 KPI 的影響有限——KPI 的必要性來自要不要驗收。",
+    },
   },
   {
     id: "junior-genai-practice-q075",
@@ -1808,6 +2751,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["試辦計畫", "可評估指標", "期限"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若試辦目的是探索使用者接受度而非驗證準確率，指標就該換成使用率與回訪率，但仍必須是可量測的。",
+    },
   },
   {
     id: "junior-genai-practice-q076",
@@ -1832,6 +2788,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["試辦驗收", "沉沒成本", "調整或終止"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若未達標的原因是資料量不足而非方法錯誤，延長試辦是合理的；若方法本身走不通，延長只是把沉沒成本加大。",
+    },
   },
   {
     id: "junior-genai-practice-q077",
@@ -1856,6 +2825,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["資料品質治理", "標註稽核", "可追溯性"],
+      constraints: ["data_quality", "governance"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若問答資料庫只有數十筆且極少變動，一次性整理加人工複查就夠了，建制稽核流程的成本反而不划算。",
+    },
   },
   {
     id: "junior-genai-practice-q078",
@@ -1880,6 +2862,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["資料集更新", "新興類別", "重新標註"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Wrong Trade-off",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若準確率下滑但新蟲害並未出現、影像條件也沒變，就該回頭懷疑標註品質或模型本身，而不是一味補資料。",
+    },
   },
   {
     id: "junior-genai-practice-q079",
@@ -1904,6 +2899,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["使用者信任", "教育溝通", "模型侷限"],
+      constraints: ["governance"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若疑慮的來源其實是系統確實常常評錯，教育與溝通就治不了本，該做的是回頭修模型。",
+    },
   },
   {
     id: "junior-genai-practice-q080",
@@ -1928,6 +2936,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["上線後監控", "效能衰退"],
+      constraints: ["maintainability"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若系統的輸入分布極穩定（例如固定格式的內部表單），監控頻率可以放寬，但不能歸零。",
+    },
   },
   {
     id: "junior-genai-practice-q081",
@@ -1952,6 +2973,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["指標驅動重訓", "門檻", "資料分布變化"],
+      constraints: ["cost", "maintainability"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Neighbor Concept",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若監控指標本身有嚴重延遲（例如標準答案三個月後才知道），就無法即時觸發，此時固定週期重訓反而是務實的折衷。",
+    },
   },
   {
     id: "junior-genai-practice-q082",
@@ -1976,6 +3010,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["概念漂移", "輸入與目標關係"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Terminology Swap",
+        B: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若年齡與裝置分布也同時明顯改變，就變成資料漂移與概念漂移並存，兩者要分別診斷、分別處理。",
+    },
   },
   {
     id: "junior-genai-practice-q083",
@@ -2000,6 +3047,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Troubleshooting",
+      concepts: ["資料漂移", "輸入分布改變"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Terminology Swap",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若新舊客群的裝置分布相近、但同一群人的偏好變了，那就是概念漂移而不是資料漂移——先看分布有沒有動。",
+    },
   },
   {
     id: "junior-genai-practice-q084",
@@ -2024,6 +3084,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Best Engineering Decision",
+      concepts: ["多模組系統", "錯誤源頭優先", "改進排序"],
+      constraints: ["quality", "latency"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若延遲已經超出可接受範圍、使用者根本等不到回覆，優先順序就會翻轉——上游優先的前提是其他面向仍在容忍範圍內。",
+    },
   },
   {
     id: "junior-genai-practice-q085",
@@ -2048,6 +3121,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["受控更新", "canary", "shadow", "回退方案"],
+      constraints: ["reliability"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若新舊模型的輸出無法自動比對優劣（例如生成式文案），shadow 的價值下降，要改以人工抽樣評分搭配小流量 canary。",
+    },
   },
   {
     id: "junior-genai-practice-q086",
@@ -2072,6 +3158,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["canary", "rollback", "監控指標"],
+      constraints: ["reliability"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Partial Truth",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若準確率只在統計雜訊範圍內波動、樣本數又太小，貿然回退也可能是誤判——要先確認差異在統計上站得住腳。",
+    },
   },
   {
     id: "junior-genai-practice-q087",
@@ -2099,6 +3198,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Troubleshooting",
+      concepts: ["幻覺", "事實查核", "檢索比對"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若模型回的是「查無相關研究」，那反而是正確行為——幻覺的特徵是編造出具體而不存在的內容，不是答不出來。",
+    },
   },
   {
     id: "junior-genai-practice-q088",
@@ -2126,6 +3238,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["直接提示注入", "間接提示注入", "指令來源"],
+      constraints: ["security"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Terminology Swap",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若那份 PDF 是由內部人員上傳且內容經過審核，間接注入的風險下降——判準在於模型讀進來的外部內容是否可信。",
+    },
   },
   {
     id: "junior-genai-practice-q089",
@@ -2153,6 +3278,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["多層防禦", "輸入驗證", "權限隔離"],
+      constraints: ["security"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若 AI 助教完全不讀取任何外部檔案、只處理選項式輸入，間接注入的攻擊面就不存在，防禦重點會回到直接注入。",
+    },
   },
   {
     id: "junior-genai-practice-q090",
@@ -2180,6 +3318,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["Guardrails", "主題限制", "可解釋性"],
+      constraints: ["security", "governance"],
+      distractorTypes: {
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若需求改成「向主管機關說明模型為何做出這個判斷」，Guardrails 幫不上忙，那要靠可解釋性與稽核紀錄。",
+    },
   },
   {
     id: "junior-genai-practice-q091",
@@ -2207,6 +3358,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["最小權限", "動作分級", "不可逆性"],
+      constraints: ["security", "risk_priority"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Partial Truth",
+      },
+      decisionBoundary:
+        "若轉帳改成有 24 小時的無條件撤回期，動作就從不可逆變成可逆，自動執行的門檻可以放寬。",
+    },
   },
   {
     id: "junior-genai-practice-q092",
@@ -2234,6 +3398,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["訓練資料記憶", "去識別化", "逐字覆誦"],
+      constraints: ["privacy"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若模型講出的姓名在訓練資料中根本不存在、只是聽起來像真的，那才是幻覺——兩者的處置完全不同。",
+    },
   },
   {
     id: "junior-genai-practice-q093",
@@ -2261,6 +3438,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["偏見檢測", "偏見緩解", "量測與處置"],
+      constraints: ["fairness"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若檢測後發現差異來自各群體本身的真實風險分布而非模型偏誤，直接「拉平」核貸率反而會製造新的不公平。",
+    },
   },
   {
     id: "junior-genai-practice-q094",
@@ -2288,6 +3478,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Concept Boundary",
+      concepts: ["黑箱", "責任歸屬", "可解釋性"],
+      constraints: ["governance", "explainability"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若系統改用規則明確、可逐條追溯的決策樹或規則庫，黑箱問題大幅緩解，但代價通常是判斷能力下降。",
+    },
   },
   {
     id: "junior-genai-practice-q095",
@@ -2315,6 +3518,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["C2PA", "簽章中繼資料", "來源追溯"],
+      constraints: ["governance"],
+      distractorTypes: {
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若通路全程使用支援 C2PA 的工具、不經截圖或轉檔，中繼資料就能完整保留——它的弱點在流通環節，不在技術本身。",
+    },
   },
   {
     id: "junior-genai-practice-q096",
@@ -2342,6 +3558,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["SynthID", "C2PA", "浮水印與中繼資料"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Terminology Swap",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若需求是完整記錄「誰在何時做了哪些編修」，浮水印攜帶的資訊量不足，仍須以 C2PA 中繼資料補上。",
+    },
   },
   {
     id: "junior-genai-practice-q097",
@@ -2369,6 +3598,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["版權", "訓練資料來源", "服務條款"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若使用的是以完全授權資料訓練、且供應商提供智財賠償保證的模型，風險顯著下降，但服務條款的商用限制仍要逐條確認。",
+    },
   },
   {
     id: "junior-genai-practice-q098",
@@ -2396,6 +3638,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["歐盟AI Act", "不可接受風險", "社會評分"],
+      constraints: ["governance"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Partial Truth",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若評分只用於單一公共服務的資格審查、而非跨領域的普遍性評分，它可能落在高風險而非不可接受——範圍決定分級。",
+    },
   },
   {
     id: "junior-genai-practice-q099",
@@ -2426,6 +3681,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["風險迴避", "緩解", "轉移", "接受"],
+      constraints: ["risk_priority"],
+      distractorTypes: {
+        A: "Terminology Swap",
+        B: "Terminology Swap",
+        C: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若銀行改成導入該功能但設定單筆上限與即時人工監看，那就從迴避變成緩解——差別在於那個行動有沒有被執行。",
+    },
   },
   {
     id: "junior-genai-practice-q100",
@@ -2459,5 +3727,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["human-in-the-loop", "逐筆確認"],
+      constraints: ["safety"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若改成系統直接寫入病歷、醫師事後查核並可撤銷，它就變成 human-over-the-loop。",
+    },
   },
 ];

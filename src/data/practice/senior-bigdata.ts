@@ -27,6 +27,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["中位數", "右偏分布", "極端值"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Correct in Different Context",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若分布近似對稱、沒有極端值，平均數與中位數幾乎相同，此時平均數因為用到全部資訊而更有效率。",
+    },
   },
   {
     id: "senior-bigdata-practice-q002",
@@ -51,6 +64,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["標準差", "離散程度", "製程穩定度"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Layer Confusion",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若兩線的平均值不同，就不能只比標準差，要改用變異係數（標準差／平均）才是公平的比較。",
+    },
   },
   {
     id: "senior-bigdata-practice-q003",
@@ -75,6 +100,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["百分位數", "分布尾端"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若關注的是「最常見的住院天數」以安排常規床位，該用的就變成眾數而不是百分位數。",
+    },
   },
   {
     id: "senior-bigdata-practice-q004",
@@ -99,6 +136,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["盒鬚圖", "四分位數", "IQR"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若要呈現的是完整分布形狀而不只是四分位摘要，盒鬚圖就不夠，該改用直方圖或小提琴圖。",
+    },
   },
   {
     id: "senior-bigdata-practice-q005",
@@ -123,6 +172,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["右偏", "平均數", "中位數"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若長尾出現在低值端（左偏），關係就反過來，平均數會小於中位數。",
+    },
   },
   {
     id: "senior-bigdata-practice-q006",
@@ -147,6 +208,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["指標定義", "分母選擇", "誤導"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Neighbor Concept",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若兩種分母的差距極小（幾乎所有註冊者都有上課），選哪一個都不影響結論，定義的重要性也隨之下降。",
+    },
   },
   {
     id: "senior-bigdata-practice-q007",
@@ -171,6 +245,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["IQR", "離群值判定"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若資料呈厚尾分布，1.5 倍 IQR 會把大量正常值判為離群，此時門檻應放寬到 3 倍或改用領域上下限。",
+    },
   },
   {
     id: "senior-bigdata-practice-q008",
@@ -195,6 +281,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["集中趨勢", "分布尾端", "報表誤導"],
+      constraints: ["quality", "governance"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        C: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若處理時間的分布近似對稱且變異很小，平均值就足以代表整體，補上分位數的邊際價值不高。",
+    },
   },
 
   // ── L22102 機率分佈與資料分佈模型（8 題）──────────────────────
@@ -221,6 +320,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["卜瓦松分布", "計數資料"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若故障之間會互相引發（一台壞導致鄰機過載），獨立性假設就不成立，卜瓦松會低估群聚發生的次數。",
+    },
   },
   {
     id: "senior-bigdata-practice-q010",
@@ -245,6 +356,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["二項分布", "固定試驗次數", "獨立性"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若違約之間因景氣而高度相關、不再獨立，二項分布會嚴重低估同時大量違約的機率。",
+    },
   },
   {
     id: "senior-bigdata-practice-q011",
@@ -269,6 +392,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["常態分布", "68-95-99.7"],
+      distractorTypes: {
+        A: "Terminology Swap",
+        B: "Terminology Swap",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "這組數字只在資料近似常態時成立；若分布厚尾，±3 個標準差之外的比例會遠高於 0.3%。",
+    },
   },
   {
     id: "senior-bigdata-practice-q012",
@@ -293,6 +428,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["指數分布", "等待時間"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若回診是依固定療程排定（例如每三個月一次），間隔就不是隨機等待時間，指數分布並不適用。",
+    },
   },
   {
     id: "senior-bigdata-practice-q013",
@@ -317,6 +464,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["中央極限定理", "抽樣分布"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若母體的變異數不存在（極厚尾分布），中央極限定理的前提就不成立，樣本平均不會趨近常態。",
+    },
   },
   {
     id: "senior-bigdata-practice-q014",
@@ -341,6 +500,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["雙峰分布", "混合子群體"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若找不到任何能區分兩峰的變數，就只能以混合分布建模，而不是硬拆成兩群。",
+    },
   },
   {
     id: "senior-bigdata-practice-q015",
@@ -365,6 +537,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["Z分數", "標準化"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若分布嚴重偏態，平均與標準差都被極端值拉動，Z 分數的判讀就失真，該改用以分位數為基礎的標準化。",
+    },
   },
   {
     id: "senior-bigdata-practice-q016",
@@ -389,6 +573,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["Q-Q圖", "常態性檢查"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若樣本數極小（例如不到 20 筆），Q-Q 圖的點本來就會抖動，偏離直線未必代表非常態。",
+    },
   },
 
   // ── L22103 假設檢定與統計推論（8 題）──────────────────────────
@@ -415,6 +611,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["p值", "顯著水準", "判讀"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Terminology Swap",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若這是二十個檢定中挑出來的那一個，0.03 就不再具有原本的意義，必須先做多重比較校正。",
+    },
   },
   {
     id: "senior-bigdata-practice-q018",
@@ -439,6 +647,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["型一錯誤", "型二錯誤"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Terminology Swap",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若把顯著水準從 0.05 調到 0.01，型一錯誤機率下降，但型二錯誤（漏檢）會隨之上升——兩者是此消彼長的取捨。",
+    },
   },
   {
     id: "senior-bigdata-practice-q019",
@@ -463,6 +683,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["多重比較", "偽陽性", "校正"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若二十個指標中只有一個是事前指定的主要指標、其餘僅供探索，就不必全部校正，但探索性結果不能當成結論。",
+    },
   },
   {
     id: "senior-bigdata-practice-q020",
@@ -487,6 +720,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Concept Boundary",
+      concepts: ["統計顯著", "實務顯著", "效果量"],
+      constraints: ["governance"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若這 0.2 分是套用到千萬人的公共政策、且成本極低，微小效果乘上規模後仍可能值得——實務意義取決於規模與成本。",
+    },
   },
   {
     id: "senior-bigdata-practice-q021",
@@ -511,6 +757,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["信賴區間", "長期表現", "古典統計"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Overgeneralization",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若採用貝氏方法計算可信區間（credible interval），「參數有 95% 機率落在此區間」的說法才成立——兩種框架對機率的定義不同。",
+    },
   },
   {
     id: "senior-bigdata-practice-q022",
@@ -535,6 +793,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["ANOVA", "多組平均比較"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        C: "Partial Truth",
+      },
+      decisionBoundary:
+        "若 ANOVA 顯示至少一組不同、還要知道是哪兩組不同，就得再做事後多重比較（如 Tukey）並校正。",
+    },
   },
   {
     id: "senior-bigdata-practice-q023",
@@ -559,6 +829,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["單尾檢定", "方向性假設"],
+      distractorTypes: {
+        B: "Correct in Different Context",
+        C: "Neighbor Concept",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若新肥料也有可能導致減產、而研究者需要偵測這個方向，就必須改用雙尾檢定。",
+    },
   },
   {
     id: "senior-bigdata-practice-q024",
@@ -583,6 +865,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["p值操縱", "事前登錄", "揭露"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Layer Confusion",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若所有嘗試過的切分方式都被完整揭露、並做了多重比較校正，那就是合法的探索性分析而不是 p 值操縱。",
+    },
   },
 
   // ── L22201 數據收集與清理（8 題）──────────────────────────────
@@ -609,6 +904,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Troubleshooting",
+      concepts: ["重複資料", "實體解析", "字串標準化"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        C: "Overgeneralization",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若系統中已有唯一且可靠的客戶編號，比對就退化成單純的鍵值合併，不需要相似度門檻。",
+    },
   },
   {
     id: "senior-bigdata-practice-q026",
@@ -633,6 +941,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["哨兵值", "缺失代碼", "前處理"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若 −999 在該場域其實可能是真實讀值（例如某些壓力或高程單位），就不能一律當成缺失代碼——判準要回到設備手冊。",
+    },
   },
   {
     id: "senior-bigdata-practice-q027",
@@ -657,6 +978,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["編碼對照表", "類別統一"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Terminology Swap",
+        B: "Wrong Trade-off",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若某個來源的編碼含意不明（例如 1／0 分不出對應哪一性別），就不能貿然對照，該先回頭確認來源定義。",
+    },
   },
   {
     id: "senior-bigdata-practice-q028",
@@ -681,6 +1015,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["覆蓋偏誤", "抽樣框", "代表性"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        B: "Layer Confusion",
+        C: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若目標母體本來就定義為「該網站的使用者」，抽樣框與母體一致，覆蓋偏誤就不成立。",
+    },
   },
   {
     id: "senior-bigdata-practice-q029",
@@ -705,6 +1052,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["清理紀錄", "可追溯性", "版本"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Layer Confusion",
+        C: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若清理完全以版本控制的程式碼執行、且原始資料不可變，那份程式碼本身就是紀錄，額外的文件可以精簡。",
+    },
   },
   {
     id: "senior-bigdata-practice-q030",
@@ -729,6 +1089,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["極端值", "真實事件", "領域確認"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若同一時段鄰近測站的讀數都正常、只有這一站爆表，設備異常的可能性就大幅上升，判斷會倒向排除。",
+    },
   },
   {
     id: "senior-bigdata-practice-q031",
@@ -753,6 +1126,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["日期解析", "ISO 8601", "型別統一"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若兩種格式中一種是「日/月/年」、另一種是「月/日/年」，光看字串分不出 03/04 是哪一天，必須回頭確認來源系統的慣例。",
+    },
   },
   {
     id: "senior-bigdata-practice-q032",
@@ -777,6 +1163,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["資料品質", "完整性", "一致性", "及時性"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        C: "Neighbor Concept",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若分析只用到歷史資料、不涉及即時決策，及時性的權重就大幅下降，重點回到完整性與正確性。",
+    },
   },
 
   // ── L22202 數據儲存與管理（8 題）──────────────────────────────
@@ -803,6 +1202,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["資料倉儲", "資料湖", "schema-on-read"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若查詢型態固定、欄位定義穩定且要求毫秒回應，倉儲勝出；若是「先收下來、之後才知道要怎麼用」，資料湖才划算。",
+    },
   },
   {
     id: "senior-bigdata-practice-q034",
@@ -827,6 +1238,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["時間序列資料庫", "高頻寫入", "時間範圍查詢"],
+      constraints: ["data_volume", "query_latency"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Neighbor Concept",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若查詢改為跨機台、跨料號的複雜關聯與交易一致性需求，關聯式資料庫才是正確選擇。",
+    },
   },
   {
     id: "senior-bigdata-practice-q035",
@@ -851,6 +1275,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["資料分區", "分區裁剪"],
+      constraints: ["query_latency"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Overgeneralization",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若查詢條件不含分區鍵（例如依商品名稱查全期），分區裁剪就派不上用場，仍會掃過所有分區。",
+    },
   },
   {
     id: "senior-bigdata-practice-q036",
@@ -875,6 +1312,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["欄式儲存", "Parquet", "壓縮"],
+      constraints: ["query_latency", "storage"],
+      distractorTypes: {
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若工作負載是「頻繁讀寫單筆完整記錄」的交易型應用，列式儲存才是正確選擇。",
+    },
   },
   {
     id: "senior-bigdata-practice-q037",
@@ -899,6 +1349,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["分層儲存", "冷熱資料", "生命週期"],
+      constraints: ["cost", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若冷資料偶爾需要在數分鐘內調閱（例如醫療爭議調查），就不能放進取回需數小時的深度封存層。",
+    },
   },
   {
     id: "senior-bigdata-practice-q038",
@@ -923,6 +1386,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["資料血緣", "轉換路徑", "影響分析"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Layer Confusion",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若管線只有一步、來源與報表一對一，血緣的價值有限；步驟越多、分支越廣，它才越不可或缺。",
+    },
   },
   {
     id: "senior-bigdata-practice-q039",
@@ -947,6 +1423,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["NoSQL", "彈性結構", "水平擴展"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若應用需要跨多張表的強一致交易（例如轉帳），關聯式資料庫的保證仍難以取代。",
+    },
   },
   {
     id: "senior-bigdata-practice-q040",
@@ -971,6 +1459,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["彙總資料", "去識別化", "權限控管"],
+      constraints: ["privacy", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若研究本身就需要個體層級的追蹤資料，彙總會讓研究失去意義，此時該走的是資料使用協議加安全運算環境。",
+    },
   },
 
   // ── L22203 數據處理技術與工具（8 題）──────────────────────────
@@ -997,6 +1498,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["ETL", "ELT", "轉換時機"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若原始資料含不得進入倉儲的個資，就必須在載入前先去識別化，ELT 的「先載入」在此不成立。",
+    },
   },
   {
     id: "senior-bigdata-practice-q042",
@@ -1021,6 +1534,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["MapReduce", "Map 階段", "鍵值對"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Terminology Swap",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若運算需要跨全部資料的全域排序或反覆疊代，兩階段模型會非常低效，此時要改用支援記憶體疊代的引擎。",
+    },
   },
   {
     id: "senior-bigdata-practice-q043",
@@ -1045,6 +1570,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["串流處理", "時間窗聚合", "即時告警"],
+      constraints: ["latency"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若告警只需每天彙整一次寄出，批次處理就夠了，串流的常駐資源與狀態管理成本反而不划算。",
+    },
   },
   {
     id: "senior-bigdata-practice-q044",
@@ -1069,6 +1607,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["資料傾斜", "分區鍵", "負載不均"],
+      constraints: ["throughput"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若各節點的處理量相近但整體都很慢，那是資源不足或演算法問題，不是傾斜——傾斜的特徵是少數任務拖住整批。",
+    },
   },
   {
     id: "senior-bigdata-practice-q045",
@@ -1093,6 +1644,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["資料到齊檢查", "重試", "告警"],
+      constraints: ["reliability"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若上游永遠不會延遲、只是偶爾整批缺漏，該做的就不是等待重試而是資料完整性檢核與補件流程。",
+    },
   },
   {
     id: "senior-bigdata-practice-q046",
@@ -1117,6 +1681,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["冪等性", "重試安全"],
+      constraints: ["reliability"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Layer Confusion",
+        C: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若作業本質上是「累加」而非「覆寫」（例如寄送通知），就無法單靠寫法達成冪等，得改以去重鍵記錄已處理的批次。",
+    },
   },
   {
     id: "senior-bigdata-practice-q047",
@@ -1141,6 +1718,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["批次處理", "延遲容忍"],
+      constraints: ["latency", "cost"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若需求改成「門診量異常時當天就要示警」，月批次的延遲就不可接受，該改為串流或每日批次。",
+    },
   },
   {
     id: "senior-bigdata-practice-q048",
@@ -1165,6 +1755,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["I/O 瓶頸", "資料本地化", "傳輸成本"],
+      constraints: ["throughput", "data_volume"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        C: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若影像已在運算節點本地、且格式已壓縮，瓶頸就可能轉移到解碼運算——瓶頸位置要實測而不是假設。",
+    },
   },
 
   // ── L22301 統計學在大數據中的應用（7 題）──────────────────────
@@ -1191,6 +1794,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["相關與因果", "混淆變數"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Terminology Swap",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若能在控制氣溫後兩者的相關仍然存在，共同原因的解釋就被削弱，才有進一步探討機制的必要。",
+    },
   },
   {
     id: "senior-bigdata-practice-q050",
@@ -1215,6 +1830,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Concept Boundary",
+      concepts: ["標準誤", "樣本數", "效果量"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若樣本雖大但抽樣有系統性偏誤，標準誤縮小反而讓錯誤的估計看起來更確定——精確不等於準確。",
+    },
   },
   {
     id: "senior-bigdata-practice-q051",
@@ -1239,6 +1867,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["決定係數", "解釋變異"],
+      distractorTypes: {
+        A: "Terminology Swap",
+        B: "Terminology Swap",
+        C: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若模型的用途只是「證明廣告有正向影響」而非精確預測，R² 低不必然是問題，該看的是係數的顯著性與大小。",
+    },
   },
   {
     id: "senior-bigdata-practice-q052",
@@ -1263,6 +1903,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["傾向分數配對", "因果推論", "觀察性研究"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若影響選擇的關鍵變數根本沒被測量到，傾向分數也配不掉那個偏誤——它只能平衡「有觀察到」的特徵。",
+    },
   },
   {
     id: "senior-bigdata-practice-q053",
@@ -1287,6 +1940,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["非線性關係", "線性迴歸侷限", "多項式項"],
+      constraints: ["quality"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若製程參數的實際操作範圍只落在曲線的單側（例如都在最適值以下），該區間內近似線性，線性迴歸就仍然堪用。",
+    },
   },
   {
     id: "senior-bigdata-practice-q054",
@@ -1311,6 +1977,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["隨機分派", "干擾因素", "因果歸因"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Overgeneralization",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若田區數量太少，隨機分派仍可能剛好把肥沃地全分到同一組，此時要改用分層或配對設計來確保平衡。",
+    },
   },
   {
     id: "senior-bigdata-practice-q055",
@@ -1335,6 +2013,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["反向因果", "共同原因", "政策建議"],
+      constraints: ["quality"],
+      distractorTypes: {
+        B: "Layer Confusion",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若平台曾隨機指派部分學生額外的觀看提醒，就有了實驗變異可用，因果推論才站得住腳。",
+    },
   },
 
   // ── L22302 常見的大數據分析方法（8 題）────────────────────────
@@ -1361,6 +2052,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["關聯規則探勘", "購物籃分析"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若目標改成「預測這位顧客下次會買什麼」，關聯規則就不夠，該改用推薦系統或序列模型。",
+    },
   },
   {
     id: "senior-bigdata-practice-q057",
@@ -1385,6 +2088,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["提升度", "支持度", "獨立性"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Terminology Swap",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若某規則提升度很高但支持度極低（例如全年只出現三次），它在營運上多半不值得據以調整陳列。",
+    },
   },
   {
     id: "senior-bigdata-practice-q058",
@@ -1409,6 +2124,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["分群分析", "群數決定", "輪廓係數"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若院方其實已有既定的病患分類（如慢性病／急症），問題就變成監督式分類而不是分群。",
+    },
   },
   {
     id: "senior-bigdata-practice-q059",
@@ -1433,6 +2160,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["時間序列分析", "趨勢", "季節性"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若未來三個月將新增一條產線、用電結構出現結構性改變，純外推的時間序列模型就會失準，需要加入干預變數。",
+    },
   },
   {
     id: "senior-bigdata-practice-q060",
@@ -1457,6 +2196,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["主成分分析", "降維", "變異保留"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若後續必須向稽核說明是哪一個原始欄位造成差異，主成分已失去物理意義，該改用特徵篩選而非降維。",
+    },
   },
   {
     id: "senior-bigdata-practice-q061",
@@ -1481,6 +2232,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["非監督式異常偵測", "無標註", "行為分布"],
+      constraints: ["labeled_data_scarcity"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Wrong Trade-off",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若已累積足夠且標註可靠的詐欺案例，監督式分類通常更準，也能指出屬於哪一種手法。",
+    },
   },
   {
     id: "senior-bigdata-practice-q062",
@@ -1505,6 +2269,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["空間分析", "空間自相關", "鄰近性"],
+      constraints: ["quality"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若各縣市的產量彼此確實獨立（例如由完全不同的灌溉系統決定），一般迴歸就足夠，空間項反而是多餘的複雜度。",
+    },
   },
   {
     id: "senior-bigdata-practice-q063",
@@ -1529,6 +2306,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["RFM", "顧客分級"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若商品是低頻高價（如家電），Frequency 幾乎沒有鑑別力，RFM 就要調整權重或改用其他分級方式。",
+    },
   },
 
   // ── L22303 數據可視化工具（7 題）──────────────────────────────
@@ -1555,6 +2344,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["散佈圖", "連續變數關係"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若資料點多達數十萬筆而互相重疊，散佈圖會糊成一片，該改用熱力圖或先做抽樣與透明度處理。",
+    },
   },
   {
     id: "senior-bigdata-practice-q065",
@@ -1579,6 +2380,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Troubleshooting",
+      concepts: ["視覺誤導", "座標軸截斷", "長度編碼"],
+      constraints: ["governance", "quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        C: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若圖表改為折線圖，截斷 Y 軸是可接受的慣例——長條圖以長度編碼數值、折線圖以位置編碼，兩者對基線的要求不同。",
+    },
   },
   {
     id: "senior-bigdata-practice-q066",
@@ -1603,6 +2417,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Best Engineering Decision",
+      concepts: ["儀表板設計", "認知負擔", "顏色語意"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若使用者是需要深入排查的分析師而非現場主管，資訊密度可以提高，但顏色語意一致這條仍然成立。",
+    },
   },
   {
     id: "senior-bigdata-practice-q067",
@@ -1627,6 +2454,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["直方圖", "單變數分布"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若要比較多組的分布形狀，並排的直方圖會互相遮擋，該改用箱型圖或小提琴圖。",
+    },
   },
   {
     id: "senior-bigdata-practice-q068",
@@ -1651,6 +2490,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Best Engineering Decision",
+      concepts: ["色覺無障礙", "多重編碼通道"],
+      constraints: ["quality"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若圖表只有兩類且已用形狀與直接標籤區分，配色的限制就放寬——關鍵是資訊不能只由單一通道承載。",
+    },
   },
   {
     id: "senior-bigdata-practice-q069",
@@ -1675,6 +2527,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["面量圖", "空間視覺化"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若各鄉鎮面積差距極大，面量圖會讓大面積區域在視覺上被放大，此時要改用等值點圖或依人口變形的地圖。",
+    },
   },
   {
     id: "senior-bigdata-practice-q070",
@@ -1699,6 +2563,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["成長率", "基數效應", "報表誤讀"],
+      constraints: ["quality", "governance"],
+      distractorTypes: {
+        B: "Layer Confusion",
+        C: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若所有項目的基數量級相近，成長率之間就可以直接比較，這項誤讀風險也隨之消失。",
+    },
   },
 
   // ── L22401 大數據與機器學習（8 題）────────────────────────────
@@ -1725,6 +2602,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["特徵工程", "領域知識", "表格式資料"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Partial Truth",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若資料是影像或文字這類非結構化輸入、且樣本充足，深度模型能自行萃取特徵，人工特徵工程的邊際效益就大幅下降。",
+    },
   },
   {
     id: "senior-bigdata-practice-q072",
@@ -1749,6 +2638,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["過擬合", "泛化"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Terminology Swap",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若訓練集與測試集的表現都很差，那是欠擬合而非過擬合——診斷必須同時看兩個誤差。",
+    },
   },
   {
     id: "senior-bigdata-practice-q073",
@@ -1773,6 +2674,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["小批次訓練", "分散式訓練", "記憶體限制"],
+      constraints: ["compute", "data_volume"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若已確認抽樣後仍具代表性、且模型不需要罕見樣本，抽樣訓練反而比分散式更省事也更快。",
+    },
   },
   {
     id: "senior-bigdata-practice-q074",
@@ -1797,6 +2711,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["資料量", "資料品質", "泛化"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若新增的資料與目標分布不同（例如來自另一個客群），量增加反而會把模型帶偏——先確認分布一致再談數量。",
+    },
   },
   {
     id: "senior-bigdata-practice-q075",
@@ -1821,6 +2747,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["探索性資料分析", "分布", "異常"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若資料是既有管線每日產出、結構與品質都已被監控，EDA 可以精簡為檢視監控報表，但不能完全省略。",
+    },
   },
   {
     id: "senior-bigdata-practice-q076",
@@ -1845,6 +2783,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Troubleshooting",
+      concepts: ["概念漂移", "關係改變", "重訓"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Layer Confusion",
+        C: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若輸入特徵的分布也同時明顯改變，那是資料漂移與概念漂移並存，兩者要分別診斷、分別處理。",
+    },
   },
   {
     id: "senior-bigdata-practice-q077",
@@ -1869,6 +2820,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["資訊洩漏", "群組切分", "相關樣本"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        B: "Layer Confusion",
+        C: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若目標是「預測同一位病患的下次就診」而非推廣到新病患，依時間切分同一人的紀錄反而才是正確設計。",
+    },
   },
   {
     id: "senior-bigdata-practice-q078",
@@ -1893,6 +2857,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Concept Boundary",
+      concepts: ["特徵存放區", "訓練與服務一致性"],
+      constraints: ["maintainability", "integration"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若只有一個模型、且特徵在訓練與服務端由同一份程式碼計算，特徵存放區的維運成本就換不到相應效益。",
+    },
   },
 
   // ── L22402 大數據在鑑別式 AI 中的應用（8 題）──────────────────
@@ -1919,6 +2896,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Incorrect Statement",
+      concepts: ["類別不平衡", "評估指標", "重採樣"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Correct in Different Context",
+        C: "Correct in Different Context",
+        D: "Correct in Different Context",
+      },
+      decisionBoundary:
+        "若把選項 B 改成「以少數類別的 PR-AUC 作為模型選擇依據」，它就成為恰當的做法。",
+    },
   },
   {
     id: "senior-bigdata-practice-q080",
@@ -1943,6 +2933,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["AUC", "辨別能力"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Terminology Swap",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若正負樣本極度不平衡，AUC 可能仍然好看卻掩蓋了少數類別的表現，此時 PR-AUC 更能反映實情。",
+    },
   },
   {
     id: "senior-bigdata-practice-q081",
@@ -1967,6 +2969,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["分類門檻", "召回率", "錯誤成本"],
+      constraints: ["quality", "safety"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Terminology Swap",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若後續的確診檢查具侵入性或成本極高，誤報的代價上升，門檻就不能無限下調——取捨點由兩類錯誤的成本比決定。",
+    },
   },
   {
     id: "senior-bigdata-practice-q082",
@@ -1991,6 +3006,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["標籤雜訊", "標註一致性", "效能上限"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        B: "Layer Confusion",
+        C: "Layer Confusion",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若不一致只發生在少數邊界模糊的樣本上，影響有限；一旦連明確的瑕疵都判法不同，效能上限就會被壓得很低。",
+    },
   },
   {
     id: "senior-bigdata-practice-q083",
@@ -2015,6 +3043,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["混淆矩陣", "偽陰性"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Terminology Swap",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若情境改為垃圾郵件過濾，偽陰性只是漏掉一封垃圾信，代價遠低於把重要信件誤判為垃圾的偽陽性——哪一類更嚴重取決於場景。",
+    },
   },
   {
     id: "senior-bigdata-practice-q084",
@@ -2039,6 +3079,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["捷徑學習", "群組特徵", "特徵稽核"],
+      constraints: ["data_quality", "fairness"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Layer Confusion",
+        C: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若該班確實整體學習狀況不佳、其他證據也支持，整班高風險就是正確判斷而非捷徑學習——要先看有沒有外部證據佐證。",
+    },
   },
   {
     id: "senior-bigdata-practice-q085",
@@ -2063,6 +3116,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["分布偏移", "測試集代表性", "實地樣本"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若測試集本身就是從田間隨機拍攝取得，測試分數才代表實地表現——測試集與部署環境同分布，這個落差才不會出現。",
+    },
   },
   {
     id: "senior-bigdata-practice-q086",
@@ -2087,6 +3153,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["F1分數", "調和平均"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若精確率與召回率的重要性不對等（例如召回更重要），該改用加權的 F-beta 而不是等權的 F1。",
+    },
   },
 
   // ── L22403 大數據在生成式 AI 中的應用（7 題）──────────────────
@@ -2113,6 +3191,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["去重", "逐字記憶", "訓練效率"],
+      constraints: ["data_quality", "cost"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        C: "Layer Confusion",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若某類內容本來就稀少、需要模型確實記住（例如法條原文），過度去重反而會削弱它的覆蓋。",
+    },
   },
   {
     id: "senior-bigdata-practice-q088",
@@ -2137,6 +3228,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Concept Boundary",
+      concepts: ["Chunking", "檢索品質", "重疊切塊"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        C: "Layer Confusion",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若文件本身已是結構清楚的短條目（如問答對），依條目切塊即可，重疊與大小的調校就不再是關鍵。",
+    },
   },
   {
     id: "senior-bigdata-practice-q089",
@@ -2161,6 +3265,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["向量資料庫", "語意檢索"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Layer Confusion",
+        C: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若查詢的是精確料號或條號這類字面字串，向量檢索容易召回相近但不對的內容，關鍵字檢索才可靠。",
+    },
   },
   {
     id: "senior-bigdata-practice-q090",
@@ -2185,6 +3301,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["微調資料風險", "記憶洩漏", "紅隊測試"],
+      constraints: ["privacy", "security"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若改以 RAG 檢索這些文件而不是微調，敏感內容就不會被寫進模型權重，風險焦點會轉為檢索階段的權限控管。",
+    },
   },
   {
     id: "senior-bigdata-practice-q091",
@@ -2209,6 +3338,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["RAG 評估", "檢索命中率", "排序位置"],
+      constraints: ["quality"],
+      distractorTypes: {
+        B: "Layer Confusion",
+        C: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若檢索已確認帶回正確段落、答案卻仍然錯，問題就在生成階段，該量測的變成「答案是否忠於檢索到的證據」。",
+    },
   },
   {
     id: "senior-bigdata-practice-q092",
@@ -2233,6 +3375,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["合成資料", "分布偏離", "比例控制"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若合成資料只用於補強某個已知稀少但定義明確的類別（例如特定瑕疵型態），且以真實樣本驗證過，風險就相對可控。",
+    },
   },
   {
     id: "senior-bigdata-practice-q093",
@@ -2257,6 +3412,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["嵌入", "語意向量"],
+      distractorTypes: {
+        B: "Terminology Swap",
+        C: "Neighbor Concept",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若嵌入模型與語料的領域差距太大（例如以通用語料嵌入專業醫學名詞），向量空間的語意關係就會失準，需要領域特化的嵌入模型。",
+    },
   },
 
   // ── L22404 大數據隱私保護、安全與合規（7 題）──────────────────
@@ -2283,6 +3450,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["去識別化", "假名化", "可還原性"],
+      constraints: ["privacy", "governance"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若對照表被完全銷毀、且無其他途徑可復原身分，假名化的資料才會進入去識別化的範疇。",
+    },
   },
   {
     id: "senior-bigdata-practice-q095",
@@ -2307,6 +3487,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Direct Concept",
+      concepts: ["k-匿名性", "準識別欄位"],
+      constraints: ["privacy"],
+      distractorTypes: {
+        A: "Terminology Swap",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若同一組內的 k 筆記錄在敏感欄位上其實全部相同（例如都罹患同一疾病），k-匿名仍會洩漏，此時需要 l-多樣性補強。",
+    },
   },
   {
     id: "senior-bigdata-practice-q096",
@@ -2331,6 +3524,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["資料最小化", "目的必要性"],
+      constraints: ["privacy", "governance"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Wrong Trade-off",
+        C: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若日後出現新的分析目的，正確做法是重新取得同意再蒐集，而不是當初就先囤著以備不時之需。",
+    },
   },
   {
     id: "senior-bigdata-practice-q097",
@@ -2355,6 +3561,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["彙總統計", "個資保護", "目的達成"],
+      constraints: ["privacy", "governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若某個部門人數極少，彙總統計本身就可能反推到個人，此時要再設最小組別門檻或合併分組。",
+    },
   },
   {
     id: "senior-bigdata-practice-q098",
@@ -2379,6 +3598,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Direct Concept",
+      concepts: ["差分隱私", "受控雜訊", "隱私預算"],
+      constraints: ["privacy"],
+      distractorTypes: {
+        B: "Layer Confusion",
+        C: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若同一份資料被反覆查詢，隱私預算會逐次耗盡，之後就必須拒絕查詢——差分隱私保護的是累積的查詢次數，不是單次。",
+    },
   },
   {
     id: "senior-bigdata-practice-q099",
@@ -2403,6 +3635,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["跨境傳輸", "資料在地化", "法規差異"],
+      constraints: ["governance", "privacy"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Layer Confusion",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若所有資料都只在單一法域內蒐集與處理、完全不跨境，這項限制就不成立，重點回到當地的一般個資規範。",
+    },
   },
   {
     id: "senior-bigdata-practice-q100",
@@ -2427,5 +3672,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["事故應變", "證據保全", "通報義務"],
+      constraints: ["security", "governance"],
+      distractorTypes: {
+        B: "Wrong Trade-off",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若外洩已經結束且範圍確定，第一步就從「止血」轉為「評估影響範圍與通報」，但保全證據的優先順序不變。",
+    },
   },
 ];

@@ -6,7 +6,7 @@ import type { Question } from "../types";
  * 考科二偏重系統整合與故障排除，因此 L3／L4 的比重高於考科一。
  * 每題都標註認知層級、題型原型、干擾項類型與工程限制條件，並附
  * 「條件改變時答案如何變化」的 Decision Boundary；分布規範由
- * `tests/aiotQuestionBank.test.ts` 強制。
+ * `tests/questionBankMeta.test.ts` 強制。
  *
  * ⚠️ 考科二**沒有官方學習指引也沒有公告真題**，題目依 115 年度簡章的評鑑內容
  * 大綱與一般工程知識命製，內容正確性需人工複審。

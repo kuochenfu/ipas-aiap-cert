@@ -7,7 +7,7 @@ import type { Question } from "../types";
  * 題型原型、干擾項策略與難度，再寫題目；每個錯誤選項都標註干擾類型，
  * 並附「條件改變時答案如何變化」的 Decision Boundary。
  * 分布規範（認知層級、難度、Definition 題上限、跨節點比例）由
- * `tests/aiotQuestionBank.test.ts` 強制。
+ * `tests/questionBankMeta.test.ts` 強制。
  *
  * 內容為 LLM 命題，正確性需人工複審。
  */

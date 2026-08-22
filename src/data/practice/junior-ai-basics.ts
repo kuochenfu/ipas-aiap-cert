@@ -27,6 +27,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["人工智慧", "機器學習", "深度學習", "包含關係"],
+      distractorTypes: {
+        B: "Terminology Swap",
+        C: "Neighbor Concept",
+        D: "Terminology Swap",
+      },
+      crossNode: "L11401",
+      decisionBoundary:
+        "若再把生成式 AI 加進來，它不會變成第四層——層級由「用什麼技術實作」決定，不是由技術出現的先後決定。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q002",
@@ -51,6 +64,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["生成式AI", "深度學習", "分類層級"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        C: "Overgeneralization",
+        D: "Neighbor Concept",
+      },
+      crossNode: "L11401",
+      decisionBoundary:
+        "若某個生成式工具改以規則模板拼湊文字、完全不含神經網路，它就不屬於深度學習——「生成式」講的是輸出型態，不保證實作方式。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q003",
@@ -75,6 +101,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["專家系統", "規則式AI", "機器學習定義"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+      },
+      crossNode: "L11301",
+      decisionBoundary:
+        "若舊系統的規則是從歷史資料自動挖掘出來的（例如決策樹學到的判斷條件），它就同時屬於 AI 與 ML——判準是規則從哪裡來，不是規則長什麼樣。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q004",
@@ -99,6 +138,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["弱AI", "強AI", "任務遷移"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Neighbor Concept",
+        C: "Partial Truth",
+      },
+      decisionBoundary:
+        "若系統能在沒受過訓練的新科目上自行摸索出批改標準，判準才會往強 AI 移動——關鍵是能否遷移，不是單一任務的準確度。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q005",
@@ -123,6 +174,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["強AI", "弱AI", "跨領域遷移"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Partial Truth",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若把問題改成「這套助教有沒有商業價值」，任務數量就變成有效指標了——任務廣度衡量的是產品面，不是 AI 的能力分類。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q006",
@@ -147,6 +210,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["分析型AI", "預測型AI"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Terminology Swap",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若第二套工具改成「解釋去年為什麼減產」，它就回到分析型——分野在時間方向（回看既有／推估未來），不在資料來源。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q007",
@@ -171,6 +246,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["生成型AI", "預測型AI", "提示詞"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Overgeneralization",
+        D: "Neighbor Concept",
+      },
+      crossNode: "L11401",
+      decisionBoundary:
+        "若工具改成從既有維修紀錄中挑一份最相近的整份回傳，它就是檢索而不是生成——差別在輸出是新產生的還是既有的。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q008",
@@ -195,6 +283,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Architecture",
+      concepts: ["AI Agent", "AI系統", "模型", "編排層"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若那套系統只照固定順序呼叫感測器、不會依結果改變下一步，它就只是自動化流程而不是 Agent——Agent 的關鍵在依回饋自行調整。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q009",
@@ -219,6 +319,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["模型", "AI系統", "組裝"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若那套批改系統只剩模型本身、沒有題庫與教師介面，它就退回成模型——AI 系統的定義在於「組裝起來能完成任務」。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q010",
@@ -243,6 +355,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["基礎模型", "LLM", "多模態模型"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Neighbor Concept",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若某個模型只為單一任務從頭訓練、無法支援其他下游任務，它就不是基礎模型——判準是能否作為多種下游任務的共同起點。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q011",
@@ -267,6 +391,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Concept Boundary",
+      concepts: ["推理模型", "推論時計算", "延遲與成本"],
+      constraints: ["cost", "latency"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若延遲與成本上升卻沒換到多步問題的準確度提升，那就不是推理模型應有的取捨，該回頭懷疑部署設定或流量問題。",
+    },
   },
 
   // ── L11102 AI 治理概念（11 題）──────────────────────────────────
@@ -293,6 +430,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["人工智慧基本法", "中央主管機關"],
+      distractorTypes: {
+        A: "Partial Truth",
+        C: "Overgeneralization",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若問的是金融業運用 AI 的具體規範，主管機關就換成金管會——基本法是框架法，各業別另有主管機關與指引。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q013",
@@ -320,6 +469,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["人工智慧基本法第4條", "七大基本原則"],
+      distractorTypes: {
+        B: "Partial Truth",
+        C: "Partial Truth",
+        D: "Partial Truth",
+      },
+      decisionBoundary:
+        "若把問題改成「導入專案該評估哪些面向」，成本效益與系統效能就是合理答案——它們是專案管理指標，只是不在第 4 條的法定原則裡。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q014",
@@ -344,6 +505,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["歐盟AI Act", "風險分級", "社會評分"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若同一套徵信系統只用於內部研究、不對申請人產生任何決策效果，風險等級就會下降——分級看的是用途與影響，不是技術本身。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q015",
@@ -368,6 +541,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["歐盟AI Act", "附錄III", "適用時程"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Overgeneralization",
+        C: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若該應用不在附錄 III 而屬於附錄 I 的嵌入型系統，適用時程就變成 2028 年 8 月 2 日——延後的期限依附錄別而不同。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q016",
@@ -395,6 +581,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["金融業AI指引", "透明性", "揭露義務"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Wrong Trade-off",
+        C: "Partial Truth",
+      },
+      decisionBoundary:
+        "若揭露對象改成主管機關的金檢而非消費者，需要提供的資訊就會深入到模型與資料層次——揭露的深度隨對象而變。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q017",
@@ -419,6 +618,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["金融業AI指引", "內部治理架構", "專責單位"],
+      constraints: ["governance"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若機構完全不直接面對消費者（例如只做後台清算），揭露義務的觸發條件就不成立，但內部治理架構仍然要建。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q018",
@@ -443,6 +655,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["AIEC", "評測構面"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Partial Truth",
+        D: "Partial Truth",
+      },
+      decisionBoundary:
+        "若採購評估要看的是使用體驗，效率與易用性就是合理指標——它們只是不在 AIEC 的五個評測構面裡。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q019",
@@ -467,6 +691,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["人類監督", "Human-in-the-loop", "Human-over-the-loop", "Human-in-command"],
+      constraints: ["risk_priority", "governance"],
+      distractorTypes: {
+        B: "Terminology Swap",
+        C: "Wrong Trade-off",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若大額匯款改成可在 24 小時內無條件撤回，決策就從不可逆變成可逆，監督層級可以下修到 Human-over-the-loop。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q020",
@@ -491,6 +728,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["Human-in-the-loop", "逐筆核可"],
+      constraints: ["safety"],
+      distractorTypes: {
+        A: "Correct in Different Context",
+        B: "Neighbor Concept",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若改成藥師只在系統送出後抽查、不核可也不影響送出，它就變成 Human-over-the-loop。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q021",
@@ -515,6 +765,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Constraint Change",
+      concepts: ["Human-over-the-loop", "監督層級", "風險取捨"],
+      constraints: ["risk_priority", "latency"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若凍結改成不可撤銷、且錯誤凍結會造成重大損害，即使核可會塞車也不該下修到事後監督——可逆性是這個取捨成立的前提。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q022",
@@ -539,6 +802,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["AI倫理", "透明性", "公平性", "隱私性"],
+      distractorTypes: {
+        A: "Terminology Swap",
+        C: "Overgeneralization",
+        D: "Neighbor Concept",
+      },
+      crossNode: "L11203",
+      decisionBoundary:
+        "若案例一改成「醫師看得懂依據，但誤診後沒人能負責」，對應的原則就從透明性移到問責性。",
+    },
   },
 
   // ── L11201 資料基本概念與來源（11 題）────────────────────────────
@@ -565,6 +841,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["結構化資料", "關聯式資料庫"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若同一批交易紀錄改以每筆附加不同欄位的 JSON 存放，它就退成半結構化——判準是欄位是否事先固定，不是存在哪裡。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q024",
@@ -589,6 +877,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["半結構化資料", "JSON", "欄位不固定"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Partial Truth",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若所有設備都被要求輸出完全相同的欄位集合，這批資料就變成結構化——半結構化的關鍵是「有標籤但欄位不固定」。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q025",
@@ -613,6 +913,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["非結構化資料", "影像"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Partial Truth",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若先以影像辨識把每張空拍圖轉成「田區代號＋病害等級＋面積」的表格，產出的那份資料就是結構化的了。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q026",
@@ -637,6 +949,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["大數據5V", "Volume"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若情境改成「感測器種類從溫度擴增到影像與音訊」，同一批資料要談的構面就從 Volume 換成 Variety。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q027",
@@ -661,6 +985,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["大數據5V", "Velocity"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若系統改成每日收盤後才批次結算，速度就不再是瓶頸，該談的構面會轉向 Volume 或 Value。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q028",
@@ -685,6 +1021,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["大數據5V", "Variety"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若四種來源其實全是數值時序、只是欄位名稱不同，多樣性就不成立，問題會回到資料整合而非型態多元。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q029",
@@ -709,6 +1057,20 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["大數據5V", "Veracity", "資料清洗"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Wrong Trade-off",
+      },
+      crossNode: "L11202",
+      decisionBoundary:
+        "若那些偏離值其實反映真實的異常升溫，它就不是雜訊而是最有價值的訊號——同一筆離群值是雜訊還是訊號，取決於物理上是否可能發生。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q030",
@@ -733,6 +1095,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["大數據5V", "Value", "特徵篩選"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Overgeneralization",
+        C: "Neighbor Concept",
+      },
+      crossNode: "L11202",
+      decisionBoundary:
+        "若那些欄位對「預測流失」沒用、但對「推薦商品」很有用，價值判斷就會翻轉——Value 永遠是相對於分析目標而言的。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q031",
@@ -757,6 +1132,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["自有產品資料", "網路爬蟲資料", "資料來源型態"],
+      distractorTypes: {
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若那個行情網站改為提供正式 API 並簽了授權，同一批資料就從爬蟲資料變成公開 API 或外部購買資料，權利關係也隨之不同。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q032",
@@ -781,6 +1168,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["感測器網路", "公開API", "外部購買"],
+      distractorTypes: {
+        A: "Terminology Swap",
+        B: "Overgeneralization",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若氣象資料改成自行架設氣象站量測，它就從公開 API 變成感測器網路資料——來源型態看的是取得方式，不是內容主題。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q033",
@@ -805,6 +1204,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Concept Boundary",
+      concepts: ["資料整合", "資料孤島", "單一客戶視圖"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Overgeneralization",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若三套系統的欄位定義本來就一致、只是分開存放，整合就退化成單純的集中儲存，重點會從一致化轉為存取效能。",
+    },
   },
 
   // ── L11202 資料整理與分析流程（11 題）────────────────────────────
@@ -831,6 +1243,20 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["ETL", "ELT", "資料倉儲"],
+      constraints: ["cost"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Terminology Swap",
+        C: "Neighbor Concept",
+      },
+      crossNode: "L11203",
+      decisionBoundary:
+        "若倉儲的運算成本遠高於來源端、或原始資料含不得入倉的個資，ETL 就勝出——選擇取決於轉換要花誰的算力、以及原始資料能不能落地。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q035",
@@ -855,6 +1281,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["遺缺值處理", "插補", "隨機缺失"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若缺值高達三成、且集中在低分學生（非隨機缺失），插補就會製造系統性偏誤，此時應改為保留缺值指示變數或直接刪除。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q036",
@@ -879,6 +1318,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["IQR", "離群值", "四分位數"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Partial Truth",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若資料明顯非常態且有厚尾，1.5 倍 IQR 會把大量正常值判為離群，門檻應放寬到 3 倍或改用領域上下限。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q037",
@@ -903,6 +1354,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["Z-score", "標準差", "常態分布"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Terminology Swap",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若讀數分布明顯右偏，平均數與標準差都會被極端值拉動，Z-score 的判定就失準，該改用以四分位數為基礎的 IQR。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q038",
@@ -927,6 +1390,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["正規化", "標準化", "量綱"],
+      distractorTypes: {
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      crossNode: "L11302",
+      decisionBoundary:
+        "若模型改成決策樹或隨機森林這類以分割點運作的模型，兩者都不必做——縮放只影響距離或梯度敏感的模型。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q039",
@@ -951,6 +1427,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["One-hot Encoding", "Label Encoding", "類別編碼"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Wrong Trade-off",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若欄位改成「低／中／高風險」這種本身帶順序的類別，Label Encoding 反而正確——順序存在時保留它是有資訊的。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q040",
@@ -975,6 +1464,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["對數轉換", "右偏分布", "長尾"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Terminology Swap",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若資料中含有 0 或負值，直接取對數會失效，須先平移（如 log1p）或改用其他轉換。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q041",
@@ -999,6 +1500,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["特徵交叉", "交互作用", "特徵工程"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      crossNode: "L11302",
+      decisionBoundary:
+        "若改用本來就能捕捉交互作用的樹模型或神經網路，手工特徵交叉的邊際效益會大幅下降。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q042",
@@ -1023,6 +1537,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["EDA", "CDA", "假設檢定"],
+      distractorTypes: {
+        A: "Terminology Swap",
+        C: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若團隊在看圖表之前就已寫下「練習時數會提高分數」這個假設，第一階段就直接是 CDA——分野在有沒有預設假設，不在用不用圖表。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q043",
@@ -1047,6 +1573,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["右偏分布", "平均數", "中位數"],
+      distractorTypes: {
+        A: "Terminology Swap",
+        B: "Overgeneralization",
+        C: "Partial Truth",
+      },
+      decisionBoundary:
+        "若改用中位數與四分位距描述這批保費，極端值的影響就被隔離，結論會比用平均數穩健得多。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q044",
@@ -1071,6 +1609,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["散佈圖", "連續變數", "視覺化"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若其中一個變數改成「班級」這種類別型，散佈圖就不適用，應改用箱型圖比較各類別的分布。",
+    },
   },
 
   // ── L11203 資料隱私與安全（11 題）────────────────────────────────
@@ -1097,6 +1647,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["假名化", "匿名化", "可逆性"],
+      constraints: ["privacy"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若對照表被完全銷毀、且無其他途徑可復原身分，這批資料才會從假名化進入匿名化的範疇。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q046",
@@ -1121,6 +1684,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["準識別欄位", "k-匿名", "連結攻擊"],
+      constraints: ["privacy"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若把出生年月粗化成五歲一組、郵遞區號只留三碼，準識別組合的獨特性下降，重新識別風險就隨之降低。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q047",
@@ -1145,6 +1721,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["目的限制原則", "另行同意"],
+      constraints: ["privacy", "governance"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若病患在初診時就被明確告知並同意「聯絡資料得用於健檢方案通知」，此利用就落在原蒐集目的範圍內。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q048",
@@ -1169,6 +1758,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["當事人權利", "查詢", "更正"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Partial Truth",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若請求的是刪除一筆仍在法定留存年限內的交易紀錄，機構可依法拒絕——當事人權利並非沒有邊界。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q049",
@@ -1193,6 +1795,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["差分隱私", "隨機雜訊", "推論攻擊"],
+      constraints: ["privacy"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Layer Confusion",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若改為只允許回傳樣本數 100 以上的統計量並限制查詢次數，也能降低推論風險，但保護強度不像差分隱私那樣可量化。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q050",
@@ -1217,6 +1832,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["傳輸加密", "TLS", "竊聽"],
+      constraints: ["security"],
+      distractorTypes: {
+        A: "Layer Confusion",
+        C: "Partial Truth",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若攻擊者取得的是資料庫備份檔而非網路封包，傳輸加密完全幫不上忙，該靠的是靜態資料加密與存取控制。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q051",
@@ -1241,6 +1869,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["中間人攻擊", "憑證驗證"],
+      constraints: ["security"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Partial Truth",
+        C: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若雙方改用預先內建的憑證釘選（certificate pinning），即使攻擊者取得合法簽發的憑證也無法冒充，防護會再往上一層。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q052",
@@ -1265,6 +1906,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["最小權限原則", "存取控制", "稽核"],
+      constraints: ["security", "governance"],
+      distractorTypes: {
+        A: "Partial Truth",
+        B: "Neighbor Concept",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若該管理員的職務確實包含重設密碼，那項權限就該保留——最小權限是「職務所需的最低」，不是「一律最低」。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q053",
@@ -1289,6 +1943,20 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["聯邦學習", "本地訓練", "參數更新"],
+      constraints: ["privacy"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Overgeneralization",
+        D: "Neighbor Concept",
+      },
+      crossNode: "L11301",
+      decisionBoundary:
+        "若模型參數更新本身就會洩漏個別病患資訊，聯邦學習仍然不夠，需要再疊上差分隱私或安全聚合。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q054",
@@ -1313,6 +1981,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["同態加密", "密文運算"],
+      constraints: ["privacy", "cost"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若運算量大到同態加密的成本無法承受，替代方案是可信執行環境（TEE）——保護較弱，但速度接近明文運算。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q055",
@@ -1337,6 +2018,20 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["訓練資料記憶", "模型洩漏", "提示誘發"],
+      constraints: ["privacy"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Neighbor Concept",
+        C: "Overgeneralization",
+      },
+      crossNode: "L11401",
+      decisionBoundary:
+        "若模型重現的只是訓練資料的統計傾向而非逐字內容，那是一般化而非記憶洩漏——判準是能否還原到可識別特定個人的程度。",
+    },
   },
 
   // ── L11301 機器學習基本原理（11 題）──────────────────────────────
@@ -1366,6 +2061,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["監督式學習", "非監督式學習", "標籤"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Terminology Swap",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若土壤數值後來被人工標上「適合／不適合種植」的判定，第二項工作就轉為監督式學習——分野在有沒有標籤，不在資料型態。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q057",
@@ -1393,6 +2100,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["半監督式學習", "自監督式學習", "前置任務"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Terminology Swap",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若醫師把全部影像都標註完成，第一種作法就退回成一般監督式學習——半監督的價值正來自「未標記遠多於標記」。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q058",
@@ -1417,6 +2136,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["強化式學習", "獎勵訊號", "代理人"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若改成先由老師傅示範上千條正確路徑、再讓模型模仿，它就變成監督式學習（模仿學習），不再需要獎勵訊號。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q059",
@@ -1441,6 +2172,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["訓練集", "驗證集", "測試集"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若測試集被拿來反覆比較模型，它就退化成第二個驗證集，最終評估的樂觀偏誤又會回來。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q060",
@@ -1465,6 +2208,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["資料洩漏", "標準化", "評估樂觀偏誤"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Terminology Swap",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若標準化參數改為只用訓練集計算、再原樣套用到測試集，流程就正確了——關鍵是測試集的統計量不得回流。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q061",
@@ -1489,6 +2245,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["k摺交叉驗證", "時間序列", "切分方式"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Neighbor Concept",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若各病患彼此獨立、且模型不預測時間趨勢而只做橫斷面分類，隨機 k 摺就重新適用。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q062",
@@ -1513,6 +2282,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["過擬合", "欠擬合", "一般化"],
+      distractorTypes: {
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若訓練誤差與新資料誤差都很低，兩種現象都不存在——診斷必須同時看兩個誤差，只看其中一個一定會判錯。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q063",
@@ -1540,6 +2321,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Comparison",
+      concepts: ["偏差", "變異", "模型複雜度"],
+      distractorTypes: {
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若模型乙在大量增加訓練資料後變異明顯下降，資料量確實也是主因之一——偏差與變異的診斷要靠學習曲線驗證，不能只看單次結果。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q064",
@@ -1564,6 +2357,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["L1正則化", "L2正則化", "稀疏解"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Terminology Swap",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若目標是保留全部特徵、只想壓抑係數幅度以穩定模型，L2 才對；要順便做特徵篩選才選 L1。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q065",
@@ -1588,6 +2393,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["損失函數", "優化器", "參數更新"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Terminology Swap",
+        D: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若換掉損失函數，模型追求的目標就變了；若只換優化器，目標不變、只是走向最低點的路徑不同。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q066",
@@ -1612,6 +2429,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Scenario Selection",
+      concepts: ["資料增強", "樣本不足", "過擬合"],
+      constraints: ["data_quality", "cost"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若某種瑕疵在資料集中一個樣本都沒有，增強救不了——它只能擴充既有類型的變化，不能無中生有新類別。",
+    },
   },
 
   // ── L11302 常見的機器學習模型（12 題）────────────────────────────
@@ -1638,6 +2468,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["線性迴歸", "連續型目標"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若目標改成「會不會違約」這種二元結果，線性迴歸就不適用，該換成輸出落在 0 到 1 的邏輯迴歸。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q068",
@@ -1662,6 +2504,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["邏輯迴歸", "sigmoid", "二元分類"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Overgeneralization",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若目標改成預測「未來 24 小時內故障幾次」這種計數，邏輯迴歸就不適用，該換成卜瓦松迴歸或一般迴歸模型。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q069",
@@ -1686,6 +2540,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["KNN", "距離", "K值"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Overgeneralization",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若特徵維度極高，樣本間距離會趨於一致（維度詛咒），KNN 的判斷失去鑑別力，該先降維或換模型。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q070",
@@ -1710,6 +2576,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["決策樹", "不純度", "可解釋性"],
+      constraints: ["explainability"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若樹長到數十層、上千個節點，可解釋性就名存實亡——可解釋來自路徑短到人讀得完，不是來自模型種類。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q071",
@@ -1734,6 +2613,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["隨機森林", "集成學習", "隨機抽樣"],
+      constraints: ["explainability", "cost"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Terminology Swap",
+        C: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若需求是「向法遵人員逐步說明每一筆判斷」，穩定性的優勢會被可解釋性的損失抵銷，單一決策樹反而合適。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q072",
@@ -1758,6 +2650,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["SVM", "高維小樣本", "核函數"],
+      constraints: ["data_volume", "compute"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若樣本數成長到數百萬筆，核函數的運算成本會變得無法承受，該改用線性模型或梯度提升樹。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q073",
@@ -1782,6 +2687,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["K-means", "群數K", "非監督式"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        C: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若群的形狀不是球狀而是細長或環狀，K-means 的距離假設就失效，該改用 DBSCAN 這類密度式分群。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q074",
@@ -1806,6 +2723,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["PCA", "降維", "主成分"],
+      constraints: ["explainability"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若後續必須向稽核說明「是哪一顆感測器異常」，主成分已失去物理意義，該改用特徵篩選而不是降維。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q075",
@@ -1830,6 +2760,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["CNN", "卷積層", "參數共享"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若輸入改成欄位之間沒有空間鄰近關係的表格資料，卷積的局部性假設就不成立，CNN 的優勢也隨之消失。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q076",
@@ -1854,6 +2796,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["RNN", "LSTM", "長期依賴"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若序列很短（例如只看前三個月），長期依賴問題不明顯，LSTM 的額外參數就換不到相應的效益。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q077",
@@ -1878,6 +2832,20 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["自編碼器", "重建誤差", "異常偵測"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Neighbor Concept",
+      },
+      crossNode: "L11301",
+      decisionBoundary:
+        "若訓練用的「正常資料」裡混進了未被察覺的異常，模型會把異常也學成正常，重建誤差就不再分得開兩者。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q078",
@@ -1902,6 +2870,20 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["決策樹", "特徵縮放", "門檻切分"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      crossNode: "L11202",
+      decisionBoundary:
+        "若模型改成 KNN 或含正則化的線性迴歸，縮放就變成必要步驟——需不需要縮放取決於模型怎麼使用數值。",
+    },
   },
   // ── L11401 鑑別式 AI 與生成式 AI 的基本原理（11 題）────────────────
   {
@@ -1927,6 +2909,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["鑑別式模型", "條件機率", "決策邊界"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若同一份影像改用「先建立各類別分布、再以貝氏定理反推」的方式分類，它就成了生成式做法——輸出相同，內部學的東西不同。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q080",
@@ -1951,6 +2945,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["生成式模型", "機率分布", "取樣"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      crossNode: "L11203",
+      decisionBoundary:
+        "若產出的影像與某張訓練影像幾乎逐像素相同，那不是學到分布而是記憶了樣本，屬於過擬合甚至隱私風險。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q081",
@@ -1975,6 +2982,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["判別任務", "生成任務", "輸出性質"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若功能一改成「指出答案錯在哪並寫一段評語」，它就同時含生成任務——判準看的是輸出有沒有新內容，不是輸入是什麼。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q082",
@@ -1999,6 +3018,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["GAN", "生成器", "判別器", "對抗訓練"],
+      distractorTypes: {
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若判別器強到生成器永遠騙不過，梯度會消失、生成器停止進步——對抗訓練要求兩者能力相當，不是其中一方越強越好。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q083",
@@ -2023,6 +3054,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["VAE", "編碼器", "解碼器", "潛在空間"],
+      distractorTypes: {
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若潛在空間不連續、取樣點解碼後只是雜訊，VAE 就只剩壓縮能力而失去生成能力——生成能力來自潛在空間的連續性。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q084",
@@ -2047,6 +3090,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["擴散模型", "去噪", "逐步生成"],
+      constraints: ["compute"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        D: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若把去噪步數從上千步壓到十步以內，生成速度大增但細節品質通常下降——步數是品質與速度的直接取捨。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q085",
@@ -2071,6 +3127,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Concept Boundary",
+      concepts: ["Transformer", "自注意力", "全域語意"],
+      constraints: ["compute"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Overgeneralization",
+        C: "Neighbor Concept",
+      },
+      decisionBoundary:
+        "若序列長到數萬個 token，自注意力隨長度平方成長的運算量會成為瓶頸，此時要改用稀疏或線性注意力的變形。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q086",
@@ -2095,6 +3164,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["模式崩潰", "GAN", "多樣性"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        B: "Layer Confusion",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若生成影像多樣但細節模糊、判別器輕易分辨真偽，那是生成器能力不足而非模式崩潰——兩者的徵狀正好相反。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q087",
@@ -2119,6 +3200,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Concept Boundary",
+      concepts: ["單純貝氏", "生成式模型", "貝氏定理"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Overgeneralization",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若換成直接學習決策邊界的邏輯迴歸，即使輸出的類別完全相同，它也屬於鑑別式——歸類看的是內部怎麼學，不是輸出長什麼樣。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q088",
@@ -2143,6 +3236,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "教育",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["LLM", "自回歸生成", "token"],
+      distractorTypes: {
+        B: "Neighbor Concept",
+        C: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若對話長度超出模型的上下文視窗，較早的內容會被截掉、不再影響預測——「納入先前對話」是有上限的。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q089",
@@ -2167,6 +3272,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Comparison",
+      concepts: ["準確率", "生成式評估", "人工評分"],
+      constraints: ["quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Wrong Trade-off",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若把生成任務限縮成「從三個既有範本中挑一個」，它就退回成判別任務，準確率又可以用了。",
+    },
   },
 
   // ── L11402 鑑別式 AI 與生成式 AI 的整合應用（11 題）────────────────
@@ -2193,6 +3311,20 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["合成資料", "稀缺樣本", "資料分布"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Wrong Trade-off",
+        B: "Wrong Trade-off",
+        D: "Overgeneralization",
+      },
+      crossNode: "L11301",
+      decisionBoundary:
+        "若合成影像在訓練集中的佔比過高，模型會學到生成器的偏好而不是真實病灶特徵——真實樣本必須留下來當錨點。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q091",
@@ -2217,6 +3349,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Scenario Selection",
+      concepts: ["生成式模擬", "反詐欺", "樣本稀少"],
+      constraints: ["data_quality", "security"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Terminology Swap",
+      },
+      decisionBoundary:
+        "若模擬樣態全部照著已知手法產生、沒涵蓋新型態，它補的只是數量而不是廣度，對偵測新手法沒有幫助。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q092",
@@ -2241,6 +3386,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["模擬情境", "避障", "實地驗證"],
+      constraints: ["safety", "data_quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        D: "Partial Truth",
+      },
+      decisionBoundary:
+        "若模擬與實地驗證出現明顯落差，該修的是模擬的物理與感測雜訊模型，而不是把模擬情境的數量再調高。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q093",
@@ -2265,6 +3423,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L2",
+      archetype: "Architecture",
+      concepts: ["生成式", "鑑別式", "分工整合"],
+      constraints: ["governance"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Terminology Swap",
+        C: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若鑑別式審核模型本身誤判率偏高，把關就會變成瓶頸——整合設計必須連審核模型的準確度一起評估。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q094",
@@ -2289,6 +3460,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "易",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L1",
+      archetype: "Direct Concept",
+      concepts: ["多模態", "模態整合"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Neighbor Concept",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若系統只是分別跑兩個模型、再把兩份輸出並排呈現而彼此不影響，它就不是多模態整合，只是兩套單模態系統。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q095",
@@ -2313,6 +3496,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "工廠",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Troubleshooting",
+      concepts: ["對抗訓練", "訓練穩定性", "更新步調"],
+      constraints: ["compute"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若震盪其實來自資料本身（例如每批次的瑕疵比例差異極大），調整學習率不會有幫助，該先固定批次的類別組成。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q096",
@@ -2337,6 +3533,20 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["資料偏差", "合成資料", "公平性"],
+      constraints: ["fairness", "data_quality"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      crossNode: "L11102",
+      decisionBoundary:
+        "若在合成之前先對該族群重新取樣或加權，讓生成器學到的是平衡後的分布，放大偏差的路徑才會被切斷。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q097",
@@ -2361,6 +3571,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Architecture",
+      concepts: ["模組整合", "介面設計", "更新頻率"],
+      constraints: ["maintainability"],
+      distractorTypes: {
+        A: "Neighbor Concept",
+        C: "Overgeneralization",
+        D: "Overgeneralization",
+      },
+      decisionBoundary:
+        "若兩個模組本來就由同一團隊、同一套資料規格開發，這個挑戰不會出現——它是組織邊界造成的問題，不是技術限制。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q098",
@@ -2385,6 +3608,20 @@ export const practiceQuestions: Question[] = [
     difficulty: "中",
     source: "generated",
     sourceRef: "醫療",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["高風險決策", "生成式輸出", "人類把關"],
+      constraints: ["safety", "governance"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Overgeneralization",
+      },
+      crossNode: "L11102",
+      decisionBoundary:
+        "若把生成式模型的角色限縮成「整理病歷摘要供醫師閱讀」，它就從決策者退回成輔助工具，疑慮也隨之消失。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q099",
@@ -2409,6 +3646,19 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "農業",
+    meta: {
+      cognitiveLevel: "L4",
+      archetype: "Troubleshooting",
+      concepts: ["合成資料反覆訓練", "多樣性衰退", "真實資料錨點"],
+      constraints: ["data_quality"],
+      distractorTypes: {
+        A: "Overgeneralization",
+        B: "Overgeneralization",
+        C: "Layer Confusion",
+      },
+      decisionBoundary:
+        "若每一代都固定混入足量的新真實影像，多樣性就有錨點可回歸——關鍵在真實資料的比例，不在模型多大。",
+    },
   },
   {
     id: "junior-ai-basics-practice-q100",
@@ -2433,5 +3683,18 @@ export const practiceQuestions: Question[] = [
     difficulty: "難",
     source: "generated",
     sourceRef: "金融",
+    meta: {
+      cognitiveLevel: "L3",
+      archetype: "Best Engineering Decision",
+      concepts: ["推論延遲", "算力配置", "呼叫順序"],
+      constraints: ["latency", "compute", "cost"],
+      distractorTypes: {
+        B: "Overgeneralization",
+        C: "Wrong Trade-off",
+        D: "Wrong Trade-off",
+      },
+      decisionBoundary:
+        "若把鑑別式意圖分類放到最前面、先篩掉可直接轉真人的提問，生成式模型的呼叫量下降，延遲問題會大幅緩解。",
+    },
   },
 ];

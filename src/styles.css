@@ -59,6 +59,16 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; border-ra
   background: var(--panel-alt); color: var(--muted); border: 1px solid var(--border);
   border-radius: 999px; font-size: 0.78rem; font-weight: 700;
 }
+/* LLM 命題的提示徽章。刻意不與主題徽章同色——它要能被一眼分辨出是警語，
+   而不是另一個分類標籤；但也不用錯誤紅，那是「你答錯了」的顏色。 */
+.q-source {
+  display: inline-block; margin-bottom: 8px; padding: 3px 10px;
+  background: #fdf3e3; color: #8a5a1b; border: 1px solid #e0bd83;
+  border-radius: 999px; font-size: 0.78rem; font-weight: 700;
+}
+.q-topic + .q-source { margin-left: 6px; }
+/* 模式選單第三張卡的警語，與該卡的說明文字區隔。 */
+.mode-card .mode-card-warn { color: #8a5a1b; font-size: 0.85rem; font-weight: 700; }
 .choices { display: grid; gap: 10px; margin: 18px 0; }
 .choice {
   display: flex; gap: 12px; align-items: center;

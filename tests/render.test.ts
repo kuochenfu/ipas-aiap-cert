@@ -136,6 +136,18 @@ describe("renderQuestion", () => {
     expect(html).not.toContain('class="q-topic"');
   });
 
+  it("LLM 命題的新題顯示待複審提示", () => {
+    const html = renderQuestion({ ...examQs[0], source: "generated" }, 0, 1, undefined, false, "", false);
+    expect(html).toContain('class="q-source"');
+    expect(html).toContain("AI 命題・待複審");
+  });
+
+  it("官方真題與官方學習指引練習評量不顯示該提示", () => {
+    expect(renderQuestion(examQs[0], 0, 1, undefined, false, "", false)).not.toContain('class="q-source"');
+    const guide = renderQuestion({ ...examQs[0], source: "study-guide" }, 0, 1, undefined, false, "", false);
+    expect(guide).not.toContain('class="q-source"');
+  });
+
   it("選項解析優先取用詳解中的選項段落", () => {
     const html = renderQuestion({
       ...examQs[0],
@@ -221,6 +233,14 @@ describe("renderExamPaper", () => {
 });
 
 describe("renderExamReview", () => {
+  it("LLM 命題的新題在考卷與逐題檢討都標出待複審", () => {
+    const gen = [{ ...examQs[0], source: "generated" }] as any;
+    expect(renderExamPaper(gen, {}, "10:00", 0)).toContain("AI 命題・待複審");
+    expect(renderExamReview(gen, { q1: "B" }, 0, "回成績")).toContain("AI 命題・待複審");
+    expect(renderExamPaper(examQs, {}, "10:00", 0)).not.toContain("AI 命題・待複審");
+    expect(renderExamReview(examQs, { q1: "B" }, 0, "回成績")).not.toContain("AI 命題・待複審");
+  });
+
   it("標示正解與你的作答、含詳解", () => {
     const html = renderExamReview(examQs, { q1: "B" }, 0, "回成績");
     expect(html).toContain("因為 A");
@@ -372,6 +392,7 @@ describe("模式選單的新題庫卡", () => {
     expect(html).toContain('data-mode="practice"');
     expect(html).toContain("新題庫練習");
     expect(html).toContain("依評鑑主題分類 100 題");
+    expect(html).toContain("整份題庫由 LLM 命製，內容尚待人工複審");
   });
 
   it("新題庫為空時不顯示第三張卡", () => {

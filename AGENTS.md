@@ -15,7 +15,7 @@
 - **模擬考試**：選 **3 份固定試卷**（`src/state/mockPapers.ts`，依 `subjectId + 份次` seed，決定性可重現）→ **單頁** 50 題作答（點選即時就地更新 DOM，**不整頁重繪**以保留捲動）→ 計時（初級 75／中級 90 分，時間到自動交卷）→ 成績 → **單頁逐題檢討**。
 - **刷題練習**：放入該科**整個題庫、依考卷原序**（不打散），逐題卡片、作答後即時揭曉對錯與詳解、不計時。
 - 模式選單的刷題題數為**動態顯示**（該科實際題數），勿再寫死數字。
-- **新題庫（`src/data/practice/`）**：依官方評鑑內容節點分類的補充題，配額定義於 `src/domain/assessmentTopics.ts`；**不得併入 `getQuestions`**——與原題庫是兩個完全獨立的資料來源。目前**七科各 100 題**（AI 應用規劃師五科、AIoT 兩科）。**新增或擴充新題庫前必讀 `docs/question-authoring.md`**——命題規格、產出流程，以及四個型別檢查抓不到的坑（換位時漏搬 `meta.distractorTypes`、詳解裡指名的選項字母、同長度節點共用答案序列、序列太整齊）。其刷題進度存於既有 key `ipas-aiap-drill-progress` 底下、同一 map 內以 `${subjectId}:practice` 為 key（與原刷題的 `subjectId` key 分開，互不覆蓋）。模式選單第三張卡以 `data-mode="practice"` 觸發，實際上是 `session.mode = "drill"` ＋ `session.bank = "practice"`（沿用既有刷題流程與 UI，只是換題庫來源）；七科的模式選單都會顯示第三張卡。
+- **新題庫（`src/data/practice/`）**：依官方評鑑內容節點分類的補充題，配額定義於 `src/domain/assessmentTopics.ts`；**不得併入 `getQuestions`**——與原題庫是兩個完全獨立的資料來源。目前共 **915 題**：AIoT 兩科各 100 題，AI 應用規劃師五科於 2026-08-22 加題再平衡後為 120–166 題不等，**題數以 `assessmentTopics.ts` 的配額為準、不再是固定值**。**新增或擴充新題庫前必讀 `docs/question-authoring.md`**——命題規格、產出流程，以及四個型別檢查抓不到的坑（換位時漏搬 `meta.distractorTypes`、詳解裡指名的選項字母、同長度節點共用答案序列、序列太整齊）。其刷題進度存於既有 key `ipas-aiap-drill-progress` 底下、同一 map 內以 `${subjectId}:practice` 為 key（與原刷題的 `subjectId` key 分開，互不覆蓋）。模式選單第三張卡以 `data-mode="practice"` 觸發，實際上是 `session.mode = "drill"` ＋ `session.bank = "practice"`（沿用既有刷題流程與 UI，只是換題庫來源）；七科的模式選單都會顯示第三張卡。
 
 ### 錯題本
 - 存於 **localStorage**，key 固定為 `ipas-aiap-misses`。
@@ -48,10 +48,10 @@ docs/markdown/*.md  →  npm run parse:papers  →  src/data/past-exams/*.json
 
 - `src/data/past-exams/*.json` 已提交，為歷屆試題的唯一真實來源。
 - **真題的手寫詳解與錯誤選項解析**置於 `src/data/explanations/<subjectId>.ts`（map 格式，key 為題目 id，值為 `QuestionExplanation = { explanation, choices }`；`choices` 只放三個**錯誤**選項，正解不寫）。
-- **手寫新題**置於 `src/data/generated/<subjectId>.ts`（陣列格式）。新題的詳解與選項解析寫在**題目物件自身**的 `explanation` / `choiceExplanations` 欄位，**不經** `explanations/*.ts`——改初級的解析內容時兩處都要顧到。
+- **補充新題**置於 `src/data/generated/<subjectId>.ts`（陣列格式）。內容為 **LLM 命製**、尚未人工逐題事實查核，與 `practice/*` 的複審缺口性質相同（見 `docs/coverage/practice-bank.md`）；手寫的是真題的詳解與選項解析，不是題目本身。新題的詳解與選項解析寫在**題目物件自身**的 `explanation` / `choiceExplanations` 欄位，**不經** `explanations/*.ts`——改初級的解析內容時兩處都要顧到。
 - 重新執行 `npm run parse:papers` **只覆寫** `past-exams/*.json`，不影響 explanations 與 generated。
 - 三者由 `src/data/<subjectId>.ts` 合併，透過 `src/data/index.ts` 對外提供 `getQuestions`、`getBankStats`。
-- 每題有 `source` 欄位（`"past-exam"` / `"generated"`），可用於區分真題與新題。
+- 每題有 `source` 欄位（`"past-exam"` / `"generated"` / `"study-guide"`，第三種為官方學習指引的練習評量，目前只有 AIoT 考科一使用），可用於區分官方題與 LLM 命製的新題——UI 的「AI 命題・待複審」提示即以此判斷。
 
 ### 選項解析（新不變式，2026-08）
 

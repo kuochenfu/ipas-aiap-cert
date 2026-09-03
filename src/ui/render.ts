@@ -332,11 +332,24 @@ export const renderModePicker = ({
       <button class="mode-card" data-mode="practice">
         <h2>新題庫練習</h2>
         <p>依評鑑主題分類 ${practice.count} 題・附選項解析・不計時</p>
+        <p class="mode-card-warn">整份題庫由 LLM 命製，內容尚待人工複審</p>
         ${practice.progressText ? `<p class="drill-progress-hint">${escapeHtml(practice.progressText)}</p>` : ""}
       </button>
     ` : ""}
   </main>
 `;
+
+/**
+ * LLM 命題的提示。`source === "generated"` 涵蓋 `generated/*` 的補充新題與
+ * `practice/*` 的評鑑節點新題庫——兩者都由 LLM 依官方學習指引與評鑑節點命製，
+ * 目前只有格式與分布的自動測試，內容正確性尚待人工複審。考生據此判斷可信度，
+ * 因此題目出現在哪裡就標在哪裡（刷題、模擬考卷、逐題檢討）。
+ * 官方真題（past-exam）與官方學習指引的練習評量（study-guide）不標。
+ */
+const renderSourceNote = (q: Question): string =>
+  q.source === "generated"
+    ? `<span class="q-source" title="本題由 LLM 命製，內容尚未經人工複審">AI 命題・待複審</span>`
+    : "";
 
 export const renderQuestion = (
   q: Question, index: number, total: number,
@@ -372,6 +385,7 @@ export const renderQuestion = (
     <main class="question">
       ${drillControls ? renderDrillFilters(drillControls) : ""}
       ${q.topic && isTopicClassified(q.topic) ? `<span class="q-topic">${escapeHtml(q.topic)}</span>` : ""}
+      ${renderSourceNote(q)}
       <p class="prompt">${escapeHtml(q.prompt)}</p>
       ${renderFigures(q.figures)}
       <div class="choices">${choices}</div>
@@ -825,6 +839,7 @@ export const renderExamPaper = (
 ): string => {
   const blocks = questions.map((q, i) => `
     <section class="exam-q" data-qid="${escapeHtml(q.id)}">
+      ${renderSourceNote(q)}
       <p class="prompt"><span class="qnum">${i + 1}.</span> ${escapeHtml(q.prompt)}</p>
       ${renderFigures(q.figures)}
       <div class="choices">${q.choices.map((c) => renderExamChoice(q.id, c, answers[q.id] === c.id, q.choiceFigures?.[c.id])).join("")}</div>
@@ -865,6 +880,7 @@ export const renderExamReview = (
     const yours = mine ? `你的作答：${mine}` : "未作答";
     return `
       <section class="exam-q">
+        ${renderSourceNote(q)}
         <p class="prompt"><span class="qnum">${i + 1}.</span> ${escapeHtml(q.prompt)}</p>
         ${renderFigures(q.figures)}
         <div class="choices">${choices}</div>

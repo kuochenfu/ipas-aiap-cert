@@ -1,4 +1,5 @@
 import type { DistractorType, Question, QuestionArchetype, QuestionMeta } from "../data/types";
+import { conceptsOf } from "./concepts";
 import type { AnswerRecords, Confidence } from "./drill";
 import type { AnswerState } from "./exam";
 import { isCorrect } from "./exam";
@@ -231,6 +232,45 @@ export const calibrationStats = (
   return { rows, unmarked };
 };
 
+export type ConceptRow = {
+  id: string;
+  label: string;
+  answered: number;
+  correct: number;
+};
+
+/** 概念統計要有幾題才列入。單題的 0% 是雜訊，不該被當成「最弱概念」。 */
+export const CONCEPT_MIN_SAMPLE = 3;
+
+/**
+ * 依受控概念詞彙彙總表現，只回傳作答數達門檻者，答對率低的排前面。
+ *
+ * 概念的比對是**啟發式**的（見 `domain/concepts.ts`）：題幹提到但不是考點的詞也會命中，
+ * 一題也可能同時命中數個概念。因此這份清單是**建議看哪裡**，不是精確的能力評分——
+ * 呈現時必須把這件事寫出來。
+ */
+export const conceptStats = (
+  questions: Question[],
+  answers: AnswerState,
+  minSample: number = CONCEPT_MIN_SAMPLE,
+): ConceptRow[] => {
+  const tally = new Map<string, { label: string; answered: number; correct: number }>();
+  for (const question of questions) {
+    const answer = answers[question.id];
+    if (answer === undefined) continue;
+    for (const concept of conceptsOf(question)) {
+      const row = tally.get(concept.id) ?? { label: concept.label, answered: 0, correct: 0 };
+      row.answered += 1;
+      if (isCorrect(question, answer)) row.correct += 1;
+      tally.set(concept.id, row);
+    }
+  }
+  return [...tally.entries()]
+    .filter(([, row]) => row.answered >= minSample)
+    .map(([id, row]) => ({ id, ...row }))
+    .sort((a, b) => (a.correct / a.answered) - (b.correct / b.answered) || b.answered - a.answered || a.id.localeCompare(b.id));
+};
+
 export type Diagnostics = {
   levels: MetaStatRow[];
   archetypes: MetaStatRow[];
@@ -238,6 +278,8 @@ export type Diagnostics = {
   /** 已作答但沒有干擾類型可分析的錯題數，供「分析涵蓋多少錯題」誠實呈現。 */
   unclassifiedWrong: number;
   calibration: Calibration;
+  /** 依答對率由低到高排序的概念表現；作答數未達門檻者不列。 */
+  conceptWeakness: ConceptRow[];
 };
 
 export const buildDiagnostics = (
@@ -257,5 +299,6 @@ export const buildDiagnostics = (
     errors,
     unclassifiedWrong: wrong - classified,
     calibration: calibrationStats(questions, answers, records),
+    conceptWeakness: conceptStats(questions, answers),
   };
 };

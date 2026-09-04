@@ -14,6 +14,7 @@ import { subjects } from "../src/domain/catalog";
 import { getQuestions } from "../src/data/index";
 import { getPracticeQuestions } from "../src/data/practice";
 import { archetypeLabels, cognitiveLevelLabels, type CognitiveLevel } from "../src/domain/diagnostics";
+import { concepts, conceptsOf } from "../src/domain/concepts";
 import type { Question, QuestionArchetype } from "../src/data/types";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -94,6 +95,36 @@ for (const subject of subjects) {
   }
 }
 
+// ── 概念覆蓋 ──
+// 受控詞彙（`domain/concepts.ts`）裡完全沒有題目的概念，就是該考點目前沒被練到。
+const allQuestions = subjects.flatMap((subject) => [
+  ...getQuestions(subject.id),
+  ...getPracticeQuestions(subject.id),
+]);
+const conceptHits = new Map<string, number>();
+let unmatched = 0;
+for (const question of allQuestions) {
+  const matched = conceptsOf(question);
+  if (matched.length === 0) unmatched += 1;
+  for (const concept of matched) conceptHits.set(concept.id, (conceptHits.get(concept.id) ?? 0) + 1);
+}
+const emptyConcepts = concepts.filter((concept) => !conceptHits.has(concept.id));
+const conceptSection = `## 概念覆蓋
+
+受控詞彙共 ${concepts.length} 條（\`src/domain/concepts.ts\`）。
+${allQuestions.length - unmatched} 題（${pct(allQuestions.length - unmatched, allQuestions.length)}）至少對上一個概念。
+
+${
+  emptyConcepts.length === 0
+    ? "每一條概念都有題目。"
+    : `**目前沒有任何題目的概念（${emptyConcepts.length} 條）**：${
+        emptyConcepts.map((concept) => concept.label).join("、")
+      }。這些是考點有列、題庫卻沒練到的地方。`
+}
+
+概念比對是啟發式的（比對概念標註、題幹與正解），僅供覆蓋盤點，不作為配額依據。
+`;
+
 const doc = `# 題庫覆蓋矩陣
 
 > 由 \`npm run report:coverage\` 產生，**請勿手改**——重跑會覆寫。
@@ -110,7 +141,8 @@ const doc = `# 題庫覆蓋矩陣
 
 認知層級：${LEVELS.map((level) => cognitiveLevelLabels[level]).join("、")}。
 
-${sections.join("\n")}`;
+${sections.join("\n")}
+${conceptSection}`;
 
 writeFileSync(outFile, doc, "utf8");
 console.log(`✔ 已寫入 ${outFile}（${totalTagged}/${totalAll} 題帶 meta）`);

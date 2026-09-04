@@ -8,7 +8,8 @@ import type { Cert, Level } from "../data/types";
 import type { Question } from "../data/types";
 import type { StudyNoteItem, StudyNoteSection, StudyNoteTable, StudyNotesBySubject } from "../data/types";
 import type { Confidence, DrillFilter } from "../domain/drill";
-import type { Calibration, Diagnostics, ErrorRow, MetaStatRow } from "../domain/diagnostics";
+import { CONCEPT_MIN_SAMPLE } from "../domain/diagnostics";
+import type { Calibration, ConceptRow, Diagnostics, ErrorRow, MetaStatRow } from "../domain/diagnostics";
 import { isTopicClassified, topicMatchesGuideCode } from "../domain/assessmentTopics";
 
 export type BankStats = { total: number; pastExam: number; generated: number; studyGuide: number };
@@ -573,6 +574,37 @@ const renderCalibration = (calibration: Calibration): string => {
     ${note}`;
 };
 
+/**
+ * 最弱概念。只顯示前幾名——列出全部會變成另一張大表，而使用者要的是「先看哪裡」。
+ * 比對是啟發式的，這件事必須寫在表下，否則會被當成精確評分。
+ */
+const CONCEPT_ROWS = 8;
+
+const renderConceptWeakness = (rows: ConceptRow[]): string => {
+  if (rows.length === 0) {
+    return `
+      <h2 class="diag-heading">概念表現</h2>
+      <p class="diag-empty">同一個概念累積作答滿 ${CONCEPT_MIN_SAMPLE} 題後，這裡會列出答對率最低的概念。</p>`;
+  }
+  const body = rows.slice(0, CONCEPT_ROWS).map((row) => {
+    const rate = Math.round((row.correct / row.answered) * 100);
+    return `
+      <tr>
+        <td class="topic-name">${escapeHtml(row.label)}</td>
+        <td class="topic-progress">${row.answered} 題</td>
+        <td class="topic-rate">${row.correct}／${row.answered}　${rate}%</td>
+        <td class="topic-visual"><span class="topic-bar" style="--rate:${rate}%"><span class="topic-bar-fill"></span></span></td>
+      </tr>`;
+  }).join("");
+  return `
+    <h2 class="diag-heading">最弱的概念</h2>
+    <table class="topic-table">
+      <thead><tr><th>概念</th><th>已作答</th><th>答對率</th><th></th></tr></thead>
+      <tbody>${body}</tbody>
+    </table>
+    <p class="topic-note">概念以關鍵詞比對題幹與命題標註取得，屬<strong>建議性</strong>分類：題幹提到但不是考點的詞也可能被算進去，一題也可能同時算進數個概念。請當成「先看哪裡」的線索，而不是精確的能力評分。</p>`;
+};
+
 export const renderTopicStats = (
   subjectName: string, rows: TopicStatRow[], backLabel: string,
   diagnostics?: Diagnostics,
@@ -599,6 +631,7 @@ export const renderTopicStats = (
       ${renderMetaStatTable("題型表現", "題型原型", diagnostics.archetypes)}
       <h2 class="diag-heading">錯誤類型</h2>
       ${renderErrorRows(diagnostics.errors, diagnostics.unclassifiedWrong)}
+      ${renderConceptWeakness(diagnostics.conceptWeakness)}
       ${renderCalibration(diagnostics.calibration)}`
     : "";
   return `

@@ -454,6 +454,10 @@ describe("renderTopicStats（帶學習診斷）", () => {
       meaning: "選到了旁邊那個很像的概念。", advice: "回該節點的「容易混淆」一節。", count: 3,
     }],
     unclassifiedWrong: 2,
+    conceptWeakness: [
+      { id: "recall", label: "召回率", answered: 6, correct: 2 },
+      { id: "precision", label: "精確率", answered: 4, correct: 3 },
+    ],
     calibration: {
       rows: [
         { key: "sure" as const, label: "標記「有把握」", answered: 10, correct: 9 },
@@ -481,6 +485,17 @@ describe("renderTopicStats（帶學習診斷）", () => {
     expect(html).toContain("概念邊界不清");
     expect(html).toContain("3 題");
     expect(html).toContain("下一步：");
+  });
+  it("最弱概念表列出概念、題數與答對率，並聲明比對是建議性的", () => {
+    expect(html).toContain("最弱的概念");
+    expect(html).toContain("召回率");
+    expect(html).toContain("2／6");
+    expect(html).toContain("建議性");
+  });
+  it("尚無足夠樣本時說明門檻，而不是給一張空表", () => {
+    const none = renderTopicStats("科目", rows, "回刷題", { ...diagnostics, conceptWeakness: [] });
+    expect(none).toContain("概念表現");
+    expect(none).toContain("題後");
   });
   it("校準表列出兩種標記的答對率與判讀", () => {
     expect(html).toContain("信心校準");

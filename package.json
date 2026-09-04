@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "parse:papers": "tsx scripts/parse-past-papers.ts",
     "extract:study-slices": "tsx scripts/generate-study-notes.ts",
-    "report:coverage": "tsx scripts/coverage-matrix.ts"
+    "report:coverage": "tsx scripts/coverage-matrix.ts",
+    "report:review": "tsx scripts/review-priority.ts"
   },
   "devDependencies": {
     "@types/node": "^25.6.2",

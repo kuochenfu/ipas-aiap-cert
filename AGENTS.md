@@ -123,6 +123,7 @@ npm run build        # tsc + vite build（產生 dist/）
 npm run test         # vitest run（單元測試）
 npm run parse:papers # 重新解析 docs/markdown/*.md → src/data/past-exams/*.json
 npm run report:coverage # 產生 docs/coverage/coverage-matrix.md（節點 × 認知層級 × 題型）
+npm run report:review   # 產生 docs/coverage/review-priority.md（人工複審的風險排序）
 ```
 
 **修改前後務必執行 `npm run build` 與 `npm run test`，確保型別正確且測試全數通過。**

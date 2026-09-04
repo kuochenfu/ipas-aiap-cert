@@ -429,6 +429,61 @@ describe("renderTopicStats", () => {
     expect(html).toContain('data-nav="back-play"');
     expect(renderTopicStats("<x>", rows, "回刷題")).toContain("&lt;x&gt;");
   });
+  it("沒有診斷資料時只呈現節點表格，標題不改名", () => {
+    expect(html).toContain("<h1>節點表現</h1>");
+    expect(html).not.toContain("認知層級表現");
+  });
+});
+
+describe("renderTopicStats（帶學習診斷）", () => {
+  const rows = [{ topic: "L23101 機率／統計", total: 12, answered: 4, correct: 3 }];
+  const diagnostics = {
+    levels: [
+      { key: "L1", label: "L1 記憶", total: 10, answered: 5, correct: 5 },
+      { key: "L4", label: "L4 分析", total: 8, answered: 0, correct: 0 },
+    ],
+    archetypes: [{ key: "Scenario Selection", label: "情境選型", total: 6, answered: 2, correct: 1 }],
+    errors: [{
+      type: "Neighbor Concept" as const, label: "相鄰概念", errorClass: "概念邊界不清",
+      meaning: "選到了旁邊那個很像的概念。", advice: "回該節點的「容易混淆」一節。", count: 3,
+    }],
+    unclassifiedWrong: 2,
+  };
+  const html = renderTopicStats("機器學習技術與應用", rows, "回刷題", diagnostics);
+
+  it("標題改為學習診斷，且四張表都在", () => {
+    expect(html).toContain("<h1>學習診斷</h1>");
+    expect(html).toContain("評鑑節點表現");
+    expect(html).toContain("認知層級表現");
+    expect(html).toContain("題型表現");
+    expect(html).toContain("錯誤類型");
+  });
+  it("認知層級沿用與節點表相同的呈現：尚未作答不顯示 0%", () => {
+    expect(html).toContain("L1 記憶");
+    expect(html).toContain("5／5");
+    expect(html).toContain("尚未作答");
+  });
+  it("每一種錯誤類型都帶含義與下一步", () => {
+    expect(html).toContain("相鄰概念");
+    expect(html).toContain("概念邊界不清");
+    expect(html).toContain("3 題");
+    expect(html).toContain("下一步：");
+  });
+  it("無法分類的錯題數誠實列出", () => {
+    expect(html).toContain("另有 2 題錯題沒有干擾類型標註");
+  });
+  it("沒有錯題時說明會怎麼分析，而不是留白", () => {
+    const empty = renderTopicStats("科目", rows, "回刷題", { ...diagnostics, errors: [], unclassifiedWrong: 0 });
+    expect(empty).toContain("目前還沒有可分析的錯題");
+  });
+  it("錯誤類型的文字經跳脫", () => {
+    const evil = renderTopicStats("科目", rows, "回刷題", {
+      ...diagnostics,
+      errors: [{ ...diagnostics.errors[0], label: "<img>", advice: "<b>x</b>", meaning: "<i>y</i>" }],
+    });
+    expect(evil).toContain("&lt;img&gt;");
+    expect(evil).not.toContain("<img>");
+  });
 });
 
 describe("證照導覽", () => {

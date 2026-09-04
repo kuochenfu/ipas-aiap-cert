@@ -476,3 +476,64 @@ All About Circuits）則換成可驗證的等價來源。`tests/studyGuide.test.
 `studyNotes.aiot.ts` 是依備考 syllabus 整理的讀書筆記，考科二部分更是以簡章大綱為骨架
 外加工程知識。因此 UI 上的標籤也不同（五科為「學習指引整理」、AIoT 為「備考整理」）。
 內容需人工複審，尤其 B2.3 的 OEE／ROI／CAPEX-OPEX 公式屬延伸補強，官方未明文列為必考。
+
+---
+
+## 2026-09-04 新增：Assessment Engine ／ Learning Engine 路線圖
+
+兩份提案（`docs/raw/certification_question_generation_project_v2.md`、
+`docs/raw/learning_capability_training_project_v2.md`）盤點後的執行計畫。
+盤點結論是：兩份文件的底層在本站已經蓋了七成——官方 syllabus graph（`assessmentTopics.ts`）、
+cognitive operation（`meta.archetype` 十種原型）、difficulty target、
+以及**每個錯誤選項的干擾類型**（`meta.distractorTypes`）都已逐題標好，
+只是從來沒有被**讀出來**過。缺的是四件具體的事，不是架構。
+
+### 盤點當日的量測
+
+| | 題數 | 帶 `meta` |
+|---|---:|---:|
+| 原題庫（真題＋generated＋study-guide） | 1,057 | 0 |
+| 新題庫 `practice/` | 915 | 915 |
+| 合計 | 1,972 | 915（46%） |
+
+`meta.concepts` 共 **1,890 個相異字串，其中 1,386 個（73%）只出現一次**，
+出現 ≥5 題的只有 28 個——所以 Concept 層目前是標籤雲，不是 graph。
+
+### P0：資料已備齊，只差呈現　✅ 已完成（2026-09-04）
+
+1. **錯誤類型診斷**（`src/domain/diagnostics.ts`）——把 `distractorTypes` 彙總成心智模型錯誤，
+   每一種都帶「代表什麼」與「下一步」，且下一步一律指向站上已存在的東西
+   （該節點的「容易混淆」、該題的「判斷分界」）。
+2. **認知層級／題型報表**——文件二 §9 要的那種報告（不是「機器學習 62%」而是逐維度）。
+   與節點表共用同一種呈現，四張表掃視起來是同一種東西。
+3. **覆蓋矩陣** `npm run report:coverage` → `docs/coverage/coverage-matrix.md`
+   （節點 × 認知層級 × 題型，標出無 L3／L4 的節點）。
+4. **重複題檢查** `tests/duplicates.test.ts`——首次掃描即找到 `aiot-junior-iot`
+   兩批自編題之間的 10 對撞題，詳見 `docs/coverage/bank-defects.md`。
+
+### P1：作答資料的形狀（進行中）
+
+5. **作答歷程**：`drillProgress` 目前只存「最後一次選了什麼」，沒有時間戳、次數與信心，
+   因此文件一的 Retention、Calibration、Repeated Error、Forgetting risk **四個維度全部量不到**。
+   這是整個路線圖真正的地基，不是 Syllabus Graph（那個已經有了）。
+6. **信心標記**：揭曉前的「有把握／不確定」，是唯一不需後端就能拿到的 Calibration 資料。
+7. **自適應選題**：依最弱節點 × 最弱認知層級 × 到期重測排序。
+
+### P2：內容工程
+
+8. **原題庫 1,057 題補 `meta`**（建議只補 `cognitiveLevel` ＋ `archetype`，
+   跳過逐選項 `distractorTypes`）——補完，P0 的所有報表才對使用者最想練的真題生效。
+9. **收斂受控概念詞彙**（1,890 → 估 150–250），Concept 層才成為可用的 graph。
+10. **逐題 evidence 指標**，讓待複審清單能依風險抽樣，而不是逐題硬掃。
+
+### P3：後端與真 psychometrics　❄ 已決定暫不進行（2026-09-04）
+
+p-value、discrimination、distractor analysis 與 external validation 都需要**跨使用者**資料，
+而本站是純靜態 SPA、狀態全在 localStorage。已評估並**決定不走這條路**：
+
+- 代價是專案不再是純靜態，要處理同意與隱私。
+- 且以目前的使用人數，discrimination 在小 N 下是雜訊——蓋了也讀不出東西。
+
+因此本站的「psychometrics」一律限定為**個人化的 item stats**（單一使用者的作答歷程），
+文件與 UI 都不得把它稱作 discrimination。日後若真的要走，解除條件是：
+有穩定的使用者量，且願意承擔後端維運。

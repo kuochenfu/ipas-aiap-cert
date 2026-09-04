@@ -9,6 +9,7 @@ import { getSubject } from "./domain/catalog";
 import { getQuestions } from "./data/index";
 import { isTopicClassified, practiceTotal, topicMatchesGuideCode } from "./domain/assessmentTopics";
 import { scoreExam, topicStats, topicSummary, type AnswerState } from "./domain/exam";
+import { buildDiagnostics, hasQuestionMeta } from "./domain/diagnostics";
 import { buildAttempt } from "./state/attempt";
 import { buildMockPaper, PAPER_COUNT } from "./state/mockPapers";
 import { addMiss, loadMisses, loadReadNodes, removeMiss, toggleReadNode } from "./state/storage";
@@ -543,6 +544,7 @@ function renderView() {
       const controls = {
         filter: session.drillFilter, counts: drillCounts(),
         total: session.questions.length, hasTopics: bankHasTopics(),
+        hasMeta: hasQuestionMeta(session.questions),
       };
       if (!filtered.length && !session.reveal) {
         app.innerHTML = renderDrillEmpty(controls);
@@ -566,6 +568,10 @@ function renderView() {
       getSubject(session.subjectId)?.name ?? "",
       topicStats(session.questions, session.answers),
       "回刷題",
+      // 診斷三表需要命題後設資料；原題庫（尚未回填 meta）只呈現節點表格。
+      hasQuestionMeta(session.questions)
+        ? buildDiagnostics(session.questions, session.answers)
+        : undefined,
     );
     return;
   }

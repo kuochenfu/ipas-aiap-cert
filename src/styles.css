@@ -234,6 +234,23 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; border-ra
   /* 窄螢幕把視覺化長條收起來，避免節點名稱被擠成每行兩個字。 */
   .topic-visual, .topic-stats thead th:last-child { display: none; }
 }
+
+/* 學習診斷：節點表格之外的三張表（認知層級、題型、錯誤類型）。 */
+.diag-heading { font-size: 1rem; margin: 26px 0 0; }
+.diag-empty { color: var(--muted); line-height: 1.8; }
+.diag-errors { list-style: none; margin: 14px 0; padding: 0; display: grid; gap: 10px; }
+.diag-error {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px;
+}
+.diag-error-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.diag-error-label { font-weight: 800; }
+.diag-error-class {
+  color: var(--muted); font-size: 0.8rem; border: 1px solid var(--border);
+  border-radius: 999px; padding: 1px 8px;
+}
+.diag-error-count { margin-left: auto; font-variant-numeric: tabular-nums; }
+.diag-error-meaning { margin: 8px 0 0; line-height: 1.8; }
+.diag-error-advice { margin: 6px 0 0; color: var(--accent); line-height: 1.8; font-weight: 700; }
 .study-entry {
   width: 100%; background: var(--panel); color: var(--accent);
   border: 1px solid var(--border); padding: 14px 16px; margin-top: 14px; font-size: 1rem; font-weight: 700;

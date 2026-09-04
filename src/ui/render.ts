@@ -8,6 +8,7 @@ import type { Cert, Level } from "../data/types";
 import type { Question } from "../data/types";
 import type { StudyNoteItem, StudyNoteSection, StudyNoteTable, StudyNotesBySubject } from "../data/types";
 import type { DrillFilter } from "../domain/drill";
+import type { Diagnostics, ErrorRow, MetaStatRow } from "../domain/diagnostics";
 import { isTopicClassified, topicMatchesGuideCode } from "../domain/assessmentTopics";
 
 export type BankStats = { total: number; pastExam: number; generated: number; studyGuide: number };
@@ -16,8 +17,10 @@ export type DrillControls = {
   filter: DrillFilter;
   counts: DrillCounts;
   total: number;
-  /** 題庫已依評鑑節點分類時才顯示「節點表現」入口（未分類的題庫看了也沒意義）。 */
+  /** 題庫已依評鑑節點分類時才顯示診斷入口（未分類的題庫看了也沒意義）。 */
   hasTopics?: boolean;
+  /** 題庫帶命題後設資料時，診斷頁多出認知層級／題型／錯誤類型三張表，入口改名。 */
+  hasMeta?: boolean;
 };
 
 /**
@@ -106,7 +109,7 @@ const drillFilterLabels: Record<DrillFilter, string> = {
   unanswered: "未答",
 };
 
-const renderDrillFilters = ({ filter, counts, total, hasTopics }: DrillControls): string => `
+const renderDrillFilters = ({ filter, counts, total, hasTopics, hasMeta }: DrillControls): string => `
   <div class="drill-controls">
     <div class="drill-filters" aria-label="刷題篩選">
       ${(Object.keys(drillFilterLabels) as DrillFilter[]).map((key) => `
@@ -124,7 +127,7 @@ const renderDrillFilters = ({ filter, counts, total, hasTopics }: DrillControls)
         題
       </label>
       <button class="drill-jump-go" data-nav="jump">前往</button>
-      ${hasTopics ? `<button class="drill-topics" data-nav="topics">節點表現</button>` : ""}
+      ${hasTopics ? `<button class="drill-topics" data-nav="topics">${hasMeta ? "學習診斷" : "節點表現"}</button>` : ""}
       <button class="drill-reset" data-nav="drill-reset">重置進度</button>
     </div>
   </div>
@@ -421,8 +424,63 @@ export type TopicStatRow = { topic: string; total: number; correct: number; answ
  * 與成績頁的主題統計不同，刷題可以只作答一部分，因此每個節點要分別呈現
  * 「已作答幾題」與「其中答對幾題」——只給答對率會讓一題答對的節點看起來滿分。
  */
+/**
+ * 診斷表共用的一列：已作答 / 總題數 ＋ 答對率長條。
+ * 與節點表格刻意共用 `.topic-*` 的樣式，四張表掃視起來才是同一種東西。
+ */
+const renderMetaStatRow = (row: MetaStatRow): string => {
+  const rate = row.answered > 0 ? Math.round((row.correct / row.answered) * 100) : null;
+  const bar = rate === null
+    ? `<span class="topic-bar-empty">尚未作答</span>`
+    : `<span class="topic-bar" style="--rate:${rate}%"><span class="topic-bar-fill"></span></span>`;
+  return `
+    <tr>
+      <td class="topic-name">${escapeHtml(row.label)}</td>
+      <td class="topic-progress">${row.answered} / ${row.total}</td>
+      <td class="topic-rate">${rate === null ? "—" : `${row.correct}／${row.answered}　${rate}%`}</td>
+      <td class="topic-visual">${bar}</td>
+    </tr>`;
+};
+
+const renderMetaStatTable = (caption: string, header: string, rows: MetaStatRow[]): string =>
+  rows.length === 0 ? "" : `
+    <h2 class="diag-heading">${escapeHtml(caption)}</h2>
+    <table class="topic-table">
+      <thead><tr><th>${escapeHtml(header)}</th><th>已作答</th><th>答對率</th><th></th></tr></thead>
+      <tbody>${rows.map(renderMetaStatRow).join("")}</tbody>
+    </table>`;
+
+/**
+ * 錯誤類型分布。刻意不畫成圓餅圖——使用者要的不是比例，是「這類錯誤該怎麼辦」，
+ * 所以每一列都帶著含義與下一步，且下一步一律指向站上已經存在的東西。
+ */
+const renderErrorRows = (errors: ErrorRow[], unclassifiedWrong: number): string => {
+  if (errors.length === 0) {
+    return `<p class="diag-empty">目前還沒有可分析的錯題。答錯時，本站會依該選項的干擾類型判斷你是哪一種理解缺口。</p>`;
+  }
+  const total = errors.reduce((n, row) => n + row.count, 0);
+  const items = errors.map((row) => `
+    <li class="diag-error">
+      <div class="diag-error-head">
+        <span class="diag-error-label">${escapeHtml(row.label)}</span>
+        <span class="diag-error-class">${escapeHtml(row.errorClass)}</span>
+        <strong class="diag-error-count">${row.count} 題</strong>
+      </div>
+      <p class="diag-error-meaning">${escapeHtml(row.meaning)}</p>
+      <p class="diag-error-advice">下一步：${escapeHtml(row.advice)}</p>
+    </li>`).join("");
+  const note = unclassifiedWrong > 0
+    ? `<p class="topic-note">另有 ${unclassifiedWrong} 題錯題沒有干擾類型標註，未計入上表。</p>`
+    : "";
+  return `
+    <p class="lead">已分析 ${total} 題錯題，依你選到的那個選項是「用什麼方式誘答」分類。</p>
+    <ul class="diag-errors">${items}</ul>
+    ${note}`;
+};
+
 export const renderTopicStats = (
   subjectName: string, rows: TopicStatRow[], backLabel: string,
+  diagnostics?: Diagnostics,
 ): string => {
   const body = rows.map((row) => {
     const rate = row.answered > 0 ? Math.round((row.correct / row.answered) * 100) : null;
@@ -439,18 +497,28 @@ export const renderTopicStats = (
   }).join("");
   const answered = rows.reduce((n, r) => n + r.answered, 0);
   const correct = rows.reduce((n, r) => n + r.correct, 0);
+  // 診斷三表只有在題庫帶 meta 時才有資料；沒有就只呈現節點表格，標題也退回原本的名字。
+  const extra = diagnostics
+    ? `
+      ${renderMetaStatTable("認知層級表現", "認知層級", diagnostics.levels)}
+      ${renderMetaStatTable("題型表現", "題型原型", diagnostics.archetypes)}
+      <h2 class="diag-heading">錯誤類型</h2>
+      ${renderErrorRows(diagnostics.errors, diagnostics.unclassifiedWrong)}`
+    : "";
   return `
     <header class="topbar">
       <button class="back" data-nav="back-play">← ${escapeHtml(backLabel)}</button>
-      <h1>節點表現</h1>
+      <h1>${diagnostics ? "學習診斷" : "節點表現"}</h1>
     </header>
     <main class="topic-stats">
       <p class="lead">${escapeHtml(subjectName)}　已作答 ${answered} 題，答對 ${correct} 題</p>
+      ${diagnostics ? `<h2 class="diag-heading">評鑑節點表現</h2>` : ""}
       <table class="topic-table">
         <thead><tr><th>評鑑內容節點</th><th>已作答</th><th>答對率</th><th></th></tr></thead>
         <tbody>${body}</tbody>
       </table>
-      <p class="topic-note">節點依《AI 應用規劃師能力鑑定 — 評鑑內容範圍參考》分類；「已作答」為本科目目前的刷題進度。</p>
+      ${extra}
+      <p class="topic-note">節點依官方《評鑑內容範圍參考》分類；「已作答」為本科目目前的刷題進度。認知層級、題型與錯誤類型來自命題時逐題標註的後設資料，目前僅新題庫具備。</p>
     </main>
   `;
 };

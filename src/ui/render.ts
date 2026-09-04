@@ -7,8 +7,8 @@ import { getStudyGuide } from "../data/studyGuide";
 import type { Cert, Level } from "../data/types";
 import type { Question } from "../data/types";
 import type { StudyNoteItem, StudyNoteSection, StudyNoteTable, StudyNotesBySubject } from "../data/types";
-import type { DrillFilter } from "../domain/drill";
-import type { Diagnostics, ErrorRow, MetaStatRow } from "../domain/diagnostics";
+import type { Confidence, DrillFilter } from "../domain/drill";
+import type { Calibration, Diagnostics, ErrorRow, MetaStatRow } from "../domain/diagnostics";
 import { isTopicClassified, topicMatchesGuideCode } from "../domain/assessmentTopics";
 
 export type BankStats = { total: number; pastExam: number; generated: number; studyGuide: number };
@@ -21,6 +21,11 @@ export type DrillControls = {
   hasTopics?: boolean;
   /** 題庫帶命題後設資料時，診斷頁多出認知層級／題型／錯誤類型三張表，入口改名。 */
   hasMeta?: boolean;
+  /**
+   * 校準模式（作答前先標記信心）。三個欄位分別是：開關、這一題已標記但還沒作答的信心、
+   * 以及已作答的那次記下的信心。收成一個物件是因為它們永遠一起出現、也一起消失。
+   */
+  confidence?: { mode: boolean; pending?: Confidence; recorded?: Confidence };
 };
 
 /**
@@ -103,13 +108,52 @@ export const renderChoice = (choice: Choice, view: ChoiceView, figure?: Question
   `;
 };
 
+// 順序即畫面上的按鈕順序。「推薦」排在「全部」之後——它是主要的複習入口，
+// 但不搶第一個位置，因為第一次讀完整份題庫時原序才是對的。
 const drillFilterLabels: Record<DrillFilter, string> = {
   all: "全部",
+  recommended: "推薦",
   wrong: "錯題",
   unanswered: "未答",
 };
 
-const renderDrillFilters = ({ filter, counts, total, hasTopics, hasMeta }: DrillControls): string => `
+const confidenceLabels: Record<Confidence, string> = {
+  sure: "有把握",
+  unsure: "不確定",
+};
+
+/**
+ * 作答前的信心標記（Calibration）。
+ *
+ * 刻意放在選項**之上**：先下注、再作答，事後才標記沒有校準意義。
+ * 只在校準模式開啟且尚未揭曉時出現，其餘情況完全不佔版面。
+ */
+const renderConfidencePicker = (pending?: Confidence): string => `
+  <div class="confidence-picker" aria-label="作答前先標記信心">
+    <span class="confidence-hint">先下注：</span>
+    ${(Object.keys(confidenceLabels) as Confidence[]).map((key) => `
+      <button class="confidence-btn ${pending === key ? "active" : ""}"
+              data-confidence="${key}" aria-pressed="${pending === key}">${confidenceLabels[key]}</button>
+    `).join("")}
+  </div>
+`;
+
+/**
+ * 揭曉後的校準回饋。真正有資訊量的是**不一致**的兩格：
+ * 有把握卻答錯＝過度自信，不確定卻答對＝低估自己。一致時只做平淡確認。
+ */
+const renderCalibrationNote = (recorded: Confidence | undefined, correct: boolean): string => {
+  if (!recorded) return "";
+  const text = recorded === "sure"
+    ? (correct ? "你標記「有把握」而且答對了，信心與實力相符。" : "你標記「有把握」卻答錯了——這類題目最值得回頭看，因為你不知道自己不知道。")
+    : (correct ? "你標記「不確定」但答對了。確認一下是真的懂，還是猜中的。" : "你標記「不確定」而且答錯了，至少信心是準的——把它加進複習清單。");
+  const tone = recorded === "sure" && !correct ? "is-overconfident" : "";
+  return `<p class="calibration-note ${tone}">${escapeHtml(text)}</p>`;
+};
+
+const renderDrillFilters = (
+  { filter, counts, total, hasTopics, hasMeta, confidence }: DrillControls,
+): string => `
   <div class="drill-controls">
     <div class="drill-filters" aria-label="刷題篩選">
       ${(Object.keys(drillFilterLabels) as DrillFilter[]).map((key) => `
@@ -127,6 +171,10 @@ const renderDrillFilters = ({ filter, counts, total, hasTopics, hasMeta }: Drill
         題
       </label>
       <button class="drill-jump-go" data-nav="jump">前往</button>
+      ${confidence
+        ? `<button class="drill-confidence ${confidence.mode ? "active" : ""}" data-nav="toggle-confidence"
+                   aria-pressed="${confidence.mode}">校準模式</button>`
+        : ""}
       ${hasTopics ? `<button class="drill-topics" data-nav="topics">${hasMeta ? "學習診斷" : "節點表現"}</button>` : ""}
       <button class="drill-reset" data-nav="drill-reset">重置進度</button>
     </div>
@@ -370,6 +418,7 @@ export const renderQuestion = (
   const explanation = reveal
     ? `
       ${renderAnswerSummary(q, selected)}
+      ${renderCalibrationNote(drillControls?.confidence?.recorded, selected === q.answer)}
       <div class="explanation"><strong>詳解</strong><p>${escapeHtml(q.explanation || "（尚無詳解）")}</p></div>
       ${renderChoiceExplanations(q)}
       ${renderDecisionBoundary(q)}
@@ -391,6 +440,9 @@ export const renderQuestion = (
       ${renderSourceNote(q)}
       <p class="prompt">${escapeHtml(q.prompt)}</p>
       ${renderFigures(q.figures)}
+      ${drillControls?.confidence?.mode && !reveal
+        ? renderConfidencePicker(drillControls.confidence.pending)
+        : ""}
       <div class="choices">${choices}</div>
       ${explanation}
       <div class="qnav">
@@ -478,6 +530,49 @@ const renderErrorRows = (errors: ErrorRow[], unclassifiedWrong: number): string 
     ${note}`;
 };
 
+/**
+ * 校準表。沒有任何標記時整段不顯示，只留一行說明怎麼開啟——
+ * 一張全空的表會讓人以為功能壞了。
+ */
+const renderCalibration = (calibration: Calibration): string => {
+  if (calibration.rows.length === 0) {
+    return `
+      <h2 class="diag-heading">信心校準</h2>
+      <p class="diag-empty">尚無資料。在刷題頁開啟「校準模式」後，作答前先標記「有把握／不確定」，這裡會比較兩者的實際答對率。</p>`;
+  }
+  const body = calibration.rows.map((row) => {
+    const rate = Math.round((row.correct / row.answered) * 100);
+    return `
+      <tr>
+        <td class="topic-name">${escapeHtml(row.label)}</td>
+        <td class="topic-progress">${row.answered} 題</td>
+        <td class="topic-rate">${row.correct}／${row.answered}　${rate}%</td>
+        <td class="topic-visual"><span class="topic-bar" style="--rate:${rate}%"><span class="topic-bar-fill"></span></span></td>
+      </tr>`;
+  }).join("");
+  const sure = calibration.rows.find((row) => row.key === "sure");
+  const unsure = calibration.rows.find((row) => row.key === "unsure");
+  // 兩者都有資料時才下判讀——只有一格時比較不出東西。
+  let verdict = "";
+  if (sure && unsure) {
+    const gap = (sure.correct / sure.answered) - (unsure.correct / unsure.answered);
+    verdict = gap >= 0.2
+      ? "信心與實力相符：你有把握時確實比較會答對。"
+      : "兩者的答對率接近，代表你目前分不太出自己會不會——先練「有把握卻答錯」的那些題。";
+  }
+  const note = calibration.unmarked > 0
+    ? `<p class="topic-note">另有 ${calibration.unmarked} 題已作答但未標記信心，未計入。</p>`
+    : "";
+  return `
+    <h2 class="diag-heading">信心校準</h2>
+    <table class="topic-table">
+      <thead><tr><th>作答前的標記</th><th>題數</th><th>答對率</th><th></th></tr></thead>
+      <tbody>${body}</tbody>
+    </table>
+    ${verdict ? `<p class="diag-verdict">${escapeHtml(verdict)}</p>` : ""}
+    ${note}`;
+};
+
 export const renderTopicStats = (
   subjectName: string, rows: TopicStatRow[], backLabel: string,
   diagnostics?: Diagnostics,
@@ -497,13 +592,14 @@ export const renderTopicStats = (
   }).join("");
   const answered = rows.reduce((n, r) => n + r.answered, 0);
   const correct = rows.reduce((n, r) => n + r.correct, 0);
-  // 診斷三表只有在題庫帶 meta 時才有資料；沒有就只呈現節點表格，標題也退回原本的名字。
+  // 診斷各表只有在題庫帶 meta 時才有資料；沒有就只呈現節點表格，標題也退回原本的名字。
   const extra = diagnostics
     ? `
       ${renderMetaStatTable("認知層級表現", "認知層級", diagnostics.levels)}
       ${renderMetaStatTable("題型表現", "題型原型", diagnostics.archetypes)}
       <h2 class="diag-heading">錯誤類型</h2>
-      ${renderErrorRows(diagnostics.errors, diagnostics.unclassifiedWrong)}`
+      ${renderErrorRows(diagnostics.errors, diagnostics.unclassifiedWrong)}
+      ${renderCalibration(diagnostics.calibration)}`
     : "";
   return `
     <header class="topbar">

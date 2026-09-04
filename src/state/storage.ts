@@ -41,3 +41,24 @@ export const toggleReadNode = (code: string): boolean => {
   localStorage.setItem(STUDY_READ_KEY, JSON.stringify([...set]));
   return next;
 };
+
+// ── 校準模式（作答前標記信心）的開關 ──────────────────
+// 獨立的 key，且刻意是**站台層級**而非科目層級：這是使用者的作答習慣，
+// 不該換一科就被重設。預設關閉——每題多一次點擊的成本要由使用者自己決定要不要付。
+const CONFIDENCE_MODE_KEY = "ipas-aiap-confidence-mode";
+
+export const loadConfidenceMode = (): boolean => {
+  try {
+    return localStorage.getItem(CONFIDENCE_MODE_KEY) === "on";
+  } catch {
+    return false;
+  }
+};
+
+export const saveConfidenceMode = (enabled: boolean): void => {
+  try {
+    localStorage.setItem(CONFIDENCE_MODE_KEY, enabled ? "on" : "off");
+  } catch {
+    // 儲存空間已滿或被停用：忽略，本次仍可作答
+  }
+};

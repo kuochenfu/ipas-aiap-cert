@@ -94,7 +94,7 @@ describe("renderQuestion", () => {
       false,
       "",
       false,
-      { filter: "all", counts: { all: 1, wrong: 0, unanswered: 1 }, total: 1 },
+      { filter: "all", counts: { all: 1, recommended: 1, wrong: 0, unanswered: 1 }, total: 1 },
     );
     expect(html).not.toContain('data-nav="submit"');
     expect(html).not.toContain("交卷");
@@ -352,7 +352,11 @@ describe("renderStudyView with nested notes", () => {
 });
 
 describe("刷題跳題列", () => {
-  const controls = { filter: "all" as const, counts: { all: 222, wrong: 3, unanswered: 100 }, total: 222 };
+  const controls = {
+    filter: "all" as const,
+    counts: { all: 222, recommended: 103, wrong: 3, unanswered: 100 },
+    total: 222,
+  };
 
   it("刷題卡片含跳題輸入框與重置鈕", () => {
     const html = renderQuestion(examQs[0], 0, 222, undefined, false, "", false, controls);
@@ -363,7 +367,9 @@ describe("刷題跳題列", () => {
   });
 
   it("篩選結果為空的畫面也有跳題列", () => {
-    const html = renderDrillEmpty({ ...controls, filter: "wrong", counts: { all: 222, wrong: 0, unanswered: 100 } });
+    const html = renderDrillEmpty({
+      ...controls, filter: "wrong", counts: { all: 222, recommended: 100, wrong: 0, unanswered: 100 },
+    });
     expect(html).toContain('data-nav="jump"');
   });
 
@@ -448,6 +454,13 @@ describe("renderTopicStats（帶學習診斷）", () => {
       meaning: "選到了旁邊那個很像的概念。", advice: "回該節點的「容易混淆」一節。", count: 3,
     }],
     unclassifiedWrong: 2,
+    calibration: {
+      rows: [
+        { key: "sure" as const, label: "標記「有把握」", answered: 10, correct: 9 },
+        { key: "unsure" as const, label: "標記「不確定」", answered: 6, correct: 2 },
+      ],
+      unmarked: 4,
+    },
   };
   const html = renderTopicStats("機器學習技術與應用", rows, "回刷題", diagnostics);
 
@@ -468,6 +481,34 @@ describe("renderTopicStats（帶學習診斷）", () => {
     expect(html).toContain("概念邊界不清");
     expect(html).toContain("3 題");
     expect(html).toContain("下一步：");
+  });
+  it("校準表列出兩種標記的答對率與判讀", () => {
+    expect(html).toContain("信心校準");
+    expect(html).toContain("標記「有把握」");
+    expect(html).toContain("9／10");
+    // 有把握 90% vs 不確定 33%，落差夠大 → 判讀為相符
+    expect(html).toContain("信心與實力相符");
+    expect(html).toContain("另有 4 題已作答但未標記信心");
+  });
+  it("兩者答對率接近時，判讀改為「分不出自己會不會」", () => {
+    const flat = renderTopicStats("科目", rows, "回刷題", {
+      ...diagnostics,
+      calibration: {
+        rows: [
+          { key: "sure" as const, label: "標記「有把握」", answered: 10, correct: 6 },
+          { key: "unsure" as const, label: "標記「不確定」", answered: 10, correct: 5 },
+        ],
+        unmarked: 0,
+      },
+    });
+    expect(flat).toContain("分不太出自己會不會");
+  });
+  it("完全沒有標記時說明怎麼開啟，而不是給一張空表", () => {
+    const none = renderTopicStats("科目", rows, "回刷題", {
+      ...diagnostics, calibration: { rows: [], unmarked: 8 },
+    });
+    expect(none).toContain("校準模式");
+    expect(none).not.toContain("<th>作答前的標記</th>");
   });
   it("無法分類的錯題數誠實列出", () => {
     expect(html).toContain("另有 2 題錯題沒有干擾類型標註");
@@ -785,5 +826,68 @@ describe("getTopicCounts", () => {
     const iot = getTopicCounts("aiot-junior-iot");
     expect(Object.keys(iot)).toHaveLength(6);
     expect(iot["B2.3 智慧製造流程優化與成本控制"]).toBe(10);
+  });
+});
+
+describe("推薦篩選與校準模式的介面", () => {
+  const controls = {
+    filter: "all" as const,
+    counts: { all: 222, recommended: 103, wrong: 3, unanswered: 100 },
+    total: 222,
+  };
+
+  it("篩選列多出「推薦」且帶題數", () => {
+    const html = renderQuestion(examQs[0], 0, 222, undefined, false, "", false, controls);
+    expect(html).toContain('data-filter="recommended"');
+    expect(html).toContain("推薦");
+    expect(html).toContain("103");
+  });
+
+  it("未帶 confidence 時完全不出現校準模式的按鈕（不佔版面）", () => {
+    const html = renderQuestion(examQs[0], 0, 222, undefined, false, "", false, controls);
+    expect(html).not.toContain('data-nav="toggle-confidence"');
+    expect(html).not.toContain("先下注");
+  });
+
+  it("校準模式關閉時只有開關，沒有下注列", () => {
+    const html = renderQuestion(examQs[0], 0, 222, undefined, false, "", false, {
+      ...controls, confidence: { mode: false },
+    });
+    expect(html).toContain('data-nav="toggle-confidence"');
+    expect(html).toContain('aria-pressed="false"');
+    expect(html).not.toContain("先下注");
+  });
+
+  it("校準模式開啟且未揭曉時，下注列出現在選項之前", () => {
+    const html = renderQuestion(examQs[0], 0, 222, undefined, false, "", false, {
+      ...controls, confidence: { mode: true, pending: "sure" },
+    });
+    expect(html).toContain('data-confidence="sure"');
+    expect(html).toContain('data-confidence="unsure"');
+    expect(html.indexOf("confidence-picker")).toBeLessThan(html.indexOf('class="choices"'));
+    expect(html).toContain('class="confidence-btn active"');
+  });
+
+  it("已揭曉就不再顯示下注列——事後標記沒有校準意義", () => {
+    const html = renderQuestion(examQs[0], 0, 222, "A", true, "", false, {
+      ...controls, confidence: { mode: true },
+    });
+    expect(html).not.toContain("先下注");
+  });
+
+  it("揭曉後依當時的標記給校準回饋，答錯且標記有把握時特別點名", () => {
+    const wrong = examQs[0].choices.find((c) => c.id !== examQs[0].answer)!.id;
+    const html = renderQuestion(examQs[0], 0, 222, wrong, true, "", false, {
+      ...controls, confidence: { mode: true, recorded: "sure" },
+    });
+    expect(html).toContain("is-overconfident");
+    expect(html).toContain("你不知道自己不知道");
+  });
+
+  it("沒有標記過的題目，揭曉後不顯示校準回饋", () => {
+    const html = renderQuestion(examQs[0], 0, 222, "A", true, "", false, {
+      ...controls, confidence: { mode: true },
+    });
+    expect(html).not.toContain("calibration-note");
   });
 });

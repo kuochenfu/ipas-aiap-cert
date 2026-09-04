@@ -25,13 +25,35 @@
   一律以該次作答為準（答對就不算錯題，這是使用者把錯題消掉的途徑）；尚未作答的才看錯題本。
 - **清除**：「重置進度」會連同本科目（以 `subjectId-` 前綴比對）的錯題本一併清空。
 - 改動刷題篩選或考試結算時，**兩個來源都要顧到**；純函式 `drillMatches`／`filteredDrillIndices`／
-  `drillFilterTarget` 都接受選用的 `missed` 集合，未傳時行為與併入前相同。
+  `drillFilterTarget` 第四個參數是選用的 `DrillContext`（`{ missed?, records?, now? }`），
+  未傳時行為與併入前相同。
+
+### 刷題的第四種篩選：推薦
+- `DrillFilter` 為 `"all" | "recommended" | "wrong" | "unanswered"`。
+- **「推薦」與其他三種不同：它同時決定順序**。`filteredDrillIndices` 對它回傳的是
+  依 `domain/adaptive.ts` 排序後的索引，而非題庫原序——`moveDrill` 的上一題／下一題
+  是在這個陣列上移動的，因此排序即導覽順序。
+- 排序規則：**狀態壓過弱點**（答錯 → 未作答 → 到期重測），弱點只在同一種狀態內排序。
+  這是刻意的：否則使用者會看到「明明有錯題沒複習，卻先跳到沒做過的題目」。
+- **沒有隨機性**：同樣的作答狀態永遠給出同樣的順序，否則每次進來題序都不同，會被誤讀成進度掉了。
+- 間隔重測需要 `records` 的時間戳；沒有歷程（舊資料）時安全退化為「未作答 ＋ 答錯」。
 
 ### 刷題進度
 - 存於 **localStorage**，key 固定為 `ipas-aiap-drill-progress`（`src/state/drillProgress.ts`）。
-- 依科目 id 分別儲存，內容為目前的 `questionId` 與作答 map（`Record<題目id, 選項字母>`）。
+- 依科目 id 分別儲存，內容為目前的 `questionId`、作答 map（`Record<題目id, 選項字母>`），
+  以及 **`records`（作答歷程）**——每題的 `{ choice, firstAt, lastAt, attempts, wrongCount, confidence? }`。
+- **`records` 是後加的欄位，必須維持雙向相容**：舊資料沒有它，讀回來是空物件、行為與從前完全相同；
+  逐欄驗證，一筆壞掉只丟那一筆，不讓整科進度消失（`tests/drillProgress.test.ts` 守住）。
 - 不可更換 key 名稱，否則現有使用者的刷題進度將遺失。
-- 僅**刷題練習**會持久化進度；**模擬考試**不會。
+- 僅**刷題練習**會持久化進度；**模擬考試**不會（歷程同理，模擬考不記）。
+
+### 校準模式（信心標記）
+- 開關存於 **localStorage**，key 為 `ipas-aiap-confidence-mode`，值為 `"on"` / `"off"`，**預設關閉**。
+- 這是**站台層級**的設定，不隨科目重設——它是使用者的作答習慣。
+- 信心一律在**作答前**標記、且只對當前這一題有效：**換題即作廢**，已揭曉則不再接受標記
+  （事後才說「我有把握」沒有校準意義）。
+- 信心與正確率的比較集中在 `domain/diagnostics.ts` 的 `calibrationStats`；
+  這是提案文件裡唯一**不需要後端**就能量到的維度，因為它比較的是同一個人自己的兩個數字。
 
 ### 私有資料
 - `docs/raw/` 存放原始 PDF，**絕對不可提交或公開**（已列入 `.gitignore`）。

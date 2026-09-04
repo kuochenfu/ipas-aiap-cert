@@ -1,4 +1,5 @@
 import type { DistractorType, Question, QuestionArchetype, QuestionMeta } from "../data/types";
+import type { AnswerRecords, Confidence } from "./drill";
 import type { AnswerState } from "./exam";
 import { isCorrect } from "./exam";
 
@@ -181,15 +182,68 @@ export const errorTypeStats = (questions: Question[], answers: AnswerState): Err
     .sort((a, b) => b.count - a.count || a.type.localeCompare(b.type));
 };
 
+export type CalibrationRow = {
+  key: Confidence;
+  label: string;
+  answered: number;
+  correct: number;
+};
+
+export type Calibration = {
+  rows: CalibrationRow[];
+  /** 已作答但沒標記信心的題數（校準模式關閉時，這會等於全部）。 */
+  unmarked: number;
+};
+
+const confidenceLabels: Record<Confidence, string> = {
+  sure: "標記「有把握」",
+  unsure: "標記「不確定」",
+};
+
+/**
+ * 校準：信心與正確率是否相符。
+ *
+ * 這是提案文件裡唯一**不需要後端**就能量到的維度——它比較的是同一個人自己的
+ * 兩個數字，不需要跨使用者的分布。判讀方式：「有把握」的答對率應該明顯高於
+ * 「不確定」；若兩者接近，代表使用者其實分不出自己會不會，這正是 Calibration Error。
+ */
+export const calibrationStats = (
+  questions: Question[],
+  answers: AnswerState,
+  records: AnswerRecords | undefined,
+): Calibration => {
+  const tally = new Map<Confidence, { answered: number; correct: number }>();
+  let unmarked = 0;
+  for (const question of questions) {
+    const answer = answers[question.id];
+    if (answer === undefined) continue;
+    const confidence = records?.[question.id]?.confidence;
+    if (!confidence) { unmarked += 1; continue; }
+    const row = tally.get(confidence) ?? { answered: 0, correct: 0 };
+    row.answered += 1;
+    if (isCorrect(question, answer)) row.correct += 1;
+    tally.set(confidence, row);
+  }
+  const rows = (Object.keys(confidenceLabels) as Confidence[])
+    .filter((key) => tally.has(key))
+    .map((key) => ({ key, label: confidenceLabels[key], ...tally.get(key)! }));
+  return { rows, unmarked };
+};
+
 export type Diagnostics = {
   levels: MetaStatRow[];
   archetypes: MetaStatRow[];
   errors: ErrorRow[];
   /** 已作答但沒有干擾類型可分析的錯題數，供「分析涵蓋多少錯題」誠實呈現。 */
   unclassifiedWrong: number;
+  calibration: Calibration;
 };
 
-export const buildDiagnostics = (questions: Question[], answers: AnswerState): Diagnostics => {
+export const buildDiagnostics = (
+  questions: Question[],
+  answers: AnswerState,
+  records?: AnswerRecords,
+): Diagnostics => {
   const errors = errorTypeStats(questions, answers);
   const classified = errors.reduce((n, row) => n + row.count, 0);
   const wrong = questions.filter((question) => {
@@ -201,5 +255,6 @@ export const buildDiagnostics = (questions: Question[], answers: AnswerState): D
     archetypes: archetypeStats(questions, answers),
     errors,
     unclassifiedWrong: wrong - classified,
+    calibration: calibrationStats(questions, answers, records),
   };
 };

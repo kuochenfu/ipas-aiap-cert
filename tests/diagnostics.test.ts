@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
-  archetypeStats, buildDiagnostics, cognitiveLevelStats, errorLibrary, errorTypeStats,
-  hasQuestionMeta,
+  archetypeStats, buildDiagnostics, calibrationStats, cognitiveLevelStats, errorLibrary,
+  errorTypeStats, hasQuestionMeta,
 } from "../src/domain/diagnostics";
 import { getPracticeQuestions } from "../src/data/practice";
 import { getQuestions } from "../src/data/index";
@@ -142,5 +142,41 @@ describe("與真實題庫的相容性", () => {
   it("原題庫尚未回填 meta，診斷入口因此不對它顯示", () => {
     // 這條是刻意的現況記錄：原題庫補上 meta 後應改為 true，屆時本測試會提醒更新。
     expect(hasQuestionMeta(getQuestions("junior-ai-basics"))).toBe(false);
+  });
+});
+
+describe("calibrationStats", () => {
+  const NOW = 1_800_000_000_000;
+  const rec = (choice: ChoiceId, confidence?: "sure" | "unsure") =>
+    ({ choice, firstAt: NOW, lastAt: NOW, attempts: 1, wrongCount: 0, confidence });
+  const bank = [q("1", "D", meta()), q("2", "D", meta()), q("3", "D", meta()), q("4", "D", meta())];
+
+  it("依標記分組計算答對率", () => {
+    const answers: Record<string, ChoiceId> = { "1": "D", "2": "A", "3": "D", "4": "A" };
+    const records = {
+      "1": rec("D", "sure"), "2": rec("A", "sure"),
+      "3": rec("D", "unsure"), "4": rec("A", "unsure"),
+    };
+    const out = calibrationStats(bank, answers, records);
+    expect(out.rows).toEqual([
+      { key: "sure", label: "標記「有把握」", answered: 2, correct: 1 },
+      { key: "unsure", label: "標記「不確定」", answered: 2, correct: 1 },
+    ]);
+    expect(out.unmarked).toBe(0);
+  });
+
+  it("已作答但未標記的題目計入 unmarked，不混進任一組", () => {
+    const out = calibrationStats(bank, { "1": "D", "2": "A" }, { "1": rec("D", "sure") });
+    expect(out.unmarked).toBe(1);
+    expect(out.rows).toHaveLength(1);
+  });
+
+  it("未作答的題目兩邊都不計", () => {
+    expect(calibrationStats(bank, {}, {})).toEqual({ rows: [], unmarked: 0 });
+  });
+
+  it("沒有歷程時全數視為未標記（校準模式關閉的情形）", () => {
+    const out = calibrationStats(bank, { "1": "D", "2": "A" }, undefined);
+    expect(out).toEqual({ rows: [], unmarked: 2 });
   });
 });

@@ -53,11 +53,14 @@ npm run parse:papers # 從 docs/markdown/*.md 重新解析真題 → src/data/pa
 
 ## 容易踩到的點（gotchas）
 
-- **事件委派的選擇器清單**：`main.ts` 用單一 `closest("[data-cert],[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-nav],[data-study-jump],[data-study-action],[data-topic-drill],[data-study-read],…")` 攔截點擊。**新增任何可點擊的 `data-*` 屬性時，必須把它加進這個清單**，否則點擊不會被處理（曾因漏 `data-paper` 導致選卷無反應）。反過來說，**不想被點的元素就不要掛這些屬性**——題數為 0 的科目卡（AIoT 考科二）刻意不掛 `data-subject`，因此不需要另外攔截。
+- **事件委派的選擇器清單**：`main.ts` 用單一 `closest("[data-cert],[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-confidence],[data-nav],[data-study-jump],[data-study-action],[data-topic-drill],[data-study-read],…")` 攔截點擊。**新增任何可點擊的 `data-*` 屬性時，必須把它加進這個清單**，否則點擊不會被處理（曾因漏 `data-paper` 導致選卷無反應）。現在 `tests/eventDelegation.test.ts` 會把 `render.ts` 輸出的 data-* 與這串清單對起來，漏掛會被擋下；真的不需要被點的屬性要加進該檔的 `NON_CLICKABLE` 並寫明理由。反過來說，**不想被點的元素就不要掛這些屬性**——題數為 0 的科目卡（AIoT 考科二）刻意不掛 `data-subject`，因此不需要另外攔截。
 - **單頁考試的就地更新**：exam 模式選項點擊是直接改 DOM class 與「已作答」計數、**不呼叫 `render()`**；drill 模式則每次互動重繪整題。改任一邊時注意兩者路徑不同。
 - **`reveal` 揭曉邏輯**：drill 作答後揭曉、檢討一律揭曉、考試作答中不揭曉——集中在 `revealForCurrent()` 與 render 分流，改導覽時別讓檢討翻頁丟失揭曉。
 - **錯題本 localStorage key 為 `ipas-aiap-misses`**，勿更名（會遺失現有使用者紀錄）。它只在**模擬考交卷**時寫入（`finishExam`），讀取端是**刷題的「錯題」篩選器**：`drillMatches` 的 `wrong` 會把「本次刷題答錯」與「在錯題本裡且本次刷題尚未作答」兩者聯集起來，刷題答對即從篩選中消失，「重置進度」則連同本科目的錯題本一併清除。改刷題篩選或考試結算時，兩個來源都要顧到。
-- **刷題進度 localStorage key 為 `ipas-aiap-drill-progress`**，勿更名（會遺失現有使用者紀錄）。進度記錄的是 `questionId` 而非索引，這是刻意設計——題庫會隨時間成長，用索引會在新增題目後悄悄指向錯的題目。
+- **刷題進度 localStorage key 為 `ipas-aiap-drill-progress`**，勿更名（會遺失現有使用者紀錄）。進度記錄的是 `questionId` 而非索引，這是刻意設計——題庫會隨時間成長，用索引會在新增題目後悄悄指向錯的題目。2026-09-04 起同一筆進度多帶 **`records`（作答歷程：時間戳、作答次數、答錯次數、信心）**，這是「推薦」排序、間隔重測與信心校準的資料來源。**它是後加欄位，雙向相容是不變式**：舊資料沒有它就是空物件，行為與從前完全相同。
+- **刷題有第四種篩選「推薦」，它同時決定順序**：`filteredDrillIndices` 對 `"recommended"` 回傳的是 `domain/adaptive.ts` 排序後的索引（答錯 → 未作答 → 到期重測，弱點只在同一狀態內排序），而不是題庫原序——`moveDrill` 就是在這個陣列上走，所以排序即導覽順序。排序**沒有隨機性**，同樣的作答狀態永遠給同樣的結果。
+- **校準模式（作答前標記「有把握／不確定」）預設關閉**，開關存在 `ipas-aiap-confidence-mode`。信心只對當前這一題有效：**換題即作廢、已揭曉不再接受標記**（事後才說有把握沒有校準意義）。它是兩份提案裡唯一不需要後端就能量到的維度。
+- **學習診斷頁（`data-nav="topics"`）依題庫有沒有 `meta` 決定長相**：原題庫 1,057 題尚未回填 meta，只顯示節點表格、標題維持「節點表現」；新題庫 915 題全部有 meta，多出認知層級／題型／錯誤類型／信心校準四張表、標題改為「學習診斷」。閘門是 `hasQuestionMeta()`（過半數帶 meta）。**原題庫補上 meta 後，`tests/diagnostics.test.ts` 最後一條會失敗**——那是刻意留的提醒，不是壞掉。
 - **原卷圖片一律轉錄為文字，不放圖檔**：考卷裡的「圖」幾乎都是程式碼／console 輸出／資料表的截圖，pdftotext 擷取不到。轉錄寫在 `explanations/*.ts` 的 `figures`（題幹附圖）與 `choiceFigures`（選項本身是圖），型別見 `QuestionFigure`。**不要改放圖片檔**——原卷每頁都疊了 iPAS 浮水印、截圖在手機上不可讀，且轉錄可搜尋可複製。**也不要寫進 `past-exams/*.json`**，那是機器產物，重跑 `parse:papers` 會全部消失（`tests/figures.test.ts` 會擋）。真正的圖表（訓練曲線、ROC）用 `kind: "chart"` 以文字描述代替。
 - **學習主題頁的工具（節點目錄、搜尋、展開收合、已讀、直達刷題）兩張證照都有**，且各證照一份：`main.ts` 的處理函式一律用 `certSectionOf(element)` 從被點的控制項往上找 `[data-cert-section]`，**不要改回用選擇器直接抓某一張證照的區塊**，否則在另一張證照上操作會改到別人的區塊。
 - **筆記條目有三種呈現型別**：`StudyNoteItem` 除了 `text` 外可帶 `table`（比較表）、`formula`（公式）、`flow`（流程），`text` 在帶 table／flow 時**是標題而非內容**。既有五科全部只用純文字，型別皆為選用，因此不受影響。表格必須留在 `.note-table-wrap` 內（`overflow-x: auto`）——寬表在手機上要自己捲，頁面本身不得橫向捲動。

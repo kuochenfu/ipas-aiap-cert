@@ -251,6 +251,30 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; border-ra
 .diag-error-count { margin-left: auto; font-variant-numeric: tabular-nums; }
 .diag-error-meaning { margin: 8px 0 0; line-height: 1.8; }
 .diag-error-advice { margin: 6px 0 0; color: var(--accent); line-height: 1.8; font-weight: 700; }
+.diag-verdict { line-height: 1.8; font-weight: 700; }
+
+/* 校準模式：作答前的信心標記。放在選項之上，先下注再作答。 */
+.drill-confidence {
+  background: var(--panel); color: var(--muted);
+  border: 1px solid var(--border); padding: 6px 12px; font-weight: 700;
+}
+.drill-confidence:hover { border-color: var(--accent); }
+.drill-confidence.active { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+.confidence-picker {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 12px;
+}
+.confidence-hint { color: var(--muted); font-size: 0.9rem; font-weight: 700; }
+.confidence-btn {
+  background: var(--panel); color: var(--text);
+  border: 1px solid var(--border); border-radius: 999px; padding: 5px 14px; font-weight: 700;
+}
+.confidence-btn:hover { border-color: var(--accent); }
+.confidence-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.calibration-note {
+  margin: 10px 0 0; padding: 10px 12px; line-height: 1.8;
+  background: var(--panel-alt); border-radius: 8px; color: var(--muted);
+}
+.calibration-note.is-overconfident { color: var(--wrong); font-weight: 700; }
 .study-entry {
   width: 100%; background: var(--panel); color: var(--accent);
   border: 1px solid var(--border); padding: 14px 16px; margin-top: 14px; font-size: 1rem; font-weight: 700;

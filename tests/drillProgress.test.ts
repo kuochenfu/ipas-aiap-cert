@@ -9,7 +9,8 @@ beforeEach(() => localStorage.clear());
 describe("刷題進度儲存", () => {
   it("存取往返", () => {
     saveDrillProgress("junior-ai-basics", { questionId: "q3", answers: { q1: "B" } });
-    expect(loadDrillProgress("junior-ai-basics")).toEqual({ questionId: "q3", answers: { q1: "B" } });
+    expect(loadDrillProgress("junior-ai-basics"))
+      .toEqual({ questionId: "q3", answers: { q1: "B" }, records: {} });
   });
   it("各科目彼此獨立", () => {
     saveDrillProgress("junior-ai-basics", { questionId: "a1", answers: {} });
@@ -52,6 +53,53 @@ describe("刷題進度容錯", () => {
     localStorage.setItem(KEY, JSON.stringify({
       "junior-ai-basics": { questionId: "q1", answers: { q1: "A", q2: "Z", q3: 5 } },
     }));
-    expect(loadDrillProgress("junior-ai-basics")).toEqual({ questionId: "q1", answers: { q1: "A" } });
+    expect(loadDrillProgress("junior-ai-basics"))
+      .toEqual({ questionId: "q1", answers: { q1: "A" }, records: {} });
+  });
+});
+
+describe("作答歷程的持久化", () => {
+  const NOW = 1_800_000_000_000;
+  const record = { choice: "A" as const, firstAt: NOW, lastAt: NOW, attempts: 2, wrongCount: 1 };
+
+  it("歷程隨進度一起存取", () => {
+    saveDrillProgress("junior-ai-basics", {
+      questionId: "q1", answers: { q1: "A" }, records: { q1: { ...record, confidence: "sure" } },
+    });
+    expect(loadDrillProgress("junior-ai-basics")?.records).toEqual({
+      q1: { ...record, confidence: "sure" },
+    });
+  });
+
+  it("舊格式（沒有 records）讀回來是空物件，作答與位置不受影響", () => {
+    localStorage.setItem(KEY, JSON.stringify({
+      "junior-ai-basics": { questionId: "q9", answers: { q9: "C" } },
+    }));
+    expect(loadDrillProgress("junior-ai-basics"))
+      .toEqual({ questionId: "q9", answers: { q9: "C" }, records: {} });
+  });
+
+  it("壞掉的單筆歷程被丟棄，其餘保留——不讓一筆壞資料清空整科進度", () => {
+    localStorage.setItem(KEY, JSON.stringify({
+      "junior-ai-basics": {
+        questionId: "q1",
+        answers: { q1: "A" },
+        records: {
+          good: record,
+          badChoice: { ...record, choice: "Z" },
+          badTime: { ...record, lastAt: "昨天" },
+          badConfidence: { ...record, confidence: "maybe" },
+          notObject: 5,
+        },
+      },
+    }));
+    expect(Object.keys(loadDrillProgress("junior-ai-basics")!.records!)).toEqual(["good"]);
+  });
+
+  it("records 不是物件時整包忽略", () => {
+    localStorage.setItem(KEY, JSON.stringify({
+      "junior-ai-basics": { questionId: "q1", answers: {}, records: ["x"] },
+    }));
+    expect(loadDrillProgress("junior-ai-basics")?.records).toEqual({});
   });
 });

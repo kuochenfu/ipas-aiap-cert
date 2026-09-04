@@ -12,11 +12,13 @@ import { scoreExam, topicStats, topicSummary, type AnswerState } from "./domain/
 import { buildDiagnostics, hasQuestionMeta } from "./domain/diagnostics";
 import { buildAttempt } from "./state/attempt";
 import { buildMockPaper, PAPER_COUNT } from "./state/mockPapers";
-import { addMiss, loadMisses, loadReadNodes, removeMiss, toggleReadNode } from "./state/storage";
+import {
+  addMiss, loadConfidenceMode, loadMisses, loadReadNodes, removeMiss, saveConfidenceMode, toggleReadNode,
+} from "./state/storage";
 import {
   restoreDrill, parseJumpTarget, drillMatches, filteredDrillIndices, drillFilterTarget,
-  practiceProgressKey,
-  type DrillFilter,
+  practiceProgressKey, recordAnswer,
+  type AnswerRecords, type Confidence, type DrillContext, type DrillFilter,
 } from "./domain/drill";
 import { loadDrillProgress, saveDrillProgress, clearDrillProgress } from "./state/drillProgress";
 import type { ChoiceId, Question } from "./data/types";
@@ -42,6 +44,12 @@ type Session = {
   paperIndex: number;       // exam：第幾份試卷（0-based）
   questions: Question[];
   answers: AnswerState;
+  /** 逐題作答歷程（時間、次數、信心）。只有刷題會累積。 */
+  records: AnswerRecords;
+  /** 校準模式：作答前先標記信心。使用者可關，關掉時完全不出現。 */
+  confidenceMode: boolean;
+  /** 本題已標記、但還沒作答的信心；作答後即消耗掉。 */
+  pendingConfidence?: Confidence;
   index: number;
   reveal: boolean;          // drill：作答即揭曉；exam：交卷後 review 才揭曉
   deadline: number | null;  // exam 計時用 timestamp（ms）
@@ -73,7 +81,9 @@ function blankSession(): Session {
   return {
     view: "home", cert: "aiap", level: "junior", subjectId: "", mode: "exam", bank: "main",
     topicScope: undefined, paperIndex: 0,
-    questions: [], answers: {}, index: 0, reveal: false, deadline: null, drillFilter: "all",
+    questions: [], answers: {}, records: {}, confidenceMode: loadConfidenceMode(),
+    pendingConfidence: undefined,
+    index: 0, reveal: false, deadline: null, drillFilter: "all",
   };
 }
 
@@ -102,8 +112,9 @@ function drillCounts(): DrillCounts {
     counts.all += 1;
     if (sessionDrillMatches(question, "unanswered")) counts.unanswered += 1;
     if (sessionDrillMatches(question, "wrong")) counts.wrong += 1;
+    if (sessionDrillMatches(question, "recommended")) counts.recommended += 1;
     return counts;
-  }, { all: 0, wrong: 0, unanswered: 0 });
+  }, { all: 0, recommended: 0, wrong: 0, unanswered: 0 });
 }
 
 // 新題庫的進度與原刷題分開存：同一個 localStorage key 底下，科目 key 加上 :practice 後綴。
@@ -124,16 +135,21 @@ function persistDrill() {
   for (const [id, choice] of Object.entries(session.answers)) {
     if (choice !== undefined) answers[id] = choice;
   }
-  saveDrillProgress(drillProgressKey(), { questionId: current.id, answers });
+  saveDrillProgress(drillProgressKey(), { questionId: current.id, answers, records: session.records });
 }
 
 // 以下三個為 src/domain/drill.ts 純函式的 session 綁定版本，方便呼叫端省去傳參。
+// 「推薦」篩選需要作答歷程與現在時間，一併收在這個 context 裡。
+function drillContext(): DrillContext {
+  return { missed: sessionMisses, records: session.records };
+}
+
 function sessionDrillMatches(question: Question, filter = session.drillFilter): boolean {
-  return drillMatches(question, session.answers, filter, sessionMisses);
+  return drillMatches(question, session.answers, filter, drillContext());
 }
 
 function sessionFilteredIndices(filter = session.drillFilter): number[] {
-  return filteredDrillIndices(session.questions, session.answers, filter, sessionMisses);
+  return filteredDrillIndices(session.questions, session.answers, filter, drillContext());
 }
 
 function moveDrill(delta: -1 | 1) {
@@ -150,6 +166,8 @@ function moveDrill(delta: -1 | 1) {
     session.index = next;
   }
   session.reveal = revealForCurrent();
+  // 信心是「對這一題」下的注，換題就作廢。
+  session.pendingConfidence = undefined;
   persistDrill();
   render();
 }
@@ -541,23 +559,28 @@ function renderView() {
       app.innerHTML = renderExamPaper(session.questions, session.answers, timeText(), answeredCount());
     } else {
       const filtered = sessionFilteredIndices();
+      const current = session.questions[session.index];
       const controls = {
         filter: session.drillFilter, counts: drillCounts(),
         total: session.questions.length, hasTopics: bankHasTopics(),
         hasMeta: hasQuestionMeta(session.questions),
+        confidence: {
+          mode: session.confidenceMode,
+          pending: session.pendingConfidence,
+          recorded: current ? session.records[current.id]?.confidence : undefined,
+        },
       };
       if (!filtered.length && !session.reveal) {
         app.innerHTML = renderDrillEmpty(controls);
         return;
       }
-      const q = session.questions[session.index];
-      if (!q) {
+      if (!current) {
         app.innerHTML = renderDrillEmpty(controls);
         return;
       }
       app.innerHTML = renderQuestion(
-        q, session.index, session.questions.length,
-        session.answers[q.id], session.reveal, "", false, controls,
+        current, session.index, session.questions.length,
+        session.answers[current.id], session.reveal, "", false, controls,
       );
     }
     return;
@@ -570,7 +593,7 @@ function renderView() {
       "回刷題",
       // 診斷三表需要命題後設資料；原題庫（尚未回填 meta）只呈現節點表格。
       hasQuestionMeta(session.questions)
-        ? buildDiagnostics(session.questions, session.answers)
+        ? buildDiagnostics(session.questions, session.answers, session.records)
         : undefined,
     );
     return;
@@ -604,6 +627,8 @@ function beginDrill(bank: Question[]) {
   session.questions = buildAttempt(bank, { count: bank.length, shuffle: (a) => [...a] }).questions;
   const restored = restoreDrill(session.questions, loadDrillProgress(drillProgressKey()));
   session.answers = restored.answers;
+  session.records = restored.records;
+  session.pendingConfidence = undefined;
   session.index = restored.index;
   session.deadline = null;
   session.drillFilter = "all";
@@ -673,16 +698,35 @@ function selectChoice(choiceId: ChoiceId) {
   if (!q) return;
   session.answers[q.id] = choiceId;
   if (session.mode === "drill") {
+    // 歷程只在刷題累積：模擬考本來就不存進度，記了也沒有地方讀。
+    session.records[q.id] = recordAnswer(
+      session.records[q.id], choiceId, choiceId === q.answer, Date.now(), session.pendingConfidence,
+    );
+    session.pendingConfidence = undefined;
     session.reveal = true;
     persistDrill();
   }
   render();
 }
 
+function setPendingConfidence(value: Confidence) {
+  // 已揭曉就不再收信心——事後才說「我有把握」沒有校準意義。
+  if (session.mode !== "drill" || session.reveal) return;
+  session.pendingConfidence = session.pendingConfidence === value ? undefined : value;
+  render();
+}
+
+function toggleConfidenceMode() {
+  session.confidenceMode = !session.confidenceMode;
+  saveConfidenceMode(session.confidenceMode);
+  if (!session.confidenceMode) session.pendingConfidence = undefined;
+  render();
+}
+
 function changeDrillFilter(filter: DrillFilter) {
   session.drillFilter = filter;
   const target = drillFilterTarget(
-    session.questions, session.answers, session.index, filter, sessionMisses,
+    session.questions, session.answers, session.index, filter, drillContext(),
   );
   session.index = target.index;
   // 沒有題目符合時強制不揭曉，render 才會走空狀態畫面而非顯示題目。
@@ -718,6 +762,8 @@ function resetDrill() {
   }
   sessionMisses = new Set();
   session.answers = {};
+  session.records = {};
+  session.pendingConfidence = undefined;
   session.index = 0;
   session.drillFilter = "all";
   session.reveal = false;
@@ -725,7 +771,7 @@ function resetDrill() {
 }
 
 app.addEventListener("click", (event) => {
-  const target = (event.target as HTMLElement).closest("[data-cert],[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-filter],[data-nav],[data-tts-section],[data-tts-rate],[data-study-jump],[data-study-action],[data-topic-drill],[data-study-read]");
+  const target = (event.target as HTMLElement).closest("[data-cert],[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-confidence],[data-filter],[data-nav],[data-tts-section],[data-tts-rate],[data-study-jump],[data-study-action],[data-topic-drill],[data-study-read]");
   if (!(target instanceof HTMLElement)) return;
 
   if (target.hasAttribute("data-tts-section") && target instanceof HTMLButtonElement) {
@@ -750,6 +796,9 @@ app.addEventListener("click", (event) => {
 
   const readNode = target.getAttribute("data-study-read");
   if (readNode) { toggleStudyRead(readNode, target); return; }
+
+  const confidence = target.getAttribute("data-confidence");
+  if (confidence) { setPendingConfidence(confidence as Confidence); return; }
 
   const cert = target.getAttribute("data-cert");
   if (cert) { session.cert = cert as Cert; session.view = "cert"; render(); return; }
@@ -817,6 +866,7 @@ app.addEventListener("click", (event) => {
   if (nav === "result") { session.view = "result"; render(); return; }
   if (nav === "jump" && session.mode === "drill") { submitDrillJump(); return; }
   if (nav === "drill-reset" && session.mode === "drill") { resetDrill(); return; }
+  if (nav === "toggle-confidence" && session.mode === "drill") { toggleConfidenceMode(); return; }
   if (nav === "topics" && session.mode === "drill") { session.view = "topics"; render(); return; }
   if (nav === "back-play") { session.view = "play"; render(); return; }
   if (nav === "review") { session.view = "review"; session.reveal = true; session.index = 0; render(); return; }

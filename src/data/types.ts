@@ -63,12 +63,24 @@ export type QuestionMeta = {
   cognitiveLevel: "L1" | "L2" | "L3" | "L4";
   /** 題型原型，例「Scenario Selection」「Troubleshooting」。 */
   archetype: QuestionArchetype;
-  /** 本題涉及的概念關鍵字，供弱點分析與相似題推薦。 */
-  concepts: string[];
+  /**
+   * 本題涉及的概念關鍵字，供弱點分析與相似題推薦。
+   *
+   * 選用：新題庫（`practice/`）逐題都有；**原題庫的回填只帶認知層級與題型原型**，
+   * 不含概念與干擾類型（見 `src/data/meta/`）。目前全站的概念字串共 1,890 個、
+   * 其中 73% 只出現一次，尚未收斂成受控詞彙，因此回填時硬湊只會讓標籤雲更大。
+   */
+  concepts?: string[];
   /** 情境題的工程限制條件，例 range／power／latency。 */
   constraints?: string[];
-  /** 每個錯誤選項的干擾類型；正解不列。 */
-  distractorTypes: Partial<Record<ChoiceId, DistractorType>>;
+  /**
+   * 每個錯誤選項的干擾類型；正解不列。
+   *
+   * 選用，理由同 `concepts`：原題庫的回填只到題型層，逐選項的干擾類型是另一份工作。
+   * 缺少時「錯誤類型」診斷會把該題的錯答計入 `unclassifiedWrong` 並如實顯示，
+   * 而不是靜默漏掉。
+   */
+  distractorTypes?: Partial<Record<ChoiceId, DistractorType>>;
   /** 跨節點題目所涉及的另一個節點碼。 */
   crossNode?: string;
   /** 條件改變時答案如何變化——建立工程判斷的關鍵，渲染於詳解之後。 */
@@ -85,7 +97,13 @@ export type QuestionArchetype =
   | "Architecture"
   | "Incorrect Statement"
   | "Multi-Statement"
-  | "Best Engineering Decision";
+  | "Best Engineering Decision"
+  /**
+   * 計算求值。新題庫的規格 v2.0 沒有這一型（它針對的是工程判斷題），
+   * 但真題裡「二分搜尋要比較幾次」「參數量是多少」「OEE 等於多少」這類題確實成群出現，
+   * 硬塞進「直述概念」會讓診斷表把它們讀成記憶題。原題庫回填時新增。
+   */
+  | "Calculation";
 
 export type DistractorType =
   | "Neighbor Concept"

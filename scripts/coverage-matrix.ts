@@ -102,8 +102,11 @@ const doc = `# 題庫覆蓋矩陣
 覆蓋度不是題數：一個節點有 30 題但全是 L1 記憶題，仍然是低品質覆蓋。
 下表把每一科攤成 **節點 × 認知層級 × 題型**，「缺口」欄標出完全沒有 L3／L4 題的節點。
 
-全站共 ${totalAll} 題，其中 ${totalTagged} 題（${pct(totalTagged, totalAll)}）帶命題後設資料。
-未帶 meta 的題目無法進入矩陣——這本身就是最大的覆蓋盲點。
+全站共 ${totalAll} 題，其中 ${totalTagged} 題（${pct(totalTagged, totalAll)}）帶命題後設資料。${
+  totalTagged < totalAll
+    ? "\n未帶 meta 的題目無法進入矩陣——這本身就是最大的覆蓋盲點。"
+    : ""
+}
 
 認知層級：${LEVELS.map((level) => cognitiveLevelLabels[level]).join("、")}。
 

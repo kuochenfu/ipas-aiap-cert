@@ -75,6 +75,20 @@ docs/markdown/*.md  →  npm run parse:papers  →  src/data/past-exams/*.json
 - 三者由 `src/data/<subjectId>.ts` 合併，透過 `src/data/index.ts` 對外提供 `getQuestions`、`getBankStats`。
 - 每題有 `source` 欄位（`"past-exam"` / `"generated"` / `"study-guide"`，第三種為官方學習指引的練習評量，目前只有 AIoT 考科一使用），可用於區分官方題與 LLM 命製的新題——UI 的「AI 命題・待複審」提示即以此判斷。
 
+### 命題後設資料（`meta`）的兩層
+
+- **新題庫（`practice/*`）**：命題時寫的完整 `QuestionMeta`——認知層級、題型原型、概念、限制條件、
+  逐選項干擾類型、跨節點、判斷分界。契約在 `tests/questionBankMeta.test.ts`。
+- **原題庫**：2026-09-04 回填，**只有認知層級與題型原型**，放在獨立的一層
+  `src/data/meta/<subjectId>.ts`（`CompactMeta`，一題一行），由 `applyQuestionMeta` 在合併之後套上。
+  - 獨立成一層是刻意的：真題 JSON 是機器產物、`explanations/*.ts` 與 `generated/*.ts` 是已校對的手寫內容。
+  - `applyQuestionMeta` **不覆寫已有的 meta**。
+  - `QuestionMeta` 的 `concepts` 與 `distractorTypes` 因此為選用；**缺的欄位不得以空值假裝存在**，
+    診斷頁會如實回報「另有 N 題錯題沒有干擾類型標註」。
+  - 守衛：`tests/questionMetaBackfill.test.ts`（每題都有、無孤兒 id、值在集合內、題型不退化成一兩種）。
+- **內容為 LLM 逐題判讀，未經人工複核**，與其他 LLM 產物屬同一批風險。
+- 覆蓋矩陣報表：`npm run report:coverage` → `docs/coverage/coverage-matrix.md`（機器產物，勿手改）。
+
 ### 選項解析（新不變式，2026-08）
 
 - **選項解析一律手寫、不再由詞彙表自動組合。** 舊的 `src/data/glossary.ts`、`src/data/choiceAnalysis.ts` 與 `resolveExplanations.ts` 內的 `buildFallbackExplanation`／`buildChoiceExplanations` 已刪除；**不得重新引入以樣板或名詞定義自動生成解析的機制**。理由與量測見 [`docs/coverage/explanations-overhaul.md`](docs/coverage/explanations-overhaul.md)。
@@ -108,6 +122,7 @@ npm run dev          # 本地開發（http://127.0.0.1:5173/ipas-aiap-cert/）
 npm run build        # tsc + vite build（產生 dist/）
 npm run test         # vitest run（單元測試）
 npm run parse:papers # 重新解析 docs/markdown/*.md → src/data/past-exams/*.json
+npm run report:coverage # 產生 docs/coverage/coverage-matrix.md（節點 × 認知層級 × 題型）
 ```
 
 **修改前後務必執行 `npm run build` 與 `npm run test`，確保型別正確且測試全數通過。**

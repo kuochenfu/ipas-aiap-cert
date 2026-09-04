@@ -56,6 +56,7 @@ export const archetypeLabels: Record<QuestionArchetype, string> = {
   "Incorrect Statement": "何者錯誤",
   "Multi-Statement": "多敘述判斷",
   "Best Engineering Decision": "最佳工程決策",
+  "Calculation": "計算求值",
 };
 
 /**
@@ -173,7 +174,7 @@ export const errorTypeStats = (questions: Question[], answers: AnswerState): Err
   for (const question of questions) {
     const chosen = answers[question.id];
     if (chosen === undefined || isCorrect(question, chosen)) continue;
-    const type = question.meta?.distractorTypes[chosen];
+    const type = question.meta?.distractorTypes?.[chosen];
     if (!type) continue;
     counts.set(type, (counts.get(type) ?? 0) + 1);
   }

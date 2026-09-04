@@ -139,9 +139,21 @@ describe("與真實題庫的相容性", () => {
     }
   });
 
-  it("原題庫尚未回填 meta，診斷入口因此不對它顯示", () => {
-    // 這條是刻意的現況記錄：原題庫補上 meta 後應改為 true，屆時本測試會提醒更新。
-    expect(hasQuestionMeta(getQuestions("junior-ai-basics"))).toBe(false);
+  it("原題庫已回填 meta，診斷入口對它也生效", () => {
+    // 2026-09-04 回填 1,057 題；回填的守衛在 tests/questionMetaBackfill.test.ts。
+    expect(hasQuestionMeta(getQuestions("junior-ai-basics"))).toBe(true);
+  });
+
+  it("原題庫的回填只到題型層，錯誤類型診斷因此如實回報無法分析的錯題", () => {
+    // 回填不含逐選項的干擾類型，這件事必須在畫面上說出來，不能靜默漏掉。
+    const bank = getQuestions("junior-ai-basics").slice(0, 5);
+    const answers: Record<string, ChoiceId> = {};
+    for (const question of bank) {
+      answers[question.id] = question.choices.find((choice) => choice.id !== question.answer)!.id;
+    }
+    const diag = buildDiagnostics(bank, answers);
+    expect(diag.levels.length).toBeGreaterThan(0);
+    expect(diag.unclassifiedWrong).toBe(bank.length);
   });
 });
 

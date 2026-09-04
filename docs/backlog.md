@@ -511,15 +511,23 @@ cognitive operation（`meta.archetype` 十種原型）、difficulty target、
 4. **重複題檢查** `tests/duplicates.test.ts`——首次掃描即找到 `aiot-junior-iot`
    兩批自編題之間的 10 對撞題，詳見 `docs/coverage/bank-defects.md`。
 
-### P1：作答資料的形狀（進行中）
+### P1：作答資料的形狀　✅ 已完成（2026-09-04）
 
-5. **作答歷程**：`drillProgress` 目前只存「最後一次選了什麼」，沒有時間戳、次數與信心，
+5. **作答歷程**——`drillProgress` 原本只存「最後一次選了什麼」，沒有時間戳、次數與信心，
    因此文件一的 Retention、Calibration、Repeated Error、Forgetting risk **四個維度全部量不到**。
    這是整個路線圖真正的地基，不是 Syllabus Graph（那個已經有了）。
-6. **信心標記**：揭曉前的「有把握／不確定」，是唯一不需後端就能拿到的 Calibration 資料。
-7. **自適應選題**：依最弱節點 × 最弱認知層級 × 到期重測排序。
+   新增 `AnswerRecord`（`choice` / `firstAt` / `lastAt` / `attempts` / `wrongCount` / `confidence`），
+   **與既有的 `answers` 並存**：舊資料沒有 `records` 就是空物件，行為完全不變；
+   逐欄驗證，一筆壞掉只丟那一筆。
+6. **信心標記**——刷題可開「校準模式」，作答前標「有把握／不確定」。預設關閉、站台層級設定；
+   換題即作廢、已揭曉不再接受標記。診斷頁比較兩者的實際答對率，落差 < 20 個百分點時
+   直說「你目前分不太出自己會不會」。
+7. **自適應選題**——刷題多出第四種篩選「推薦」，它同時決定順序：
+   **狀態壓過弱點**（答錯 → 未作答 → 到期重測），弱點只在同一狀態內排序。
+   間隔重測 1/3/7/21/60 天。**完全沒有隨機性**——同樣的作答狀態永遠給同樣的順序，
+   否則每次進來題序都不同，會被誤讀成進度掉了。
 
-### P2：內容工程
+### P2：內容工程　✅ 已完成（2026-09-04）
 
 8. **原題庫 1,057 題補 `meta`　✅ 已完成（2026-09-04）**——只補 `cognitiveLevel` ＋ `archetype`，
    逐題判讀後寫進獨立的 `src/data/meta/<subjectId>.ts`。**全站 1,972 題現在 100% 帶 meta**，
@@ -601,3 +609,19 @@ p-value、discrimination、distractor analysis 與 external validation 都需要
 因此本站的「psychometrics」一律限定為**個人化的 item stats**（單一使用者的作答歷程），
 文件與 UI 都不得把它稱作 discrimination。日後若真的要走，解除條件是：
 有穩定的使用者量，且願意承擔後端維運。
+
+### 這一輪之後還剩什麼
+
+P0–P2 已全部完成，P3（後端與真 psychometrics）依 2026-09-04 的決定不做。剩下的是**內容**，
+而且現在有兩份報表指著該做什麼，不必再靠感覺：
+
+1. **補 6 個沒有 L3／L4 題的節點**（`docs/coverage/coverage-matrix.md` 的「缺口」欄）：
+   `L11101 AI 的定義與分類`、`L22402 大數據在鑑別式 AI 中的應用`、
+   AIoT 考科一的 `A2.1`／`A2.2`／`A2.3`／`A3.2`。
+2. **依風險排序做人工複審**（`docs/coverage/review-priority.md`）：全站 142 題達到 7 分，
+   中級三科各 34–38 題最多。這份清單做得完。
+3. **卡方檢定**：受控詞彙有這個考點，題庫卻一題也沒有。
+4. **概念限定刷題**：目前只有節點限定（`session.topicScope`）。診斷頁已經會列出最弱概念，
+   但點下去還不能直接練那些題——要做的話得處理 `drillProgressKey()` 的第三種後綴。
+
+**不要做的**：為了讓分布數字好看而改寫既有真題的 meta。真題的分布是量出來的事實。

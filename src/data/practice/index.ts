@@ -1,6 +1,8 @@
 import type { Question } from "../types";
 import { practiceQuestions as aiotJuniorBasics } from "./aiot-junior-basics";
 import { practiceQuestions as aiotJuniorIot } from "./aiot-junior-iot";
+import { practiceQuestions as aiotJuniorBasics2026 } from "./aiot-junior-basics.2026";
+import { practiceQuestions as aiotJuniorIot2026 } from "./aiot-junior-iot.2026";
 import { practiceQuestions as juniorAiBasics } from "./junior-ai-basics";
 import { practiceQuestions as juniorGenai } from "./junior-genai";
 import { practiceQuestions as seniorAiTech } from "./senior-ai-tech";
@@ -13,8 +15,9 @@ const banks: Record<string, Question[]> = {
   "senior-ai-tech": seniorAiTech,
   "senior-bigdata": seniorBigdata,
   "senior-ml": seniorMl,
-  "aiot-junior-basics": aiotJuniorBasics,
-  "aiot-junior-iot": aiotJuniorIot,
+  // AIoT 兩科各有兩批：第一批 q001–q100（2026-08-22）與第二批（2026-09-19），合併後依 id 順序即為題庫原序。
+  "aiot-junior-basics": [...aiotJuniorBasics, ...aiotJuniorBasics2026],
+  "aiot-junior-iot": [...aiotJuniorIot, ...aiotJuniorIot2026],
 };
 
 /** banks registry 涵蓋的科目清單，供測試等處推導，避免各處各自硬編一份、日後加科目卻漏改。 */

@@ -17,9 +17,10 @@ describe("評鑑內容主題目錄", () => {
     }
   });
 
-  it("AIoT 兩科維持各 100 題", () => {
-    expect(practiceTotal("aiot-junior-basics")).toBe(100);
-    expect(practiceTotal("aiot-junior-iot")).toBe(100);
+  // 2026-09-19 起 AIoT 兩科各加第二批（每節點 +10 題）：考科一 9 節點 → 190，考科二 6 節點 → 160。
+  it("AIoT 兩科的配額為第一批 100 題加每節點 10 題的第二批", () => {
+    expect(practiceTotal("aiot-junior-basics")).toBe(190);
+    expect(practiceTotal("aiot-junior-iot")).toBe(160);
   });
 
   it("junior-ai-basics 有 9 個評鑑內容節點", () => {

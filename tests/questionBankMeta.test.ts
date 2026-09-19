@@ -120,8 +120,9 @@ describe("AIoT 新題庫：規格契約", () => {
   for (const subjectId of subjectIds) {
     const questions = bank(subjectId);
 
-    it(`${subjectId}：共 100 題，且各評鑑內容節點題數與配額完全相符`, () => {
-      expect(questions).toHaveLength(100);
+    it(`${subjectId}：題數等於配額總和，且各評鑑內容節點題數與配額完全相符`, () => {
+      // 2026-09-19 起兩科各有兩批（100 ＋ 每節點 10 題），總數以 assessmentTopics.ts 的配額為準。
+      expect(questions).toHaveLength(practiceTotal(subjectId));
       const counts: Record<string, number> = {};
       for (const q of questions) counts[q.topic] = (counts[q.topic] ?? 0) + 1;
       for (const topic of practiceTopics[subjectId]) {
@@ -202,12 +203,14 @@ describe("AIoT 新題庫：規格契約", () => {
       }
     });
 
-    it(`${subjectId}：正解字母分布均衡（每個字母 20–30 題）`, () => {
+    // 原本寫死 20–30 題，是 100 題時的 20–30%；題庫成長後改以比例表示，區間不變。
+    it(`${subjectId}：正解字母分布均衡（每個字母佔 20–30%）`, () => {
       const counts: Record<string, number> = { A: 0, B: 0, C: 0, D: 0 };
       for (const q of questions) counts[q.answer] += 1;
       for (const [letter, count] of Object.entries(counts)) {
-        expect(count, `${letter} 有 ${count} 題`).toBeGreaterThanOrEqual(20);
-        expect(count, `${letter} 有 ${count} 題`).toBeLessThanOrEqual(30);
+        const pct = (count / questions.length) * 100;
+        expect(pct, `${letter} 有 ${count} 題（${pct.toFixed(1)}%）`).toBeGreaterThanOrEqual(20);
+        expect(pct, `${letter} 有 ${count} 題（${pct.toFixed(1)}%）`).toBeLessThanOrEqual(30);
       }
     });
   }

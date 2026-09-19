@@ -47,9 +47,9 @@ describe("junior-genai 內容完整性", () => {
   const past = questions.filter((q) => q.source === "past-exam");
   const generated = questions.filter((q) => q.source === "generated");
 
-  it("179 題真題；已補詳解的舊梯次與學習指引皆非空", () => {
-    expect(past.length).toBe(179);
-    const legacy = past.filter((q) => !q.id.includes("-115-2-") && !q.id.includes("-guide-"));
+  it("229 題真題；已補詳解的舊梯次與學習指引皆非空", () => {
+    expect(past.length).toBe(229);
+    const legacy = past.filter((q) => !q.id.includes("-115-2-") && !q.id.includes("-115-3-") && !q.id.includes("-guide-"));
     expect(legacy.length).toBe(100);
     const missing = legacy.filter((q) => q.explanation.trim().length === 0);
     expect(missing.map((q) => q.id)).toEqual([]);
@@ -64,6 +64,13 @@ describe("junior-genai 內容完整性", () => {
     expect(second.map((q) => q.sourceRef)).toContain("115年第二次 第1題");
     expect(second.map((q) => q.sourceRef)).toContain("115年第二次 第50題");
     // 手寫詳解／選項解析的覆蓋率與品質斷言見 tests/explanationsCoverage.test.ts。
+  });
+
+  it("115年第三次真題匯入 50 題且保留來源", () => {
+    const third = past.filter((q) => q.id.includes("-115-3-"));
+    expect(third.length).toBe(50);
+    expect(third.map((q) => q.sourceRef)).toContain("115年第三次 第1題");
+    expect(third.map((q) => q.sourceRef)).toContain("115年第三次 第50題");
   });
 
   it("新題數 ≥10", () => {
@@ -133,12 +140,16 @@ describe("junior-ai-basics 新題完整性", () => {
   const past = questions.filter((q) => q.source === "past-exam");
   const generated = questions.filter((q) => q.source === "generated");
 
-  it("190 題真題；115年第二次與學習指引皆已匯入且保留來源", () => {
-    expect(past.length).toBe(190);
+  it("240 題真題；115年第二次、第三次與學習指引皆已匯入且保留來源", () => {
+    expect(past.length).toBe(240);
     const second = past.filter((q) => q.id.includes("-115-2-"));
     expect(second.length).toBe(50);
     expect(second.map((q) => q.sourceRef)).toContain("115年第二次 第1題");
     expect(second.map((q) => q.sourceRef)).toContain("115年第二次 第50題");
+    const third = past.filter((q) => q.id.includes("-115-3-"));
+    expect(third.length).toBe(50);
+    expect(third.map((q) => q.sourceRef)).toContain("115年第三次 第1題");
+    expect(third.map((q) => q.sourceRef)).toContain("115年第三次 第50題");
     // 手寫詳解／選項解析的覆蓋率與品質斷言見 tests/explanationsCoverage.test.ts。
     const guide = past.filter((q) => q.id.includes("-guide-"));
     expect(guide.length).toBe(40);

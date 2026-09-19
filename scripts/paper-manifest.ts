@@ -19,6 +19,10 @@ export const papers: PaperEntry[] = [
     subjectId: "junior-ai-basics", examCode: "115-2", examLabel: "115年第二次",
   },
   {
+    file: "115年第三次初級AI應用規劃師_第一科_人工智慧基礎概論_公告試題_20260906220418.md",
+    subjectId: "junior-ai-basics", examCode: "115-3", examLabel: "115年第三次",
+  },
+  {
     file: "114年第四梯次初級AI應用規劃師第一科人工智慧基礎概論(當次試題公告114_20251226000442.md",
     subjectId: "junior-ai-basics", examCode: "114-4", examLabel: "114年第四梯次",
   },
@@ -29,6 +33,10 @@ export const papers: PaperEntry[] = [
   {
     file: "115年第二次初級AI應用規劃師_第二科_生成式AI應用與規劃_公告試題_20260604212719.md",
     subjectId: "junior-genai", examCode: "115-2", examLabel: "115年第二次",
+  },
+  {
+    file: "115年第三次初級AI應用規劃師_第二科_生成式AI應用與規劃_公告試題_20260906220452.md",
+    subjectId: "junior-genai", examCode: "115-3", examLabel: "115年第三次",
   },
   {
     file: "114年第四梯次初級AI應用規劃師第二科生成式AI應用與規劃(當次試題公告114_20251226000507.md",

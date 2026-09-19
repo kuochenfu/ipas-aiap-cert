@@ -51,6 +51,10 @@ describe("原題庫詳解與選項解析覆蓋率", () => {
     expect(completeCount("junior-ai-basics", "115-2")).toBe(50);
   });
 
+  it("junior-ai-basics 115-3 全 50 題達標", () => {
+    expect(completeCount("junior-ai-basics", "115-3")).toBe(50);
+  });
+
   it("junior-ai-basics 114-4 全 50 題達標", () => {
     expect(completeCount("junior-ai-basics", "114-4")).toBe(50);
   });
@@ -65,6 +69,10 @@ describe("原題庫詳解與選項解析覆蓋率", () => {
 
   it("junior-genai 115-2 全 50 題達標", () => {
     expect(completeCount("junior-genai", "115-2")).toBe(50);
+  });
+
+  it("junior-genai 115-3 全 50 題達標", () => {
+    expect(completeCount("junior-genai", "115-3")).toBe(50);
   });
 
   it("junior-genai 114-4 全 50 題達標", () => {
@@ -183,8 +191,8 @@ describe("初級兩科詳解整體品質", () => {
   }
 
   it("原題庫題數未變", () => {
-    expect(getQuestions("junior-ai-basics")).toHaveLength(222);
-    expect(getQuestions("junior-genai")).toHaveLength(213);
+    expect(getQuestions("junior-ai-basics")).toHaveLength(272);
+    expect(getQuestions("junior-genai")).toHaveLength(263);
   });
 });
 

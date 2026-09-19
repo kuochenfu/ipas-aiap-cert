@@ -91,8 +91,8 @@ describe("各節點題數精確等於配額", () => {
 describe("原題庫未受影響", () => {
   it("getQuestions 的題數不變", async () => {
     const { getQuestions } = await import("../src/data/index");
-    expect(getQuestions("junior-ai-basics")).toHaveLength(222);
-    expect(getQuestions("junior-genai")).toHaveLength(213);
+    expect(getQuestions("junior-ai-basics")).toHaveLength(272);
+    expect(getQuestions("junior-genai")).toHaveLength(263);
   });
 });
 

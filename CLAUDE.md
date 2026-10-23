@@ -49,12 +49,16 @@ npm run parse:papers # 從 docs/markdown/*.md 重新解析真題 → src/data/pa
 
 **渲染走 `innerHTML` 字串樣板**：所有動態文字一律先經 `src/ui/escape.ts` 的 `escapeHtml`，外部連結加 `target="_blank" rel="noopener noreferrer"`。
 
-更深入的模組職責見 `docs/architecture.md`；不變式與操作守則見 `AGENTS.md`；**新增新題庫前必讀 `docs/question-authoring.md`**（命題規格、資料形狀、產出流程，以及四個型別檢查抓不到的坑）；各功能的設計與計畫見 `docs/superpowers/specs/` 與 `docs/superpowers/plans/`；**待辦清單見 `docs/backlog.md`**（2026-08-17 全面複盤，每項附量測數字與相依關係）；專案回顧見 `docs/retrospective-*.md`（最新一份為 `docs/retrospective-2026-08-22-aiot-cert-and-question-banks.md`，記錄了 AIoT 證照上架與 640 題新題庫的六課；`docs/retrospective-2026-08-17-senior-115-1-and-figures.md` 記錄了原卷圖片的處理決策與解析器的靜默缺陷；`docs/retrospective-2026-08-14-explanations-overhaul.md` 的「最重要的一課」一節則記錄了寫詳解時最容易出錯的句型與檢查法）；已知的題目瑕疵與待複審內容見 `docs/coverage/`（尤其 `bank-defects.md` 與 `explanations-overhaul.md`）。
+更深入的模組職責見 `docs/architecture.md`；不變式與操作守則見 `AGENTS.md`；**新增新題庫前必讀 `docs/question-authoring.md`**（命題規格、資料形狀、產出流程，以及四個型別檢查抓不到的坑）；各功能的設計與計畫見 `docs/superpowers/specs/` 與 `docs/superpowers/plans/`；**待辦清單見 `docs/backlog.md`**（2026-08-17 全面複盤，每項附量測數字與相依關係）；專案回顧見 `docs/retrospective-*.md`（最新一份為 `docs/retrospective-2026-10-23-design-critique.md`，記錄了依設計評論修正考試流程與成績頁的三課；`docs/retrospective-2026-08-22-aiot-cert-and-question-banks.md` 記錄了 AIoT 證照上架與 640 題新題庫的六課；`docs/retrospective-2026-08-17-senior-115-1-and-figures.md` 記錄了原卷圖片的處理決策與解析器的靜默缺陷；`docs/retrospective-2026-08-14-explanations-overhaul.md` 的「最重要的一課」一節則記錄了寫詳解時最容易出錯的句型與檢查法）；已知的題目瑕疵與待複審內容見 `docs/coverage/`（尤其 `bank-defects.md` 與 `explanations-overhaul.md`）。
 
 ## 容易踩到的點（gotchas）
 
 - **事件委派的選擇器清單**：`main.ts` 用單一 `closest("[data-cert],[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-confidence],[data-nav],[data-study-jump],[data-study-action],[data-topic-drill],[data-study-read],…")` 攔截點擊。**新增任何可點擊的 `data-*` 屬性時，必須把它加進這個清單**，否則點擊不會被處理（曾因漏 `data-paper` 導致選卷無反應）。現在 `tests/eventDelegation.test.ts` 會把 `render.ts` 輸出的 data-* 與這串清單對起來，漏掛會被擋下；真的不需要被點的屬性要加進該檔的 `NON_CLICKABLE` 並寫明理由。反過來說，**不想被點的元素就不要掛這些屬性**——題數為 0 的科目卡（AIoT 考科二）刻意不掛 `data-subject`，因此不需要另外攔截。
-- **單頁考試的就地更新**：exam 模式選項點擊是直接改 DOM class 與「已作答」計數、**不呼叫 `render()`**；drill 模式則每次互動重繪整題。改任一邊時注意兩者路徑不同。
+- **單頁考試的就地更新**：exam 模式選項點擊是直接改 DOM class、`aria-pressed`、「已作答」計數與頂列題號地圖（`data-exam-jump`）的已作答格、**不呼叫 `render()`**；drill 模式則每次互動重繪整題。改任一邊時注意兩者路徑不同。
+- **破壞性動作一律先確認，摩擦與按錯的代價成正比**：模擬考的「結束」、交卷（有未作答時主要選項是跳回第一題未作答）、「重置本科進度」都經 `main.ts` 的 `askConfirm()`，考試中關分頁另有 `beforeunload`。刷題的「← 結束」**刻意不確認**（進度已存），不要「統一」加上去。確認框是原生 `<dialog>`＋`<form method="dialog">`（`renderConfirmDialog`），按鈕靠 `value`/`returnValue` 回傳，**不掛 `data-*`、不走事件委派**。
+- **及格規則的數字一律從 `examRules` 算**：模式選單與成績頁的「70 分及格／最多失分 15 題／答對 35 題」都由 `examRules` 與 `render.ts` 的 `PASS_CORRECT` 推得，不要寫死數字。
+- **刷題頂列的「工具」選單與考卷的題號地圖都是 `<details>`**：點選單外或按 Esc 會關閉（`main.ts` 的 `closableMenus`）。新增同類下拉時把選擇器加進那串，否則會關不掉。
+- **樣式慣例（`styles.css`）**：顏色、字級一律用 `:root` token；新增顏色要同時在 `prefers-color-scheme: dark` 與 `[data-theme="dark"]` 兩處給暗色值。hover 規則**只寫在檔尾的 `@media (hover: hover)` 區塊**，寫在外面會在手機上點一下就黏住。不要用超過 1px 的彩色側邊框當強調（設計偵測器會擋，分隔線改用 inset `box-shadow`）。
 - **`reveal` 揭曉邏輯**：drill 作答後揭曉、檢討一律揭曉、考試作答中不揭曉——集中在 `revealForCurrent()` 與 render 分流，改導覽時別讓檢討翻頁丟失揭曉。
 - **錯題本 localStorage key 為 `ipas-aiap-misses`**，勿更名（會遺失現有使用者紀錄）。它只在**模擬考交卷**時寫入（`finishExam`），讀取端是**刷題的「錯題」篩選器**：`drillMatches` 的 `wrong` 會把「本次刷題答錯」與「在錯題本裡且本次刷題尚未作答」兩者聯集起來，刷題答對即從篩選中消失，「重置進度」則連同本科目的錯題本一併清除。改刷題篩選或考試結算時，兩個來源都要顧到。
 - **刷題進度 localStorage key 為 `ipas-aiap-drill-progress`**，勿更名（會遺失現有使用者紀錄）。進度記錄的是 `questionId` 而非索引，這是刻意設計——題庫會隨時間成長，用索引會在新增題目後悄悄指向錯的題目。2026-09-04 起同一筆進度多帶 **`records`（作答歷程：時間戳、作答次數、答錯次數、信心）**，這是「推薦」排序、間隔重測與信心校準的資料來源。**它是後加欄位，雙向相容是不變式**：舊資料沒有它就是空物件，行為與從前完全相同。

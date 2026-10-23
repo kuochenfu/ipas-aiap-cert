@@ -34,7 +34,7 @@ Vite + TypeScript，純前端靜態 SPA，部署於 GitHub Pages（base path `/i
 | 檔案 | 職責 |
 |------|------|
 | `escape.ts` | HTML 字元跳脫工具函式。 |
-| `render.ts` | 所有 HTML 片段的產生函式：首頁、級別/科目、模式選單、試卷選單（`renderPaperPicker`）、刷題逐題卡（`renderQuestion`）、單頁考卷（`renderExamPaper`）、單頁檢討（`renderExamReview`）、成績、學習主題（`renderStudyView`）。選項解析區塊優先使用題目的 `choiceExplanations`；沒有時才走 `fallbackChoiceExplanation`（正解顯示固定句、錯誤選項先試 `explanationSegmentForChoice` 從詳解抽「A…B…」片段，都沒有才是通用句）。**注意後備路徑是逐選項生效的**：`choiceExplanations` 刻意不含正解，所以初級兩科 435 題的**正解欄位**同樣走後備（顯示固定句），並非只有中級三科在用——若日後中級也手寫完就把後備刪掉，會讓那 435 格瞬間空白。單頁檢討（`renderExamReview`）則另以 `q.choiceExplanations` 是否存在為閘門：沒有手寫解析的題目**整個區塊不顯示**，不以通用句充數。 |
+| `render.ts` | 所有 HTML 片段的產生函式：首頁、級別/科目、模式選單、試卷選單（`renderPaperPicker`）、刷題逐題卡（`renderQuestion`）、單頁考卷（`renderExamPaper`）、單頁檢討（`renderExamReview`）、成績（`renderResult`，以「離及格線多遠」為主：結論句、50 格作答帶＋及格線、節點由弱到強並可直接練題）、確認對話框（`renderConfirmDialog`）、學習主題（`renderStudyView`）。刷題頂列拆成 `renderDrillFilters`（四個篩選）與 `renderDrillTools`（收進 `<details>` 的跳題、校準、診斷、重置）。選項解析區塊優先使用題目的 `choiceExplanations`；沒有時才走 `fallbackChoiceExplanation`（正解顯示固定句、錯誤選項先試 `explanationSegmentForChoice` 從詳解抽「A…B…」片段，都沒有才是通用句）。**注意後備路徑是逐選項生效的**：`choiceExplanations` 刻意不含正解，所以初級兩科 435 題的**正解欄位**同樣走後備（顯示固定句），並非只有中級三科在用——若日後中級也手寫完就把後備刪掉，會讓那 435 格瞬間空白。單頁檢討（`renderExamReview`）則另以 `q.choiceExplanations` 是否存在為閘門：沒有手寫解析的題目**整個區塊不顯示**，不以通用句充數。 |
 
 ### `src/data/`
 題庫資料層，負責合併多個來源並對外提供統一介面。
@@ -53,7 +53,7 @@ Vite + TypeScript，純前端靜態 SPA，部署於 GitHub Pages（base path `/i
 | `practice/<subjectId>.ts`、`practice/index.ts` | 新題庫：依官方評鑑內容節點分類的補充題（配額見 `src/domain/assessmentTopics.ts`），與 `past-exams`/`explanations`/`generated` 組成的原題庫**完全獨立、不經 `getQuestions`**；`practice/index.ts` 提供 `getPracticeQuestions`、`getPracticeStats`、`practiceSubjectIds`。目前僅初級兩科各 100 題，見 `docs/coverage/practice-bank.md`。 |
 
 ### `src/main.ts`
-畫面狀態機（View State Machine）。視圖：`home / level / mode / paper / play / result / review / study / topics`（`topics` 為刷題的「節點表現」）。管理頁面切換、計時器與自動交卷、以及兩種流程：
+畫面狀態機（View State Machine）。視圖：`home / level / mode / paper / play / result / review / study / topics`（`topics` 為刷題的「節點表現」）。管理頁面切換、計時器（剩 5 分鐘轉警示色）與自動交卷、破壞性動作的確認（`askConfirm`：放棄考試、交卷、重置進度；考試中另有 `beforeunload`）、以及兩種流程：
 - **模擬考試**：`mode → paper`（選 3 份）→ `play`（單頁 `renderExamPaper`，選項就地更新不重繪）→ `result` → `review`（單頁 `renderExamReview`）。
 - **刷題練習**：`mode → play`（逐題 `renderQuestion`，全題庫、原序、即時揭曉）。
 

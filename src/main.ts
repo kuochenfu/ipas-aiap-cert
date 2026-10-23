@@ -3,12 +3,13 @@ import {
   renderHome, renderCert, renderLevel, renderModePicker, renderQuestion, renderResult, renderStudyView,
   renderTopicStats,
   renderPaperPicker, renderExamPaper, renderExamReview, renderDrillEmpty,
-  renderStudyLoading,
+  renderStudyLoading, renderConfirmDialog,
 } from "./ui/render";
+import type { ConfirmDialogView } from "./ui/render";
 import { getSubject } from "./domain/catalog";
 import { getQuestions } from "./data/index";
 import { isTopicClassified, practiceTotal, topicMatchesGuideCode } from "./domain/assessmentTopics";
-import { scoreExam, topicStats, topicSummary, type AnswerState } from "./domain/exam";
+import { examRules, scoreExam, topicStats, topicSummary, type AnswerState } from "./domain/exam";
 import { buildDiagnostics, hasQuestionMeta } from "./domain/diagnostics";
 import { buildAttempt } from "./state/attempt";
 import { buildMockPaper, PAPER_COUNT } from "./state/mockPapers";
@@ -182,6 +183,7 @@ function stopTimer() {
 // 剩餘時間的播報門檻（分鐘）。計時器本身刻意不逐秒播報（見 render.ts 的 role="timer"），
 // 只在跨過這些門檻時對 .sr-live 寫一次，讓螢幕閱讀器使用者掌握時間又不被每秒打斷。
 const TIME_ANNOUNCE_MINUTES = [30, 10, 5, 1];
+const LOW_TIME_MS = 5 * 60_000;
 let lastAnnouncedMinute: number | null = null;
 
 function announce(message: string) {
@@ -201,6 +203,8 @@ function startTimer() {
     const el = app.querySelector(".timer");
     if (el) el.textContent = timeText();
     if (session.deadline === null) return;
+    // 最後五分鐘轉成警示色：明眼使用者也需要「該檢查未作答了」的訊號，不只是播報。
+    el?.classList.toggle("is-low", session.deadline - Date.now() <= LOW_TIME_MS);
     const remainingMinutes = Math.ceil((session.deadline - Date.now()) / 60_000);
     if (TIME_ANNOUNCE_MINUTES.includes(remainingMinutes) && remainingMinutes !== lastAnnouncedMinute) {
       lastAnnouncedMinute = remainingMinutes;
@@ -257,7 +261,7 @@ function setTtsRate(rate: number) {
 }
 
 function sectionSpeechText(section: HTMLElement): string {
-  const heading = section.querySelector("h5")?.textContent?.trim() ?? "";
+  const heading = section.querySelector(".study-note-title")?.textContent?.trim() ?? "";
   const details = [...section.querySelectorAll(".note-text")]
     .map((item) => item.textContent?.trim() ?? "")
     .filter(Boolean);
@@ -331,7 +335,12 @@ function jumpToStudyNode(anchorId: string) {
   if (!target) return;
   // 捲過去卻只看到標題沒有內容會很困惑，所以順手把該節點的筆記展開。
   target.querySelector<HTMLDetailsElement>("details.study-notes")?.setAttribute("open", "");
-  target.scrollIntoView({ behavior: "smooth", block: "start" });
+  target.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
+}
+
+/** 使用者要求減少動態時改為瞬間跳轉。 */
+function scrollBehavior(): ScrollBehavior {
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
 }
 
 function runStudyAction(action: string, button: HTMLElement) {
@@ -538,6 +547,7 @@ function renderView() {
       drillProgressText: hintFor(bank, session.subjectId),
       practice,
       mockExam: subject?.mockExam ?? true,
+      durationMinutes: subject?.durationMinutes,
     });
     if (practiceCount > 0 && !practiceCache) {
       const subjectId = session.subjectId;
@@ -615,10 +625,15 @@ function renderView() {
   if (session.view === "result") {
     stopTimer();
     const report = scoreExam(session.questions, session.answers);
-    app.innerHTML = renderResult(
-      report.score, report.correct, report.wrong, report.passed,
-      topicSummary(session.questions, session.answers),
-    );
+    app.innerHTML = renderResult({
+      subjectId: session.subjectId,
+      score: report.score,
+      correct: report.correct,
+      missed: report.wrong,
+      unanswered: session.questions.length - answeredCount(),
+      passed: report.passed,
+      topics: topicSummary(session.questions, session.answers),
+    });
   }
 }
 
@@ -679,6 +694,8 @@ function startExamPaper(paperIndex: number) {
 
 function finishExam() {
   stopTimer();
+  // 時間到自動交卷時，確認框可能還開著；它問的問題已經不成立了。
+  closeConfirm();
   for (const id of scoreExam(session.questions, session.answers).missedQuestionIds) {
     addMiss(id);
   }
@@ -770,8 +787,113 @@ function resetDrill() {
   render();
 }
 
+// ── 不可逆操作前的確認 ─────────────────────────────────
+let openConfirm: HTMLDialogElement | null = null;
+
+function closeConfirm() {
+  openConfirm?.close("");
+}
+
+/** 開一個確認框，回傳使用者按下的按鈕 value；Esc 或被程式關閉時回傳空字串。 */
+function askConfirm(view: ConfirmDialogView): Promise<string> {
+  closeConfirm();
+  const dialog = document.createElement("dialog");
+  if (typeof dialog.showModal !== "function") {
+    // 不支援 <dialog> 的環境退回原生 confirm：第二顆按鈕視為「確定」。
+    return Promise.resolve(window.confirm(`${view.title}\n${view.body}`) ? view.actions[1]?.value ?? "" : "");
+  }
+  dialog.className = "confirm-dialog";
+  dialog.innerHTML = renderConfirmDialog(view);
+  document.body.append(dialog);
+  openConfirm = dialog;
+  return new Promise((resolve) => {
+    dialog.addEventListener("close", () => {
+      if (openConfirm === dialog) openConfirm = null;
+      dialog.remove();
+      resolve(dialog.returnValue);
+    }, { once: true });
+    dialog.showModal();
+  });
+}
+
+const inExam = () => session.view === "play" && session.mode === "exam";
+
+function jumpToExamQuestion(index: number) {
+  app.querySelector<HTMLDetailsElement>(".exam-map")?.removeAttribute("open");
+  const section = document.getElementById(`exam-q-${index}`);
+  if (!section) return;
+  section.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
+  section.querySelector<HTMLElement>("[data-choice]")?.focus({ preventScroll: true });
+}
+
+async function confirmSubmit() {
+  const firstOpen = session.questions.findIndex((q) => session.answers[q.id] === undefined);
+  const unanswered = session.questions.length - answeredCount();
+  const choice = await askConfirm(unanswered > 0
+    ? {
+      title: `還有 ${unanswered} 題未作答`,
+      body: `未作答以失分計算（最多可失分 ${examRules.maxWrongToPass} 題）。交卷後就不能再修改答案。`,
+      actions: [
+        { label: `回到第 ${firstOpen + 1} 題`, value: "jump", tone: "primary" },
+        { label: "仍要交卷", value: "submit", tone: "plain" },
+      ],
+    }
+    : {
+      title: "確定交卷？",
+      body: "50 題都已作答。交卷後就不能再修改答案。",
+      actions: [
+        { label: "再檢查一下", value: "", tone: "plain" },
+        { label: "交卷", value: "submit", tone: "primary" },
+      ],
+    });
+  if (!inExam()) return;
+  if (choice === "jump") jumpToExamQuestion(firstOpen);
+  if (choice === "submit") finishExam();
+}
+
+async function confirmQuitExam() {
+  const choice = await askConfirm({
+    title: "放棄這次模擬考？",
+    body: `已作答的 ${answeredCount()} 題不會保存，也不會計分或加入錯題本。`,
+    actions: [
+      { label: "繼續作答", value: "", tone: "primary" },
+      { label: "放棄並離開", value: "quit", tone: "danger" },
+    ],
+  });
+  if (choice !== "quit" || !inExam()) return;
+  stopTimer();
+  session.view = "level";
+  render();
+}
+
+async function confirmResetDrill() {
+  const choice = await askConfirm({
+    title: "重置本科的刷題進度？",
+    body: "會清除這個題庫的作答紀錄、作答歷程，以及本科目在錯題本裡的模擬考錯題。這個動作無法復原。",
+    actions: [
+      { label: "取消", value: "", tone: "plain" },
+      { label: "重置", value: "reset", tone: "danger" },
+    ],
+  });
+  if (choice === "reset" && session.mode === "drill") resetDrill();
+}
+
+// 考試中關閉或重新整理分頁會遺失整份作答，交給瀏覽器跳出離開確認。
+window.addEventListener("beforeunload", (event) => {
+  if (inExam()) event.preventDefault();
+});
+
+// 工具選單與題號地圖是 <details>：點外面或按 Esc 要能收起來，跟一般的下拉選單一樣。
+const closableMenus = "details.drill-tools[open], details.exam-map[open]";
+document.addEventListener("click", (event) => {
+  const target = event.target as Node;
+  for (const menu of app.querySelectorAll<HTMLDetailsElement>(closableMenus)) {
+    if (!menu.contains(target)) menu.removeAttribute("open");
+  }
+});
+
 app.addEventListener("click", (event) => {
-  const target = (event.target as HTMLElement).closest("[data-cert],[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-confidence],[data-filter],[data-nav],[data-tts-section],[data-tts-rate],[data-study-jump],[data-study-action],[data-topic-drill],[data-study-read]");
+  const target = (event.target as HTMLElement).closest("[data-cert],[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-confidence],[data-filter],[data-nav],[data-tts-section],[data-tts-rate],[data-study-jump],[data-study-action],[data-topic-drill],[data-study-read],[data-exam-jump]");
   if (!(target instanceof HTMLElement)) return;
 
   if (target.hasAttribute("data-tts-section") && target instanceof HTMLButtonElement) {
@@ -793,6 +915,9 @@ app.addEventListener("click", (event) => {
 
   const topicDrill = target.getAttribute("data-topic-drill");
   if (topicDrill) { startTopicDrill(topicDrill); return; }
+
+  const examJump = target.getAttribute("data-exam-jump");
+  if (examJump !== null) { jumpToExamQuestion(Number(examJump)); return; }
 
   const readNode = target.getAttribute("data-study-read");
   if (readNode) { toggleStudyRead(readNode, target); return; }
@@ -823,9 +948,16 @@ app.addEventListener("click", (event) => {
     const group = target.closest(".exam-q");
     group?.querySelectorAll<HTMLElement>("[data-choice]").forEach((b) => {
       b.classList.toggle("selected", b === target);
+      b.setAttribute("aria-pressed", String(b === target));
     });
     const countEl = app.querySelector(".answered-count");
     if (countEl) countEl.textContent = String(answeredCount());
+    const position = session.questions.findIndex((q) => q.id === qid);
+    const cell = app.querySelector<HTMLElement>(`[data-exam-jump="${position}"]`);
+    if (cell) {
+      cell.classList.add("is-answered");
+      cell.setAttribute("aria-label", `第 ${position + 1} 題，已作答`);
+    }
     return;
   }
   if (choice && session.view === "play") {
@@ -847,7 +979,10 @@ app.addEventListener("click", (event) => {
   // 「返回」是往上一層走：級別頁回到證照頁，其餘（模式頁、選卷頁）回到級別頁。
   if (nav === "back") { session.view = session.view === "level" ? "cert" : "level"; render(); return; }
   if (nav === "back-mode") { stopTimer(); session.view = "mode"; render(); return; }
-  if (nav === "quit") { stopTimer(); session.view = "level"; render(); return; }
+  if (nav === "quit") {
+    if (inExam()) { void confirmQuitExam(); return; }
+    stopTimer(); session.view = "level"; render(); return;
+  }
   if (nav === "prev") {
     if (session.mode === "drill") { moveDrill(-1); return; }
     if (session.index > 0) session.index--;
@@ -862,10 +997,10 @@ app.addEventListener("click", (event) => {
     render();
     return;
   }
-  if (nav === "submit" && session.view === "play") { finishExam(); return; }
+  if (nav === "submit" && session.view === "play") { void confirmSubmit(); return; }
   if (nav === "result") { session.view = "result"; render(); return; }
   if (nav === "jump" && session.mode === "drill") { submitDrillJump(); return; }
-  if (nav === "drill-reset" && session.mode === "drill") { resetDrill(); return; }
+  if (nav === "drill-reset" && session.mode === "drill") { void confirmResetDrill(); return; }
   if (nav === "toggle-confidence" && session.mode === "drill") { toggleConfidenceMode(); return; }
   if (nav === "topics" && session.mode === "drill") { session.view = "topics"; render(); return; }
   if (nav === "back-play") { session.view = "play"; render(); return; }
@@ -874,6 +1009,14 @@ app.addEventListener("click", (event) => {
 
 window.addEventListener("keydown", (event) => {
   const target = event.target;
+  if (event.key === "Escape") {
+    const menu = app.querySelector<HTMLDetailsElement>(closableMenus);
+    if (menu) {
+      menu.removeAttribute("open");
+      menu.querySelector("summary")?.focus();
+      return;
+    }
+  }
   if (event.key === "Enter" && session.mode === "drill" && target instanceof HTMLInputElement && target.classList.contains("drill-jump-input")) {
     event.preventDefault();
     submitDrillJump();

@@ -11,6 +11,7 @@ import type { Confidence, DrillFilter } from "../domain/drill";
 import { CONCEPT_MIN_SAMPLE } from "../domain/diagnostics";
 import type { Calibration, ConceptRow, Diagnostics, ErrorRow, MetaStatRow } from "../domain/diagnostics";
 import { isTopicClassified, topicMatchesGuideCode } from "../domain/assessmentTopics";
+import { examRules } from "../domain/exam";
 
 export type BankStats = { total: number; pastExam: number; generated: number; studyGuide: number };
 export type DrillCounts = Record<DrillFilter, number>;
@@ -102,7 +103,7 @@ export const renderChoice = (choice: Choice, view: ChoiceView, figure?: Question
   if (view.reveal && view.correct) classes.push("correct");
   if (view.reveal && view.selected && !view.correct) classes.push("wrong");
   return `
-    <button class="${classes.join(" ")}" data-choice="${choice.id}">
+    <button class="${classes.join(" ")}" data-choice="${choice.id}" aria-pressed="${view.selected}">
       <span class="choice-id">${choice.id}</span>
       ${renderChoiceBody(choice, figure)}
     </button>
@@ -152,9 +153,9 @@ const renderCalibrationNote = (recorded: Confidence | undefined, correct: boolea
   return `<p class="calibration-note ${tone}">${escapeHtml(text)}</p>`;
 };
 
-const renderDrillFilters = (
-  { filter, counts, total, hasTopics, hasMeta, confidence }: DrillControls,
-): string => `
+// 篩選列是刷題的主導覽，留在題目上方；其餘不常用的工具收進題號列右側的「工具」選單，
+// 手機上題目才不會被十顆按鈕擠到第一屏之外。
+const renderDrillFilters = ({ filter, counts }: DrillControls): string => `
   <div class="drill-controls">
     <div class="drill-filters" aria-label="刷題篩選">
       ${(Object.keys(drillFilterLabels) as DrillFilter[]).map((key) => `
@@ -164,22 +165,37 @@ const renderDrillFilters = (
         </button>
       `).join("")}
     </div>
-    <div class="drill-jump">
-      <label class="drill-jump-label">
-        跳至
-        <input class="drill-jump-input" type="number" inputmode="numeric" min="1" max="${total}"
-               aria-label="跳至第幾題（1 到 ${total}）">
-        題
-      </label>
-      <button class="drill-jump-go" data-nav="jump">前往</button>
-      ${confidence
-        ? `<button class="drill-confidence ${confidence.mode ? "active" : ""}" data-nav="toggle-confidence"
-                   aria-pressed="${confidence.mode}">校準模式</button>`
-        : ""}
-      ${hasTopics ? `<button class="drill-topics" data-nav="topics">${hasMeta ? "學習診斷" : "節點表現"}</button>` : ""}
-      <button class="drill-reset" data-nav="drill-reset">重置進度</button>
-    </div>
+    ${filter === "recommended"
+      ? `<p class="drill-filter-hint">推薦順序：先複習答錯的題目，再做未作答的，最後是到期該重測的。</p>`
+      : ""}
   </div>
+`;
+
+const renderDrillTools = ({ total, hasTopics, hasMeta, confidence }: DrillControls): string => `
+  <details class="drill-tools">
+    <summary>工具${confidence?.mode ? `<span class="drill-tools-flag">校準中</span>` : ""}</summary>
+    <div class="drill-tools-panel">
+      <div class="drill-jump">
+        <label class="drill-jump-label">
+          跳至第
+          <input class="drill-jump-input" type="number" inputmode="numeric" min="1" max="${total}"
+                 aria-label="跳至第幾題（1 到 ${total}）">
+          題
+        </label>
+        <button class="drill-jump-go" data-nav="jump">前往</button>
+      </div>
+      ${confidence
+        ? `<div class="drill-tool">
+             <button class="drill-confidence ${confidence.mode ? "active" : ""}" data-nav="toggle-confidence"
+                     aria-pressed="${confidence.mode}">校準模式：${confidence.mode ? "開" : "關"}</button>
+             <p class="drill-tool-hint">作答前先標記「有把握／不確定」，學習診斷會比較兩者的實際答對率。</p>
+           </div>`
+        : ""}
+      ${hasTopics ? `<button class="drill-topics" data-nav="topics">${hasMeta ? "學習診斷" : "節點表現"} →</button>` : ""}
+      <button class="drill-reset" data-nav="drill-reset">重置本科進度…</button>
+      <p class="drill-keys">鍵盤：A–D 作答・← → 換題</p>
+    </div>
+  </details>
 `;
 
 const renderAnswerSummary = (q: Question, selected: string | undefined): string => {
@@ -259,7 +275,7 @@ const fallbackChoiceExplanation = (q: Question, choice: Choice): string => {
   const correctChoice = q.choices.find((item) => item.id === q.answer);
   const correctText = correctChoice?.text ?? "";
   if (choice.id === q.answer) {
-    return "這是本題正解；請搭配下方詳解掌握判斷依據。";
+    return "這是本題正解；判斷依據見上方詳解。";
   }
   // 部分題目的詳解本身帶有「（A）…（B）…」的逐項說明，優先抽取該片段。
   const segment = explanationSegmentForChoice(q.explanation, choice.id);
@@ -311,7 +327,10 @@ export const renderHome = (): string => `
         </button>
       `).join("")}
     </div>
-      <button class="study-entry" data-nav="study">📚 學習主題（延伸閱讀）</button>
+    <button class="study-entry" data-nav="study">
+      <span class="study-entry-title">學習主題</span>
+      <span class="study-entry-sub">各科重點筆記、考前速記與延伸閱讀</span>
+    </button>
   </main>
 `;
 
@@ -361,7 +380,12 @@ export type ModePickerView = {
   practice?: { count: number; progressText?: string };
   /** 省略時視為開放。AIoT 兩科為 false——官方未公告題數，模擬考規則無從訂定。 */
   mockExam?: boolean;
+  /** 模擬考的作答時間；省略時不寫分鐘數。 */
+  durationMinutes?: number;
 };
+
+// 及格線換算成題數：考生在考場上算的是「還能錯幾題」，不是分數。
+const PASS_CORRECT = Math.ceil(examRules.passScore / examRules.pointsPerQuestion);
 
 export const renderModePicker = ({
   subjectName,
@@ -369,11 +393,16 @@ export const renderModePicker = ({
   drillProgressText,
   practice,
   mockExam = true,
+  durationMinutes,
 }: ModePickerView): string => `
   <header class="topbar"><button class="back" data-nav="back">← 返回</button><h1>${escapeHtml(subjectName)}</h1></header>
   <main class="mode-picker">
     ${mockExam
-      ? `<button class="mode-card" data-mode="exam"><h2>模擬考試</h2><p>50 題・計時・100 分制・70 分及格</p></button>`
+      ? `<button class="mode-card" data-mode="exam">
+           <h2>模擬考試</h2>
+           <p>${examRules.totalQuestions} 題・${durationMinutes ? `限時 ${durationMinutes} 分鐘` : "計時"}・${examRules.passScore} 分及格</p>
+           <p class="mode-card-rule">最多可失分 ${examRules.maxWrongToPass} 題（答對 ${PASS_CORRECT} 題即及格）</p>
+         </button>`
       : `<p class="mode-note">官方尚未公告題數與配分，暫不提供模擬考試。</p>`}
     <button class="mode-card" data-mode="drill">
       <h2>刷題練習</h2>
@@ -431,9 +460,9 @@ export const renderQuestion = (
     : "";
   return `
     <header class="topbar">
-      <button class="back" data-nav="quit">結束</button>
+      <button class="back" data-nav="quit">← 結束</button>
       <span class="progress">第 ${index + 1} / ${total} 題</span>
-      <span class="timer">${timeText}</span>
+      ${drillControls ? renderDrillTools(drillControls) : `<span class="timer">${timeText}</span>`}
     </header>
     <main class="question">
       ${drillControls ? renderDrillFilters(drillControls) : ""}
@@ -457,8 +486,9 @@ export const renderQuestion = (
 
 export const renderDrillEmpty = (controls: DrillControls): string => `
   <header class="topbar">
-    <button class="back" data-nav="quit">結束</button>
+    <button class="back" data-nav="quit">← 結束</button>
     <span class="progress">刷題練習</span>
+    ${renderDrillTools(controls)}
   </header>
   <main class="question">
     ${renderDrillFilters(controls)}
@@ -647,25 +677,88 @@ export const renderTopicStats = (
         <tbody>${body}</tbody>
       </table>
       ${extra}
-      <p class="topic-note">節點依官方《評鑑內容範圍參考》分類；「已作答」為本科目目前的刷題進度。認知層級、題型與錯誤類型來自命題時逐題標註的後設資料，目前僅新題庫具備。</p>
+      <p class="topic-note">節點依官方《評鑑內容範圍參考》分類；「已作答」為本科目目前的刷題進度。認知層級與題型為每題標註的後設資料；錯誤類型需要逐選項的干擾類型標註，目前只有新題庫具備。</p>
     </main>
   `;
 };
 
+export type ResultView = {
+  subjectId: string;
+  score: number;
+  correct: number;
+  /** 失分題數＝答錯＋未作答（與 scoreExam 的 wrong 相同口徑）。 */
+  missed: number;
+  unanswered: number;
+  passed: boolean;
+  topics: { topic: string; total: number; correct: number }[];
+};
+
+/**
+ * 成績頁。主角不是分數本身，而是「離及格線多遠」——iPAS 的規則是最多失分 15 題，
+ * 所以用 50 格的作答帶把答對、答錯、未作答排開，並在第 35 格畫出及格線。
+ * 節點表依答對率由弱到強排序，每列都能直接進入該節點的刷題。
+ */
 export const renderResult = (
-  score: number, correct: number, wrong: number, passed: boolean,
-  topics: { topic: string; total: number; correct: number }[],
+  { subjectId, score, correct, missed, unanswered, passed, topics }: ResultView,
 ): string => {
-  const rows = topics
-    .map((t) => `<tr><td>${escapeHtml(t.topic)}</td><td>${t.correct}/${t.total}</td></tr>`)
+  const total = correct + missed;
+  const answeredWrong = missed - unanswered;
+  const gap = PASS_CORRECT - correct;
+  const verdictLine = passed
+    ? `比及格線多答對 ${correct - PASS_CORRECT} 題；失分額度 ${examRules.maxWrongToPass} 題，這次用了 ${missed} 題。`
+    : `差 ${gap} 題及格：最多只能失分 ${examRules.maxWrongToPass} 題，這次失分 ${missed} 題。`;
+  const cells = [
+    ...Array.from({ length: correct }, () => "is-correct"),
+    ...Array.from({ length: answeredWrong }, () => "is-wrong"),
+    ...Array.from({ length: unanswered }, () => "is-skip"),
+  ].map((kind) => `<span class="strip-cell ${kind}"></span>`).join("");
+  const stripLabel = `答對 ${correct} 題、答錯 ${answeredWrong} 題、未作答 ${unanswered} 題；及格需答對 ${PASS_CORRECT} 題`;
+  const rate = (t: { total: number; correct: number }) => (t.total ? t.correct / t.total : 0);
+  const rows = [...topics]
+    .sort((a, b) => rate(a) - rate(b) || b.total - a.total)
+    .map((t) => {
+      const code = t.topic.split(" ")[0];
+      const action = isTopicClassified(t.topic)
+        ? `<button class="node-drill" data-topic-drill="${escapeHtml(subjectId)}|${escapeHtml(code)}">練這個節點</button>`
+        : "";
+      return `
+        <tr>
+          <td class="topic-name">${escapeHtml(t.topic)}</td>
+          <td class="topic-rate">${t.correct} / ${t.total}</td>
+          <td class="topic-action">${action}</td>
+        </tr>`;
+    })
     .join("");
   return `
-    <header class="topbar"><button class="back" data-nav="home">回首頁</button><h1>成績</h1></header>
+    <header class="topbar"><button class="back" data-nav="home">← 回首頁</button><h1>成績</h1></header>
     <main class="result">
-      <p class="score ${passed ? "pass" : "fail"}">${score} 分　${passed ? "及格" : "不及格"}</p>
-      <p>答對 ${correct} 題、答錯 ${wrong} 題（及格 70 分）</p>
-      <table class="topic-table"><thead><tr><th>主題</th><th>答對/總數</th></tr></thead><tbody>${rows}</tbody></table>
-      <button class="review-btn" data-nav="review">逐題檢討</button>
+      <section class="result-verdict ${passed ? "is-pass" : "is-fail"}">
+        <p class="score">${score} 分<span class="score-verdict">${passed ? "及格" : "不及格"}</span></p>
+        <p class="result-line">${verdictLine}</p>
+      </section>
+      <figure class="answer-strip">
+        <div class="strip" role="img" aria-label="${stripLabel}">
+          <div class="strip-cells">${cells}</div>
+          <span class="strip-line" style="--line:${(PASS_CORRECT / total) * 100}%" aria-hidden="true"></span>
+        </div>
+        <figcaption class="strip-legend">
+          <span class="legend-item is-correct">答對 ${correct}</span>
+          <span class="legend-item is-wrong">答錯 ${answeredWrong}</span>
+          <span class="legend-item is-skip">未作答 ${unanswered}</span>
+          <span class="legend-item is-line">及格線：答對 ${PASS_CORRECT} 題</span>
+        </figcaption>
+      </figure>
+      <div class="result-actions">
+        <button class="submit" data-nav="review">逐題檢討</button>
+      </div>
+      ${missed > 0
+        ? `<p class="topic-note">這次失分的 ${missed} 題已加入錯題本；回到刷題練習選「錯題」就能複習。</p>`
+        : ""}
+      <h2 class="diag-heading">各節點表現（由弱到強）</h2>
+      <table class="topic-table result-table">
+        <thead><tr><th>評鑑內容節點</th><th>答對</th><th><span class="sr-only">動作</span></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
     </main>
   `;
 };
@@ -747,6 +840,11 @@ type StudyNotesOptions = {
    * 證照層級的「備考總整理」不開，那本來就是要一次讀完的。
    */
   collapsibleSections?: boolean;
+  /**
+   * 節標題的層級。節點底下的筆記位在 h4（節點）之下，用 h5；證照層級的「備考總整理」
+   * 直接接在 h2（證照名）之後，用 h3，否則標題層級會跳號。
+   */
+  headingTag?: "h3" | "h5";
 };
 
 /** 供「考前速記」模式以 CSS 篩選用的穩定鍵；未列出的標題歸為 other。 */
@@ -762,9 +860,9 @@ const NOTE_SECTION_KEYS: Record<string, string> = {
 
 const noteSectionKey = (heading: string): string => NOTE_SECTION_KEYS[heading] ?? "other";
 
-const renderNoteSectionBody = (section: StudyNoteSection): string => `
+const renderNoteSectionBody = (section: StudyNoteSection, headingTag: "h3" | "h5"): string => `
   <div class="study-note-heading">
-    <h5>${escapeHtml(section.heading)}</h5>
+    <${headingTag} class="study-note-title">${escapeHtml(section.heading)}</${headingTag}>
     <button class="tts-button" data-tts-section aria-label="朗讀 ${escapeHtml(section.heading)}" title="朗讀" aria-pressed="false">
       ${speakerIcon}
     </button>
@@ -774,18 +872,18 @@ const renderNoteSectionBody = (section: StudyNoteSection): string => `
 
 const renderStudyNotes = (
   notes: StudyNoteSection[] | undefined,
-  { label = "學習指引整理", collapsibleSections = false }: StudyNotesOptions = {},
+  { label = "學習指引整理", collapsibleSections = false, headingTag = "h5" }: StudyNotesOptions = {},
 ): string => {
   if (!notes?.length) return "";
   const count = notes.reduce((sum, section) => sum + countNoteLeaves(section.items), 0);
   const sections = notes.map((section, index) => {
     if (!collapsibleSections) {
-      return `<section class="study-note-section" data-note-section="${noteSectionKey(section.heading)}">${renderNoteSectionBody(section)}</section>`;
+      return `<section class="study-note-section" data-note-section="${noteSectionKey(section.heading)}">${renderNoteSectionBody(section, headingTag)}</section>`;
     }
     return `
       <details class="study-note-section is-collapsible" data-note-section="${noteSectionKey(section.heading)}"${index === 0 ? " open" : ""}>
         <summary>${escapeHtml(section.heading)} <span>${countNoteLeaves(section.items)}</span></summary>
-        ${renderNoteSectionBody(section)}
+        ${renderNoteSectionBody(section, headingTag)}
       </details>
     `;
   }).join("");
@@ -800,10 +898,10 @@ const renderStudyNotes = (
 export const renderStudyLoading = (): string => `
   <header class="topbar">
     <button class="back" data-nav="home">← 返回</button>
-    <h1>學習主題（延伸閱讀）</h1>
+    <h1>學習主題</h1>
   </header>
   <main class="study">
-    <p class="lead">正在載入學習指引整理...</p>
+    <p class="lead">正在載入學習筆記…</p>
   </main>
 `;
 
@@ -982,7 +1080,7 @@ export const renderStudyView = (
       <section class="study-cert" data-cert-section="${escapeHtml(cert.id)}">
         <h2>${escapeHtml(cert.name)}</h2>
         ${tools}
-        ${renderStudyNotes(examOverviews?.[cert.id], { label: "備考總整理" })}
+        ${renderStudyNotes(examOverviews?.[cert.id], { label: "備考總整理", headingTag: "h3" })}
         ${levelsHtml}
       </section>
     `;
@@ -990,10 +1088,10 @@ export const renderStudyView = (
   return `
     <header class="topbar">
       <button class="back" data-nav="home">← 返回</button>
-      <h1>學習主題（延伸閱讀）</h1>
+      <h1>學習主題</h1>
     </header>
     <main class="study">
-      <p class="lead">依官方評鑑範圍，掌握各科應讀主題與延伸閱讀。</p>
+      <p class="lead">依官方評鑑範圍整理的各科重點筆記與延伸閱讀；每個主題都能直接練題。</p>
       <div class="tts-rate" aria-label="朗讀語速">
         <span>語速</span>
         <button data-tts-rate="0.9">0.9x</button>
@@ -1022,7 +1120,7 @@ const renderExamChoice = (
   const classes = ["choice"];
   if (selected) classes.push("selected");
   return `
-    <button class="${classes.join(" ")}" data-qid="${escapeHtml(qid)}" data-choice="${choice.id}">
+    <button class="${classes.join(" ")}" data-qid="${escapeHtml(qid)}" data-choice="${choice.id}" aria-pressed="${selected}">
       <span class="choice-id">${choice.id}</span>
       ${renderChoiceBody(choice, figure)}
     </button>`;
@@ -1035,17 +1133,30 @@ export const renderExamPaper = (
   answered: number,
 ): string => {
   const blocks = questions.map((q, i) => `
-    <section class="exam-q" data-qid="${escapeHtml(q.id)}">
+    <section class="exam-q" id="exam-q-${i}" data-qid="${escapeHtml(q.id)}">
       ${renderSourceNote(q)}
       <p class="prompt"><span class="qnum">${i + 1}.</span> ${escapeHtml(q.prompt)}</p>
       ${renderFigures(q.figures)}
       <div class="choices">${q.choices.map((c) => renderExamChoice(q.id, c, answers[q.id] === c.id, q.choiceFigures?.[c.id])).join("")}</div>
     </section>`).join("");
+  // 題號地圖：50 題的單頁考卷沒有它，就得靠記憶找回跳過的題目。
+  // 格子的「已作答」與上方計數一樣由 main.ts 就地更新，不整頁重繪。
+  const mapCells = questions.map((q, i) => {
+    const done = answers[q.id] !== undefined;
+    return `<button class="exam-map-cell${done ? " is-answered" : ""}" data-exam-jump="${i}"
+      aria-label="第 ${i + 1} 題${done ? "，已作答" : "，未作答"}">${i + 1}</button>`;
+  }).join("");
   return `
     <header class="topbar exam-bar">
-      <button class="back" data-nav="quit">結束</button>
-      <!-- 已作答數只在使用者點選項時變動，是對操作的直接回饋，用 polite 播報剛好。 -->
-      <span class="progress" aria-live="polite" aria-atomic="true">已作答 <span class="answered-count">${answered}</span> / ${questions.length}</span>
+      <button class="back exam-quit" data-nav="quit">結束</button>
+      <details class="exam-map">
+        <!-- 已作答數只在使用者點選項時變動，是對操作的直接回饋，用 polite 播報剛好。 -->
+        <summary><span class="progress" aria-live="polite" aria-atomic="true"><span class="progress-label">已作答 </span><span class="answered-count">${answered}</span> / ${questions.length}</span></summary>
+        <div class="exam-map-panel">
+          <p class="exam-map-hint">點題號跳到該題；實心格為已作答。</p>
+          <div class="exam-map-grid">${mapCells}</div>
+        </div>
+      </details>
       <!-- 計時器每秒就地更新（main.ts 的 startTimer）。role="timer" 依規範隱含
            aria-live="off"——刻意不逐秒播報，否則會蓋掉正在朗讀的題目；
            改由 main.ts 在剩 10/5/1 分鐘等門檻時寫入下方的 .sr-live 區域。 -->
@@ -1095,3 +1206,27 @@ export const renderExamReview = (
     </main>
   `;
 };
+
+export type ConfirmDialogView = {
+  title: string;
+  body: string;
+  /** 依序排列的按鈕；第一顆取得預設焦點，因此應放「安全」的選項。 */
+  actions: { label: string; value: string; tone?: "primary" | "danger" | "plain" }[];
+};
+
+/**
+ * 不可逆操作（交卷、放棄考試、重置進度）前的確認框。用原生 <dialog> 的
+ * `method="dialog"` 表單，按鈕的 value 即為 returnValue，不需要額外的 data-* 委派；
+ * Esc 關閉時 returnValue 為空字串，呼叫端一律當成取消。
+ */
+export const renderConfirmDialog = ({ title, body, actions }: ConfirmDialogView): string => `
+  <form method="dialog" class="confirm-form">
+    <h2 class="confirm-title">${escapeHtml(title)}</h2>
+    <p class="confirm-body">${escapeHtml(body)}</p>
+    <div class="confirm-actions">
+      ${actions.map((action, index) => `
+        <button value="${escapeHtml(action.value)}" class="confirm-btn is-${action.tone ?? "plain"}"${index === 0 ? " autofocus" : ""}>${escapeHtml(action.label)}</button>
+      `).join("")}
+    </div>
+  </form>
+`;

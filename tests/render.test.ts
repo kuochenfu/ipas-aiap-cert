@@ -64,9 +64,9 @@ describe("renderStudyView", () => {
     expect(html).toContain('rel="noopener noreferrer"');
     expect(html).toContain('target="_blank"');
   });
-  it("載入畫面提示正在載入學習指引整理", () => {
+  it("載入畫面提示正在載入學習筆記", () => {
     const html = renderStudyLoading();
-    expect(html).toContain("正在載入學習指引整理");
+    expect(html).toContain("正在載入學習筆記");
   });
 });
 

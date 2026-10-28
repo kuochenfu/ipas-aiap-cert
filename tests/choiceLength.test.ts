@@ -51,6 +51,11 @@ describe("選項長度：已修正的題庫維持在目標內", () => {
     ["senior-ai-tech", "practice"],
     ["senior-bigdata", "practice"],
     ["senior-ml", "practice"],
+    ["junior-ai-basics", "generated"],
+    ["junior-genai", "generated"],
+    ["senior-ai-tech", "generated"],
+    ["senior-bigdata", "generated"],
+    ["senior-ml", "generated"],
   ];
 
   for (const [subjectId, bank] of fixed) {
@@ -69,11 +74,6 @@ describe("選項長度：尚未修正的題庫只准變好（棘輪）", () => {
   const ratchet: Array<[string, "practice" | "generated", number]> = [
     ["junior-ai-basics", "practice", 45],
     ["junior-genai", "practice", 37],
-    ["junior-ai-basics", "generated", 78],
-    ["junior-genai", "generated", 91],
-    ["senior-ai-tech", "generated", 83],
-    ["senior-bigdata", "generated", 67],
-    ["senior-ml", "generated", 88],
   ];
 
   for (const [subjectId, bank, cap] of ratchet) {

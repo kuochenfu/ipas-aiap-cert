@@ -23,7 +23,7 @@ npm run parse:papers # 從 docs/markdown/*.md 重新解析真題 → src/data/pa
 
 **AI 應用規劃師**：每科 50 題單選、每題 2 分、滿分 100、70 及格（最多錯 15 題）。選項固定 A/B/C/D，答案為**單一字母**。中級報考科目1＋（科目2 或 3）；本站五科皆可獨立練習。
 
-**AIoT 應用工程師（初級）**：115 年度簡章只寫「每科目單選題、每科 100 分、70 分及格」，**未載明題數與配分**，因此 `examRules` 不適用；AIoT 兩科的 `Subject.mockExam` 為 `false`，**只開刷題、不開模擬考試**。拿到官方題數前不要打開（緣由見 `docs/backlog.md` 的 A2）。授證需「考科一＋考科二」兩科皆過，考科一無抵免。
+**AIoT 應用工程師（初級）**：115 年度簡章只寫「每科目單選題、每科 100 分、70 分及格」，**未載明題數與配分**，因此 `examRules` 不適用；AIoT 兩科的 `Subject.mockExam` 為 `false`，**只開刷題、不開模擬考試**。拿到官方題數前不要打開（緣由見 `docs/backlog.md` 的 A2）。授證需「考科一＋考科二」：同時報考時兩科**平均 70 且每科不低於 60** 即可，非同時報考才是每科皆達 70（簡章 4.2）；考科一無抵免。
 
 ## 大局架構（跨檔案才看得懂的部分）
 
@@ -49,7 +49,7 @@ npm run parse:papers # 從 docs/markdown/*.md 重新解析真題 → src/data/pa
 
 **渲染走 `innerHTML` 字串樣板**：所有動態文字一律先經 `src/ui/escape.ts` 的 `escapeHtml`，外部連結加 `target="_blank" rel="noopener noreferrer"`。
 
-更深入的模組職責見 `docs/architecture.md`；不變式與操作守則見 `AGENTS.md`；**新增新題庫前必讀 `docs/question-authoring.md`**（命題規格、資料形狀、產出流程，以及四個型別檢查抓不到的坑）；各功能的設計與計畫見 `docs/superpowers/specs/` 與 `docs/superpowers/plans/`；**待辦清單見 `docs/backlog.md`**（2026-08-17 全面複盤，每項附量測數字與相依關係）；專案回顧見 `docs/retrospective-*.md`（最新一份為 `docs/retrospective-2026-10-23-design-critique.md`，記錄了依設計評論修正考試流程與成績頁的三課；`docs/retrospective-2026-08-22-aiot-cert-and-question-banks.md` 記錄了 AIoT 證照上架與 640 題新題庫的六課；`docs/retrospective-2026-08-17-senior-115-1-and-figures.md` 記錄了原卷圖片的處理決策與解析器的靜默缺陷；`docs/retrospective-2026-08-14-explanations-overhaul.md` 的「最重要的一課」一節則記錄了寫詳解時最容易出錯的句型與檢查法）；已知的題目瑕疵與待複審內容見 `docs/coverage/`（尤其 `bank-defects.md` 與 `explanations-overhaul.md`）。
+更深入的模組職責見 `docs/architecture.md`；不變式與操作守則見 `AGENTS.md`；**新增新題庫前必讀 `docs/question-authoring.md`**（命題規格、資料形狀、產出流程，以及四個型別檢查抓不到的坑）；各功能的設計與計畫見 `docs/superpowers/specs/` 與 `docs/superpowers/plans/`；**待辦清單見 `docs/backlog.md`**（2026-08-17 全面複盤，每項附量測數字與相依關係）；專案回顧見 `docs/retrospective-*.md`（最新一份為 `docs/retrospective-2026-10-28-longest-option-cue.md`，量測出 LLM 題庫「挑最長選項」就能及格的系統性破綻，**命題或改題前必讀**；`docs/retrospective-2026-10-23-design-critique.md` 記錄了依設計評論修正考試流程與成績頁的三課；`docs/retrospective-2026-08-22-aiot-cert-and-question-banks.md` 記錄了 AIoT 證照上架與 640 題新題庫的六課；`docs/retrospective-2026-08-17-senior-115-1-and-figures.md` 記錄了原卷圖片的處理決策與解析器的靜默缺陷；`docs/retrospective-2026-08-14-explanations-overhaul.md` 的「最重要的一課」一節則記錄了寫詳解時最容易出錯的句型與檢查法）；已知的題目瑕疵與待複審內容見 `docs/coverage/`（尤其 `bank-defects.md` 與 `explanations-overhaul.md`）。
 
 ## 容易踩到的點（gotchas）
 

@@ -10,7 +10,8 @@ import type { StudyNoteSection, StudyNotesBySubject } from "./types";
  * 需人工複審；尤其 B2.3 的 OEE／ROI／CAPEX-OPEX 等公式屬延伸補強，
  * 官方並未明文列為必考公式。
  *
- * 標註「2026」的段落是依 2026-08 查得的公開資訊補入的產業現況，
+ * 標註「2026」的段落是依 2026-08 查得的公開資訊補入的產業現況（2026-10-28 依近三個月
+ * 的新資訊再更新一次，並在 aiotExamOverview 補上應考須知與速查表），
  * 用意是讓案例與技術現狀不過時；這類內容**時效性最強、最需要定期複查**。
  */
 
@@ -39,6 +40,7 @@ export const aiotAbbreviations: AiotAbbreviation[] = [
   { term: "MCU", full: "Microcontroller Unit", zh: "微控制器", nodes: ["A1.1", "B1.1", "B2.1"] },
   { term: "TinyML", full: "Tiny Machine Learning", zh: "微型機器學習", nodes: ["A1.1"] },
   { term: "SLM", full: "Small Language Model", zh: "小型語言模型", nodes: ["A1.1"] },
+  { term: "MoE", full: "Mixture of Experts", zh: "混合專家模型", nodes: ["A1.1"] },
   { term: "PTQ", full: "Post-Training Quantization", zh: "訓練後量化", nodes: ["A1.1"] },
   { term: "QAT", full: "Quantization-Aware Training", zh: "量化感知訓練", nodes: ["A1.1"] },
   { term: "FL", full: "Federated Learning", zh: "聯合學習", nodes: ["A1.1"] },
@@ -76,6 +78,7 @@ export const aiotAbbreviations: AiotAbbreviation[] = [
   { term: "LPWAN", full: "Low-Power Wide-Area Network", zh: "低功耗廣域網路", nodes: ["A1.2", "A2.2"] },
   { term: "NB-IoT", full: "Narrowband Internet of Things", zh: "窄頻物聯網", nodes: ["A2.2"] },
   { term: "RedCap", full: "Reduced Capability (5G NR-Light)", zh: "5G 精簡型終端", nodes: ["A2.2"] },
+  { term: "CRL", full: "Certificate Revocation List", zh: "憑證撤銷清單", nodes: ["A2.2"] },
 
   // A2.3 工業通訊標準與資訊模型
   { term: "OPC UA", full: "OPC Unified Architecture", zh: "OPC 統一架構", nodes: ["A2.3"] },
@@ -112,6 +115,8 @@ export const aiotAbbreviations: AiotAbbreviation[] = [
   { term: "MITM", full: "Man-in-the-Middle", zh: "中間人攻擊", nodes: ["A2.5"] },
   { term: "OTA", full: "Over-the-Air", zh: "空中韌體更新", nodes: ["A2.5", "B1.3"] },
   { term: "PbD", full: "Privacy by Design", zh: "由設計起始的隱私", nodes: ["A2.5"] },
+  { term: "CSIRT", full: "Computer Security Incident Response Team", zh: "資安事件應變小組", nodes: ["A2.5"] },
+  { term: "SRP", full: "Single Reporting Platform (ENISA)", zh: "CRA 單一通報平台", nodes: ["A2.5"] },
   { term: "CRA", full: "Cyber Resilience Act", zh: "歐盟網路韌性法", nodes: ["A2.5", "B1.3"] },
   { term: "SBOM", full: "Software Bill of Materials", zh: "軟體物料清單", nodes: ["A2.5", "B1.3"] },
 
@@ -164,6 +169,7 @@ export const aiotAbbreviations: AiotAbbreviation[] = [
   { term: "TSDB", full: "Time-Series Database", zh: "時間序列資料庫", nodes: ["B2.2"] },
   { term: "UTC", full: "Coordinated Universal Time", zh: "世界協調時間", nodes: ["B2.2"] },
   { term: "SQL", full: "Structured Query Language", zh: "結構化查詢語言", nodes: ["B2.2"] },
+  { term: "DPS", full: "Device Provisioning Service (Azure)", zh: "裝置佈建服務", nodes: ["B2.2"] },
 
   // B2.3 智慧製造流程優化與成本控制
   { term: "OEE", full: "Overall Equipment Effectiveness", zh: "整體設備效率", nodes: ["B2.3"] },
@@ -275,8 +281,10 @@ export const aiotStudyNotes: StudyNotesBySubject = {
             children: [
               { text: "TinyML：跑著某種 TinyML 的 IoT 裝置數在 2026 上看 10 億台，技術已商品化。" },
               { text: "MCU 內建 NPU 成為趨勢，例如 STMicroelectronics STM32N6 整合神經加速器；NXP 則以 Cortex-M 搭配強化 DSP 與 ML 加速，MCU 與應用處理器的界線逐漸模糊。" },
-              { text: "SLM 已能在裝置端執行：Microsoft Phi-3 Mini（3.8B）、Google Gemma 2B、Apple 端側約 3B 模型；TinyML 的進展也讓精簡 SLM 有機會跑在 MCU 上做語音喚醒與異常偵測。" },
-              { text: "推論框架三強：LiteRT（TensorFlow Lite 改名，保留相容性並強化硬體委派）、ExecuTorch（PyTorch 端側方案，base footprint 約 50 KB，可跑到 MCU）、ONNX Runtime（以 execution provider 對接各家 NPU）。" },
+              { text: "TI 於 2026-03 推出內建 TinyEngine NPU 的 MCU（MSPM0G5187 為 Cortex-M0+、AM13Ex 為 Cortex-M33），並宣布 NPU 將擴及整條 MCU 產品線——連最低階的 M0+ 都開始帶 AI 加速器。" },
+              { text: "SLM 已能在裝置端執行：Google Gemma 4（2026-04，Apache 2.0 授權）推出專為邊緣設計的 E2B／E4B 版本，另有 MoE 架構的 26B A4B（每次推論只啟用約 4B 參數）；更早的 Phi-3 Mini（3.8B）、Apple 端側約 3B 模型也屬此類。" },
+              { text: "推論框架三強：LiteRT（TensorFlow Lite 改名，2026-03 隨 TensorFlow 2.21 脫離預覽、正式進入生產；另有跑 LLM 的 LiteRT-LM）、ExecuTorch（PyTorch 端側方案，2025-10 發布 1.0 GA，base footprint 約 50 KB，可跑到 MCU）、ONNX Runtime（以 execution provider 對接各家 NPU）。" },
+              { text: "觀念不變：MoE 的「總參數大、每次啟用少」與量化一樣，都是為了在受限硬體上壓低每次推論的運算量。" },
             ],
           },
         ],
@@ -392,6 +400,8 @@ export const aiotStudyNotes: StudyNotesBySubject = {
               { text: "Gartner 預測到 2030 年，半自主 AI agent 將編排約 10% 的生產、品質與維護作業（今日約 2%），且人類保留最終核可權。" },
               { text: "數位分身（Digital Twin）2026 的採用預估成長約 35%，並從「預測結果」走向「閉迴路自動執行」。" },
               { text: "AI agent 開始自動排維修工單、叫料與調參數，而不只是發出告警。" },
+              { text: "2026-10 台灣：AIoT Taiwan 2026（10/20–22，南港展覽館）以「Edge Intelligence Now」為主題，經濟部產業發展署主題館展出 65 項技術成果——國內產業的焦點也已從「連上網」轉到「在邊緣做判斷」。" },
+              { text: "2026-08 Gartner《AI 技術成熟度曲線》指出 AI 投資仍強，但「價值實現不均」：實務上，能說清楚 KPI（停機、良率、能耗）的 AIoT 專案才走得出 PoC。" },
             ],
           },
         ],
@@ -488,6 +498,10 @@ export const aiotStudyNotes: StudyNotesBySubject = {
           },
           {
             text: "2026 新類別：Ambient IoT——靠環境能量採集或無線供電運作的「無電池」裝置，目標是解決每日大量廢棄電池的問題，適合超低功耗的標籤與感測。",
+            children: [
+              { text: "標準進度：3GPP 在 Release 19 定義了第一種 Ambient IoT 裝置類型，Release 20（5G-Advanced 的最後一版）續做第二階段。" },
+              { text: "量級對照：Ambient IoT 的峰值功耗約在 µW 級，5G RedCap 則在 10 mW 以上——差了約四個數量級，所以兩者服務的是完全不同的裝置。" },
+            ],
           },
         ],
       },
@@ -597,6 +611,9 @@ export const aiotStudyNotes: StudyNotesBySubject = {
             text: "2026 連網技術現況（時效性內容，需定期複查）",
             children: [
               { text: "Matter 1.5（2025-11-20 發布）首度納入攝影機與視訊門鈴的標準模型，並擴充門窗遮蔽、土壤感測、能源費率、智慧電表與 EV 充電行為。" },
+              { text: "Matter 1.6（2026-06-17 發布）是「聚焦型」改版：NFC 配網（不必再靠 BLE 完成 commissioning，適合嵌牆開關、吸頂燈）、Joint Fabric（多個控制器共同管理同一個 Matter 網路，是 Multi-Admin 的延伸）、恆溫器建議值，以及可分區更新的憑證撤銷清單（CRL）。" },
+              { text: "LoRaWAN：LoRa Alliance 於 2026-09-22 宣布全球部署裝置達 1.5 億台、年複合成長約 25%（2025 年底約 1.25 億）——LPWAN 仍是廣域低功耗感測的主力。" },
+              { text: "Wi-Fi HaLow 是 Wi-Fi Alliance 對 IEEE 802.11ah 的認證名稱：Sub-GHz 頻段、傳得遠，理論上單一 AP 可掛 8,191 台裝置。" },
               { text: "Thread 1.4 自 2026-01-01 起成為 Thread 聯盟唯一認證的版本，讓不同品牌裝置能加入同一個 mesh。" },
               { text: "Wi-Fi 7 與 Thread 的協定不同，需要 Matter 作為轉譯層才能互通。" },
               { text: "5G RedCap（NR-Light）補上「不需完整 5G 規格」的中階裝置缺口，eRedCap 模組自 2026 起陸續出貨。" },
@@ -708,7 +725,7 @@ export const aiotStudyNotes: StudyNotesBySubject = {
               { text: "MQTT Sparkplug B 補上 MQTT 原本缺的三件事：資料模型、狀態管理、標準化的 Topic 命名空間；它已於 2023 年成為 ISO/IEC 國際標準。" },
               { text: "Unified Namespace（UNS）成為廠級資料架構的主流樣式：全廠事件以單一命名空間匯流，各系統各取所需。" },
               { text: "實務分工是「機台網用 OPC UA 處理複雜 PLC 結構、廠級事件流用 MQTT + Sparkplug B」，而不是二選一。" },
-              { text: "OPC UA over TSN 提供乙太網路上的即時、確定性傳輸。" },
+              { text: "OPC UA over TSN 提供乙太網路上的即時、確定性傳輸；2026-10 Avnu Alliance（TSN 的認證組織）與 OPC Foundation 簽署合作，共同推動 OPC UA FX over TSN 的測試與認證——代表它正從規格走向可驗證的產品。" },
               { text: "OPC UA PubSub 雖在規範內，但生產級 broker 實作與採用度仍遠不及 MQTT 生態。" },
             ],
           },
@@ -894,9 +911,24 @@ export const aiotStudyNotes: StudyNotesBySubject = {
             text: "2026 法規時程（時效性內容，且很適合出考題）",
             children: [
               { text: "歐盟 CRA（網路韌性法，Regulation 2024/2847）要求連網產品 secure by design、提供 SBOM（CycloneDX／SPDX 格式）。" },
-              { text: "CRA 的漏洞與事件通報義務自 2026-09-11 生效，已遭利用的漏洞須於 24 小時內通報；全部要求於 2027-12-11 全面適用。" },
+              { text: "CRA 的漏洞與事件通報義務已於 2026-09-11 生效；全部要求於 2027-12-11 全面適用（開源軟體管理者 steward 的通報義務也從 2027-12-11 起算）。" },
+              {
+                text: "CRA 通報的三段時限（Article 14，已遭利用的漏洞）",
+                table: {
+                  headers: ["階段", "時限", "內容"],
+                  rows: [
+                    ["早期預警（early warning）", "知悉後 24 小時內", "先告知有此事"],
+                    ["漏洞通報（notification）", "知悉後 72 小時內", "產品、漏洞性質、已採取的措施"],
+                    ["最終報告（final report）", "修補或緩解措施可用後 14 天內", "影響、嚴重度、根因與修正"],
+                  ],
+                },
+              },
+              { text: "通報管道：ENISA 的單一通報平台（Single Reporting Platform, SRP）於 2026-09-11 上線。廠商「報一次」即可——通報先送到主要營業據點所在國的 CSIRT（擔任協調者），同時讓 ENISA 看到，再由該 CSIRT 轉給產品有販售的其他國家。" },
               { text: "CRA 的支援期要求：取產品宣告支援期、預期壽命與「至少 5 年」三者中較長者。" },
-              { text: "歐盟 AI Act 於 2026-05-07 的 Digital Omnibus 協議後大幅調整時程：Annex III 高風險義務自 2026-08-02 延至 2027-12-02，Annex I（含無線電設備等產品法規類）自 2027-08-02 延至 2028-08-02，合成內容標示義務延至 2026-12-02，各國監理沙盒延至 2027-08-02。" },
+              { text: "歐盟 AI Act 的 Digital Omnibus 已正式立法為 Regulation (EU) 2026/1744（2026-07-24 刊登公報、07-27 生效）：Annex III 高風險義務自 2026-08-02 延至 2027-12-02，Annex I（含無線電設備、機械等產品法規類）延至 2028-08-02，各國監理沙盒延至 2027-08-02。" },
+              { text: "AI Act 沒有延後的部分：Article 50 透明度義務仍自 2026-08-02 適用；只有 2026-08-02 前已上市、會產生合成內容的系統，可寬限到 2026-12-02 才須完成標示。另有兩項新增禁止行為也於 2026-12-02 生效。" },
+              { text: "美國 Cyber Trust Mark（FCC 的自願性消費 IoT 資安標章）：ioXt Alliance 自 2026-04-13 接任主管理機構，2026-08-11 開放標章管理機構申請；截至 2026-10 產品仍無法申請標章，目標 2027 上架零售。" },
+              { text: "台灣：《人工智慧基本法》2026-01 公布施行（原則法、無專屬罰則，資安與安全是七大原則之一），數位發展部 2026-07 訂定 AI 風險分類框架；《資通安全管理法》修正案 2025-09-24 公布（主管機關改為數位發展部、特定非公務機關須設資安長），施行日期由行政院另定。" },
             ],
           },
         ],
@@ -1312,6 +1344,7 @@ export const aiotStudyNotes: StudyNotesBySubject = {
           { text: "Defense in Depth：任何單一防線都會被突破，所以要多層並行。只靠一道雲端防火牆是典型的錯誤答案。" },
           { text: "最小權限原則（Least Privilege）：每個身分只拿它需要的權限，配合 RBAC 落實。" },
           { text: "2026 合規要求：CRA 的 secure by design、SBOM 與最短 5 年支援期，把「安全」從一次性設計變成整個生命週期的義務（詳見 A2.5 的時程）。" },
+          { text: "2026-09-11 起 CRA 通報已是現行義務：已遭利用的漏洞須在 24 小時內預警、72 小時內通報。架構上因此要事先備好三樣東西——SBOM（知道自己用了哪些元件）、漏洞監控，以及能快速推送修補的 OTA 管道。" },
         ],
       },
       abbrSection("B1.3"),
@@ -1461,6 +1494,14 @@ export const aiotStudyNotes: StudyNotesBySubject = {
             text: "雲端設計的五個考量：Scalability、Availability、Security、Cost、Latency——通常互相拉扯，要按場域取捨。",
           },
           { text: "2026 架構樣式：全廠資料匯流到 Unified Namespace，各系統（MES、AI、看板）改為訂閱 UNS，而不是彼此點對點串接。" },
+          {
+            text: "2026-09 雲端平台異動：Microsoft 宣布 Azure IoT Central 自 2026-09-23 起不再能建立新應用，既有應用可用到 2029-09-20",
+            children: [
+              { text: "官方建議的遷移路徑正好是本節點的分層：裝置連線 → IoT Hub、裝置佈建 → DPS（Device Provisioning Service）、規則與整合 → Event Grid／Functions、儀表板與分析 → Microsoft Fabric Real-Time Intelligence／Power BI。" },
+              { text: "觀念：「一站式 SaaS 應用平台」正在讓位給「可組合的平台服務」。AWS 這兩年也陸續停掉 IoT Analytics、IoT Events 等上層服務，保留 IoT Core 這類底層連線服務。" },
+              { text: "設計啟示：平台會退場，所以資料格式與裝置連線要盡量走標準（MQTT、標準遙測 JSON），換平台時才不必重寫裝置端。" },
+            ],
+          },
         ],
       },
       abbrSection("B2.2"),
@@ -1623,6 +1664,70 @@ export const aiotStudyNotes: StudyNotesBySubject = {
  */
 export const aiotExamOverview: StudyNoteSection[] = [
   {
+    heading: "考前一週：115 年學科考試須知（依簡章 115.V1，2026-10-28 整理）",
+    items: [
+      {
+        text: "考試時間：115/10/31（六），兩科同一天、中間休息 30 分鐘",
+        table: {
+          headers: ["節次", "科目", "時間", "長度"],
+          rows: [
+            ["第一節", "考科一 AIoT 基礎概論", "09:00–10:15", "75 分鐘"],
+            ["第二節", "考科二 物聯網系統與應用", "10:45–12:00", "75 分鐘"],
+          ],
+        },
+      },
+      {
+        text: "作答方式：電腦化測驗、每科皆為單選題（簡章未載明題數）",
+        children: [
+          { text: "開考前會播放操作教學短片；以滑鼠左鍵點選答案。" },
+          { text: "結束前都可以改答案或留空——先把有把握的題目做完，再回頭處理卡住的題目。" },
+          { text: "題目若有附圖，可點選查看。" },
+        ],
+      },
+      {
+        text: "授證規則（物聯網類 = 考科一 ＋ 考科二）",
+        children: [
+          { text: "同時報考兩科：兩科平均達 70 分，且每科不得低於 60 分即可授證。換言之，強科可以補弱科，但弱科不能掉到 60 以下。" },
+          { text: "非同時報考：每科皆須達 70 分。單科 70 分以上的成績保留三個年度。" },
+          { text: "成績暫定 11/25 公告，採網路查詢。" },
+        ],
+      },
+      {
+        text: "攜帶物品與試場規則",
+        children: [
+          { text: "必帶：具照片與身分證號的證件正本。考試通知（考場、座位）自 10/21 起可上網查詢列印。" },
+          { text: "可帶：鉛筆、原子筆、橡皮擦、尺，以及考選部核定的國家考試電子計算器（型號請自行到考選部網頁確認）——B2.3 的 OEE／ROI 計算題用得到。" },
+          { text: "每節開考前 5 分鐘入座；開考 20 分鐘後不得入場、開考 30 分鐘內不得離場。" },
+          { text: "手機須關機，鑑定中鈴響扣該科 5–20 分，通話者該科不予計分。不得攜帶飲水、食物、穿戴裝置。" },
+          { text: "對題目有疑義，當科當場向監考人員申請。" },
+        ],
+      },
+    ],
+  },
+  {
+    heading: "近三個月新資訊速查（2026-08～10，時效性內容）",
+    items: [
+      {
+        text: "考題多半在數月前就命好，最新事件直接入題的機率不高；但下表的「觀念」都在評鑑內容範圍內，看懂它比背日期更有用。",
+      },
+      {
+        text: "依節點整理（詳細內容已併入各節點的「2026」段落）",
+        table: {
+          headers: ["節點", "新資訊", "該記住的觀念"],
+          rows: [
+            ["A1.1", "TI 全線 MCU 內建 NPU；Gemma 4 E2B／E4B 邊緣版；LiteRT 正式版、ExecuTorch 1.0", "Edge AI 已下放到最低階 MCU；量化與 MoE 都在壓低推論成本"],
+            ["A1.2", "AIoT Taiwan 2026「Edge Intelligence Now」（10/20–22）", "焦點從「連網」轉到「邊緣判斷」與可量化的 KPI"],
+            ["A2.1", "3GPP Rel-19／20 Ambient IoT", "無電池裝置功耗約 µW 級，與 RedCap 差約四個數量級"],
+            ["A2.2", "Matter 1.6（NFC 配網、Joint Fabric）；LoRaWAN 達 1.5 億台", "Matter 是應用層互通標準；LPWAN 仍是廣域低功耗主力"],
+            ["A2.3", "Avnu × OPC Foundation 推 OPC UA FX over TSN 認證", "TSN 提供確定性傳輸；OPC UA 提供資訊模型"],
+            ["A2.5／B1.3", "CRA 通報 9/11 生效、ENISA SRP 上線；AI Act Omnibus 成為 2026/1744", "24h 預警／72h 通報／14 天最終報告；SBOM 與 OTA 是前提"],
+            ["B2.2", "Azure IoT Central 停止新建（9/23），2029-09-20 退場", "一站式平台讓位給可組合的 IoT Hub ＋ DPS ＋ 分析平台"],
+          ],
+        },
+      },
+    ],
+  },
+  {
     heading: "使用方式與建議順序",
     items: [
       {
@@ -1654,7 +1759,7 @@ export const aiotExamOverview: StudyNoteSection[] = [
         text: "注意：B2.3 的 OEE、ROI、CAPEX/OPEX 等公式屬於依「智慧製造流程優化與成本控制」延伸的高價值補強，不代表官方已明文列為必考公式。",
       },
       {
-        text: "標註「2026」的段落是依 2026-08 查得的公開資訊補入的產業現況（Matter／Thread 版本、CRA 與 AI Act 時程、Edge AI 生態等），時效性最強，考前請再確認一次。",
+        text: "標註「2026」的段落是依 2026-08 查得、並於 2026-10-28 再更新一次的公開資訊（Matter 版本、CRA 通報、AI Act 時程、Edge AI 生態、雲端平台異動等），時效性最強，考前請再確認一次。",
       },
     ],
   },

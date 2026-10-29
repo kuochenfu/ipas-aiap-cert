@@ -41,6 +41,8 @@ const llmBank = (subjectId: string, bank: "practice" | "generated"): Question[] 
     ? getPracticeQuestions(subjectId)
     : getQuestions(subjectId).filter((q) => q.source === "generated");
 
+// 2026-10-28～29 已修正全部 LLM 題庫（AIoT 兩科、中級與初級新題庫、五科 generated），原本鎖住現況的棘輪組因此移除。
+// 日後新增 LLM 題庫時，直接加進這份清單。
 describe("選項長度：已修正的題庫維持在目標內", () => {
   // 隨機基準為 25%；官方題目的「正解最長」比例約 34–46%（初級／AIoT）。
   // 正解最短也設上限，避免矯枉過正，變成「挑不是最短的」也能猜。
@@ -56,6 +58,8 @@ describe("選項長度：已修正的題庫維持在目標內", () => {
     ["senior-ai-tech", "generated"],
     ["senior-bigdata", "generated"],
     ["senior-ml", "generated"],
+    ["junior-ai-basics", "practice"],
+    ["junior-genai", "practice"],
   ];
 
   for (const [subjectId, bank] of fixed) {
@@ -65,21 +69,6 @@ describe("選項長度：已修正的題庫維持在目標內", () => {
       expect(pct(s.longest, s.n), "正解為最長選項的比例").toBeLessThanOrEqual(35);
       expect(pct(s.shortest, s.n), "正解為最短選項的比例").toBeLessThanOrEqual(40);
       expect(s.glaring, "正解達最長干擾項 1.3 倍以上的題目").toEqual([]);
-    });
-  }
-});
-
-describe("選項長度：尚未修正的題庫只准變好（棘輪）", () => {
-  // 數字是 2026-10-28 的現況。改寫選項後請把上限調低，修完就移到上面的「已修正」組。
-  const ratchet: Array<[string, "practice" | "generated", number]> = [
-    ["junior-ai-basics", "practice", 45],
-    ["junior-genai", "practice", 37],
-  ];
-
-  for (const [subjectId, bank, cap] of ratchet) {
-    it(`${subjectId}（${bank}）：正解最長比例不超過 ${cap}%`, () => {
-      const s = lengthStats(llmBank(subjectId, bank));
-      expect(pct(s.longest, s.n)).toBeLessThanOrEqual(cap);
     });
   }
 });

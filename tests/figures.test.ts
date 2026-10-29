@@ -68,6 +68,20 @@ describe("原卷圖片的文字轉錄", () => {
     }
   });
 
+  // 「沒有空白選項」擋不住另一種壞題：選項有字、內容卻在圖裡。senior-ml-114-2-q46、q47
+  // 的選項是「程式碼 A」「程式碼 A、程式碼 C」，四段程式碼全在截圖裡，在站上無法作答，
+  // 2026-10 盤點程式題時才發現。題目文字點名了圖或程式碼片段，就必須有轉錄。
+  // 刻意不收「下表」「執行結果」：前者會命中「情境下表現」，後者常是一般敘述。
+  it("題目文字點名了附圖或程式碼片段，就必須有轉錄", () => {
+    const REF = /下圖|附圖|如圖|上圖|附表|程式碼\s*[A-E](?![A-Za-z])/;
+    const missing = allQuestions
+      .filter((q) => q.source !== "generated")
+      .filter((q) => REF.test(q.prompt + q.choices.map((c) => c.text).join(" ")))
+      .filter((q) => figuresOf(q).length === 0)
+      .map((q) => q.id);
+    expect(missing).toEqual([]);
+  });
+
   // 已知會用到附圖的題目；補完後不應再退化。數字若因新增考卷而變動，
   // 請確認新卷的附圖也已轉錄後再更新。
   it("中級三科的附圖轉錄覆蓋數不低於既有水準", () => {
@@ -79,6 +93,6 @@ describe("原卷圖片的文字轉錄", () => {
     );
     expect(counts["senior-ai-tech"]).toBeGreaterThanOrEqual(1);
     expect(counts["senior-bigdata"]).toBeGreaterThanOrEqual(19);
-    expect(counts["senior-ml"]).toBeGreaterThanOrEqual(22);
+    expect(counts["senior-ml"]).toBeGreaterThanOrEqual(24);
   });
 });

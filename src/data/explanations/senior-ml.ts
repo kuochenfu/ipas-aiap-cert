@@ -387,15 +387,108 @@ export const explanations: Record<string, QuestionExplanation> = {
   },
   "senior-ml-114-2-q46": {
     explanation:
-      "本題要找出使 PCA 降噪失效、需修正的程式段，官方答案為 B。PCA 降噪的關鍵在保留的主成分數量（n_components）需設定得當——保留太多成分會把雜訊一併留下、達不到去噪效果，因此 B 段為應修改之處。其餘段落（A、C、D）為正確流程，故選 B（L232 PCA 降維/降噪）。",
+      "要改的是建立 PCA 的那一行（B）：PCA() 沒有指定 n_components 時會保留全部 64 個主成分，transform 之後再 inverse_transform 等於把資料原封不動地還原，雜訊也一起完整保留；改成例如 PCA(n_components=0.5)，只保留解釋 50% 變異的主成分，捨去多半由雜訊構成的小變異方向，降噪才會生效。原卷另標了程式碼E（inverse_transform 還原影像），同樣不需修改，只是不在選項中。匯入 PCA 類別的程式碼A（A）沒有任何可調的設定；以 noisy 擬合（C）正是這種降噪的標準做法，雜訊的變異分散在所有方向，主要成分仍由筆畫結構主導；投影到主成分空間的 transform（D）本身沒有錯，問題出在投影空間保留了全部維度（L232 PCA 降維／降噪）。",
     topic: "L23202 常見機器學習演算法",
     choices: {},
+    figures: [
+      {
+        kind: "note",
+        content:
+          "請根據這份資料回答第 46～47 題。在郵遞區號自動辨識的研究中，研究人員收集了一份手寫數字影像資料集，每一張影像為 8×8 的灰階圖片，共包含多個手寫數字樣本。這份資料集來自 UCI Machine Learning Repository，常被用於數字辨識與機器學習方法的教學與實驗。在過程中，研究人員發現資料中可能存在雜訊，例如筆跡模糊或影像中附加的干擾點，這會影響後續分類模型的效能。因此，他們希望透過資料降噪的方法，提升後續分類的準確度。同時，他們也想透過 KNN（K-Nearest Neighbors）搭配交叉驗證來評估模型表現，確保模型在不同資料切割下都能有穩定的預測能力。",
+      },
+      {
+        kind: "code",
+        content:
+          "from sklearn.datasets import load_digits\n" +
+          "digits = load_digits()\n" +
+          "digits.data.shape",
+      },
+      { kind: "output", content: "(1797, 64)" },
+      {
+        kind: "chart",
+        caption: "部分樣本繪製後的外觀",
+        content: "兩列共 20 張 8×8 灰階手寫數字影像，每列依序為 0 到 9，筆畫清晰可辨。",
+      },
+      {
+        kind: "code",
+        content:
+          "import numpy as np\n" +
+          "noisy = np.random.normal(digits.data, 4)",
+      },
+      {
+        kind: "chart",
+        caption: "加入雜訊後的外觀",
+        content: "同樣的 20 張影像加上雜訊後，數字輪廓仍隱約可辨，但每張影像都布滿隨機的深淺斑點。",
+      },
+      {
+        kind: "code",
+        content:
+          "from sklearn.decomposition import PCA          #程式碼A\n" +
+          "pca = PCA()                                     #程式碼B\n" +
+          "pca.fit(noisy)                                  #程式碼C\n" +
+          "components = pca.transform(noisy)               #程式碼D\n" +
+          "filtered = pca.inverse_transform(components)    #程式碼E",
+      },
+    ],
   },
   "senior-ml-114-2-q47": {
     explanation:
-      "本題要找出能正確以 KNN 搭配交叉驗證並輸出準確率的程式組合，官方答案為選項 B（其內容為「程式碼A、程式碼C」）。注意題目的四段程式碼以程式碼A/程式碼B/程式碼C/程式碼D 命名，與選項 A/B/C/D 字母相同、易混淆，以下一律以「程式碼X」指程式片段、以「選項X」指作答選項。能正確完成任務者為程式碼A 與程式碼C：兩者皆正確建立 KNN 分類器並正確呼叫 cross_val_score（或等效交叉驗證流程）後輸出準確率。程式碼B、程式碼D 則在資料切割或交叉驗證函數的使用上有誤，無法正確輸出準確率，故不納入。因此涵蓋「程式碼A、程式碼C」的選項 B 為正解（L233 交叉驗證）。",
+      "能正確輸出準確率的是程式碼A 與程式碼C，也就是選項（B）。程式碼A 以 StratifiedKFold(n_splits=5, shuffle=True) 做分層切割、以 scoring=\"accuracy\" 評估；程式碼C 直接寫 cv=5，對分類器而言 cross_val_score 內部同樣使用分層 K 折（只是不洗牌），兩者都正確。程式碼B 與程式碼D 的問題都在 scoring=\"f1\"：digits 有 10 個類別，\"f1\" 預設 average=\"binary\" 只適用二元分類，每一折都會評分失敗，cross_val_score 把失敗的分數記為 nan 並發出警告，最後印出 nan；就算改成 \"f1_macro\" 能算出數字，輸出的也是 F1 而不是題目要的準確率。四組全收的選項（A）納入了會輸出 nan 的程式碼B 與程式碼D；選項（C）的組合含程式碼B；選項（D）的組合含程式碼D（L233 交叉驗證）。",
     topic: "L23303 模型訓練、評估與驗證",
     choices: {},
+    figures: [
+      { kind: "note", content: "沿用第 46 題的 digits 手寫數字資料集情境。" },
+      {
+        kind: "code",
+        caption: "程式碼 A",
+        content:
+          "from sklearn.model_selection import StratifiedKFold, cross_val_score\n" +
+          "from sklearn.neighbors import KNeighborsClassifier\n" +
+          "\n" +
+          "X, y = digits.data, digits.target\n" +
+          "model = KNeighborsClassifier(n_neighbors=3)\n" +
+          "cv = StratifiedKFold(n_splits=5, shuffle=True)\n" +
+          "scores = cross_val_score(model, X, y, cv=cv, scoring=\"accuracy\")\n" +
+          "print(scores.mean())",
+      },
+      {
+        kind: "code",
+        caption: "程式碼 B",
+        content:
+          "from sklearn.model_selection import StratifiedKFold, cross_val_score\n" +
+          "from sklearn.neighbors import KNeighborsClassifier\n" +
+          "\n" +
+          "X, y = digits.data, digits.target\n" +
+          "model = KNeighborsClassifier(n_neighbors=3)\n" +
+          "cv = StratifiedKFold(n_splits=5, shuffle=True)\n" +
+          "scores = cross_val_score(model, X, y, cv=cv, scoring=\"f1\")\n" +
+          "print(scores.mean())",
+      },
+      {
+        kind: "code",
+        caption: "程式碼 C",
+        content:
+          "from sklearn.model_selection import StratifiedKFold, cross_val_score\n" +
+          "from sklearn.neighbors import KNeighborsClassifier\n" +
+          "\n" +
+          "X, y = digits.data, digits.target\n" +
+          "model = KNeighborsClassifier(n_neighbors=3)\n" +
+          "scores = cross_val_score(model, X, y, cv=5, scoring=\"accuracy\")\n" +
+          "print(scores.mean())",
+      },
+      {
+        kind: "code",
+        caption: "程式碼 D",
+        content:
+          "from sklearn.model_selection import StratifiedKFold, cross_val_score\n" +
+          "from sklearn.neighbors import KNeighborsClassifier\n" +
+          "\n" +
+          "X, y = digits.data, digits.target\n" +
+          "model = KNeighborsClassifier(n_neighbors=3)\n" +
+          "scores = cross_val_score(model, X, y, cv=5, scoring=\"f1\")\n" +
+          "print(scores.mean())",
+      },
+    ],
   },
   "senior-ml-114-2-q48": {
     explanation:

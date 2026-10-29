@@ -5,3 +5,6 @@ docs/raw/
 docs/markdown/
 .playwright-mcp/
 docs/study-slices/
+
+# 中級程式閱讀題的驗證環境（scripts/code-questions/run.sh 自動建立）
+scripts/code-questions/.venv/

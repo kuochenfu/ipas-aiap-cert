@@ -201,7 +201,7 @@ const renderDrillTools = ({ total, hasTopics, hasMeta, confidence }: DrillContro
              <p class="drill-tool-hint">作答前先標記「有把握／不確定」，學習診斷會比較兩者的實際答對率。</p>
            </div>`
         : ""}
-      ${hasTopics ? `<button class="drill-topics" data-nav="topics">${hasMeta ? "學習診斷" : "節點表現"} →</button>` : ""}
+      ${hasTopics ? `<button class="drill-topics" data-nav="topics">${hasMeta ? "學習診斷" : "節點表現"}${chevronRightIcon}</button>` : ""}
       <button class="drill-reset" data-nav="drill-reset">重置本科進度…</button>
       <p class="drill-keys">鍵盤：A–D 作答・← → 換題</p>
     </div>

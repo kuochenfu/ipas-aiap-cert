@@ -320,6 +320,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; border-ra
   background: var(--panel); color: var(--accent); min-height: var(--tap);
   border: 1px solid var(--border); padding: 8px 14px; font-weight: 700;
 }
+.drill-topics { display: inline-flex; align-items: center; gap: 2px; padding-right: 10px; }
+.drill-topics .icon { width: 18px; height: 18px; stroke-width: 2.25; }
 .drill-reset { color: var(--wrong); }
 .drill-confidence { width: 100%; text-align: left; color: var(--muted); }
 .drill-confidence.active { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }

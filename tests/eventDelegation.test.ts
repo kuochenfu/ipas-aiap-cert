@@ -28,13 +28,15 @@ const mainSource = readFileSync(join(root, "src", "main.ts"), "utf8");
  */
 const NON_CLICKABLE = new Set([
   "data-qid",             // 單頁考卷就地更新時定位題目
-  "data-node",            // 學習主題頁的節點，供搜尋與跳轉以 querySelector 選取
+  "data-node",            // 學習主題頁索引的節點列，供搜尋篩選以 querySelector 選取
   "data-cert-section",    // 各證照的區塊邊界，供 certSectionOf() 往上找
   "data-note-section",    // 考前速記模式的 CSS 篩選鍵
   "data-abbr-row",        // 縮寫速查的列，供搜尋時逐列顯示／隱藏
   "data-study-search",    // 搜尋輸入框（走 input 事件，不是點擊）
   "data-study-count",     // 搜尋命中數的顯示位置
-  "data-study-read-count", // 已讀進度的顯示位置
+  "data-study-abbr-hits", // 搜尋時命中縮寫的顯示位置
+  "data-abbr-filter",     // 縮寫速查的篩選輸入框（走 input 事件，不是點擊）
+  "data-reader",          // 閱讀器目前的節點碼，供樣式與除錯辨識
 ]);
 
 const emitted = new Set(

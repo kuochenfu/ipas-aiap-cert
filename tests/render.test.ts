@@ -6,7 +6,13 @@ import {
   renderLevel,
   renderSubjectCard,
   renderChoice,
-  renderStudyView,
+  renderStudyIndex,
+  renderStudyReader,
+  renderAbbrHits,
+  listStudyNodes,
+  pickStudyResume,
+  parseStudyPageKey,
+  studyPageKey,
   renderPaperPicker,
   renderQuestion,
   renderExamPaper,
@@ -17,6 +23,11 @@ import {
 
   renderTopicStats,} from "../src/ui/render";
 import type { StudyNotesBySubject } from "../src/data/types";
+import type { StudyPageRef } from "../src/ui/render";
+
+/** 閱讀器的簡寫：打開某科某節點。 */
+const reader = (notes: StudyNotesBySubject | undefined, subjectId: string, code: string, readNodes?: Set<string>) =>
+  renderStudyReader({ page: { kind: "node", subjectId, code }, notes, readNodes });
 import { studyNotes } from "../src/data/studyNotes";
 
 describe("escapeHtml", () => {
@@ -51,11 +62,12 @@ describe("renderChoice", () => {
   });
 });
 
-describe("renderStudyView", () => {
-  it("含科目名稱、主題標題、外部連結安全屬性、跳脫", () => {
-    const html = renderStudyView(studyNotes);
-    expect(html).toContain("學習主題");
-    expect(html).toContain("人工智慧基礎概論"); // 科目名稱
+describe("學習主題頁", () => {
+  it("索引含頁名與科目；閱讀器含筆記、朗讀與安全的外部連結", () => {
+    const index = renderStudyIndex({ cert: "aiap", notes: studyNotes });
+    expect(index).toContain("學習主題");
+    expect(index).toContain("人工智慧基礎概論"); // 科目名稱
+    const html = reader(studyNotes, "junior-ai-basics", "L111");
     expect(html).toContain("學習指引整理");
     expect(html).toContain("則重點");
     expect(html).toContain('data-tts-section');
@@ -267,7 +279,7 @@ describe("renderExamReview", () => {
   });
 });
 
-describe("renderStudyView with nested notes", () => {
+describe("閱讀器的巢狀筆記", () => {
   it("nested rendering: parent with children produces nested <ul> inside <li>", () => {
     const testNotes: StudyNotesBySubject = {
       "junior-ai-basics": {
@@ -287,7 +299,7 @@ describe("renderStudyView with nested notes", () => {
         ],
       },
     };
-    const html = renderStudyView(testNotes);
+    const html = reader(testNotes, "junior-ai-basics", "L111");
     // 檢查外層 <ul> 含有 <li>
     expect(html).toContain("<li>");
     // 檢查父項文本已跳脫並在 <span class="note-text">
@@ -314,7 +326,7 @@ describe("renderStudyView with nested notes", () => {
         ],
       },
     };
-    const html = renderStudyView(testNotes);
+    const html = reader(testNotes, "junior-ai-basics", "L111");
     // 驗證 <script> 被跳脫為 &lt;script&gt;
     expect(html).toContain("&lt;script&gt;");
     // 驗證 & 被跳脫為 &amp;
@@ -345,7 +357,7 @@ describe("renderStudyView with nested notes", () => {
         ],
       },
     };
-    const html = renderStudyView(testNotes);
+    const html = reader(testNotes, "junior-ai-basics", "L111");
     // 檢查摘要中顯示正確的葉子數（子項1 + 子項2 + 獨立葉子項 = 3 個葉子）
     expect(html).toContain("3 則重點");
   });
@@ -593,31 +605,36 @@ describe("模式選單的模擬考試卡", () => {
 });
 
 describe("學習主題頁的證照分組", () => {
-  it("先分證照，AIoT 兩科都列出官方評鑑內容", () => {
-    const html = renderStudyView();
-    expect(html).toContain("AIoT 應用工程師");
-    expect(html).toContain("AI 應用規劃師");
-    expect(html).toContain("A2.3　工業通訊標準與資訊模型");
-    expect(html).toContain("B2.2　雲端環境數據收集與平台設計");
+  it("索引一次只列一張證照，AIoT 兩科都列出官方評鑑內容", () => {
+    const aiot = renderStudyIndex({ cert: "aiot" });
+    expect(aiot).toContain("A2.3");
+    expect(aiot).toContain("工業通訊標準與資訊模型");
+    expect(aiot).toContain("雲端環境數據收集與平台設計");
+    expect(aiot).not.toContain('data-study-open="junior-ai-basics|L111"');
+    const aiap = renderStudyIndex({ cert: "aiap" });
+    expect(aiap).toContain('data-study-open="junior-ai-basics|L111"');
+    expect(aiap).not.toContain("A2.3");
+    // 證照切換兩顆都在，目前這張標為按下。
+    expect(aiap).toContain('data-study-cert="aiot"');
+    expect(aiap).toMatch(/data-study-cert="aiap"\s+aria-pressed="true"/);
   });
 
   it("筆記標籤反映出處：五科為學習指引整理、AIoT 為備考整理", async () => {
-    const { studyNotes } = await import("../src/data/studyNotes");
     const { aiotStudyNotes } = await import("../src/data/studyNotes.aiot");
-    const html = renderStudyView({ ...studyNotes, ...aiotStudyNotes });
-    expect(html).toContain("學習指引整理");
-    expect(html).toContain("備考整理");
+    const notes = { ...studyNotes, ...aiotStudyNotes };
+    expect(reader(notes, "junior-ai-basics", "L111")).toContain("學習指引整理");
+    expect(reader(notes, "aiot-junior-basics", "A1.1")).toContain("備考整理");
+    expect(reader(notes, "aiot-junior-basics", "A1.1")).not.toContain("學習指引整理");
   });
 
   it("備考總整理掛在證照層級，且不影響沒有總整理的證照", () => {
-    const html = renderStudyView(undefined, {
-      aiot: [{ heading: "最重要的八條公式", items: [{ text: "V = I × R" }] }],
-    });
+    const overviews = { aiot: [{ heading: "最重要的八條公式", items: [{ text: "V = I × R" }] }] };
+    expect(renderStudyIndex({ cert: "aiot", overviews })).toContain('data-study-open="overview|aiot"');
+    expect(renderStudyIndex({ cert: "aiap", overviews })).not.toContain("備考總整理");
+    const html = renderStudyReader({ page: { kind: "overview", cert: "aiot" }, overviews });
     expect(html).toContain("備考總整理");
     expect(html).toContain("最重要的八條公式");
     expect(html).toContain("V = I × R");
-    // 只出現一次——AI 應用規劃師沒有總整理，不應跟著長出空的 details。
-    expect(html.match(/備考總整理/g)).toHaveLength(1);
   });
 });
 
@@ -654,6 +671,12 @@ describe("AIoT 備考整理內容", () => {
 });
 
 describe("筆記的三種呈現型別", () => {
+  // 每個案例都只放一個節點的筆記，打開那一個節點即可。
+  const readerOf = (notes: StudyNotesBySubject) => {
+    const [subjectId, byCode] = Object.entries(notes)[0];
+    return reader(notes, subjectId, Object.keys(byCode)[0]);
+  };
+
   it("table 渲染成真表格，且包在可橫向捲動的容器裡", () => {
     const notes = {
       "aiot-junior-basics": {
@@ -669,7 +692,7 @@ describe("筆記的三種呈現型別", () => {
         }],
       },
     };
-    const html = renderStudyView(notes);
+    const html = readerOf(notes);
     expect(html).toContain("note-table-wrap");
     expect(html).toContain("<th>UART</th>");
     expect(html).toContain("<td>SCLK</td>");
@@ -688,7 +711,7 @@ describe("筆記的三種呈現型別", () => {
         }],
       },
     };
-    const html = renderStudyView(notes);
+    const html = readerOf(notes);
     expect(html).toContain("note-formula");
     expect(html).toContain("Resolution = Vref / 2^N");
     expect(html).toContain("≈ 0.806 mV");
@@ -704,7 +727,7 @@ describe("筆記的三種呈現型別", () => {
         }],
       },
     };
-    const html = renderStudyView(notes);
+    const html = readerOf(notes);
     expect(html).toContain("note-flow");
     expect(html).toContain("Sensor");
     expect(html).toContain("Cloud");
@@ -723,7 +746,7 @@ describe("筆記的三種呈現型別", () => {
         }],
       },
     };
-    const html = renderStudyView(notes);
+    const html = readerOf(notes);
     for (const raw of ["<x>", "<h>", "<r>", "<e>", "<n>", "<s>"]) {
       expect(html).not.toContain(raw);
     }
@@ -742,64 +765,113 @@ describe("筆記的三種呈現型別", () => {
         }],
       },
     };
-    expect(renderStudyView(notes)).toContain("1 則重點");
+    expect(readerOf(notes)).toContain("1 則重點");
   });
 });
 
-describe("學習主題頁的導覽工具", () => {
-  it("兩張證照各有一份工具列，目錄涵蓋全部主題", () => {
-    const html = renderStudyView();
-    expect(html).toContain('data-cert-section="aiap"');
-    expect(html).toContain('data-cert-section="aiot"');
-    expect(html.match(/data-study-search/g) ?? []).toHaveLength(2);
-    // 五科 18 個評鑑主題 + AIoT 15 個評鑑內容節點。
-    expect(html.match(/data-study-jump="node-/g) ?? []).toHaveLength(33);
-    expect(html).toContain('data-study-jump="node-L111"');
-    expect(html).toContain('data-study-jump="node-A1-1"');
+describe("學習主題頁的索引與閱讀器導覽", () => {
+  it("索引列出每個評鑑節點：五科 18 個主題、AIoT 15 個節點", () => {
+    expect(renderStudyIndex({ cert: "aiap" }).match(/class="study-node[^"]*" data-study-open="/g) ?? []).toHaveLength(18);
+    expect(renderStudyIndex({ cert: "aiot" }).match(/class="study-node[^"]*" data-study-open="/g) ?? []).toHaveLength(15);
   });
 
-  it("五科的目錄籤標出級別，避免兩個「科目1」分不清", () => {
-    const html = renderStudyView();
+  it("五科的分組標出級別，避免兩個「科目1」分不清", () => {
+    const html = renderStudyIndex({ cert: "aiap" });
     expect(html).toContain("初級科目1");
     expect(html).toContain("中級科目1");
   });
 
   // 考前速記靠 formula／confuse 兩節篩選，五科的筆記沒有這種分節，
   // 按了會整片空白，因此依資料決定要不要出這顆按鈕。
-  it("只有具備公式／易混淆分節的證照才出現考前速記", async () => {
-    const { studyNotes } = await import("../src/data/studyNotes");
+  it("只有具備公式／易混淆分節的節點才出現考前速記", async () => {
     const { aiotStudyNotes } = await import("../src/data/studyNotes.aiot");
-    const html = renderStudyView({ ...studyNotes, ...aiotStudyNotes });
-    expect(html.match(/data-study-action="cram"/g) ?? []).toHaveLength(1);
-    const aiotPart = html.slice(html.indexOf('data-cert-section="aiot"'));
-    expect(aiotPart).toContain('data-study-action="cram"');
+    const notes = { ...studyNotes, ...aiotStudyNotes };
+    expect(reader(notes, "aiot-junior-basics", "A2.2")).toContain('data-study-action="cram"');
+    expect(reader(notes, "junior-ai-basics", "L111")).not.toContain('data-study-action="cram"');
   });
 
-  it("節點錨點把 . 換成 -，避開 querySelector 的跳脫問題", () => {
-    const html = renderStudyView();
-    expect(html).toContain('id="node-A2-2"');
-    expect(html).toContain('id="node-B2-3"');
-    expect(html).not.toContain('id="node-A2.2"');
-    expect(html).toContain('data-node="A2.2"');
-  });
-
-  it("筆記各節帶 data-note-section，速記模式才有東西可篩", async () => {
+  it("分節籤列與各節錨點一一對應，帶 data-note-section 供速記篩選", async () => {
     const { aiotStudyNotes } = await import("../src/data/studyNotes.aiot");
-    const html = renderStudyView(aiotStudyNotes);
+    const html = reader(aiotStudyNotes, "aiot-junior-basics", "A1.1");
+    for (let i = 0; i < 7; i += 1) {
+      expect(html).toContain(`data-study-jump="sec-${i}"`);
+      expect(html).toContain(`id="sec-${i}"`);
+    }
     expect(html).toContain('data-note-section="formula"');
     expect(html).toContain('data-note-section="confuse"');
     expect(html).toContain('data-note-section="abbr"');
   });
+
+  it("「補充 A｜…」的分節籤只留前綴，完整標題仍在內文", () => {
+    const html = reader(studyNotes, "junior-ai-basics", "L111");
+    expect(html).toMatch(/data-study-jump="sec-1"[^>]*>補充 A<\/button>/);
+    expect(html).toContain("補充 A｜題庫考點反推（非官方講義）");
+  });
+
+  it("上一節／下一節沿索引順序走，頭尾不出按鈕", () => {
+    const first = reader(undefined, "junior-ai-basics", "L111");
+    expect(first).toContain('data-study-open="junior-ai-basics|L112"');
+    expect(first).not.toContain("上一節：");
+    // 跨科：初級科目1 的最後一節接初級科目2 的第一節。
+    expect(reader(undefined, "junior-ai-basics", "L114")).toContain('data-study-open="junior-genai|L121"');
+    const last = reader(undefined, "aiot-junior-iot", "B2.3");
+    expect(last).not.toContain("下一節：");
+    expect(last).toContain("回到目錄");
+  });
+
+  it("找不到的節點顯示提示而不是空白", () => {
+    expect(reader(undefined, "junior-ai-basics", "L999")).toContain("找不到這一頁");
+  });
+
+  it("頁面鍵可以來回轉換", () => {
+    const pages: StudyPageRef[] = [
+      { kind: "node", subjectId: "aiot-junior-basics", code: "A2.2" },
+      { kind: "overview", cert: "aiot" },
+      { kind: "abbr", cert: "aiot" },
+    ];
+    for (const page of pages) expect(parseStudyPageKey(studyPageKey(page))).toEqual(page);
+    expect(parseStudyPageKey("abbr|nope")).toBeUndefined();
+    expect(parseStudyPageKey("no-separator")).toBeUndefined();
+  });
 });
 
-describe("節點動作列與縮寫速查", () => {
+describe("接著讀", () => {
+  const entries = listStudyNodes("aiot");
+  const codes = entries.map((entry) => entry.topic.code);
+
+  it("沒有紀錄時從第一個節點開始", () => {
+    expect(pickStudyResume(entries, new Set())).toMatchObject({ reason: "first", entry: { topic: { code: codes[0] } } });
+  });
+
+  it("上次打開但未讀的節點優先", () => {
+    const resume = pickStudyResume(entries, new Set([codes[0]]), `aiot-junior-basics|${codes[3]}`);
+    expect(resume).toMatchObject({ reason: "last", entry: { topic: { code: codes[3] } } });
+  });
+
+  it("上次那節已讀完，就往後找第一個未讀，到底再繞回開頭", () => {
+    const read = new Set([codes[3], codes[4]]);
+    expect(pickStudyResume(entries, read, `aiot-junior-basics|${codes[3]}`))
+      .toMatchObject({ reason: "next", entry: { topic: { code: codes[5] } } });
+    const lastKey = `aiot-junior-iot|${codes[codes.length - 1]}`;
+    expect(pickStudyResume(entries, new Set([codes[codes.length - 1]]), lastKey))
+      .toMatchObject({ entry: { topic: { code: codes[0] } } });
+  });
+
+  it("全部讀完時不給目標，索引改顯示完成訊息", () => {
+    expect(pickStudyResume(entries, new Set(codes))).toBeUndefined();
+    expect(renderStudyIndex({ cert: "aiot", readNodes: new Set(codes) })).toContain("15 個節點都讀過了");
+  });
+});
+
+describe("節點的練題與已讀、縮寫速查", () => {
   it("15 個 AIoT 節點與 18 個五科主題全部都有練題按鈕", () => {
-    const html = renderStudyView();
-    expect(html.match(/data-topic-drill="/g) ?? []).toHaveLength(33);
-    expect(html.match(/node-drill is-empty/g) ?? []).toHaveLength(0);
-    expect(html).toContain('data-topic-drill="aiot-junior-basics|A2.2"');
-    expect(html).toContain('data-topic-drill="aiot-junior-iot|B2.3"');
-    expect(html).toContain('data-topic-drill="junior-ai-basics|L111"');
+    const all = [...listStudyNodes("aiap"), ...listStudyNodes("aiot")];
+    expect(all).toHaveLength(33);
+    for (const { subject, topic } of all) {
+      const html = reader(undefined, subject.id, topic.code);
+      expect(html, `${topic.code} 沒有練題按鈕`).toContain(`data-topic-drill="${subject.id}|${topic.code}"`);
+      expect(html).not.toContain("node-drill is-empty");
+    }
   });
 
   // 五科的學習主題是三碼評鑑主題，題目掛在五碼評鑑內容上，一個主題涵蓋數個節點。
@@ -811,23 +883,46 @@ describe("節點動作列與縮寫速查", () => {
       .filter(([topic]) => topicMatchesGuideCode(topic, "L113"))
       .reduce((sum, [, n]) => sum + n, 0);
     expect(expected).toBeGreaterThan(1);
-    expect(renderStudyView()).toContain(`練這個主題的 ${expected} 題`);
+    expect(reader(undefined, "junior-ai-basics", "L113")).toContain(`練這一節的 ${expected} 題`);
+    expect(renderStudyIndex({ cert: "aiap" })).toContain(`${expected} 題`);
   });
 
-  it("已讀節點反映在按鈕狀態與計數上", () => {
-    const html = renderStudyView(undefined, undefined, { readNodes: new Set(["A1.1", "B2.3"]) });
-    expect(html).toContain("已讀 2 / 15");   // AIoT
-    expect(html).toContain("已讀 0 / 18");   // AI 應用規劃師
-    expect(html).toContain('data-study-read="A1.1"\n              aria-pressed="true"');
+  it("已讀節點反映在索引進度、列的勾選與閱讀器按鈕上", () => {
+    const readNodes = new Set(["A1.1", "B2.3"]);
+    expect(renderStudyIndex({ cert: "aiot", readNodes })).toContain("已讀 <strong>2</strong> / 15 個節點");
+    expect(renderStudyIndex({ cert: "aiap", readNodes })).toContain("已讀 <strong>0</strong> / 18 個節點");
+    expect(renderStudyIndex({ cert: "aiot", readNodes })).toContain('class="study-node is-read" data-study-open="aiot-junior-basics|A1.1"');
+    const html = reader(undefined, "aiot-junior-basics", "A1.1", readNodes);
+    expect(html).toMatch(/data-study-read="A1\.1"\s+aria-pressed="true"/);
+    expect(html).not.toContain("標記已讀，下一節");
   });
 
-  it("有縮寫資料才渲染速查表，每列可被搜尋篩選", async () => {
+  it("練過的節點在索引列出答對題數", () => {
+    const html = renderStudyIndex({
+      cert: "aiot",
+      practice: { "aiot-junior-basics|A1.1": { answered: 5, correct: 4 } },
+    });
+    expect(html).toContain("練過 5 題答對 4");
+  });
+
+  it("有縮寫資料才出速查入口，速查頁每列可被篩選", async () => {
     const { aiotAbbreviations } = await import("../src/data/studyNotes.aiot");
-    expect(renderStudyView()).not.toContain("縮寫速查");
-    const html = renderStudyView(undefined, undefined, { abbreviations: { aiot: aiotAbbreviations } });
+    expect(renderStudyIndex({ cert: "aiot" })).not.toContain("縮寫速查");
+    expect(renderStudyIndex({ cert: "aiot", abbreviations: { aiot: aiotAbbreviations } }))
+      .toContain('data-study-open="abbr|aiot"');
+    const html = renderStudyReader({ page: { kind: "abbr", cert: "aiot" }, abbreviations: { aiot: aiotAbbreviations } });
     expect(html).toContain("縮寫速查");
     expect(html.match(/data-abbr-row/g) ?? []).toHaveLength(aiotAbbreviations.length);
     expect(html).toContain("Unified Namespace");
+  });
+
+  it("搜尋時順帶列出命中的縮寫，超過上限提示看速查表", () => {
+    const entries = Array.from({ length: 8 }, (_, i) => ({ term: `MQ${i}`, full: "Message Queue", nodes: ["A2.2"] }));
+    const html = renderAbbrHits(entries, "message");
+    expect(html.match(/class="abbr-hit"/g) ?? []).toHaveLength(6);
+    expect(html).toContain("另有 2 個縮寫符合");
+    expect(renderAbbrHits(entries, "")).toBe("");
+    expect(renderAbbrHits([{ term: "<x>", full: "<y>", nodes: [] }], "x")).not.toContain("<x>");
   });
 });
 

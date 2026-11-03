@@ -410,75 +410,290 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; border-ra
 .study-entry-title { font-size: var(--fs-h3); font-weight: 800; }
 .study-entry-sub { color: var(--muted); font-size: var(--fs-sm); }
 
-/* ── 學習主題頁 ─────────────────────────────────────── */
-.study .lead { color: var(--muted); }
+/* ── 學習主題頁：索引 → 單節點閱讀器 ───────────────────────
+   一個評鑑節點＝一章。索引只放一張證照的節點清單；閱讀器一次一節，
+   底部固定列負責「上一節／已讀／練題／下一節」。 */
+.icon {
+  width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.node-code {
+  font-variant-numeric: tabular-nums; font-weight: 800; color: var(--accent);
+  letter-spacing: 0.01em; white-space: nowrap;
+}
+
+/* 索引：證照切換 */
+.study-cert-switch {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px;
+  background: var(--panel-alt); border-radius: 12px; margin-bottom: 16px;
+}
+.study-cert-tab {
+  min-height: var(--tap); padding: 8px 10px; background: transparent; color: var(--muted);
+  border: 1px solid transparent; font-weight: 700; line-height: 1.3;
+}
+.study-cert-tab.active {
+  background: var(--panel-raised); color: var(--text); border-color: var(--border);
+  box-shadow: 0 2px 6px var(--shadow);
+}
+
+/* 索引：進度與「接著讀」——這一頁唯一的實心色塊，打開就知道下一步按哪裡。 */
+.study-resume { display: grid; gap: 10px; margin-bottom: 20px; }
+.study-progress { display: flex; align-items: center; gap: 12px; }
+.study-progress-text { color: var(--muted); font-size: var(--fs-sm); white-space: nowrap; }
+.study-progress-text strong { color: var(--text); font-variant-numeric: tabular-nums; }
+.study-progress-bar {
+  flex: 1; height: 6px; border-radius: 3px; background: var(--accent-tint); overflow: hidden;
+}
+.study-progress-bar > span { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
+.study-resume-card {
+  display: flex; align-items: center; gap: 16px; width: 100%; text-align: left;
+  padding: 18px 20px; border-radius: 12px; border: 1px solid var(--accent);
+  background: var(--accent); color: var(--on-accent);
+  box-shadow: 0 8px 20px var(--shadow);
+}
+.study-resume-text { display: grid; gap: 4px; flex: 1; min-width: 0; }
+.study-resume-title { font-size: var(--fs-card); font-weight: 800; line-height: 1.35; }
+.study-resume-title .node-code { color: inherit; opacity: 0.8; margin-right: 0.5em; }
+.study-resume-meta { font-size: var(--fs-sm); opacity: 0.85; line-height: 1.5; }
+.study-resume-go {
+  display: inline-flex; align-items: center; gap: 2px; flex: none;
+  font-weight: 800; white-space: nowrap;
+}
+@media (max-width: 520px) {
+  .study-resume-card { flex-direction: column; align-items: stretch; gap: 12px; }
+  .study-resume-go { align-self: flex-start; }
+}
+.study-resume-done {
+  margin: 0; padding: 14px 16px; border-radius: 10px; background: var(--accent-soft);
+  color: var(--text); line-height: 1.7;
+}
+
+/* 索引：搜尋 */
+/* 搜尋中把進度與入口收起來，結果直接接在搜尋框下，手機鍵盤才不會蓋住。 */
+.study-index.is-filtering .study-resume,
+.study-index.is-filtering .study-extras { display: none; }
+.study-search-row { position: relative; scroll-margin-top: 12px; display: flex; align-items: center; }
+.study-search-row > .icon { position: absolute; left: 13px; color: var(--muted); pointer-events: none; }
+.study-search {
+  width: 100%; min-height: var(--tap); padding: 10px 12px 10px 42px; font: inherit; font-size: 1rem;
+  border: 1px solid var(--border); border-radius: 10px; background: var(--panel-raised); color: var(--text);
+}
+.study-search::placeholder { color: var(--muted); }
+.study-search-count { margin: 8px 2px 0; color: var(--muted); font-size: var(--fs-sm); min-height: 0; }
+.study-search-count:empty { display: none; }
+.study-abbr-hits:empty { display: none; }
+.study-abbr-hits { margin-top: 12px; }
+.study-abbr-hits-title { margin: 0 0 6px; font-size: var(--fs-sm); color: var(--muted); }
+.abbr-hits {
+  margin: 0; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+.abbr-hit { display: grid; grid-template-columns: minmax(4.5em, auto) 1fr; gap: 12px; padding: 10px 14px; }
+.abbr-hit + .abbr-hit { box-shadow: inset 0 1px 0 var(--border); }
+.abbr-hit dt { font-weight: 800; color: var(--accent); }
+.abbr-hit dd { margin: 0; line-height: 1.6; overflow-wrap: anywhere; }
+.abbr-hit-zh { margin-left: 0.5em; color: var(--muted); }
+.abbr-hit-nodes { margin-left: 0.5em; color: var(--muted); font-size: var(--fs-xs); font-variant-numeric: tabular-nums; }
+.abbr-hits-more { margin: 6px 2px 0; color: var(--muted); font-size: var(--fs-sm); }
+
+/* 索引：備考總整理與縮寫速查 */
+.study-extras { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.study-extra {
+  display: grid; gap: 2px; text-align: left; padding: 12px 14px; min-height: var(--tap);
+  background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+}
+.study-extra-title { font-weight: 800; color: var(--accent); }
+.study-extra-meta { font-size: var(--fs-sm); color: var(--muted); }
+
+/* 索引：節點清單。一科一個面板，列與列之間用 inset 細線，不再巢狀卡片。 */
+.study-group { margin-top: 28px; }
+.study-group-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 2px 8px;
+}
+.study-group-head h2 { margin: 0; font-size: var(--fs-h3); line-height: 1.4; }
+.study-group-code { color: var(--accent); margin-right: 0.5em; }
+.study-group-count { color: var(--muted); font-size: var(--fs-sm); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.study-node-list {
+  list-style: none; margin: 0; padding: 0;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+}
+.study-node-list > li + li { box-shadow: inset 0 1px 0 var(--border); }
+.study-node {
+  display: grid; grid-template-columns: 3.6em 1fr 24px; align-items: center; gap: 12px;
+  width: 100%; min-height: 60px; padding: 12px 16px; text-align: left; border-radius: 0;
+  background: transparent;
+}
+.study-node-text { display: grid; gap: 2px; min-width: 0; }
+.study-node-title { font-weight: 700; line-height: 1.45; }
+.study-node-meta { color: var(--muted); font-size: var(--fs-sm); line-height: 1.5; }
+.study-node-state {
+  width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--border);
+}
+.study-node.is-read .study-node-state { background: var(--accent); color: var(--on-accent); box-shadow: none; }
+.study-node.is-read .study-node-state .icon { width: 14px; height: 14px; stroke-width: 3; }
+.study-node.is-read .study-node-title { color: var(--muted); }
+
+/* 閱讀器 */
+.reader-topbar { margin-bottom: 10px; }
+.reader-crumb {
+  color: var(--muted); font-size: var(--fs-sm); font-weight: 700; line-height: 1.4;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+}
+.study-reader { padding-bottom: 96px; }
+.study-reader.study-abbr { padding-bottom: 24px; }
+.reader-head h1 { margin: 0 0 8px; font-size: var(--fs-h1); line-height: 1.3; }
+.reader-head h1 .node-code { margin-right: 0.4em; }
+.reader-meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 0 0 16px;
+  color: var(--muted); font-size: var(--fs-sm);
+}
+.reader-source {
+  padding: 2px 10px; border-radius: 999px; background: var(--panel-alt); color: var(--text);
+  font-weight: 700; font-size: var(--fs-xs);
+}
+.reader-scope { padding: 14px 16px; border-radius: 12px; background: var(--panel-alt); }
+.reader-scope-title { margin: 0 0 6px; font-size: var(--fs-sm); color: var(--muted); }
+.reader-scope ul { margin: 0; padding-left: 1.2em; }
+.reader-scope li { line-height: 1.7; margin: 2px 0; }
+
+/* 分節籤列：黏在頁頂，隨捲動標示目前所在的節。 */
+.reader-toc {
+  position: sticky; top: 0; z-index: 4; margin: 20px -16px 0; padding: 8px 16px;
+  display: grid; gap: 8px;
+  background: var(--bar-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  box-shadow: inset 0 -1px 0 var(--border);
+}
+.reader-toc-track {
+  display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.reader-toc-track::-webkit-scrollbar { display: none; }
+.reader-toc-chip {
+  flex: none; max-width: 15em; min-height: 40px; padding: 6px 14px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  border: 1px solid var(--border); border-radius: 999px; background: var(--panel);
+  color: var(--text); font-size: var(--fs-sm); font-weight: 600;
+  transition: background-color 160ms ease-out, color 160ms ease-out, border-color 160ms ease-out;
+}
+.reader-toc-chip.is-current { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.reader-cram {
+  display: inline-block; margin-top: 12px; min-height: 40px; padding: 4px 12px; border-radius: 999px;
+  border: 1px dashed var(--accent); background: transparent; color: var(--accent);
+  font-size: var(--fs-sm); font-weight: 700;
+}
+.reader-cram.active { border-style: solid; background: var(--accent-soft); }
+@media (min-width: 640px) {
+  /* 桌機沒有觸控橫捲，籤太多就換行，不讓後面的籤藏在看不到的捲軸裡。 */
+  .reader-toc { margin: 24px 0 0; padding: 8px 0; }
+  .reader-toc-track { flex-wrap: wrap; overflow: visible; }
+}
+
+/* 分節內文：閱讀用的主文字色，不再是灰。 */
+.reader-body { margin-top: 4px; }
+.reader-section { padding: 28px 0 8px; scroll-margin-top: var(--toc-h, 64px); }
+.reader-section + .reader-section { box-shadow: inset 0 1px 0 var(--border); }
+.study-note-heading {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px;
+}
+.study-note-title { margin: 0; font-size: var(--fs-h2); line-height: 1.4; color: var(--text); }
+.reader-section ul { margin: 0; padding-left: 1.2em; }
+.reader-section li { margin: 8px 0; line-height: 1.8; overflow-wrap: anywhere; }
+.reader-section li li { margin: 4px 0; color: var(--muted); }
+.reader-section li::marker { color: var(--accent); }
+.reader-section li li::marker { color: var(--muted); }
+.reader-links .study-note-title { margin-bottom: 8px; }
+.study-links { margin: 0; padding-left: 1.2em; }
+.study-links li { margin: 8px 0; line-height: 1.6; }
+.reading-link {
+  color: var(--accent); font-weight: 600;
+  text-decoration: underline; text-decoration-color: var(--accent-tint); text-underline-offset: 3px;
+}
+.reader-empty {
+  margin: 24px 0 0; padding: 16px; border-radius: 10px; border: 1px dashed var(--border);
+  color: var(--muted); line-height: 1.7;
+}
+mark.study-hit {
+  background: var(--warn-bg); color: var(--warn-fg); border-radius: 3px;
+  box-shadow: 0 0 0 2px var(--warn-bg); font-weight: 700;
+}
+
+/* 考前速記：只留公式與容易混淆兩節，分節籤也跟著收。 */
+.study-reader.is-cram .reader-section:not([data-note-section="formula"]):not([data-note-section="confuse"]),
+.study-reader.is-cram .reader-toc-chip:not([data-note-section="formula"]):not([data-note-section="confuse"]) {
+  display: none;
+}
+
+/* 讀完一節之後 */
+.reader-end {
+  display: grid; gap: 16px; margin-top: 32px; padding: 20px; border-radius: 12px;
+  background: var(--panel); border: 1px solid var(--border);
+}
+.reader-end-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.reader-end-actions .submit { border-radius: 10px; }
+.reader-next {
+  display: inline-flex; align-items: center; gap: 4px; min-height: var(--tap); padding: 10px 16px;
+  border: 1px solid var(--border); border-radius: 10px; background: var(--panel-raised);
+  color: var(--accent); font-weight: 700;
+}
 .tts-rate {
   display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap;
-  margin: 0 0 12px; color: var(--muted); font-size: var(--fs-sm); font-weight: 700;
+  color: var(--muted); font-size: var(--fs-sm); font-weight: 700;
 }
 .tts-rate button {
   min-width: 50px; min-height: 40px; padding: 6px 9px; border: 1px solid var(--border);
-  background: var(--panel); color: var(--muted); font-weight: 800;
+  background: var(--panel); color: var(--muted); font-weight: 800; font-variant-numeric: tabular-nums;
 }
-.tts-rate button.active {
-  border-color: var(--accent); background: var(--accent-soft); color: var(--accent);
-}
-.tts-rate button:disabled, .tts-button:disabled {
-  opacity: 0.55; cursor: not-allowed;
-}
-.study-cert { margin-bottom: 20px; }
-.study-cert > h2 {
-  color: var(--accent); font-size: var(--fs-h2);
-  border-bottom: 2px solid var(--border); padding-bottom: 6px;
-}
-.study-level { margin-bottom: 8px; }
-.study-level-name { margin: 18px 0 4px; font-size: var(--fs-body); color: var(--muted); letter-spacing: 0.04em; }
-.study-subject {
-  background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
-  padding: 14px 18px; margin: 14px 0; box-shadow: 0 6px 18px var(--shadow);
-}
-.study-subject > h3 { margin: 4px 0 12px; font-size: var(--fs-card); }
-.study-topic { margin: 10px 0 18px; scroll-margin-top: 12px; }
-.study-topic h4 { margin: 0 0 6px; font-size: var(--fs-h4); color: var(--text); line-height: 1.5; }
-.study-contents { margin: 0 0 6px; padding-left: 20px; color: var(--muted); }
-.study-contents li { margin: 2px 0; line-height: 1.6; }
-/* 筆記以縮排與細線收在節點之下，而不是另一張卡片。 */
-.study-notes {
-  margin: 10px 0; border-left: 1px solid var(--accent); padding-left: 14px;
-}
-.study-notes summary {
-  color: var(--accent); font-weight: 800; cursor: pointer; line-height: 1.6; padding: 6px 0;
-}
-.study-notes summary span { color: var(--muted); font-size: var(--fs-sm); font-weight: 700; }
-.study-note-section { margin: 10px 0 14px; }
-.study-note-heading {
-  display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  margin-bottom: 6px;
-}
-.study-note-title {
-  margin: 0; font-size: var(--fs-body); font-weight: 800; color: var(--text); line-height: 1.5;
-}
+.tts-rate button.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.tts-rate button:disabled, .tts-button:disabled { opacity: 0.55; cursor: not-allowed; }
 .tts-button {
-  width: 40px; height: 40px; flex: none; display: inline-grid; place-items: center;
-  border: 1px solid var(--border); background: var(--panel); color: var(--accent);
+  width: var(--tap); height: var(--tap); flex: none; display: inline-grid; place-items: center;
+  border: 1px solid var(--border); border-radius: 999px; background: var(--panel); color: var(--accent);
 }
 .tts-button.speaking { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .tts-button svg {
   width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2;
   stroke-linecap: round; stroke-linejoin: round;
 }
-.study-note-section ul {
-  margin: 0; padding-left: 20px; color: var(--muted);
+
+/* 底部固定列：上一節／已讀／練題／下一節。拇指搆得到，讀到一半也隨時能練。 */
+.reader-dock {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
+  padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+  background: var(--bar-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 var(--border);
 }
-.study-note-section li {
-  margin: 5px 0; line-height: 1.72;
-  overflow-wrap: anywhere;
+.reader-dock-inner {
+  max-width: 788px; margin: 0 auto;
+  display: grid; grid-template-columns: auto auto 1fr auto; align-items: center; gap: 8px;
 }
-.study-links { margin: 0; padding-left: 20px; }
-.study-links li { margin: 6px 0; line-height: 1.6; }
-.reading-link {
-  color: var(--accent); font-weight: 600;
-  text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px;
+.dock-step {
+  display: inline-flex; align-items: center; justify-content: center; gap: 2px;
+  min-width: var(--tap); min-height: var(--tap); padding: 6px 8px;
+  border: 1px solid var(--border); border-radius: 10px; background: var(--panel); color: var(--accent);
+}
+.dock-step.is-placeholder { border: none; background: transparent; }
+.dock-step-code { font-size: var(--fs-sm); font-weight: 700; font-variant-numeric: tabular-nums; }
+.node-read {
+  display: inline-flex; align-items: center; gap: 6px; min-height: var(--tap); padding: 6px 14px;
+  border: 1px solid var(--border); border-radius: 10px; background: var(--panel);
+  color: var(--muted); font-size: var(--fs-sm); font-weight: 700; white-space: nowrap;
+}
+.node-read .icon { width: 16px; height: 16px; stroke-width: 2.5; opacity: 0.45; }
+.node-read.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.node-read.active .icon { opacity: 1; }
+.node-drill {
+  min-height: var(--tap); padding: 8px 14px; border: 1px solid var(--accent); border-radius: 10px;
+  background: var(--accent); color: var(--on-accent); font-weight: 800; white-space: nowrap;
+}
+.node-drill.is-empty {
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px dashed var(--border); background: transparent; color: var(--muted); font-weight: 400;
+}
+@media (max-width: 400px) {
+  .dock-step-code { display: none; }
+  .node-read { padding: 6px 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reader-toc-chip { transition: none; }
 }
 
 /* ── 單頁模擬考 ─────────────────────────────────────── */
@@ -582,7 +797,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; border-ra
 .confirm-btn.is-danger { color: var(--wrong); border-color: var(--wrong); }
 
 /* ── 筆記的三種呈現型別 ───────────────────────────────── */
-.note-block { list-style: none; margin: 10px 0 10px -1.1em; }
+.note-block { list-style: none; margin: 12px 0 12px -1.2em; }
 /* 寬表在手機上必須自己橫向捲動，頁面本身不得橫向捲動。 */
 .note-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .note-table { border-collapse: collapse; min-width: 100%; font-size: var(--fs-sm); }
@@ -617,71 +832,15 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; border-ra
   padding: 2px 10px; font-size: var(--fs-sm);
 }
 .note-flow-steps li + li::before { content: "→"; color: var(--muted); margin-right: 8px; }
-.study-note-section.is-collapsible { border-left: 1px solid var(--border); padding-left: 12px; }
-.study-note-section.is-collapsible > summary {
-  cursor: pointer; font-weight: 700; padding: 8px 0; color: var(--text);
-}
-.study-note-section.is-collapsible > summary span { color: var(--muted); font-weight: 400; font-size: var(--fs-sm); }
-.study-note-section.is-collapsible[open] > summary { color: var(--accent); }
-/* 摺疊時標題已在 summary 上，展開後不需要再重複一次同名標題。 */
-.study-note-section.is-collapsible > .study-note-heading .study-note-title { display: none; }
-
-/* ── 學習主題頁的工具列與節點目錄 ─────────────────────── */
-.study-tools { margin: 10px 0 16px; display: grid; gap: 8px; }
-.study-tools-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.study-search {
-  flex: 1 1 240px; min-width: 0; min-height: var(--tap); padding: 8px 12px; font-size: 1rem;
-  border: 1px solid var(--border); border-radius: 8px; background: var(--panel-raised); color: var(--text);
-}
-.study-search-count { color: var(--muted); font-size: var(--fs-sm); }
-.study-action {
-  border: 1px solid var(--border); border-radius: 999px; background: var(--panel);
-  min-height: 40px; padding: 6px 14px; font-size: var(--fs-sm); color: var(--text); cursor: pointer;
-}
-.study-action.active { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
-/* 節點目錄在手機上自己橫向捲動，不讓籤列把版面撐開。 */
-.study-toc { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; }
-.study-toc-group { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; }
-.study-toc-label { color: var(--muted); font-size: var(--fs-xs); white-space: nowrap; }
-.study-toc-chip {
-  border: 1px solid var(--border); border-radius: 6px; background: var(--panel);
-  min-height: 40px; padding: 4px 10px; font-size: var(--fs-sm); font-variant-numeric: tabular-nums;
-  color: var(--accent); cursor: pointer; white-space: nowrap;
-}
-/* 考前速記：只留公式與容易混淆兩節。 */
-.study-cert.is-cram .study-note-section:not([data-note-section="formula"]):not([data-note-section="confuse"]) {
-  display: none;
-}
-.study-cert.is-cram .study-contents,
-.study-cert.is-cram .study-links { display: none; }
-/* ── 節點的動作列（練題 / 已讀）與縮寫速查 ─────────────── */
-.node-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
-.node-drill {
-  border: 1px solid var(--accent); border-radius: 999px; background: var(--accent-soft);
-  color: var(--accent); min-height: 40px; padding: 6px 14px; font-size: var(--fs-sm); font-weight: 700; cursor: pointer;
-}
-.node-drill.is-empty {
-  display: inline-flex; align-items: center;
-  border-style: dashed; border-color: var(--border); background: transparent;
-  color: var(--muted); font-weight: 400; cursor: default;
-}
-.node-read {
-  border: 1px solid var(--border); border-radius: 999px; background: var(--panel);
-  color: var(--muted); min-height: 40px; padding: 6px 14px; font-size: var(--fs-sm); cursor: pointer;
-}
-.node-read.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
-.study-read-count { color: var(--muted); font-size: var(--fs-sm); margin-right: auto; }
-.abbr-lookup { margin: 0 0 12px; }
-/* 速記模式下不需要縮寫速查與節點動作列擋在中間。 */
-.study-cert.is-cram .node-actions { display: none; }
-
 /* ── 懸停狀態 ─────────────────────────────────────────
    只給真的有滑鼠的裝置。觸控裝置的 :hover 會在點擊後黏住，
    讓剛點過的卡片看起來像「被選取」。 */
 @media (hover: hover) {
   .back:hover, .drill-jump-go:hover, .drill-topics:hover, .drill-reset:hover,
   .drill-confidence:hover, .drill-filter:hover, .qnav button:hover, .study-entry:hover,
-  .tts-button:hover, .study-action:hover, .study-toc-chip:hover, .confirm-btn:hover,
+  .tts-button:hover, .reader-toc-chip:not(.is-current):hover, .confirm-btn:hover,
+  .study-cert-tab:not(.active):hover, .study-extra:hover, .dock-step:hover, .reader-next:hover,
+  .reader-cram:not(.active):hover,
   .drill-tools > summary:hover, .exam-map > summary:hover {
     border-color: var(--accent); background: var(--accent-soft);
   }
@@ -691,12 +850,13 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; border-ra
   .subject-card.is-empty:hover { border-color: var(--border); background: var(--panel); }
   .exam-bar .exam-quit:hover { background: var(--panel); border-color: var(--border); color: var(--text); }
   button.choice:not(.selected):not(.correct):not(.wrong):hover { border-color: var(--accent); background: var(--accent-soft); }
-  .submit:hover, .qnav .submit:hover, .confirm-btn.is-primary:hover, .study-action.active:hover {
+  .submit:hover, .qnav .submit:hover, .confirm-btn.is-primary:hover, .node-drill:not(.is-empty):hover,
+  .study-resume-card:hover {
     background: var(--accent-strong); border-color: var(--accent-strong); color: var(--on-accent);
   }
   .confidence-btn:not(.active):hover { border-color: var(--accent); }
   .tts-button:disabled:hover { border-color: var(--border); background: var(--panel); }
-  .node-drill:not(.is-empty):hover { background: var(--accent); color: var(--on-accent); }
+  .study-node:hover { background: var(--accent-soft); }
   .node-read:hover { border-color: var(--accent); color: var(--accent); }
   .exam-map-cell:not(.is-answered):hover { border-style: solid; border-color: var(--accent); color: var(--accent); }
   .reading-link:hover { text-decoration-color: currentColor; }

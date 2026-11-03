@@ -1,3 +1,5 @@
+import type { Cert } from "../data/types";
+
 const MISS_KEY = "ipas-aiap-misses";
 
 const readArray = (key: string): string[] => {
@@ -40,6 +42,43 @@ export const toggleReadNode = (code: string): boolean => {
   else set.delete(code);
   localStorage.setItem(STUDY_READ_KEY, JSON.stringify([...set]));
   return next;
+};
+
+// ── 學習主題頁的「上次讀到」 ─────────────────────────
+// 記每張證照最後打開的節點（`科目id|節點碼`）與最後看的證照，供索引頁的「接著讀」。
+// 與已讀標記分開：打開不等於讀完，讀完與否仍由使用者自己標。
+const STUDY_LAST_KEY = "ipas-aiap-study-last";
+
+export type StudyLast = { cert?: Cert; nodes: Partial<Record<Cert, string>> };
+
+const isCert = (value: unknown): value is Cert => value === "aiap" || value === "aiot";
+
+export const loadStudyLast = (): StudyLast => {
+  try {
+    const raw = localStorage.getItem(STUDY_LAST_KEY);
+    const parsed: unknown = raw ? JSON.parse(raw) : null;
+    if (typeof parsed !== "object" || parsed === null) return { nodes: {} };
+    const record = parsed as Record<string, unknown>;
+    const nodes: StudyLast["nodes"] = {};
+    if (typeof record.nodes === "object" && record.nodes !== null) {
+      for (const [cert, key] of Object.entries(record.nodes as Record<string, unknown>)) {
+        if (isCert(cert) && typeof key === "string") nodes[cert] = key;
+      }
+    }
+    return { ...(isCert(record.cert) ? { cert: record.cert } : {}), nodes };
+  } catch {
+    return { nodes: {} };
+  }
+};
+
+export const saveStudyLast = (cert: Cert, nodeKey?: string): void => {
+  const current = loadStudyLast();
+  const next: StudyLast = { cert, nodes: nodeKey ? { ...current.nodes, [cert]: nodeKey } : current.nodes };
+  try {
+    localStorage.setItem(STUDY_LAST_KEY, JSON.stringify(next));
+  } catch {
+    // 無痕模式或儲存空間已滿：少了「接著讀」不影響閱讀本身。
+  }
 };
 
 // ── 校準模式（作答前標記信心）的開關 ──────────────────

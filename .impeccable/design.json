@@ -1,0 +1,652 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-03T23:45:04+00:00",
+  "title": "Design System: iPAS 能力鑑定 練習",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#f5f2eb",
+        "oklch": "oklch(96.2% 0.010 87.5)",
+        "cssVar": "--bg",
+        "dark": "#111613",
+        "tonalRamp": [
+          "#0d0b07",
+          "#282621",
+          "#47453f",
+          "#686660",
+          "#8c8983",
+          "#b0aea7",
+          "#d4d1ca",
+          "#f1eee7"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Panel",
+        "canonical": "#fffdf8",
+        "oklch": "oklch(99.4% 0.007 88.6)",
+        "cssVar": "--panel",
+        "dark": "#182019",
+        "tonalRamp": [
+          "#0c0b08",
+          "#282623",
+          "#464541",
+          "#686662",
+          "#8b8984",
+          "#b0aea9",
+          "#d3d1cc",
+          "#f0eee9"
+        ]
+      },
+      "panel-raised": {
+        "role": "neutral",
+        "displayName": "Panel Raised",
+        "canonical": "#ffffff",
+        "oklch": "oklch(100.0% 0.000 89.9)",
+        "cssVar": "--panel-raised",
+        "dark": "#1d2620",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#262626",
+          "#454545",
+          "#666666",
+          "#898989",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ]
+      },
+      "panel-alt": {
+        "role": "neutral",
+        "displayName": "Panel Alt",
+        "canonical": "#e7efe9",
+        "oklch": "oklch(94.4% 0.012 153.7)",
+        "cssVar": "--panel-alt",
+        "dark": "#223029",
+        "tonalRamp": [
+          "#080d09",
+          "#222824",
+          "#404742",
+          "#616863",
+          "#848b86",
+          "#a9b0aa",
+          "#cbd3cd",
+          "#e9f1eb"
+        ]
+      },
+      "ledger-green": {
+        "role": "primary",
+        "displayName": "Ledger Green",
+        "canonical": "#196f5a",
+        "oklch": "oklch(48.7% 0.086 172.2)",
+        "cssVar": "--accent",
+        "dark": "#6cc7a3",
+        "tonalRamp": [
+          "#001407",
+          "#003322",
+          "#005340",
+          "#237661",
+          "#4b9a83",
+          "#72c0a8",
+          "#95e4cb",
+          "#b2ffe8"
+        ]
+      },
+      "ledger-green-deep": {
+        "role": "primary",
+        "displayName": "Deep Ledger Green",
+        "canonical": "#14342b",
+        "oklch": "oklch(29.8% 0.042 172.5)",
+        "cssVar": "--accent-strong",
+        "dark": "#8fd8bb",
+        "tonalRamp": [
+          "#001009",
+          "#0c2d24",
+          "#2d4c43",
+          "#4d6e64",
+          "#709286",
+          "#94b7ab",
+          "#b6dace",
+          "#d3f8eb"
+        ]
+      },
+      "on-accent": {
+        "role": "primary",
+        "displayName": "On-Accent",
+        "canonical": "#ffffff",
+        "oklch": "oklch(100.0% 0.000 89.9)",
+        "cssVar": "--on-accent",
+        "dark": "#0b1a13",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#262626",
+          "#454545",
+          "#666666",
+          "#898989",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ]
+      },
+      "accent-soft": {
+        "role": "primary",
+        "displayName": "Accent Soft",
+        "canonical": "#edf7f1",
+        "oklch": "oklch(96.7% 0.013 159.9)",
+        "cssVar": "--accent-soft",
+        "dark": "#17291f",
+        "tonalRamp": [
+          "#070d09",
+          "#212824",
+          "#3f4743",
+          "#606963",
+          "#838c86",
+          "#a7b1ab",
+          "#cad4ce",
+          "#e7f1eb"
+        ]
+      },
+      "accent-tint": {
+        "role": "primary",
+        "displayName": "Accent Tint",
+        "canonical": "#dcefe5",
+        "oklch": "oklch(93.5% 0.024 163.1)",
+        "cssVar": "--accent-tint",
+        "dark": "#1f3a2d",
+        "tonalRamp": [
+          "#030e08",
+          "#1b2a23",
+          "#3a4941",
+          "#5a6b62",
+          "#7d8e85",
+          "#a1b3aa",
+          "#c4d6cc",
+          "#e1f4ea"
+        ]
+      },
+      "correct": {
+        "role": "secondary",
+        "displayName": "Sage Correct",
+        "canonical": "#4c9b7f",
+        "oklch": "oklch(63.1% 0.090 167.9)",
+        "cssVar": "--correct",
+        "dark": "#6cc7a3",
+        "tonalRamp": [
+          "#001504",
+          "#00331e",
+          "#00543c",
+          "#23765c",
+          "#4c9b7f",
+          "#72c0a3",
+          "#95e4c6",
+          "#b2ffe3"
+        ]
+      },
+      "correct-soft": {
+        "role": "secondary",
+        "displayName": "Sage Correct Wash",
+        "canonical": "#dff2e9",
+        "oklch": "oklch(94.5% 0.023 165.8)",
+        "cssVar": "--correct-soft",
+        "dark": "#173126",
+        "tonalRamp": [
+          "#030e09",
+          "#1b2a24",
+          "#394942",
+          "#5a6b63",
+          "#7d8e86",
+          "#a1b3aa",
+          "#c4d6cd",
+          "#e1f4eb"
+        ]
+      },
+      "wrong": {
+        "role": "secondary",
+        "displayName": "Brick Wrong",
+        "canonical": "#a84a3a",
+        "oklch": "oklch(52.8% 0.128 31.5)",
+        "cssVar": "--wrong",
+        "dark": "#f08f7c",
+        "tonalRamp": [
+          "#2d0000",
+          "#550000",
+          "#7b2012",
+          "#a24535",
+          "#ca6957",
+          "#f48e7b",
+          "#ffb3a0",
+          "#ffd0bd"
+        ]
+      },
+      "wrong-soft": {
+        "role": "secondary",
+        "displayName": "Brick Wrong Wash",
+        "canonical": "#fff4ed",
+        "oklch": "oklch(97.4% 0.015 54.9)",
+        "cssVar": "--wrong-soft",
+        "dark": "#35201b",
+        "tonalRamp": [
+          "#100906",
+          "#2c251f",
+          "#4c433d",
+          "#6d645e",
+          "#918781",
+          "#b6aca5",
+          "#d9cfc8",
+          "#f7ece5"
+        ]
+      },
+      "warn-bg": {
+        "role": "tertiary",
+        "displayName": "Ledger Amber Wash",
+        "canonical": "#fdf3e3",
+        "oklch": "oklch(96.8% 0.024 79.7)",
+        "cssVar": "--warn-bg",
+        "dark": "#3a2c14",
+        "tonalRamp": [
+          "#100a02",
+          "#2d2519",
+          "#4c4437",
+          "#6d6557",
+          "#918879",
+          "#b6ad9e",
+          "#d9d0c0",
+          "#f7eddd"
+        ]
+      },
+      "warn-fg": {
+        "role": "tertiary",
+        "displayName": "Ledger Amber Ink",
+        "canonical": "#8a5a1b",
+        "oklch": "oklch(50.9% 0.098 68.8)",
+        "cssVar": "--warn-fg",
+        "dark": "#f0c27a",
+        "tonalRamp": [
+          "#220000",
+          "#431800",
+          "#663900",
+          "#8a5a1b",
+          "#b07e42",
+          "#d7a267",
+          "#fcc589",
+          "#ffe3a6"
+        ]
+      },
+      "warn-border": {
+        "role": "tertiary",
+        "displayName": "Ledger Amber Edge",
+        "canonical": "#e0bd83",
+        "oklch": "oklch(81.6% 0.085 79.7)",
+        "cssVar": "--warn-border",
+        "dark": "#6b5226",
+        "tonalRamp": [
+          "#1c0300",
+          "#3b1f00",
+          "#5d3f00",
+          "#806026",
+          "#a4834b",
+          "#cba86f",
+          "#efcb91",
+          "#ffe9ad"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#16211b",
+        "oklch": "oklch(23.5% 0.019 160.6)",
+        "cssVar": "--text",
+        "dark": "#e4ebe6",
+        "tonalRamp": [
+          "#050e08",
+          "#1e2923",
+          "#3c4842",
+          "#5d6a62",
+          "#7f8d85",
+          "#a4b2aa",
+          "#c7d5cd",
+          "#e4f3ea"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Ink Muted",
+        "canonical": "#43524b",
+        "oklch": "oklch(42.3% 0.022 165.4)",
+        "cssVar": "--muted",
+        "dark": "#a8b6ae",
+        "tonalRamp": [
+          "#030e09",
+          "#1c2a24",
+          "#3a4942",
+          "#5b6a63",
+          "#7d8e86",
+          "#a2b3aa",
+          "#c4d6cd",
+          "#e2f4eb"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "rgba(22, 33, 27, 0.14)",
+        "cssVar": "--border",
+        "dark": "rgba(228, 235, 230, 0.14)"
+      },
+      "bar-bg": {
+        "role": "neutral",
+        "displayName": "Bar Glass",
+        "canonical": "rgba(245, 242, 235, 0.94)",
+        "cssVar": "--bar-bg",
+        "dark": "rgba(17, 22, 19, 0.92)"
+      },
+      "shadow-tint": {
+        "role": "neutral",
+        "displayName": "Shadow Tint",
+        "canonical": "rgba(18, 35, 28, 0.05)",
+        "cssVar": "--shadow",
+        "dark": "rgba(0, 0, 0, 0.35)"
+      },
+      "backdrop": {
+        "role": "neutral",
+        "displayName": "Backdrop",
+        "canonical": "rgba(16, 24, 20, 0.45)",
+        "cssVar": "--backdrop",
+        "dark": "rgba(0, 0, 0, 0.6)"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Score Display",
+        "purpose": "Result-page score only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page h1 and reader node title (prefixed by node code)."
+      },
+      "section-title": {
+        "displayName": "Section Title",
+        "purpose": "Note-section headings in the study reader."
+      },
+      "card-title": {
+        "displayName": "Card Title",
+        "purpose": "Choice-card headings, resume-card title, dialog title."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Subject names, group headings, diagnostic headings."
+      },
+      "prompt": {
+        "displayName": "Question Prompt",
+        "purpose": "Question stems in drill and exam."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Explanations and reader text; 1.6-1.8 leading."
+      },
+      "small": {
+        "displayName": "Small",
+        "purpose": "Meta lines, hints, counts, note tables."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Pills and badges."
+      },
+      "node-code": {
+        "displayName": "Node Code",
+        "purpose": "Assessment node codes in green tabular figures; size inherits from context."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Transcribed code figures and formula expressions only."
+      }
+    },
+    "fontSizeTokens": {
+      "--fs-xs": "0.8125rem",
+      "--fs-sm": "0.875rem",
+      "--fs-body": "1rem",
+      "--fs-h4": "1.0625rem",
+      "--fs-h3": "1.125rem",
+      "--fs-card": "1.25rem",
+      "--fs-h2": "1.375rem",
+      "--fs-h1": "1.75rem",
+      "--tap": "44px"
+    },
+    "shadows": [
+      {
+        "name": "card-lift",
+        "value": "0 6px 18px var(--shadow)",
+        "purpose": "Top-level certificate, level, mode, subject cards."
+      },
+      {
+        "name": "resume-lift",
+        "value": "0 8px 20px var(--shadow)",
+        "purpose": "Solid-green resume card on the study index."
+      },
+      {
+        "name": "segment-lift",
+        "value": "0 2px 6px var(--shadow)",
+        "purpose": "Active tab of the segmented certificate switch."
+      },
+      {
+        "name": "popover",
+        "value": "0 12px 32px var(--shadow), 0 2px 6px var(--shadow)",
+        "purpose": "Drill tools panel and exam map panel."
+      },
+      {
+        "name": "dialog",
+        "value": "0 24px 60px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.12)",
+        "purpose": "Native confirm dialog."
+      },
+      {
+        "name": "hairline-divider",
+        "value": "inset 0 1px 0 var(--border)",
+        "purpose": "Row and section dividers inside one panel; bars use the same hairline toward content."
+      },
+      {
+        "name": "state-ring",
+        "value": "inset 0 0 0 1px var(--accent)",
+        "purpose": "Doubles a 1px border for selected/active states without layout shift (correct/wrong swap the color)."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-fast",
+        "value": "120ms ease-out",
+        "purpose": "Choice background/border/ring transitions."
+      },
+      {
+        "name": "state-chip",
+        "value": "160ms ease-out",
+        "purpose": "Section-chip current-state transitions."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition: none",
+        "purpose": "Both transitions are removed under prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "dock-compact",
+        "value": "max-width: 400px"
+      },
+      {
+        "name": "exam-bar-compact",
+        "value": "max-width: 430px"
+      },
+      {
+        "name": "narrow",
+        "value": "max-width: 520px"
+      },
+      {
+        "name": "chip-wrap",
+        "value": "min-width: 640px"
+      },
+      {
+        "name": "container",
+        "value": "820px max-width, 16px side padding"
+      }
+    ],
+    "focus": {
+      "value": "outline: 2px solid var(--accent); outline-offset: 2px",
+      "purpose": "Global :focus-visible ring."
+    },
+    "backdropFilter": {
+      "value": "blur(10px)",
+      "purpose": "Sticky exam bar, reader section-chip bar, reader dock."
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one solid-green action per decision point: 交卷, 練這一節, confirm.",
+      "html": "<button class=\"ds-btn-primary\">練這一節的 10 題</button>",
+      "css": ".ds-btn-primary { font: inherit; cursor: pointer; background: var(--accent, #196f5a); color: var(--on-accent, #ffffff); border: 1px solid var(--accent, #196f5a); border-radius: 8px; padding: 10px 18px; min-height: 44px; font-weight: 800; } .ds-btn-primary:hover { background: var(--accent-strong, #14342b); border-color: var(--accent-strong, #14342b); } .ds-btn-primary:focus-visible { outline: 2px solid var(--accent, #196f5a); outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Back, tools, and navigation buttons: panel fill, hairline, green text.",
+      "html": "<button class=\"ds-btn-secondary\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M19 12H5M12 19l-7-7 7-7\"/></svg>目錄</button>",
+      "css": ".ds-btn-secondary { font: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; background: var(--panel, #fffdf8); color: var(--accent, #196f5a); border: 1px solid var(--border, rgba(22,33,27,0.14)); border-radius: 8px; padding: 8px 14px; min-height: 44px; font-weight: 700; } .ds-btn-secondary:hover { border-color: var(--accent, #196f5a); background: var(--accent-soft, #edf7f1); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--accent, #196f5a); outline-offset: 2px; }"
+    },
+    {
+      "name": "Answer Choice",
+      "kind": "custom",
+      "refersTo": "choice",
+      "description": "Full-width answer row; the letter circle is hollow at rest and fills when chosen, correct, or wrong.",
+      "html": "<div class=\"ds-choices\"><button class=\"ds-choice\"><span class=\"ds-choice-id\">A</span><span>監督式學習需要標註資料</span></button><button class=\"ds-choice is-selected\"><span class=\"ds-choice-id\">B</span><span>非監督式學習用於分群</span></button><button class=\"ds-choice is-wrong\"><span class=\"ds-choice-id\">C</span><span>強化學習不需要回饋</span></button></div>",
+      "css": ".ds-choices { display: grid; gap: 10px; } .ds-choice { font: inherit; cursor: pointer; display: flex; gap: 12px; align-items: center; min-height: 44px; text-align: left; line-height: 1.6; padding: 14px; background: var(--panel-raised, #ffffff); color: var(--text, #16211b); border: 1px solid var(--border, rgba(22,33,27,0.14)); border-radius: 8px; transition: background-color 120ms ease-out, border-color 120ms ease-out, box-shadow 120ms ease-out; } .ds-choice-id { width: 28px; height: 28px; flex: none; display: inline-grid; place-items: center; border-radius: 50%; color: var(--accent, #196f5a); font-weight: 800; box-shadow: inset 0 0 0 1.5px var(--accent, #196f5a); } .ds-choice:not(.is-selected):not(.is-wrong):hover { border-color: var(--accent, #196f5a); background: var(--accent-soft, #edf7f1); } .ds-choice.is-selected { border-color: var(--accent, #196f5a); background: var(--accent-tint, #dcefe5); box-shadow: inset 0 0 0 1px var(--accent, #196f5a); } .ds-choice.is-selected .ds-choice-id { background: var(--accent, #196f5a); color: var(--on-accent, #fff); box-shadow: none; } .ds-choice.is-wrong { border-color: var(--wrong, #a84a3a); background: var(--wrong-soft, #fff4ed); box-shadow: inset 0 0 0 1px var(--wrong, #a84a3a); } .ds-choice.is-wrong .ds-choice-id { background: var(--wrong, #a84a3a); color: var(--on-accent, #fff); box-shadow: none; } .ds-choice:focus-visible { outline: 2px solid var(--accent, #196f5a); outline-offset: 2px; }"
+    },
+    {
+      "name": "Choice Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Top-level certificate / level / mode / subject card with soft lift.",
+      "html": "<button class=\"ds-card\"><span class=\"ds-card-title\">模擬考試</span><span class=\"ds-card-body\">50 題、限時 90 分鐘，交卷後逐題檢討。</span></button>",
+      "css": ".ds-card { font: inherit; cursor: pointer; display: flex; flex-direction: column; gap: 6px; width: 100%; text-align: left; padding: 18px; background: var(--panel, #fffdf8); color: var(--text, #16211b); border: 1px solid var(--border, rgba(22,33,27,0.14)); border-radius: 10px; box-shadow: 0 6px 18px var(--shadow, rgba(18,35,28,0.05)); } .ds-card-title { color: var(--accent, #196f5a); font-size: 1.25rem; font-weight: 700; } .ds-card-body { color: var(--muted, #43524b); line-height: 1.6; } .ds-card:hover { border-color: var(--accent, #196f5a); background: var(--accent-soft, #edf7f1); } .ds-card:focus-visible { outline: 2px solid var(--accent, #196f5a); outline-offset: 2px; }"
+    },
+    {
+      "name": "Badges",
+      "kind": "chip",
+      "refersTo": "chip-topic",
+      "description": "Topic badge (quiet panel-alt) beside the amber provenance badge for LLM-authored questions.",
+      "html": "<span class=\"ds-badge\">L11101 人工智慧概念</span><span class=\"ds-badge ds-badge-warn\">AI 命題・待複審</span>",
+      "css": ".ds-badge { display: inline-block; padding: 3px 10px; margin-right: 6px; background: var(--panel-alt, #e7efe9); color: var(--muted, #43524b); border: 1px solid var(--border, rgba(22,33,27,0.14)); border-radius: 999px; font-size: 0.8125rem; font-weight: 700; } .ds-badge-warn { background: var(--warn-bg, #fdf3e3); color: var(--warn-fg, #8a5a1b); border-color: var(--warn-border, #e0bd83); }"
+    },
+    {
+      "name": "Section Chips",
+      "kind": "chip",
+      "refersTo": "chip-section",
+      "description": "Reader section-chip track; the current section fills green.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip is-current\">必懂觀念</button><button class=\"ds-chip\">重要縮寫</button><button class=\"ds-chip\">容易混淆</button></div>",
+      "css": ".ds-chips { display: flex; gap: 6px; flex-wrap: wrap; } .ds-chip { font: inherit; cursor: pointer; min-height: 40px; padding: 6px 14px; border: 1px solid var(--border, rgba(22,33,27,0.14)); border-radius: 999px; background: var(--panel, #fffdf8); color: var(--text, #16211b); font-size: 0.875rem; font-weight: 600; transition: background-color 160ms ease-out, color 160ms ease-out, border-color 160ms ease-out; } .ds-chip.is-current { background: var(--accent, #196f5a); border-color: var(--accent, #196f5a); color: var(--on-accent, #fff); } .ds-chip:not(.is-current):hover { border-color: var(--accent, #196f5a); background: var(--accent-soft, #edf7f1); } .ds-chip:focus-visible { outline: 2px solid var(--accent, #196f5a); outline-offset: 2px; }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "Study-index search with a muted inline SVG icon.",
+      "html": "<label class=\"ds-search\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"M20 20l-3.5-3.5\"/></svg><input type=\"search\" placeholder=\"搜尋節點、縮寫或筆記內文\"></label>",
+      "css": ".ds-search { position: relative; display: flex; align-items: center; } .ds-search svg { position: absolute; left: 13px; color: var(--muted, #43524b); pointer-events: none; } .ds-search input { width: 100%; min-height: 44px; padding: 10px 12px 10px 42px; font: inherit; font-size: 1rem; border: 1px solid var(--border, rgba(22,33,27,0.14)); border-radius: 10px; background: var(--panel-raised, #fff); color: var(--text, #16211b); } .ds-search input::placeholder { color: var(--muted, #43524b); } .ds-search input:focus-visible { outline: 2px solid var(--accent, #196f5a); outline-offset: 2px; }"
+    },
+    {
+      "name": "Node List",
+      "kind": "custom",
+      "refersTo": "node-row",
+      "description": "One rounded panel of flat node rows divided by inset hairlines; green tabular code, read-mark ring.",
+      "html": "<ul class=\"ds-nodes\"><li><button class=\"ds-node is-read\"><span class=\"ds-code\">A1.1</span><span class=\"ds-node-text\"><span class=\"ds-node-title\">AI 基礎概念</span><span class=\"ds-node-meta\">7 節筆記・5 題</span></span><span class=\"ds-state\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12l5 5 9-10\"/></svg></span></button></li><li><button class=\"ds-node\"><span class=\"ds-code\">A2.1</span><span class=\"ds-node-text\"><span class=\"ds-node-title\">物聯網架構與功能</span><span class=\"ds-node-meta\">7 節筆記・10 題</span></span><span class=\"ds-state\"></span></button></li></ul>",
+      "css": ".ds-nodes { list-style: none; margin: 0; padding: 0; background: var(--panel, #fffdf8); border: 1px solid var(--border, rgba(22,33,27,0.14)); border-radius: 12px; overflow: hidden; } .ds-nodes > li + li { box-shadow: inset 0 1px 0 var(--border, rgba(22,33,27,0.14)); } .ds-node { font: inherit; cursor: pointer; display: grid; grid-template-columns: 3.6em 1fr 24px; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 12px 16px; text-align: left; border: none; background: transparent; color: var(--text, #16211b); } .ds-node:hover { background: var(--accent-soft, #edf7f1); } .ds-node:focus-visible { outline: 2px solid var(--accent, #196f5a); outline-offset: -2px; } .ds-code { font-variant-numeric: tabular-nums; font-weight: 800; color: var(--accent, #196f5a); letter-spacing: 0.01em; } .ds-node-text { display: grid; gap: 2px; } .ds-node-title { font-weight: 700; line-height: 1.45; } .ds-node-meta { color: var(--muted, #43524b); font-size: 0.875rem; } .ds-state { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--border, rgba(22,33,27,0.14)); } .ds-node.is-read .ds-state { background: var(--accent, #196f5a); color: var(--on-accent, #fff); box-shadow: none; } .ds-node.is-read .ds-node-title { color: var(--muted, #43524b); }"
+    },
+    {
+      "name": "Reader Dock",
+      "kind": "nav",
+      "refersTo": "sticky-bar",
+      "description": "Fixed glass bottom bar: prev, read toggle, primary drill, next.",
+      "html": "<nav class=\"ds-dock\"><button class=\"ds-step\" aria-label=\"上一節\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M15 18l-6-6 6-6\"/></svg></button><button class=\"ds-read\">標記已讀</button><button class=\"ds-drill\">練 10 題</button><button class=\"ds-step\" aria-label=\"下一節\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 18l6-6-6-6\"/></svg></button></nav>",
+      "css": ".ds-dock { display: grid; grid-template-columns: auto auto 1fr auto; align-items: center; gap: 8px; padding: 8px 16px; background: var(--bar-bg, rgba(245,242,235,0.94)); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: inset 0 1px 0 var(--border, rgba(22,33,27,0.14)); } .ds-dock button { font: inherit; cursor: pointer; min-height: 44px; border-radius: 10px; } .ds-step { min-width: 44px; display: inline-grid; place-items: center; border: 1px solid var(--border, rgba(22,33,27,0.14)); background: var(--panel, #fffdf8); color: var(--accent, #196f5a); } .ds-read { padding: 6px 14px; border: 1px solid var(--border, rgba(22,33,27,0.14)); background: var(--panel, #fffdf8); color: var(--muted, #43524b); font-size: 0.875rem; font-weight: 700; } .ds-drill { padding: 8px 14px; border: 1px solid var(--accent, #196f5a); background: var(--accent, #196f5a); color: var(--on-accent, #fff); font-weight: 800; } .ds-step:hover { border-color: var(--accent, #196f5a); background: var(--accent-soft, #edf7f1); } .ds-read:hover { border-color: var(--accent, #196f5a); color: var(--accent, #196f5a); } .ds-drill:hover { background: var(--accent-strong, #14342b); border-color: var(--accent-strong, #14342b); } .ds-dock button:focus-visible { outline: 2px solid var(--accent, #196f5a); outline-offset: 2px; }"
+    },
+    {
+      "name": "Note Blocks",
+      "kind": "custom",
+      "refersTo": "note-formula",
+      "description": "Formula block (fill, no side stripe), scrolling comparison table, and flow-step pills.",
+      "html": "<div class=\"ds-formula\"><span class=\"ds-formula-label\">設備綜合效率</span><code>OEE = A × P × Q</code><span class=\"ds-formula-note\">三者皆為比例</span></div><div class=\"ds-table-wrap\"><table class=\"ds-table\"><thead><tr><th>層</th><th>職責</th></tr></thead><tbody><tr><td>Perception 感知層</td><td>取得物理量、執行動作</td></tr></tbody></table></div><ol class=\"ds-flow\"><li>感測</li><li>傳輸</li><li>分析</li></ol>",
+      "css": ".ds-formula { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; background: var(--accent-soft, #edf7f1); border: 1px solid var(--accent-tint, #dcefe5); padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; } .ds-formula-label { font-weight: 600; } .ds-formula code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.95rem; color: var(--accent, #196f5a); } .ds-formula-note { color: var(--muted, #43524b); font-size: 0.875rem; } .ds-table-wrap { overflow-x: auto; margin-bottom: 12px; } .ds-table { border-collapse: collapse; min-width: 100%; font-size: 0.875rem; } .ds-table th, .ds-table td { border: 1px solid var(--border, rgba(22,33,27,0.14)); padding: 6px 10px; text-align: left; white-space: nowrap; } .ds-table thead th { background: var(--accent-soft, #edf7f1); color: var(--accent, #196f5a); font-weight: 700; } .ds-table tbody td:first-child { font-weight: 600; } .ds-flow { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; list-style: none; padding: 0; margin: 0; } .ds-flow li { background: var(--panel, #fffdf8); border: 1px solid var(--border, rgba(22,33,27,0.14)); border-radius: 999px; padding: 2px 10px; font-size: 0.875rem; } .ds-flow li + li::before { content: \"\\2192\"; color: var(--muted, #43524b); margin-right: 8px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Green-Ink Study Ledger",
+    "overview": "**Creative North Star: \"The Green-Ink Study Ledger\"**\n\nThe site reads like a well-kept exam notebook: warm paper ground, near-black green ink, and a single deep-green pen used for everything that is yours to press or that marks where you are. It is a working tool for people studying in short phone sessions, so density is moderate, every control is a full thumb-sized target, and the chrome stays quiet so the question, the answer, and the node code carry the page.\n\nDepth is soft and rare. Top-level choices (certificate, level, mode, subject) sit on lightly lifted cards; everything inside a panel is flat and separated by hairlines rather than by nested boxes. State is shown by fill, not by decoration: a choice letter circle is hollow until chosen, a section chip is outlined until it is the current one, a node's read-mark is an empty ring until it is filled green. The same green also fills the one primary action on any screen.\n\nColor carries meaning, never mood. Green is identity and action; a muted sage green is \"correct\"; brick red is \"wrong\"; amber is reserved for provenance warnings (AI 命題・待複審) and search hits. Dark mode is the same ledger by lamplight: every semantic token is swapped as a set, never redesigned.",
+    "keyCharacteristics": [
+      "Warm paper ground (#f5f2eb) with off-white panels, one green accent.",
+      "A single system sans stack with explicit Traditional Chinese faces; tabular figures for every code, count, and timer.",
+      "44px minimum tap target on every interactive control.",
+      "Hairline dividers drawn with inset box-shadow; flat rows inside one rounded panel instead of nested cards.",
+      "Fill-to-select state language (letter circles, chips, read-marks, exam-map cells).",
+      "Hover styling exists only for real pointers; touch never sees sticky hover."
+    ],
+    "rules": [
+      {
+        "name": "The One Green Rule",
+        "body": "Green is the only hue for identity and action. If something is pressable, current, or the primary next step, it is green; nothing else on the page competes with it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Warning Is Not Wrong Rule",
+        "body": "Provenance cautions use amber, never brick red. Red means \"you answered wrong\" and nothing else.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two-Place Dark Rule",
+        "body": "Every color token is declared on `:root` and given a dark value in both `@media (prefers-color-scheme: dark)` and `:root[data-theme=\"dark\"]`. A color that exists only in light mode is a bug.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-Shrinking-Headings Rule",
+        "body": "h4 and h5 are never smaller than body text (1.0625rem and up); lower levels are distinguished by weight and placement, not by shrinking.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Anchor Rule",
+        "body": "Node codes (L11101, A1.1), question numbers, counts, timers, and percentages always set `font-variant-numeric: tabular-nums`; node codes are additionally 800 weight in green so they anchor each row and each reader page.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-Inside Rule",
+        "body": "Lift belongs to the outermost card or a floating layer. Rows, sections, and blocks inside a panel are flat; never nest a shadowed card in a shadowed card.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Glass Bar Rule",
+        "body": "Every sticky or fixed bar uses `bar-bg` with a 10px backdrop blur and a 1px hairline toward the content, never a solid fill or a drop shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** take every color and font size from the `:root` tokens, and give any new color a dark value in both dark-mode blocks.",
+      "**Do** make every interactive control at least 44px tall (`--tap`); compact secondary chips may go to 40px, no lower.",
+      "**Do** write hover rules only inside the trailing `@media (hover: hover)` block.",
+      "**Do** separate rows and sections with `inset 0 1px 0 var(--border)` hairlines and group rows into one rounded panel.",
+      "**Do** show selection by filling (letter circle, chip, read-mark, map cell) plus a green border with inset ring.",
+      "**Do** set codes, counts, timers, and scores in tabular figures; prefix node titles with the green node code.",
+      "**Do** let wide content (tables, code, chip tracks) scroll inside its own wrapper.",
+      "**Do** use inline SVG icons (2px stroke, `currentColor`) for any new icon."
+    ],
+    "donts": [
+      "**Don't** use a colored side border thicker than 1px as an accent; use a fill, a full hairline border, or an inset hairline instead.",
+      "**Don't** use brick red for warnings or provenance; red is only \"wrong answer\", failing score, low time, or destructive action.",
+      "**Don't** introduce a second accent hue or a decorative gradient.",
+      "**Don't** nest shadowed cards inside shadowed panels.",
+      "**Don't** shrink h4/h5 below body size.",
+      "**Don't** put more than one solid-green primary action in the same decision area.",
+      "**Don't** let the page scroll horizontally on mobile."
+    ]
+  }
+}

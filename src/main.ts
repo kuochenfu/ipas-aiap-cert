@@ -1,11 +1,12 @@
 import "./styles.css";
 import {
-  renderHome, renderCert, renderLevel, renderModePicker, renderQuestion, renderResult, renderStudyView,
+  renderHome, renderCert, renderLevel, renderModePicker, renderQuestion, renderResult,
+  renderStudyIndex, renderStudyReader, renderAbbrHits, listStudyNodes, parseStudyPageKey, studyPageKey,
   renderTopicStats,
   renderPaperPicker, renderExamPaper, renderExamReview, renderDrillEmpty,
   renderStudyLoading, renderConfirmDialog,
 } from "./ui/render";
-import type { ConfirmDialogView } from "./ui/render";
+import type { ConfirmDialogView, NodePractice, StudyPageRef } from "./ui/render";
 import { getSubject } from "./domain/catalog";
 import { getQuestions } from "./data/index";
 import { isTopicClassified, practiceTotal, topicMatchesGuideCode } from "./domain/assessmentTopics";
@@ -14,7 +15,8 @@ import { buildDiagnostics, hasQuestionMeta } from "./domain/diagnostics";
 import { buildAttempt } from "./state/attempt";
 import { buildMockPaper, PAPER_COUNT } from "./state/mockPapers";
 import {
-  addMiss, loadConfidenceMode, loadMisses, loadReadNodes, removeMiss, saveConfidenceMode, toggleReadNode,
+  addMiss, loadConfidenceMode, loadMisses, loadReadNodes, loadStudyLast, removeMiss, saveConfidenceMode,
+  saveStudyLast, toggleReadNode,
 } from "./state/storage";
 import {
   restoreDrill, parseJumpTarget, drillMatches, filteredDrillIndices, drillFilterTarget,
@@ -55,6 +57,16 @@ type Session = {
   reveal: boolean;          // drill：作答即揭曉；exam：交卷後 review 才揭曉
   deadline: number | null;  // exam 計時用 timestamp（ms）
   drillFilter: DrillFilter;
+  /** 學習主題頁正在看的證照。 */
+  studyCert: Cert;
+  /** 學習主題頁打開的閱讀器頁面；沒有時顯示索引。 */
+  studyPage?: StudyPageRef;
+  /** 索引頁的搜尋字，回到索引時還原。 */
+  studyQuery: string;
+  /** 一次性：從搜尋結果點進閱讀器時要標出的字，渲染後即清掉，之後換節不再標。 */
+  studyHighlight?: string;
+  /** 從閱讀器進「練這一節」前的捲動位置，結束刷題回來時還原。 */
+  studyScrollY?: number;
 };
 
 type PracticeModule = typeof import("./data/practice");
@@ -85,6 +97,7 @@ function blankSession(): Session {
     questions: [], answers: {}, records: {}, confidenceMode: loadConfidenceMode(),
     pendingConfidence: undefined,
     index: 0, reveal: false, deadline: null, drillFilter: "all",
+    studyCert: loadStudyLast().cert ?? "aiap", studyPage: undefined, studyQuery: "",
   };
 }
 
@@ -321,21 +334,13 @@ async function loadStudyNotes(): Promise<StudyContent> {
   return studyNotesCache;
 }
 
-// ── 學習主題頁的就地操作 ────────────────────────────────
-// 這些互動一律直接改 DOM，不呼叫 render()——學習頁很長，整頁重繪會把捲動位置與
-// 已展開的節點全部打回原形。
+// ── 學習主題頁：索引與單節點閱讀器 ─────────────────────────
+// 索引 ↔ 閱讀器的切換是換頁，走 render()；閱讀器之內的互動（分節跳轉、速記、已讀、
+// 搜尋篩選）一律就地改 DOM，不整頁重繪——那會把捲動位置打回原形。
 
-/** 工具列現在每張證照各一份，所以要從被操作的控制項往上找它所屬的證照區塊。 */
+/** 工具列每張證照各一份，所以要從被操作的控制項往上找它所屬的證照區塊。 */
 function certSectionOf(element: HTMLElement): HTMLElement | null {
   return element.closest<HTMLElement>("[data-cert-section]");
-}
-
-function jumpToStudyNode(anchorId: string) {
-  const target = document.getElementById(anchorId);
-  if (!target) return;
-  // 捲過去卻只看到標題沒有內容會很困惑，所以順手把該節點的筆記展開。
-  target.querySelector<HTMLDetailsElement>("details.study-notes")?.setAttribute("open", "");
-  target.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
 }
 
 /** 使用者要求減少動態時改為瞬間跳轉。 */
@@ -343,55 +348,231 @@ function scrollBehavior(): ScrollBehavior {
   return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
 }
 
-function runStudyAction(action: string, button: HTMLElement) {
-  const section = certSectionOf(button);
-  if (!section) return;
-  if (action === "expand" || action === "collapse") {
-    const open = action === "expand";
-    for (const details of section.querySelectorAll<HTMLDetailsElement>("details")) details.open = open;
-    return;
-  }
-  if (action === "cram") {
-    const on = !section.classList.contains("is-cram");
-    section.classList.toggle("is-cram", on);
-    button.setAttribute("aria-pressed", String(on));
-    button.classList.toggle("active", on);
-    // 速記模式只留公式與易混淆兩節，但它們本身可能是收合的，得幫使用者打開。
-    if (on) {
-      for (const details of section.querySelectorAll<HTMLDetailsElement>("details.study-notes")) details.open = true;
-      for (const details of section.querySelectorAll<HTMLDetailsElement>(
-        'details[data-note-section="formula"], details[data-note-section="confuse"]',
-      )) details.open = true;
+function jumpToStudySection(anchorId: string) {
+  const target = document.getElementById(anchorId);
+  if (!target) return;
+  target.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
+  // 焦點跟著進到該節，下一個 Tab 才會走進內文而不是留在籤列。
+  const heading = target.querySelector<HTMLElement>("h2");
+  if (!heading) return;
+  heading.setAttribute("tabindex", "-1");
+  heading.classList.add("view-anchor");
+  heading.focus({ preventScroll: true });
+}
+
+/** 打開一頁閱讀器（節點、備考總整理或縮寫速查）。 */
+function openStudyPage(key: string) {
+  const page = parseStudyPageKey(key);
+  if (!page) return;
+  stopTts();
+  session.studyPage = page;
+  if (page.kind === "node") {
+    const subject = getSubject(page.subjectId);
+    if (subject) {
+      session.studyCert = subject.cert;
+      saveStudyLast(subject.cert, key);
     }
   }
+  render();
+}
+
+/** 從閱讀器回到索引，並把焦點還給剛才那一列，讀完一節回來不必重新找位置。 */
+function closeStudyPage() {
+  const from = session.studyPage;
+  stopTts();
+  session.studyPage = undefined;
+  render();
+  if (!from) return;
+  const row = app.querySelector<HTMLElement>(`.study-node[data-study-open="${CSS.escape(studyPageKey(from))}"]`)
+    ?? app.querySelector<HTMLElement>(`.study-extra[data-study-open="${CSS.escape(studyPageKey(from))}"]`);
+  if (!row) return;
+  if (row.closest('[hidden]')) {
+    const search = app.querySelector<HTMLInputElement>("[data-study-search]");
+    if (search) { search.value = ""; filterStudyNodes(search); }
+  }
+  row.scrollIntoView({ block: "center" });
+  row.focus({ preventScroll: true });
+}
+
+function switchStudyCert(cert: Cert) {
+  if (session.studyCert === cert) return;
+  session.studyCert = cert;
+  session.studyQuery = "";
+  saveStudyLast(cert);
+  render();
+}
+
+function runStudyAction(action: string, button: HTMLElement) {
+  if (action === "cram") {
+    const reader = button.closest<HTMLElement>(".study-reader");
+    if (!reader) return;
+    const on = !reader.classList.contains("is-cram");
+    reader.classList.toggle("is-cram", on);
+    button.setAttribute("aria-pressed", String(on));
+    button.classList.toggle("active", on);
+    return;
+  }
+  if (action === "read-next") {
+    const page = session.studyPage;
+    if (page?.kind !== "node") return;
+    if (!new Set(loadReadNodes()).has(page.code)) toggleReadNode(page.code);
+    const subject = getSubject(page.subjectId);
+    const entries = subject ? listStudyNodes(subject.cert, studyNotesCache?.notes) : [];
+    const index = entries.findIndex((entry) => entry.subject.id === page.subjectId && entry.topic.code === page.code);
+    const next = entries[index + 1];
+    if (next) openStudyPage(`${next.subject.id}|${next.topic.code}`);
+    else closeStudyPage();
+  }
+}
+
+// 搜尋索引：每個節點一段小寫全文（碼、標題、評鑑範圍、筆記、延伸閱讀標題）。
+// 筆記本身不在索引頁的 DOM 裡，所以改對資料搜尋，而不是對 textContent。
+const studySearchIndex = new Map<Cert, Map<string, string>>();
+
+function noteText(sections: StudyNoteSection[] | undefined): string {
+  const out: string[] = [];
+  const walk = (items: StudyNoteSection["items"]) => {
+    for (const item of items) {
+      out.push(item.text);
+      if (item.formula) out.push(item.formula.expr, item.formula.note ?? "");
+      if (item.flow) out.push(...item.flow);
+      if (item.table) out.push(...item.table.headers, ...item.table.rows.flat());
+      if (item.children) walk(item.children);
+    }
+  };
+  for (const section of sections ?? []) {
+    out.push(section.heading);
+    walk(section.items);
+  }
+  return out.join("\n");
+}
+
+function searchIndexFor(cert: Cert): Map<string, string> {
+  const cached = studySearchIndex.get(cert);
+  if (cached) return cached;
+  const index = new Map<string, string>();
+  for (const { subject, topic } of listStudyNodes(cert, studyNotesCache?.notes)) {
+    const text = [topic.code, topic.title, ...topic.contents, noteText(topic.notes), ...topic.links.map((l) => l.title)];
+    index.set(`${subject.id}|${topic.code}`, text.join("\n").toLowerCase());
+  }
+  if (studyNotesCache) studySearchIndex.set(cert, index);
+  return index;
 }
 
 function filterStudyNodes(input: HTMLInputElement) {
   const section = certSectionOf(input);
   if (!section) return;
-  const query = input.value;
-  const needle = query.trim().toLowerCase();
-  const topics = section.querySelectorAll<HTMLElement>(".study-topic[data-node]");
+  session.studyQuery = input.value;
+  const needle = input.value.trim().toLowerCase();
+  const index = searchIndexFor(session.studyCert);
+  const rows = section.querySelectorAll<HTMLElement>(".study-node-list > li");
   let hits = 0;
-  for (const topic of topics) {
-    // textContent 會涵蓋收合中的 <details> 內文，所以搜得到還沒展開的內容。
-    const match = needle === "" || (topic.textContent ?? "").toLowerCase().includes(needle);
-    topic.hidden = !match;
-    if (match) {
-      hits += 1;
-      // 命中但內容藏在收合區裡等於沒找到，因此搜尋時自動展開命中的節點。
-      if (needle !== "") {
-        topic.querySelector<HTMLDetailsElement>("details.study-notes")?.setAttribute("open", "");
-      }
-    }
+  for (const row of rows) {
+    const key = row.querySelector<HTMLElement>("[data-study-open]")?.dataset.studyOpen ?? "";
+    const match = needle === "" || (index.get(key) ?? "").includes(needle);
+    row.hidden = !match;
+    if (match) hits += 1;
   }
-  // 縮寫速查表不是節點，但它是最常被拿來查關鍵字的地方，所以一併篩選列。
-  for (const row of section.querySelectorAll<HTMLElement>("[data-abbr-row]")) {
-    row.hidden = needle !== "" && !(row.textContent ?? "").toLowerCase().includes(needle);
+  for (const group of section.querySelectorAll<HTMLElement>(".study-group")) {
+    group.hidden = !group.querySelector(".study-node-list > li:not([hidden])");
+  }
+  const abbrHits = section.querySelector<HTMLElement>("[data-study-abbr-hits]");
+  if (abbrHits) abbrHits.innerHTML = renderAbbrHits(studyNotesCache?.abbreviations[session.studyCert] ?? [], input.value);
+  const count = section.querySelector<HTMLElement>("[data-study-count]");
+  if (count) {
+    count.textContent = needle === ""
+      ? ""
+      : hits > 0
+        ? `${hits} 個節點提到「${input.value.trim()}」，點進去會標出位置`
+        : `沒有節點提到「${input.value.trim()}」`;
+  }
+  section.classList.toggle("is-filtering", needle !== "");
+}
+
+function filterAbbrRows(input: HTMLInputElement) {
+  const section = certSectionOf(input);
+  if (!section) return;
+  const needle = input.value.trim().toLowerCase();
+  const rows = section.querySelectorAll<HTMLElement>("[data-abbr-row]");
+  let hits = 0;
+  for (const row of rows) {
+    const match = needle === "" || (row.textContent ?? "").toLowerCase().includes(needle);
+    row.hidden = !match;
+    if (match) hits += 1;
   }
   const count = section.querySelector<HTMLElement>("[data-study-count]");
-  if (count) count.textContent = needle === "" ? "" : `命中 ${hits} / ${topics.length} 個節點`;
-  section.classList.toggle("is-filtering", needle !== "");
+  if (count) count.textContent = needle === "" ? "" : `${hits} / ${rows.length} 個縮寫`;
+}
+
+/** 從索引搜尋進來時，把關鍵字在閱讀器裡標出來並捲到第一處。 */
+function highlightStudyQuery(root: HTMLElement, query: string): HTMLElement | null {
+  const needle = query.trim().toLowerCase();
+  if (!needle) return null;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: (node) =>
+      node.parentElement?.closest('button, script, style, mark')
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT,
+  });
+  const targets: Text[] = [];
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    if ((node.nodeValue ?? "").toLowerCase().includes(needle)) targets.push(node as Text);
+  }
+  let first: HTMLElement | null = null;
+  for (const node of targets) {
+    const text = node.nodeValue ?? "";
+    const lower = text.toLowerCase();
+    const fragment = document.createDocumentFragment();
+    let cursor = 0;
+    for (let at = lower.indexOf(needle); at >= 0; at = lower.indexOf(needle, cursor)) {
+      fragment.append(text.slice(cursor, at));
+      const mark = document.createElement("mark");
+      mark.className = "study-hit";
+      mark.textContent = text.slice(at, at + needle.length);
+      fragment.append(mark);
+      first ??= mark;
+      cursor = at + needle.length;
+    }
+    fragment.append(text.slice(cursor));
+    node.replaceWith(fragment);
+  }
+  return first;
+}
+
+// 分節籤列隨捲動標示目前所在的節。
+let readerObserver: IntersectionObserver | null = null;
+
+function watchReaderSections() {
+  readerObserver?.disconnect();
+  readerObserver = null;
+  const track = app.querySelector<HTMLElement>(".reader-toc-track");
+  // 籤列在桌機可能換成兩列，跳到某節時標題要落在籤列下方而不是被蓋住。
+  const toc = app.querySelector<HTMLElement>(".reader-toc");
+  if (toc) app.querySelector<HTMLElement>(".study-reader")?.style.setProperty("--toc-h", `${toc.offsetHeight + 12}px`);
+  if (!track || !("IntersectionObserver" in window)) return;
+  const chips = new Map<string, HTMLElement>();
+  for (const chip of track.querySelectorAll<HTMLElement>("[data-study-jump]")) {
+    chips.set(chip.dataset.studyJump ?? "", chip);
+  }
+  readerObserver = new IntersectionObserver((records) => {
+    const visible = records.filter((record) => record.isIntersecting);
+    if (!visible.length) return;
+    const id = visible[0].target.id;
+    const current = chips.get(id);
+    if (!current) return;
+    for (const chip of chips.values()) {
+      const on = chip === current;
+      chip.classList.toggle("is-current", on);
+      if (on) chip.setAttribute("aria-current", "true");
+      else chip.removeAttribute("aria-current");
+    }
+    // 只捲籤列本身，不用 scrollIntoView——那會連整頁一起捲。
+    track.scrollTo({
+      left: current.offsetLeft - track.clientWidth / 2 + current.offsetWidth / 2,
+      behavior: scrollBehavior(),
+    });
+  }, { rootMargin: "-20% 0px -70% 0px" });
+  for (const section of app.querySelectorAll(".reader-section[id]")) readerObserver.observe(section);
 }
 
 /** 從學習主題頁直接練某個節點：把題庫縮到該節點，其餘流程與一般刷題相同。 */
@@ -405,6 +586,8 @@ function startTopicDrill(payload: string) {
   const scoped = getQuestions(subjectId)
     .filter((question) => topicMatchesGuideCode(question.topic, topic));
   if (!scoped.length) return;
+  stopTts();
+  if (session.view === "study" && session.studyPage) session.studyScrollY = window.scrollY;
   session.cert = subject.cert;
   session.level = subject.level;
   session.subjectId = subjectId;
@@ -418,19 +601,102 @@ function toggleStudyRead(code: string, button: HTMLElement) {
   const read = toggleReadNode(code);
   button.setAttribute("aria-pressed", String(read));
   button.classList.toggle("active", read);
-  button.textContent = read ? "✓ 已讀" : "標記已讀";
-  const section = certSectionOf(button);
-  const counter = section?.querySelector<HTMLElement>("[data-study-read-count]");
-  if (!section || !counter) return;
-  const total = section.querySelectorAll("[data-study-read]").length;
-  const done = section.querySelectorAll('[data-study-read][aria-pressed="true"]').length;
-  counter.textContent = `已讀 ${done} / ${total}`;
+  const label = button.querySelector(".node-read-label");
+  if (label) label.textContent = read ? "已讀" : "標記已讀";
+  const next = app.querySelector<HTMLElement>(".reader-next");
+  if (next?.firstChild?.nodeType === Node.TEXT_NODE) {
+    const text = next.firstChild.nodeValue ?? "";
+    next.firstChild.nodeValue = read ? text.replace(/^標記已讀，/, "") : `標記已讀，${text.replace(/^標記已讀，/, "")}`;
+  }
+  announce(read ? "已標記為已讀。" : "已取消已讀標記。");
 }
+
+/** 索引頁每一列的練題成績：讀「練這一節」的節點限定進度，對答案算出答對幾題。 */
+function nodePractice(cert: Cert): Record<string, NodePractice> {
+  const out: Record<string, NodePractice> = {};
+  const answerKeys = new Map<string, Map<string, ChoiceId>>();
+  for (const { subject, topic } of listStudyNodes(cert, studyNotesCache?.notes)) {
+    const progress = loadDrillProgress(`${subject.id}:topic:${topic.code}`);
+    const answers = Object.entries(progress?.answers ?? {});
+    if (!answers.length) continue;
+    if (!answerKeys.has(subject.id)) {
+      answerKeys.set(subject.id, new Map(getQuestions(subject.id).map((q) => [q.id, q.answer])));
+    }
+    const key = answerKeys.get(subject.id)!;
+    const valid = answers.filter(([id]) => key.has(id));
+    out[`${subject.id}|${topic.code}`] = {
+      answered: valid.length,
+      correct: valid.filter(([id, choice]) => key.get(id) === choice).length,
+    };
+  }
+  return out;
+}
+
+function renderStudy(content: StudyContent) {
+  readerObserver?.disconnect();
+  const readNodes = new Set(loadReadNodes());
+  const page = session.studyPage;
+  if (!page) {
+    app.innerHTML = renderStudyIndex({
+      cert: session.studyCert,
+      notes: content.notes,
+      overviews: content.overviews,
+      abbreviations: content.abbreviations,
+      readNodes,
+      lastNode: loadStudyLast().nodes[session.studyCert],
+      practice: nodePractice(session.studyCert),
+      query: session.studyQuery,
+    });
+    const search = app.querySelector<HTMLInputElement>("[data-study-search]");
+    if (search && session.studyQuery) filterStudyNodes(search);
+    return;
+  }
+  app.innerHTML = renderStudyReader({
+    page,
+    notes: content.notes,
+    overviews: content.overviews,
+    abbreviations: content.abbreviations,
+    readNodes,
+  });
+  syncTtsControls();
+  watchReaderSections();
+  // 換節是同一個 view 內的換頁，render() 不會自動移焦點，這裡補上：回到頁首、焦點落在標題。
+  const heading = app.querySelector<HTMLElement>("h1");
+  heading?.setAttribute("tabindex", "-1");
+  heading?.classList.add("view-anchor");
+  const body = app.querySelector<HTMLElement>(".study-reader");
+  const highlight = session.studyHighlight;
+  session.studyHighlight = undefined;
+  const firstHit = page.kind === "node" && body && highlight
+    ? highlightStudyQuery(body, highlight)
+    : null;
+  const restoreY = session.studyScrollY;
+  session.studyScrollY = undefined;
+  if (restoreY !== undefined) {
+    // 從「練這一節」回來：回到進刷題前讀到的位置，而不是頁首。
+    window.scrollTo(0, restoreY);
+    return;
+  }
+  window.scrollTo(0, 0);
+  heading?.focus({ preventScroll: true });
+  if (firstHit) firstHit.scrollIntoView({ block: "center" });
+}
+
+// 手機上鍵盤會蓋住下半部；開始搜尋時把搜尋列捲到頂，結果才看得到。
+app.addEventListener("focusin", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLInputElement) || !target.hasAttribute("data-study-search")) return;
+  if (!window.matchMedia?.("(max-width: 640px)").matches) return;
+  target.closest('.study-search-row')?.scrollIntoView({ block: "start", behavior: scrollBehavior() });
+});
 
 app.addEventListener("input", (event) => {
   const target = event.target as HTMLElement;
   if (target instanceof HTMLInputElement && target.hasAttribute("data-study-search")) {
     filterStudyNodes(target);
+  }
+  if (target instanceof HTMLInputElement && target.hasAttribute("data-abbr-filter")) {
+    filterAbbrRows(target);
   }
 });
 
@@ -492,21 +758,11 @@ function renderView() {
   if (session.view === "study") {
     stopTimer();
     if (studyNotesCache) {
-      app.innerHTML = renderStudyView(studyNotesCache.notes, studyNotesCache.overviews, {
-        abbreviations: studyNotesCache.abbreviations,
-        readNodes: new Set(loadReadNodes()),
-      });
-      syncTtsControls();
+      renderStudy(studyNotesCache);
     } else {
       app.innerHTML = renderStudyLoading();
       void loadStudyNotes().then((content) => {
-        if (session.view === "study") {
-          app.innerHTML = renderStudyView(content.notes, content.overviews, {
-            abbreviations: content.abbreviations,
-            readNodes: new Set(loadReadNodes()),
-          });
-          syncTtsControls();
-        }
+        if (session.view === "study") renderStudy(content);
       });
     }
     return;
@@ -893,7 +1149,7 @@ document.addEventListener("click", (event) => {
 });
 
 app.addEventListener("click", (event) => {
-  const target = (event.target as HTMLElement).closest("[data-cert],[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-confidence],[data-filter],[data-nav],[data-tts-section],[data-tts-rate],[data-study-jump],[data-study-action],[data-topic-drill],[data-study-read],[data-exam-jump]");
+  const target = (event.target as HTMLElement).closest("[data-cert],[data-level],[data-subject],[data-mode],[data-paper],[data-choice],[data-confidence],[data-filter],[data-nav],[data-tts-section],[data-tts-rate],[data-study-jump],[data-study-action],[data-study-open],[data-study-cert],[data-topic-drill],[data-study-read],[data-exam-jump]");
   if (!(target instanceof HTMLElement)) return;
 
   if (target.hasAttribute("data-tts-section") && target instanceof HTMLButtonElement) {
@@ -908,7 +1164,19 @@ app.addEventListener("click", (event) => {
   }
 
   const jump = target.getAttribute("data-study-jump");
-  if (jump) { jumpToStudyNode(jump); return; }
+  if (jump) { jumpToStudySection(jump); return; }
+
+  const studyOpen = target.getAttribute("data-study-open");
+  if (studyOpen) {
+    session.studyHighlight = target.closest('.study-index.is-filtering .study-node-list')
+      ? session.studyQuery
+      : undefined;
+    openStudyPage(studyOpen);
+    return;
+  }
+
+  const studyCert = target.getAttribute("data-study-cert");
+  if (studyCert) { switchStudyCert(studyCert as Cert); return; }
 
   const studyAction = target.getAttribute("data-study-action");
   if (studyAction) { runStudyAction(studyAction, target); return; }
@@ -975,12 +1243,24 @@ app.addEventListener("click", (event) => {
   const nav = target.getAttribute("data-nav");
   if (!nav) return;
   if (nav === "home") { session = blankSession(); render(); return; }
-  if (nav === "study") { session.view = "study"; render(); return; }
+  if (nav === "study") {
+    if (session.view === "study" && session.studyPage) { closeStudyPage(); return; }
+    session.view = "study"; session.studyPage = undefined; render(); return;
+  }
   // 「返回」是往上一層走：級別頁回到證照頁，其餘（模式頁、選卷頁）回到級別頁。
   if (nav === "back") { session.view = session.view === "level" ? "cert" : "level"; render(); return; }
   if (nav === "back-mode") { stopTimer(); session.view = "mode"; render(); return; }
   if (nav === "quit") {
     if (inExam()) { void confirmQuitExam(); return; }
+    // 從學習頁的「練這一節」進來的刷題，結束後回到那一節的閱讀器，而不是級別選單。
+    if (session.topicScope && session.studyPage) {
+      stopTimer(); session.topicScope = undefined; session.view = "study";
+      const restoreY = session.studyScrollY;
+      render();
+      // render() 換畫面後會把焦點移到標題（連帶捲到頁首），所以還原捲動要放在它之後。
+      if (restoreY !== undefined) window.scrollTo(0, restoreY);
+      return;
+    }
     stopTimer(); session.view = "level"; render(); return;
   }
   if (nav === "prev") {

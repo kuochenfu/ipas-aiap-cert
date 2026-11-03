@@ -15,6 +15,14 @@ import type { Calibration, ConceptRow, Diagnostics, ErrorRow, MetaStatRow } from
 import { isTopicClassified, topicMatchesGuideCode } from "../domain/assessmentTopics";
 import { examRules } from "../domain/exam";
 
+// 介面圖示一律是內嵌 SVG（同一種線寬），不用 ← → ✓ 這類文字符號充當圖示。
+const icon = (paths: string, className = "icon"): string =>
+  `<svg class="${className}" viewBox="0 0 24 24" aria-hidden="true">${paths}</svg>`;
+const chevronLeftIcon = icon(`<path d="m15 18-6-6 6-6"></path>`);
+const chevronRightIcon = icon(`<path d="m9 18 6-6-6-6"></path>`);
+const checkIcon = icon(`<path d="M20 6 9 17l-5-5"></path>`);
+const searchIcon = icon(`<circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path>`);
+
 export type BankStats = { total: number; pastExam: number; generated: number; studyGuide: number };
 export type DrillCounts = Record<DrillFilter, number>;
 export type DrillControls = {
@@ -352,7 +360,7 @@ export const renderCert = (cert: Cert): string => {
     .join("");
   return `
     <header class="topbar">
-      <button class="back" data-nav="home">← 返回</button>
+      <button class="back" data-nav="home">${chevronLeftIcon}返回</button>
       <h1>${escapeHtml(info?.name ?? "")}</h1>
     </header>
     <main class="home">
@@ -368,7 +376,7 @@ export const renderLevel = (cert: Cert, level: Level): string => {
     .join("");
   return `
     <header class="topbar">
-      <button class="back" data-nav="back">← 返回</button>
+      <button class="back" data-nav="back">${chevronLeftIcon}返回</button>
       <h1>${levelName(level)}</h1>
     </header>
     <main class="subject-list">${cards}</main>
@@ -397,7 +405,7 @@ export const renderModePicker = ({
   mockExam = true,
   durationMinutes,
 }: ModePickerView): string => `
-  <header class="topbar"><button class="back" data-nav="back">← 返回</button><h1>${escapeHtml(subjectName)}</h1></header>
+  <header class="topbar"><button class="back" data-nav="back">${chevronLeftIcon}返回</button><h1>${escapeHtml(subjectName)}</h1></header>
   <main class="mode-picker">
     ${mockExam
       ? `<button class="mode-card" data-mode="exam">
@@ -462,7 +470,7 @@ export const renderQuestion = (
     : "";
   return `
     <header class="topbar">
-      <button class="back" data-nav="quit">← 結束</button>
+      <button class="back" data-nav="quit">${chevronLeftIcon}結束</button>
       <span class="progress">第 ${index + 1} / ${total} 題</span>
       ${drillControls ? renderDrillTools(drillControls) : `<span class="timer">${timeText}</span>`}
     </header>
@@ -488,7 +496,7 @@ export const renderQuestion = (
 
 export const renderDrillEmpty = (controls: DrillControls): string => `
   <header class="topbar">
-    <button class="back" data-nav="quit">← 結束</button>
+    <button class="back" data-nav="quit">${chevronLeftIcon}結束</button>
     <span class="progress">刷題練習</span>
     ${renderDrillTools(controls)}
   </header>
@@ -668,7 +676,7 @@ export const renderTopicStats = (
     : "";
   return `
     <header class="topbar">
-      <button class="back" data-nav="back-play">← ${escapeHtml(backLabel)}</button>
+      <button class="back" data-nav="back-play">${chevronLeftIcon}${escapeHtml(backLabel)}</button>
       <h1>${diagnostics ? "學習診斷" : "節點表現"}</h1>
     </header>
     <main class="topic-stats">
@@ -732,7 +740,7 @@ export const renderResult = (
     })
     .join("");
   return `
-    <header class="topbar"><button class="back" data-nav="home">← 回首頁</button><h1>成績</h1></header>
+    <header class="topbar"><button class="back" data-nav="home">${chevronLeftIcon}回首頁</button><h1>成績</h1></header>
     <main class="result">
       <section class="result-verdict ${passed ? "is-pass" : "is-fail"}">
         <p class="score">${score} 分<span class="score-verdict">${passed ? "及格" : "不及格"}</span></p>
@@ -859,7 +867,7 @@ const renderNoteSectionBody = (section: StudyNoteSection, headingTag: "h2" | "h3
 
 export const renderStudyLoading = (): string => `
   <header class="topbar">
-    <button class="back" data-nav="home">← 返回</button>
+    <button class="back" data-nav="home">${chevronLeftIcon}返回</button>
     <h1>學習主題</h1>
   </header>
   <main class="study">
@@ -872,12 +880,6 @@ export const renderStudyLoading = (): string => `
 // 筆記又包了三層 <details>；手機上讀一節要先找、再展開兩次，讀完也不知道下一節在哪。
 // 現在索引只放一張證照的節點清單與「接著讀」，點進去才是那一節的完整筆記。
 
-const icon = (paths: string, className = "icon"): string =>
-  `<svg class="${className}" viewBox="0 0 24 24" aria-hidden="true">${paths}</svg>`;
-const chevronLeftIcon = icon(`<path d="m15 18-6-6 6-6"></path>`);
-const chevronRightIcon = icon(`<path d="m9 18 6-6-6-6"></path>`);
-const checkIcon = icon(`<path d="M20 6 9 17l-5-5"></path>`);
-const searchIcon = icon(`<circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path>`);
 
 /** 閱讀器的頁面：一個評鑑節點，或證照層級的「備考總整理」與「縮寫速查」。 */
 export type StudyPageRef =
@@ -1118,7 +1120,7 @@ export const renderStudyIndex = (data: StudyIndexData): string => {
 
   return `
     <header class="topbar">
-      <button class="back" data-nav="home">← 返回</button>
+      <button class="back" data-nav="home">${chevronLeftIcon}返回</button>
       <h1>學習主題</h1>
     </header>
     <main class="study study-index" data-cert-section="${escapeHtml(cert)}">
@@ -1196,7 +1198,7 @@ export type StudyReaderData = {
 
 const renderReaderTopbar = (crumb: string): string => `
   <header class="topbar reader-topbar">
-    <button class="back" data-nav="study">← 目錄</button>
+    <button class="back" data-nav="study">${chevronLeftIcon}目錄</button>
     <span class="reader-crumb">${escapeHtml(crumb)}</span>
   </header>
 `;
@@ -1345,7 +1347,7 @@ export const renderPaperPicker = (subjectName: string, paperCount: number): stri
     <button class="mode-card" data-paper="${i}"><h2>第 ${i + 1} 份</h2><p>50 題・單頁作答・計時</p></button>
   `).join("");
   return `
-    <header class="topbar"><button class="back" data-nav="back-mode">← 返回</button><h1>${escapeHtml(subjectName)}</h1></header>
+    <header class="topbar"><button class="back" data-nav="back-mode">${chevronLeftIcon}返回</button><h1>${escapeHtml(subjectName)}</h1></header>
     <main class="mode-picker">${cards}</main>
   `;
 };
@@ -1436,7 +1438,7 @@ export const renderExamReview = (
       </section>`;
   }).join("");
   return `
-    <header class="topbar"><button class="back" data-nav="result">← ${escapeHtml(backLabel)}</button><h1>逐題檢討</h1></header>
+    <header class="topbar"><button class="back" data-nav="result">${chevronLeftIcon}${escapeHtml(backLabel)}</button><h1>逐題檢討</h1></header>
     <main class="exam-paper review">
       <p class="lead">本次得分 ${scoreLine} 分</p>
       ${blocks}

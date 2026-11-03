@@ -109,8 +109,10 @@ h1, h2, h3 { text-wrap: balance; }
 button { font: inherit; color: inherit; cursor: pointer; border: none; border-radius: 8px; }
 .back {
   background: var(--panel); color: var(--accent); min-height: var(--tap);
-  border: 1px solid var(--border); padding: 8px 14px; font-weight: 700; flex: none;
+  border: 1px solid var(--border); padding: 8px 14px 8px 10px; font-weight: 700; flex: none;
+  display: inline-flex; align-items: center; gap: 2px;
 }
+.back .icon { width: 18px; height: 18px; stroke-width: 2.25; }
 .lead { color: var(--muted); font-size: 1.05rem; line-height: 1.7; }
 /* 主要動作：交卷、逐題檢討、回成績。全站同一種實心綠。 */
 .submit {

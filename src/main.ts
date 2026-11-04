@@ -28,7 +28,7 @@ import type { ChoiceId, Question } from "./data/types";
 import type { Cert, Level } from "./data/types";
 import type { StudyNoteSection, StudyNotesBySubject } from "./data/types";
 import type { AbbrEntry, DrillCounts } from "./ui/render";
-import { splitForSpeech } from "./ui/speechChunks";
+import { hasResumableProgress, resumePoint, splitForSpeech, type SpeechProgress } from "./ui/speechChunks";
 
 type View = "home" | "cert" | "level" | "mode" | "paper" | "play" | "result" | "review" | "study" | "topics";
 type Mode = "exam" | "drill";
@@ -255,6 +255,7 @@ function stopTts(): boolean {
   if (activeUtterance) {
     activeUtterance.onend = null;
     activeUtterance.onerror = null;
+    activeUtterance.onboundary = null;
   }
   const synth = canSpeak() ? window.speechSynthesis : null;
   const busy = Boolean(synth && (synth.speaking || synth.pending));
@@ -275,14 +276,27 @@ function pickChineseVoice(): SpeechSynthesisVoice | undefined {
     ?? voices.find((v) => /^zh/i.test(v.lang));
 }
 
-function speakChunks(session: number, chunks: string[], index: number) {
+// 朗讀進度以節的 DOM 元素為鍵：換頁重繪後元素就換了，舊進度自然失效，不會接到別頁去。
+let ttsProgress: SpeechProgress<HTMLElement> | null = null;
+
+function speakChunks(session: number, chunks: string[], index: number, offset = 0) {
   if (session !== ttsSession) return;
   if (index >= chunks.length) {
+    // 念完整節：清掉進度，下次從頭。
+    ttsProgress = null;
     activeUtterance = null;
     clearTtsButton();
     return;
   }
-  const utterance = new SpeechSynthesisUtterance(chunks[index]);
+  if (ttsProgress) {
+    ttsProgress.index = index;
+    ttsProgress.charIndex = offset;
+  }
+  const utterance = new SpeechSynthesisUtterance(chunks[index].slice(offset));
+  // boundary 的 charIndex 是相對於這次送出的文字，加回 offset 才是段內位置。
+  utterance.onboundary = (event) => {
+    if (session === ttsSession && ttsProgress) ttsProgress.charIndex = offset + event.charIndex;
+  };
   utterance.lang = "zh-TW";
   utterance.rate = ttsRate;
   const voice = pickChineseVoice();
@@ -352,7 +366,8 @@ function sectionSpeechText(section: HTMLElement): string {
 
 function markSpeaking(button: HTMLButtonElement) {
   activeTtsButton = button;
-  button.dataset.ttsLabel = button.getAttribute("aria-label") ?? "朗讀";
+  // 只記第一次的原始標籤（「朗讀 某節」）；之後按鈕可能正標著「從中斷處繼續朗讀」，不能把它當成原始標籤存起來。
+  button.dataset.ttsLabel ??= button.getAttribute("aria-label") ?? "朗讀";
   button.classList.add("speaking");
   button.setAttribute("aria-pressed", "true");
   button.setAttribute("title", "停止朗讀");
@@ -362,7 +377,12 @@ function markSpeaking(button: HTMLButtonElement) {
 function readStudySection(button: HTMLButtonElement, options: { restart?: boolean } = {}) {
   if (!canSpeak()) return;
   if (activeTtsButton === button && !options.restart) {
+    // 停止只是中斷：進度保留，按鈕改標「繼續朗讀」，再按從這一段接著念。
     stopTts();
+    if (hasResumableProgress(ttsProgress)) {
+      button.setAttribute("title", "從中斷處繼續朗讀");
+      button.setAttribute("aria-label", "從中斷處繼續朗讀");
+    }
     return;
   }
 
@@ -371,16 +391,27 @@ function readStudySection(button: HTMLButtonElement, options: { restart?: boolea
   // 一節可達數千字，整段送進單一 utterance 會讓 Chrome 無聲卡住（見 speechChunks.ts），改為切段排隊朗讀。
   const chunks = splitForSpeech(sectionSpeechText(section));
   if (chunks.length === 0) return;
+  // 同一節（停止後再按、或念到一半改語速）從中斷的那一段接著念；換節或已念完則從頭。
+  const start = resumePoint(ttsProgress, section, chunks);
 
+  // 換到別節時，把上一節按鈕的「繼續朗讀」標示還原（它的進度隨之作廢）。
+  const previousButton = ttsProgress && ttsProgress.key !== section
+    ? ttsProgress.key.querySelector<HTMLButtonElement>("[data-tts-section]")
+    : null;
   const cancelled = stopTts();
+  if (previousButton) {
+    previousButton.setAttribute("title", "朗讀");
+    previousButton.setAttribute("aria-label", previousButton.dataset.ttsLabel ?? "朗讀");
+  }
+  ttsProgress = { key: section, chunks, index: start.index, charIndex: start.offset };
   markSpeaking(button);
   const session = ttsSession;
   // 沒有取消任何語音時（第一次按、或上一節已念完）必須在點擊當下同步 speak()：
   // iOS 要求第一次朗讀直接出自使用者手勢，延後呼叫會被當成自動播放而無聲。
   // 剛 cancel() 過時（換節、改語速）則稍等再念，避開 Safari 吃掉緊接著的 speak()；
   // 此時先前的朗讀已解鎖過音訊，延後呼叫不受手勢限制。
-  if (cancelled) window.setTimeout(() => speakChunks(session, chunks, 0), 120);
-  else speakChunks(session, chunks, 0);
+  if (cancelled) window.setTimeout(() => speakChunks(session, chunks, start.index, start.offset), 120);
+  else speakChunks(session, chunks, start.index, start.offset);
 }
 
 // 兩個筆記模組都是獨立 chunk，只有進入「學習主題」時才載入：

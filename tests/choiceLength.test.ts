@@ -36,6 +36,26 @@ const lengthStats = (questions: Question[]): LengthStats => {
 
 const pct = (count: number, n: number) => Math.round((100 * count) / n);
 
+/**
+ * 正解落在「最長／第二長／第三長／最短」四個長度名次的比例（同長時平分），
+ * 等於「每題都挑第 k 長的選項」的期望得分。隨機基準為各 25%。
+ */
+const rankDistribution = (questions: Question[]): number[] => {
+  const shares = [0, 0, 0, 0];
+  let n = 0;
+  for (const q of questions) {
+    if (q.choices.length !== 4) continue;
+    const answer = q.choices.find((c) => c.id === q.answer);
+    if (!answer) continue;
+    n++;
+    const correct = len(answer.text);
+    const sorted = q.choices.map((c) => len(c.text)).sort((a, b) => b - a);
+    const ranks = sorted.flatMap((value, k) => (value === correct ? [k] : []));
+    for (const k of ranks) shares[k] += 1 / ranks.length;
+  }
+  return shares.map((share) => pct(share, n));
+};
+
 const llmBank = (subjectId: string, bank: "practice" | "generated"): Question[] =>
   bank === "practice"
     ? getPracticeQuestions(subjectId)
@@ -69,6 +89,16 @@ describe("選項長度：已修正的題庫維持在目標內", () => {
       expect(pct(s.longest, s.n), "正解為最長選項的比例").toBeLessThanOrEqual(35);
       expect(pct(s.shortest, s.n), "正解為最短選項的比例").toBeLessThanOrEqual(40);
       expect(s.glaring, "正解達最長干擾項 1.3 倍以上的題目").toEqual([]);
+    });
+
+    // 只限制最長與最短時，偏差會擠到下一個沒被限制的名次：2026-10-30 量到四個題庫「每題挑第二長」得 41–44 分。
+    // 因此把分布本身寫成門檻（backlog Q3）。
+    it(`${subjectId}（${bank}）：正解在每個長度名次的比例 ≤40%`, () => {
+      const [longest, second, third, shortest] = rankDistribution(llmBank(subjectId, bank));
+      expect(longest, "正解為最長").toBeLessThanOrEqual(40);
+      expect(second, "正解為第二長").toBeLessThanOrEqual(40);
+      expect(third, "正解為第三長").toBeLessThanOrEqual(40);
+      expect(shortest, "正解為最短").toBeLessThanOrEqual(40);
     });
   }
 });

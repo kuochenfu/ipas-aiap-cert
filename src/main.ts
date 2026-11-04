@@ -28,6 +28,7 @@ import type { ChoiceId, Question } from "./data/types";
 import type { Cert, Level } from "./data/types";
 import type { StudyNoteSection, StudyNotesBySubject } from "./data/types";
 import type { AbbrEntry, DrillCounts } from "./ui/render";
+import { splitForSpeech } from "./ui/speechChunks";
 
 type View = "home" | "cert" | "level" | "mode" | "paper" | "play" | "result" | "review" | "study" | "topics";
 type Mode = "exam" | "drill";
@@ -239,10 +240,55 @@ function clearTtsButton() {
   activeTtsButton = null;
 }
 
+// 每次開始或停止朗讀都換一個場次編號。cancel() 會讓正在念的那一段觸發 error／end，
+// 舊場次的回呼看到編號不符就不再接著念下一段，也不會去動新場次的按鈕。
+let ttsSession = 0;
+
 function stopTts() {
+  ttsSession += 1;
+  if (activeUtterance) {
+    activeUtterance.onend = null;
+    activeUtterance.onerror = null;
+  }
   if (canSpeak()) window.speechSynthesis.cancel();
   activeUtterance = null;
   clearTtsButton();
+}
+
+// 明確指定語音：優先本機的 zh-TW 語音（線上語音較容易在長文或網路不穩時無聲失敗），其次任何 zh-TW、任何中文。
+// 回傳 undefined 時交由瀏覽器依 utterance.lang 自選。
+function pickChineseVoice(): SpeechSynthesisVoice | undefined {
+  const voices = window.speechSynthesis.getVoices();
+  const isTw = (voice: SpeechSynthesisVoice) => /^zh[-_]TW$/i.test(voice.lang);
+  return voices.find((v) => isTw(v) && v.localService)
+    ?? voices.find(isTw)
+    ?? voices.find((v) => /^zh/i.test(v.lang) && v.localService)
+    ?? voices.find((v) => /^zh/i.test(v.lang));
+}
+
+function speakChunks(session: number, chunks: string[], index: number) {
+  if (session !== ttsSession) return;
+  if (index >= chunks.length) {
+    activeUtterance = null;
+    clearTtsButton();
+    return;
+  }
+  const utterance = new SpeechSynthesisUtterance(chunks[index]);
+  utterance.lang = "zh-TW";
+  utterance.rate = ttsRate;
+  const voice = pickChineseVoice();
+  if (voice) utterance.voice = voice;
+  utterance.onend = () => speakChunks(session, chunks, index + 1);
+  utterance.onerror = () => {
+    if (session !== ttsSession) return;
+    activeUtterance = null;
+    clearTtsButton();
+  };
+  // 保留參照：Chrome 會在 utterance 被回收時靜默丟掉 end 事件，排隊就斷了。
+  activeUtterance = utterance;
+  // Chrome 的語音引擎偶爾停在 paused 狀態，之後 speak() 全部無聲，先 resume() 喚醒。
+  window.speechSynthesis.resume();
+  window.speechSynthesis.speak(utterance);
 }
 
 function syncTtsRateButtons() {
@@ -299,23 +345,13 @@ function readStudySection(button: HTMLButtonElement, options: { restart?: boolea
 
   const section = button.closest<HTMLElement>(".study-note-section");
   if (!section) return;
-  const text = sectionSpeechText(section);
-  if (!text) return;
+  // 一節可達數千字，整段送進單一 utterance 會讓 Chrome 無聲卡住（見 speechChunks.ts），改為切段排隊朗讀。
+  const chunks = splitForSpeech(sectionSpeechText(section));
+  if (chunks.length === 0) return;
 
   stopTts();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "zh-TW";
-  utterance.rate = ttsRate;
-  utterance.onend = () => {
-    if (activeUtterance === utterance) {
-      activeUtterance = null;
-      clearTtsButton();
-    }
-  };
-  utterance.onerror = utterance.onend;
-  activeUtterance = utterance;
   markSpeaking(button);
-  window.speechSynthesis.speak(utterance);
+  speakChunks(ttsSession, chunks, 0);
 }
 
 // 兩個筆記模組都是獨立 chunk，只有進入「學習主題」時才載入：

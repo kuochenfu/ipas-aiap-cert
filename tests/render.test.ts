@@ -24,6 +24,7 @@ import {
   renderTopicStats,} from "../src/ui/render";
 import type { StudyNotesBySubject } from "../src/data/types";
 import type { StudyPageRef } from "../src/ui/render";
+import { guideChapterLabel } from "../src/ui/render";
 
 /** 閱讀器的簡寫：打開某科某節點。 */
 const reader = (notes: StudyNotesBySubject | undefined, subjectId: string, code: string, readNodes?: Set<string>) =>
@@ -999,5 +1000,25 @@ describe("推薦篩選與校準模式的介面", () => {
       ...controls, confidence: { mode: true },
     });
     expect(html).not.toContain("calibration-note");
+  });
+});
+
+describe("guideChapterLabel：閱讀器頁首標出對應的學習指引章節", () => {
+  const sec = (heading: string) => ({ heading, items: [{ text: "x" }] });
+  it("同一章的多個編號節 → 第 N 章", () => {
+    expect(guideChapterLabel([sec("4.1 數據收集與清理"), sec("4.2 數據儲存與管理"), sec("4.3 數據處理技術與工具")])).toBe("學習指引第 4 章");
+  });
+  it("只有一個編號節（初級，另有非編號的補充節）→ N.M 節", () => {
+    expect(guideChapterLabel([sec("3.1 人工智慧概念"), sec("補充 A｜題庫考點反推（非官方講義）")])).toBe("學習指引 3.1 節");
+  });
+  it("沒有編號（AIoT）或跨章時不標", () => {
+    expect(guideChapterLabel([sec("必懂觀念"), sec("容易混淆")])).toBeUndefined();
+    expect(guideChapterLabel([sec("3.1 甲"), sec("4.1 乙")])).toBeUndefined();
+  });
+  it("實際資料：五科每個主題都標得出來", async () => {
+    const { studyNotes } = await import("../src/data/studyNotes");
+    for (const topics of Object.values(studyNotes)) {
+      for (const sections of Object.values(topics)) expect(guideChapterLabel(sections)).toMatch(/^學習指引/);
+    }
   });
 });

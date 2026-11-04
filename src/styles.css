@@ -639,7 +639,7 @@ mark.study-hit {
   color: var(--accent); font-weight: 700;
 }
 .tts-rate {
-  display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 0 0 16px;
   color: var(--muted); font-size: var(--fs-sm); font-weight: 700;
 }
 .tts-rate button {

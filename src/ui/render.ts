@@ -922,6 +922,24 @@ const subjectLabel = (subject: Subject): string =>
 const notesLabelFor = (subject: Subject): string =>
   subject.cert === "aiot" ? "備考整理" : "學習指引整理";
 
+/**
+ * 節標題前的「3.1」「4.2」是官方學習指引的章節號碼（第 1、2 章是報考資格與職能基準，內容從第 3 章起），
+ * 單節點閱讀器一頁只放一個主題，讀者看不到整本書的脈絡，因此在頁首標出對應的章或節。
+ * 以節標題的編號推得：同一頁的編號節都屬同一章時標「第 N 章」，只有一個編號節時標「N.M 節」；
+ * 沒有編號（AIoT 備考整理）或跨章時不標，不猜。
+ */
+export const guideChapterLabel = (sections: StudyNoteSection[]): string | undefined => {
+  const numbered = sections
+    .map((section) => section.heading.match(/^(\d+)\.(\d+)\s/))
+    .filter((match): match is RegExpMatchArray => match !== null);
+  if (numbered.length === 0) return undefined;
+  const chapters = new Set(numbered.map((match) => match[1]));
+  if (chapters.size !== 1) return undefined;
+  return numbered.length === 1
+    ? `學習指引 ${numbered[0][1]}.${numbered[0][2]} 節`
+    : `學習指引第 ${numbered[0][1]} 章`;
+};
+
 /** 一個學習主題可能涵蓋數個題目節點（五科的 L111 → L11101、L11102…），故以前綴加總。 */
 const topicQuestionCount = (counts: Record<string, number>, code: string): number =>
   Object.entries(counts).reduce(
@@ -1182,7 +1200,7 @@ const renderReaderSections = (sections: StudyNoteSection[], links: ReadingLink[]
 
 const renderTtsRate = (): string => `
   <div class="tts-rate" role="group" aria-label="朗讀語速">
-    <span>朗讀語速</span>
+    <span>朗讀語速（各節標題旁的喇叭按鈕）</span>
     <button data-tts-rate="0.9">0.9x</button>
     <button class="active" data-tts-rate="1">1.0x</button>
     <button data-tts-rate="1.2">1.2x</button>
@@ -1240,8 +1258,10 @@ const renderNodeReader = (
         <h1><span class="node-code">${escapeHtml(topic.code)}</span>${escapeHtml(topic.title)}</h1>
         <p class="reader-meta">
           <span class="reader-source">${notesLabelFor(subject)}</span>
+          ${subject.cert === "aiap" && guideChapterLabel(sections) ? `<span>${escapeHtml(guideChapterLabel(sections)!)}</span>` : ""}
           <span>${sections.length} 節・${noteLeafCount(sections)} 則重點</span>
         </p>
+        ${sections.length ? renderTtsRate() : ""}
         <div class="reader-scope">
           <h2 class="reader-scope-title">評鑑範圍</h2>
           <ul>${topic.contents.map((c) => `<li>${escapeHtml(c)}</li>`).join("")}</ul>
@@ -1254,7 +1274,6 @@ const renderNodeReader = (
           ${count > 0 ? `<button class="submit" data-topic-drill="${drillKey}">練這一節的 ${count} 題</button>` : ""}
           <button class="reader-next" data-study-action="read-next">${escapeHtml(nextLabel)}${chevronRightIcon}</button>
         </div>
-        ${sections.length ? renderTtsRate() : ""}
       </section>
     </main>
     <nav class="reader-dock" aria-label="節點切換">
@@ -1283,9 +1302,9 @@ const renderOverviewReader = (cert: Cert, sections: StudyNoteSection[] | undefin
           <span class="reader-source">備考整理</span>
           <span>${sections.length} 節・${noteLeafCount(sections)} 則重點・跨節點的內容</span>
         </p>
+        ${renderTtsRate()}
       </header>
       ${renderReaderSections(sections)}
-      <section class="reader-end" aria-label="讀完這一頁">${renderTtsRate()}</section>
     </main>
   `;
 };

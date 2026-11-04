@@ -244,15 +244,24 @@ function clearTtsButton() {
 // 舊場次的回呼看到編號不符就不再接著念下一段，也不會去動新場次的按鈕。
 let ttsSession = 0;
 
-function stopTts() {
+/**
+ * 停止朗讀。回傳是否真的取消了正在念（或排隊中）的語音。
+ *
+ * 只在確實有語音時才 cancel()：WebKit（iOS／macOS Safari）在 cancel() 之後同一刻 speak()，
+ * 會把新的 utterance 一起無聲丟掉。原本每次朗讀前都無條件 cancel()，Safari 上因此永遠念不出來。
+ */
+function stopTts(): boolean {
   ttsSession += 1;
   if (activeUtterance) {
     activeUtterance.onend = null;
     activeUtterance.onerror = null;
   }
-  if (canSpeak()) window.speechSynthesis.cancel();
+  const synth = canSpeak() ? window.speechSynthesis : null;
+  const busy = Boolean(synth && (synth.speaking || synth.pending));
+  if (busy) synth!.cancel();
   activeUtterance = null;
   clearTtsButton();
+  return busy;
 }
 
 // 明確指定語音：優先本機的 zh-TW 語音（線上語音較容易在長文或網路不穩時無聲失敗），其次任何 zh-TW、任何中文。
@@ -286,8 +295,8 @@ function speakChunks(session: number, chunks: string[], index: number) {
   };
   // 保留參照：Chrome 會在 utterance 被回收時靜默丟掉 end 事件，排隊就斷了。
   activeUtterance = utterance;
-  // Chrome 的語音引擎偶爾停在 paused 狀態，之後 speak() 全部無聲，先 resume() 喚醒。
-  window.speechSynthesis.resume();
+  // Chrome 的語音引擎偶爾停在 paused 狀態，之後 speak() 全部無聲，先 resume() 喚醒；沒暫停就不碰。
+  if (window.speechSynthesis.paused) window.speechSynthesis.resume();
   window.speechSynthesis.speak(utterance);
 }
 
@@ -297,9 +306,23 @@ function syncTtsRateButtons() {
   });
 }
 
+// iPhone／iPad 的靜音開關會讓網頁朗讀無聲，而網頁偵測不到開關狀態，只能事先提示。
+// iPadOS 13 起會以 Macintosh 身分出現，以觸控點數區分。
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+  || (navigator.userAgent.includes("Macintosh") && navigator.maxTouchPoints > 1);
+
 function syncTtsControls() {
   const supported = canSpeak();
   syncTtsRateButtons();
+  if (isIOS && supported) {
+    app.querySelectorAll<HTMLElement>(".tts-rate").forEach((group) => {
+      if (group.querySelector(".tts-hint")) return;
+      const hint = document.createElement("p");
+      hint.className = "tts-hint";
+      hint.textContent = "沒有聲音？iPhone／iPad 在靜音模式下聽不到朗讀，請先關閉側邊的靜音開關。";
+      group.append(hint);
+    });
+  }
   app.querySelectorAll<HTMLButtonElement>("[data-tts-rate]").forEach((button) => {
     button.disabled = !supported;
   });
@@ -349,9 +372,15 @@ function readStudySection(button: HTMLButtonElement, options: { restart?: boolea
   const chunks = splitForSpeech(sectionSpeechText(section));
   if (chunks.length === 0) return;
 
-  stopTts();
+  const cancelled = stopTts();
   markSpeaking(button);
-  speakChunks(ttsSession, chunks, 0);
+  const session = ttsSession;
+  // 沒有取消任何語音時（第一次按、或上一節已念完）必須在點擊當下同步 speak()：
+  // iOS 要求第一次朗讀直接出自使用者手勢，延後呼叫會被當成自動播放而無聲。
+  // 剛 cancel() 過時（換節、改語速）則稍等再念，避開 Safari 吃掉緊接著的 speak()；
+  // 此時先前的朗讀已解鎖過音訊，延後呼叫不受手勢限制。
+  if (cancelled) window.setTimeout(() => speakChunks(session, chunks, 0), 120);
+  else speakChunks(session, chunks, 0);
 }
 
 // 兩個筆記模組都是獨立 chunk，只有進入「學習主題」時才載入：

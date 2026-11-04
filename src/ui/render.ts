@@ -226,7 +226,8 @@ const renderAnswerSummary = (q: Question, selected: string | undefined): string 
 
 const CLAUSE_BOUNDARY = /[。；;，,\n]/;
 
-const explanationSegmentForChoice = (explanation: string, choiceId: string): string | undefined => {
+// 匯出給 scripts/choice-length/check.ts 使用：改題時讓子代理看到畫面上實際會切出的解析。
+export const explanationSegmentForChoice = (explanation: string, choiceId: string): string | undefined => {
   // 詳解裡指涉某個選項有三種常見寫法，都要認得：
   //   1. 子句開頭直接寫字母——「⋯；C 說它是單向語言模型，⋯」
   //   2. 字母夾在括號裡、跟在名詞後面——「TF-IDF（A）產生的是稀疏向量，⋯」

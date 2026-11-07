@@ -168,6 +168,8 @@ export const concepts: ConceptEntry[] = [
   { id: "ai-agent", label: "AI Agent", aliases: ["ai代理", "智慧代理", "react", "多代理", "multi-agent", "agentic", "solutiongraph", "任務規劃器"] },
   { id: "tool-calling", label: "工具呼叫與 MCP", aliases: ["工具呼叫", "functioncalling", "toolcalling", "mcp", "modelcontextprotocol", "a2a"] },
   { id: "model-compression", label: "模型壓縮", aliases: ["知識蒸餾", "distillation", "剪枝", "pruning", "模型量化", "quantization", "int8量化"] },
+  { id: "world-model", label: "世界模型", aliases: ["worldmodel", "sim-to-real", "模擬與現實落差", "具身智能"] },
+  { id: "deepfake", label: "深偽", aliases: ["deepfake", "深度偽造"] },
   { id: "guardrails", label: "護欄與輸出審查", aliases: ["guardrails", "護欄", "防護機制", "輸出審查", "人工審查"] },
   { id: "synthetic-data", label: "合成資料", aliases: ["syntheticdata", "模型崩潰", "modelcollapse"] },
 

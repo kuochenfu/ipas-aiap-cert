@@ -12,6 +12,7 @@ import { practiceQuestions as seniorAiTechCode } from "./senior-ai-tech.code";
 import { practiceQuestions as seniorBigdataCode } from "./senior-bigdata.code";
 import { practiceQuestions as seniorMlCode } from "./senior-ml.code";
 import { practiceQuestions as seniorAiTechTrends } from "./senior-ai-tech.trends";
+import { practiceQuestions as seniorMlTrends } from "./senior-ml.trends";
 
 const banks: Record<string, Question[]> = {
   "junior-ai-basics": juniorAiBasics,
@@ -20,7 +21,8 @@ const banks: Record<string, Question[]> = {
   // senior-ai-tech 另於 2026-11-07 加 AI 趨勢補強批次（`*.trends.ts`：Agent、AI 資安、世界模型，25 題）。
   "senior-ai-tech": [...seniorAiTech, ...seniorAiTechCode, ...seniorAiTechTrends],
   "senior-bigdata": [...seniorBigdata, ...seniorBigdataCode],
-  "senior-ml": [...seniorMl, ...seniorMlCode],
+  // senior-ml 另於 2026-11-07 加 AI 趨勢補強批次（`*.trends.ts`，18 題；再多一題程式題比例就會跌破 20%）。
+  "senior-ml": [...seniorMl, ...seniorMlCode, ...seniorMlTrends],
   // AIoT 兩科各有兩批：第一批 q001–q100（2026-08-22）與第二批（2026-09-19），合併後依 id 順序即為題庫原序。
   "aiot-junior-basics": [...aiotJuniorBasics, ...aiotJuniorBasics2026],
   "aiot-junior-iot": [...aiotJuniorIot, ...aiotJuniorIot2026],

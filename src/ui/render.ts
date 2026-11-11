@@ -1,5 +1,6 @@
 import { escapeHtml } from "./escape";
 import { renderStudyVisual } from "./studyVisual";
+import { renderLectureItems } from "./lecture";
 import { countStudyVisuals } from "../domain/studyVisuals";
 import { groupReaderSections } from "../domain/readerSections";
 import type { Choice, QuestionFigure } from "../data/types";
@@ -861,14 +862,14 @@ const NOTE_SECTION_KEYS: Record<string, string> = {
 const noteSectionKey = (heading: string): string =>
   heading.startsWith("補充 C｜") ? "learning" : NOTE_SECTION_KEYS[heading] ?? "other";
 
-const renderNoteSectionBody = (section: StudyNoteSection, headingTag: "h2" | "h3" | "h5", displayHeading = section.heading): string => `
+const renderNoteSectionBody = (section: StudyNoteSection, headingTag: "h2" | "h3" | "h5", displayHeading = section.heading, lecture = false): string => `
   <div class="study-note-heading">
     <${headingTag} class="study-note-title">${escapeHtml(displayHeading)}</${headingTag}>
     <button class="tts-button" data-tts-section aria-label="朗讀 ${escapeHtml(section.heading)}" title="朗讀" aria-pressed="false">
       ${speakerIcon}
     </button>
   </div>
-  ${renderNoteItems(section.items)}
+  ${lecture ? renderLectureItems(section.items, renderNoteBody) : renderNoteItems(section.items)}
 `;
 
 export const renderStudyLoading = (): string => `
@@ -1218,7 +1219,7 @@ const renderReaderSections = (
       </header>
       ${group.sections.map(({ section, id }) => `
         <section class="study-note-section reader-section" id="${id}" data-note-section="${noteSectionKey(section.heading)}">
-          ${renderNoteSectionBody(section, "h3", section.heading.replace(/^補充 C｜/, "").replace(/（非官方講義）$/, ""))}
+          ${renderNoteSectionBody(section, "h3", section.heading.replace(/^補充 C｜/, "").replace(/（非官方講義）$/, ""), group.kind === "lecture")}
         </section>
       `).join("")}
     </div>

@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { stripLectureMarker } from "../src/ui/lecture";
 import { describe, expect, it } from "vitest";
 import { renderStudyReader } from "../src/ui/render";
 import { studyNotes } from "../src/data/studyNotes";
@@ -52,7 +53,12 @@ describe("閱讀器以講義、白話圖解、補充重點安排閱讀", () => {
           expect(actual, `${subjectId}/${code} sec-${index}`).not.toBeNull();
           expect(actual?.querySelector(".study-note-title")?.textContent).toBe(visibleHeading(section));
           const firstItem = section.items[0];
-          if (firstItem) expect(actual?.textContent).toContain(firstItem.text);
+          if (firstItem) {
+            // 講義小標與說明已分成不同區塊，人工編號與分隔冒號不再重複顯示。
+            const normalize = (text: string) => text.replace(/[\s：]/gu, "");
+            const expected = /^\d+\.\d+\s/.test(section.heading) ? stripLectureMarker(firstItem.text) : firstItem.text;
+            expect(normalize(actual?.textContent ?? "")).toContain(normalize(expected));
+          }
         }
 
         const expectedKinds = [

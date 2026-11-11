@@ -125,6 +125,8 @@ export type StudyNoteItem = {
   /** 一般條目的內容；帶 table／flow 時作為該區塊的標題。 */
   text: string;
   children?: StudyNoteItem[];
+  /** 穿插於講義的自編實務例子；id 供來源追蹤與避免重複合併。 */
+  example?: { id: string };
   /** 教學圖：統一渲染可讀的座標圖、熱圖、分支圖與百格圖。 */
   visual?: StudyVisual;
   /** 比較表。壓成條列會逼讀者在腦中轉置回表格，故獨立成型別。 */

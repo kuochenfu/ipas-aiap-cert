@@ -1,6 +1,7 @@
 import { studyVisualText } from "./domain/studyVisuals";
 import "./styles.css";
 import "./readerLayout.css";
+import "./lecture.css";
 import {
   renderHome, renderCert, renderLevel, renderModePicker, renderQuestion, renderResult,
   renderStudyIndex, renderStudyReader, renderAbbrHits, listStudyNodes, parseStudyPageKey, studyPageKey,
@@ -545,6 +546,7 @@ function noteText(sections: StudyNoteSection[] | undefined): string {
   const walk = (items: StudyNoteSection["items"]) => {
     for (const item of items) {
       out.push(item.text);
+      if (item.example) out.push("自編實務例子");
       if (item.formula) out.push(item.formula.expr, item.formula.note ?? "");
       if (item.flow) out.push(...item.flow);
       if (item.visual) out.push("教學圖解", studyVisualText(item.visual));

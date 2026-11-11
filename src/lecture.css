@@ -1,0 +1,45 @@
+/* 講義正文採概念段落，不再把小標和每一句話都放進巢狀項目符號。 */
+.reader-layout .lecture-prose { min-width: 0; }
+.reader-layout .lecture-paragraph {
+  margin: 0 0 14px;
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.95;
+  overflow-wrap: anywhere;
+}
+.reader-layout .lecture-paragraph strong { font-weight: 650; }
+.reader-layout .lecture-topic { min-width: 0; margin: 28px 0 20px; }
+.reader-layout .lecture-topic:first-child { margin-top: 0; }
+.reader-layout .lecture-topic-title {
+  margin: 0 0 10px;
+  color: var(--text);
+  font-size: 1.0625rem;
+  font-weight: 750;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.reader-layout h4.lecture-topic-title { font-size: 1.1875rem; }
+.reader-layout p.lecture-topic-title { font-size: 1rem; font-weight: 650; }
+.reader-layout .lecture-topic .lecture-topic { margin: 20px 0 16px; }
+.reader-layout .lecture-block { margin: 18px 0 24px; min-width: 0; }
+.reader-layout .lecture-steps { margin: 10px 0 20px; padding-left: 1.6em; }
+.reader-layout .lecture-steps > li { padding-left: 4px; margin: 10px 0; color: var(--text); line-height: 1.9; }
+.reader-layout .lecture-example {
+  margin: 24px 0 30px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  background: var(--panel-alt);
+  min-width: 0;
+}
+.reader-layout .lecture-example-label { display: block; margin-bottom: 6px; color: var(--accent); font-size: 0.8125rem; font-weight: 650; letter-spacing: 0.03em; }
+.reader-layout .lecture-example-title { margin: 0 0 12px; color: var(--text); font-size: 1.0625rem; font-weight: 750; line-height: 1.7; }
+.reader-layout .lecture-example > .lecture-paragraph:last-child { margin-bottom: 0; }
+.reader-layout .is-lecture .note-table { width: 100%; min-width: 32rem; table-layout: fixed; }
+.reader-layout .is-lecture .note-table th,
+.reader-layout .is-lecture .note-table td { white-space: normal; overflow-wrap: anywhere; vertical-align: top; }
+@media (max-width: 539px) {
+  .reader-layout .lecture-example { padding: 16px; }
+  .reader-layout h4.lecture-topic-title { font-size: 1.125rem; }
+}

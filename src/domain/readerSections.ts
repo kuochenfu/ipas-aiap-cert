@@ -15,7 +15,7 @@ const guideGroups: Omit<ReaderSectionGroup, "sections">[] = [
     kind: "lecture",
     title: "學習講義",
     source: "學習指引整理",
-    description: "先讀講義，建立本節的基本觀念。",
+    description: "依學習指引整理語句；穿插的實務例子為本站自編。",
   },
   {
     kind: "learning",

@@ -1,5 +1,6 @@
 import type { StudyNotesBySubject } from "./types";
 import { attachStudyVisuals } from "./studyVisuals";
+import { applyLectureEdits } from "./studyLectureEdits";
 import { l211LearningNotes } from "./studyNotes.l211";
 import { l212LearningNotes } from "./studyNotes.l212";
 import { l213LearningNotes } from "./studyNotes.l213";
@@ -12155,5 +12156,5 @@ const baseStudyNotes: StudyNotesBySubject = {
   }
 };
 
-// 圖解於對應導讀開頭合併；保持原講義與既有段落的來源及文字。
-export const studyNotes: StudyNotesBySubject = attachStudyVisuals(baseStudyNotes);
+// 原始重構留存於上方；逐節合併講義編輯與自編例子，再加入對應導讀的圖解。
+export const studyNotes: StudyNotesBySubject = attachStudyVisuals(applyLectureEdits(baseStudyNotes));

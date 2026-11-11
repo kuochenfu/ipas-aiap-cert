@@ -102,4 +102,5 @@ docs/raw/*.pdf  →  (pdftotext)  →  docs/markdown/*.md  →  npm run parse:pa
 | `docs/question-authoring.md` | 新題庫的命題規格與產出流程 |
 | `docs/backlog.md` | 待辦清單 |
 | `docs/coverage/` | 題庫瑕疵與詳解覆蓋率盤點 |
+| [2026-11-11 學習體驗改版回顧](docs/retrospective-2026-11-11-learning-experience.md) | 導讀、圖解、講義與版面改版的成果、返工與後續行動 |
 | `docs/retrospective-*.md` | 各階段專案回顧 |

@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect, beforeAll, vi } from "vitest";
 
 /**
  * 走過真實點擊路徑的煙霧測試。
@@ -17,14 +17,6 @@ const click = (element: Element | null | undefined) => {
 
 const app = () => document.querySelector("#app")!;
 
-/** 新題庫是動態載入的獨立 chunk，一個 tick 不一定夠——輪詢到畫面換好為止。 */
-const waitFor = async (selector: string) => {
-  for (let i = 0; i < 200; i += 1) {
-    if (app().querySelector(selector)) return;
-    await new Promise((resolve) => setTimeout(resolve, 5));
-  }
-  throw new Error(`等不到 ${selector}`);
-};
 const byText = (selector: string, text: string) =>
   [...app().querySelectorAll(selector)].find((el) => el.textContent?.includes(text));
 
@@ -42,13 +34,16 @@ describe("刷題流程（真實點擊）", () => {
     expect(app().textContent).toContain("AIoT 基礎概論");
 
     click(app().querySelector('[data-mode="practice"]'));
-    await waitFor(".choices");
+    // 冷啟動需轉換整份動態題庫；等待實際畫面完成，避免一秒輪詢上限在 CI 誤報。
+    await vi.waitFor(() => {
+      expect(app().querySelector(".choices")).toBeTruthy();
+    }, { timeout: 20_000, interval: 20 });
 
     click(app().querySelector('[data-choice="A"]'));
     // 作答後即時揭曉：詳解與正解摘要都出現。
     expect(app().querySelector(".answer-summary")).toBeTruthy();
     expect(app().textContent).toContain("詳解");
-  });
+  }, 30_000);
 
   it("作答被寫進 localStorage 的作答歷程（含時間與次數）", () => {
     const raw = JSON.parse(localStorage.getItem("ipas-aiap-drill-progress")!);

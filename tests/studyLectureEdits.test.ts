@@ -56,6 +56,7 @@ describe("講義語句編輯與穿插案例", () => {
     expect(text).toContain("IQR＝Q3−Q1");
     expect(text).toContain("變異係數（Coefficient of Variation, CV）");
     expect(text).toContain("p 值不是 H0 為真的機率");
+    expect(text).toContain("β＝P（未拒絕 H0｜指定的 Ha 為真）");
     expect(text).not.toContain("與全距有一樣的缺點");
     expect(text).not.toContain("變異數（Coefficient of Variation）");
   });

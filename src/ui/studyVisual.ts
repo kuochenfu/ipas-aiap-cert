@@ -471,12 +471,12 @@ export function renderStudyVisual(label: string, visual: StudyVisual): string {
   return `<figure class="study-visual" data-visual-kind="${escapeHtml(visual.kind)}">
     <figcaption class="study-visual-title">${escapeHtml(label)}</figcaption>
     <p class="study-visual-summary"><strong>看圖重點：</strong>${escapeHtml(visual.summary)}</p>
+    <p class="study-visual-scroll-hint">圖表較寬時，可在圖內左右滑動；也可展開下方數值。</p>
     <div class="study-visual-scroll" tabindex="0" role="group" aria-label="${escapeHtml(label)}，圖內可左右捲動">
       <svg class="study-visual-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(label)}" viewBox="0 0 ${rendered.width} ${rendered.height}" style="min-width: ${rendered.width}px">
         ${title(label)}<desc>${escapeHtml(`${visual.summary} ${rendered.how}`)}</desc>${rendered.marks}
       </svg>
     </div>
-    <p class="study-visual-scroll-hint">圖表較寬時，可在圖內左右滑動；也可展開下方數值。</p>
     ${rendered.legend ?? ""}
     <p class="study-visual-how"><strong>讀圖方式：</strong>${escapeHtml(rendered.how)}</p>
     ${rendered.notice ? `<p class="study-visual-notice">${escapeHtml(rendered.notice)}</p>` : ""}

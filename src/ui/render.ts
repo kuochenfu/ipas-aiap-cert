@@ -1,6 +1,7 @@
 import { escapeHtml } from "./escape";
 import { renderStudyVisual } from "./studyVisual";
 import { countStudyVisuals } from "../domain/studyVisuals";
+import { groupReaderSections } from "../domain/readerSections";
 import type { Choice, QuestionFigure } from "../data/types";
 import type { Subject } from "../domain/catalog";
 import { certs, getLevels, getSubjects, subjects } from "../domain/catalog";
@@ -860,9 +861,9 @@ const NOTE_SECTION_KEYS: Record<string, string> = {
 const noteSectionKey = (heading: string): string =>
   heading.startsWith("補充 C｜") ? "learning" : NOTE_SECTION_KEYS[heading] ?? "other";
 
-const renderNoteSectionBody = (section: StudyNoteSection, headingTag: "h2" | "h3" | "h5"): string => `
+const renderNoteSectionBody = (section: StudyNoteSection, headingTag: "h2" | "h3" | "h5", displayHeading = section.heading): string => `
   <div class="study-note-heading">
-    <${headingTag} class="study-note-title">${escapeHtml(section.heading)}</${headingTag}>
+    <${headingTag} class="study-note-title">${escapeHtml(displayHeading)}</${headingTag}>
     <button class="tts-button" data-tts-section aria-label="朗讀 ${escapeHtml(section.heading)}" title="朗讀" aria-pressed="false">
       ${speakerIcon}
     </button>
@@ -1175,36 +1176,62 @@ const sectionChipLabel = (heading: string): string => {
   return heading.split("｜")[0].trim();
 };
 
-const renderReaderSections = (sections: StudyNoteSection[], links: ReadingLink[] = []): string => {
-  const chips = [
-    ...sections.map((section, index) => `
-      <button class="reader-toc-chip" data-study-jump="sec-${index}" data-note-section="${noteSectionKey(section.heading)}">${escapeHtml(sectionChipLabel(section.heading))}</button>
-    `),
-    links.length ? `<button class="reader-toc-chip" data-study-jump="sec-links" data-note-section="resource">延伸閱讀</button>` : "",
-  ].join("");
+const renderReaderSections = (
+  sections: StudyNoteSection[], links: ReadingLink[] = [], source: "guide" | "notes" = "notes",
+): string => {
+  const groups = groupReaderSections(sections, source);
   const showCram = sections.some((section) => ["formula", "confuse"].includes(noteSectionKey(section.heading)));
-  const toc = sections.length + (links.length ? 1 : 0) > 1 || showCram
-    ? `
-      <nav class="reader-toc" aria-label="本頁段落">
-        <div class="reader-toc-track">${chips}</div>
-      </nav>
-      ${showCram ? `<button class="reader-cram" data-study-action="cram" aria-pressed="false">只看公式與易混淆</button>` : ""}
-    `
-    : "";
-  const body = sections.map((section, index) => `
-    <section class="study-note-section reader-section" id="sec-${index}" data-note-section="${noteSectionKey(section.heading)}">
-      ${renderNoteSectionBody(section, "h2")}
-    </section>
+  const sectionCount = sections.length + (links.length ? 1 : 0);
+  const chips = groups.map((group) => `
+    <div class="reader-toc-group is-${group.kind}">
+      <p class="reader-toc-label">${escapeHtml(group.title)}<span>${group.sections.length}</span></p>
+      <div class="reader-toc-list">${group.sections.map(({ section, id }) => `
+        <button class="reader-toc-chip" data-study-jump="${id}" data-note-section="${noteSectionKey(section.heading)}">${escapeHtml(sectionChipLabel(section.heading))}</button>
+      `).join("")}</div>
+    </div>
   `).join("");
-  const linkSection = links.length
-    ? `
+  const options = groups.map((group) => `
+    <optgroup label="${escapeHtml(group.title)}">${group.sections.map(({ section, id }) => `
+      <option value="${id}" data-note-section="${noteSectionKey(section.heading)}">${escapeHtml(sectionChipLabel(section.heading))}</option>
+    `).join("")}</optgroup>
+  `).join("");
+  const toc = sectionCount > 1 || showCram ? `
+    <nav class="reader-toc" aria-label="本頁段落">
+      <p class="reader-toc-heading">本頁目錄<span>${sectionCount} 個段落</span></p>
+      <label class="reader-toc-mobile">跳至段落
+        <select class="reader-section-picker" data-reader-section aria-label="跳至本頁段落">
+          ${options}${links.length ? `<optgroup label="延伸閱讀"><option value="sec-links" data-note-section="resource">延伸閱讀</option></optgroup>` : ""}
+        </select>
+      </label>
+      <div class="reader-toc-track">${chips}${links.length ? `
+        <div class="reader-toc-group is-resources"><p class="reader-toc-label">延伸閱讀</p><div class="reader-toc-list">
+          <button class="reader-toc-chip" data-study-jump="sec-links" data-note-section="resource">外部資源</button>
+        </div></div>` : ""}</div>
+      ${showCram ? `<button class="reader-cram" data-study-action="cram" aria-pressed="false">只看公式與易混淆</button>` : ""}
+    </nav>
+  ` : "";
+  const body = groups.map((group) => `
+    <div class="reader-content-group is-${group.kind}">
+      <header class="reader-group-head">
+        <div class="reader-group-heading"><h2 class="reader-group-title">${escapeHtml(group.title)}<span>${group.sections.length} 節</span></h2><span class="reader-group-source">${escapeHtml(group.source)}</span></div>
+        <p>${escapeHtml(group.description)}</p>
+      </header>
+      ${group.sections.map(({ section, id }) => `
+        <section class="study-note-section reader-section" id="${id}" data-note-section="${noteSectionKey(section.heading)}">
+          ${renderNoteSectionBody(section, "h3", section.heading.replace(/^補充 C｜/, "").replace(/（非官方講義）$/, ""))}
+        </section>
+      `).join("")}
+    </div>
+  `).join("");
+  const linkSection = links.length ? `
+    <div class="reader-content-group is-resources">
       <section class="reader-section reader-links" id="sec-links" data-note-section="resource">
         <h2 class="study-note-title">延伸閱讀</h2>
         <ul class="study-links">${links.map(renderReadingLink).join("")}</ul>
       </section>
-    `
-    : "";
-  return `${toc}<div class="reader-body">${body}${linkSection}</div>`;
+    </div>
+  ` : "";
+  return `<div class="reader-layout${toc ? "" : " is-single-column"}">${toc}<div class="reader-body">${body}${linkSection}</div></div>`;
 };
 
 const renderTtsRate = (): string => `
@@ -1264,6 +1291,7 @@ const renderNodeReader = (
     ${renderReaderTopbar(`${subjectLabel(subject)}・${subject.name}`)}
     <main class="study study-reader" data-cert-section="${escapeHtml(subject.cert)}" data-reader="${escapeHtml(topic.code)}">
       <header class="reader-head">
+        <div class="reader-heading">
         <h1><span class="node-code">${escapeHtml(topic.code)}</span>${escapeHtml(topic.title)}</h1>
         <p class="reader-meta">
           <span class="reader-source">${notesLabelFor(subject)}</span>
@@ -1271,13 +1299,16 @@ const renderNodeReader = (
           <span>${sections.length} 節・${noteLeafCount(sections)} 則重點</span>
           ${countStudyVisuals(sections) ? `<span class="reader-visual-count">${countStudyVisuals(sections)} 張教學圖解</span>` : ""}
         </p>
-        ${sections.length ? renderTtsRate() : ""}
-        <div class="reader-scope">
-          <h2 class="reader-scope-title">評鑑範圍</h2>
-          <ul>${topic.contents.map((c) => `<li>${escapeHtml(c)}</li>`).join("")}</ul>
+        </div>
+        <div class="reader-header-tools">
+          <details class="reader-scope">
+            <summary>評鑑範圍<span>${topic.contents.length} 項重點</span></summary>
+            <ul>${topic.contents.map((c) => `<li>${escapeHtml(c)}</li>`).join("")}</ul>
+          </details>
+          ${sections.length ? `<details class="reader-settings"><summary>朗讀設定</summary>${renderTtsRate()}</details>` : ""}
         </div>
       </header>
-      ${renderReaderSections(sections, topic.links)}
+      ${renderReaderSections(sections, topic.links, subject.cert === "aiap" ? "guide" : "notes")}
       ${sections.length ? "" : `<p class="reader-empty">這一節還沒有整理筆記，先看上面的評鑑範圍與延伸閱讀。</p>`}
       <section class="reader-end" aria-label="讀完這一節">
         <div class="reader-end-actions">
@@ -1312,7 +1343,7 @@ const renderOverviewReader = (cert: Cert, sections: StudyNoteSection[] | undefin
           <span class="reader-source">備考整理</span>
           <span>${sections.length} 節・${noteLeafCount(sections)} 則重點・跨節點的內容</span>
         </p>
-        ${renderTtsRate()}
+        <div class="reader-header-tools"><details class="reader-settings"><summary>朗讀設定</summary>${renderTtsRate()}</details></div>
       </header>
       ${renderReaderSections(sections)}
     </main>

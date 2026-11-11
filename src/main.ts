@@ -1,5 +1,6 @@
 import { studyVisualText } from "./domain/studyVisuals";
 import "./styles.css";
+import "./readerLayout.css";
 import {
   renderHome, renderCert, renderLevel, renderModePicker, renderQuestion, renderResult,
   renderStudyIndex, renderStudyReader, renderAbbrHits, listStudyNodes, parseStudyPageKey, studyPageKey,
@@ -450,7 +451,7 @@ function jumpToStudySection(anchorId: string) {
   if (!target) return;
   target.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
   // 焦點跟著進到該節，下一個 Tab 才會走進內文而不是留在籤列。
-  const heading = target.querySelector<HTMLElement>("h2");
+  const heading = target.querySelector<HTMLElement>(".study-note-title");
   if (!heading) return;
   heading.setAttribute("tabindex", "-1");
   heading.classList.add("view-anchor");
@@ -507,6 +508,19 @@ function runStudyAction(action: string, button: HTMLElement) {
     reader.classList.toggle("is-cram", on);
     button.setAttribute("aria-pressed", String(on));
     button.classList.toggle("active", on);
+    const picker = reader.querySelector<HTMLSelectElement>("[data-reader-section]");
+    if (picker) {
+      for (const option of picker.options) {
+        const excluded = on && !["formula", "confuse"].includes(option.dataset.noteSection ?? "");
+        option.hidden = excluded;
+        option.disabled = excluded;
+      }
+      for (const group of picker.querySelectorAll("optgroup")) {
+        group.hidden = [...group.querySelectorAll("option")].every(option => option.disabled);
+      }
+      if (picker.selectedOptions[0]?.disabled) picker.value = [...picker.options].find(option => !option.disabled)?.value ?? "";
+    }
+    updateReaderTocOffset();
     return;
   }
   if (action === "read-next") {
@@ -645,41 +659,70 @@ function highlightStudyQuery(root: HTMLElement, query: string): HTMLElement | nu
   return first;
 }
 
-// 分節籤列隨捲動標示目前所在的節。
+// 目錄隨捲動同步目前段落。
 let readerObserver: IntersectionObserver | null = null;
+
+function updateReaderTocOffset() {
+  const toc = app.querySelector<HTMLElement>(".reader-toc");
+  const reader = app.querySelector<HTMLElement>(".study-reader");
+  const wide = window.matchMedia?.("(min-width: 1080px)").matches;
+  if (toc && reader) reader.style.setProperty("--toc-h", `${wide ? 24 : toc.offsetHeight + 12}px`);
+}
 
 function watchReaderSections() {
   readerObserver?.disconnect();
   readerObserver = null;
   const track = app.querySelector<HTMLElement>(".reader-toc-track");
-  // 籤列在桌機可能換成兩列，跳到某節時標題要落在籤列下方而不是被蓋住。
-  const toc = app.querySelector<HTMLElement>(".reader-toc");
-  if (toc) app.querySelector<HTMLElement>(".study-reader")?.style.setProperty("--toc-h", `${toc.offsetHeight + 12}px`);
-  if (!track || !("IntersectionObserver" in window)) return;
+  const picker = app.querySelector<HTMLSelectElement>("[data-reader-section]");
+  updateReaderTocOffset();
+  if (!track) return;
   const chips = new Map<string, HTMLElement>();
   for (const chip of track.querySelectorAll<HTMLElement>("[data-study-jump]")) {
     chips.set(chip.dataset.studyJump ?? "", chip);
   }
-  readerObserver = new IntersectionObserver((records) => {
-    const visible = records.filter((record) => record.isIntersecting);
-    if (!visible.length) return;
-    const id = visible[0].target.id;
-    const current = chips.get(id);
-    if (!current) return;
+  const first = chips.values().next().value;
+  first?.classList.add("is-current");
+  first?.setAttribute("aria-current", "true");
+  if (!("IntersectionObserver" in window)) return;
+  const sections = [...app.querySelectorAll<HTMLElement>(".reader-section[id]")];
+  const toc = app.querySelector<HTMLElement>(".reader-toc");
+  const wide = window.matchMedia?.("(min-width: 1080px)").matches;
+  const readingLine = Math.min(wide ? 96 : (toc?.offsetHeight ?? 64) + 48, Math.max(0, window.innerHeight - 40));
+  const syncPosition = () => {
+    const visible = sections.filter(section => section.getClientRects().length > 0);
+    let active = visible[0];
+    for (const section of visible) {
+      if (section.getBoundingClientRect().top <= readingLine + 2) active = section;
+      else break;
+    }
+    const current = active ? chips.get(active.id) : undefined;
+    if (!current || !active) return;
     for (const chip of chips.values()) {
       const on = chip === current;
       chip.classList.toggle("is-current", on);
       if (on) chip.setAttribute("aria-current", "true");
       else chip.removeAttribute("aria-current");
     }
-    // 只捲籤列本身，不用 scrollIntoView——那會連整頁一起捲。
-    track.scrollTo({
-      left: current.offsetLeft - track.clientWidth / 2 + current.offsetWidth / 2,
-      behavior: scrollBehavior(),
-    });
-  }, { rootMargin: "-20% 0px -70% 0px" });
+    if (picker && document.activeElement !== picker) picker.value = active.id;
+    if (wide) {
+      const item = current.getBoundingClientRect();
+      const rail = track.getBoundingClientRect();
+      if (item.top < rail.top || item.bottom > rail.bottom) {
+        track.scrollTo({ top: track.scrollTop + item.top - rail.top - track.clientHeight / 2 + item.height / 2, behavior: scrollBehavior() });
+      }
+    }
+  };
+  // 以閱讀位置的窄帶觸發更新，並依全部段落的實際位置決定目前章節。
+  readerObserver = new IntersectionObserver(syncPosition, {
+    rootMargin: `-${readingLine}px 0px -${Math.max(0, window.innerHeight - readingLine - 2)}px 0px`,
+  });
+  syncPosition();
   for (const section of app.querySelectorAll(".reader-section[id]")) readerObserver.observe(section);
 }
+
+window.addEventListener("resize", () => {
+  if (app.querySelector(".reader-layout")) watchReaderSections();
+});
 
 /** 從學習主題頁直接練某個節點：把題庫縮到該節點，其餘流程與一般刷題相同。 */
 function startTopicDrill(payload: string) {
@@ -794,6 +837,13 @@ app.addEventListener("focusin", (event) => {
   if (!(target instanceof HTMLInputElement) || !target.hasAttribute("data-study-search")) return;
   if (!window.matchMedia?.("(max-width: 640px)").matches) return;
   target.closest('.study-search-row')?.scrollIntoView({ block: "start", behavior: scrollBehavior() });
+});
+
+app.addEventListener("change", (event) => {
+  const target = event.target;
+  if (target instanceof HTMLSelectElement && target.hasAttribute("data-reader-section")) {
+    jumpToStudySection(target.value);
+  }
 });
 
 app.addEventListener("input", (event) => {

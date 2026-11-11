@@ -103,6 +103,7 @@ docs/markdown/*.md  →  npm run parse:papers  →  src/data/past-exams/*.json
   - heading 以「**補充 A**／**補充 B**」開頭者＝**非官方講義**，由題庫反推撰寫（依據見 `docs/coverage/<subjectId>.md` 的逐題盤點）。補充 A 為缺口考點概念卡（定義／題庫怎麼考／易混淆三段式，每張卡至少 2 個子項）；補充 B 為時效性技術與法規現況，敘述須附查證來源。heading 一律保留「非官方講義」字樣（`tests/studyNotes.test.ts` 會驗）。
   - heading 以「**補充 C**」開頭者＝中級三科的自編白話導讀（非官方講義），按 `seniorNodes` 的全部評鑑細項組織（科目一 9 項、科目二 13 項、科目三 12 項），來源檔為 `src/data/studyNotes.l211.ts` 至 `studyNotes.l234.ts` 的 11 個單元檔，在 `studyNotes.ts` 各單元開頭合併。保留原講義重構與既有補充節；新增說明不要假冒官方原文。
   - 中級 C 導讀的教學圖解由 `src/data/studyVisuals.*.ts` 依單元／細項碼合併；每張圖都須有可讀摘要、圖形與逐步例題。圖形型別及欄位契約在 `studyVisuals.types.ts`，由 `src/ui/studyVisual.ts` 統一安全渲染；勿把比較表或文字流程當成已補上教學圖。
+  - 閱讀器依「學習講義 → 白話解說與圖解 → 補充重點」呈現，僅在 UI 以 `src/domain/readerSections.ts` 分組；原始資料順序與 `sec-原索引` 錨點保留。AIoT 的備考整理維持原七類順序，不標成官方講義。
   - 初級與中級皆有補充 section；來源與分類以各節標題為準。
 - 外部連結請維持權威、穩定來源，新增時應實際以 HTTP 驗證可用；渲染一律 `target="_blank" rel="noopener noreferrer"` 並經 `escapeHtml`。
 

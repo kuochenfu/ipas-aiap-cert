@@ -36,6 +36,7 @@ const NON_CLICKABLE = new Set([
   "data-study-count",     // 搜尋命中數的顯示位置
   "data-study-abbr-hits", // 搜尋時命中縮寫的顯示位置
   "data-abbr-filter",     // 縮寫速查的篩選輸入框（走 input 事件，不是點擊）
+  "data-reader-section",  // 手機段落選單，走 change 事件
   "data-reader",          // 閱讀器目前的節點碼，供樣式與除錯辨識
 ]);
 

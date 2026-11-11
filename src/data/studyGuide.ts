@@ -248,6 +248,7 @@ export const studyGuides: SubjectStudyGuide[] = [
           { title: "機率分布 - 維基百科", url: "https://zh.wikipedia.org/wiki/概率分布" },
           { title: "線性代數 - 維基百科", url: "https://zh.wikipedia.org/wiki/线性代数" },
           { title: "數學優化 - 維基百科", url: "https://zh.wikipedia.org/wiki/数学优化" },
+          { title: "PCA 主成分分析 - scikit-learn 官方文件", url: "https://scikit-learn.org/stable/modules/decomposition.html#pca" },
         ],
       },
       {
@@ -262,6 +263,8 @@ export const studyGuides: SubjectStudyGuide[] = [
           { title: "深度學習 - 維基百科", url: "https://zh.wikipedia.org/wiki/深度学习" },
           { title: "人工神經網路 - 維基百科", url: "https://zh.wikipedia.org/wiki/人工神经网络" },
           { title: "台大李宏毅 機器學習課程（2023 春）", url: "https://speech.ee.ntu.edu.tw/~hylee/ml/2023-spring.php" },
+          { title: "監督式學習與演算法 - scikit-learn 官方文件", url: "https://scikit-learn.org/stable/supervised_learning.html" },
+          { title: "深度學習基礎流程 - PyTorch 官方教學", url: "https://docs.pytorch.org/tutorials/beginner/basics/intro.html" },
         ],
       },
       {
@@ -277,6 +280,9 @@ export const studyGuides: SubjectStudyGuide[] = [
           { title: "特徵工程 - 維基百科", url: "https://zh.wikipedia.org/wiki/特征工程" },
           { title: "模型評估 metrics - scikit-learn", url: "https://scikit-learn.org/stable/modules/model_evaluation.html" },
           { title: "超參數調校（Grid Search）- scikit-learn", url: "https://scikit-learn.org/stable/modules/grid_search.html" },
+          { title: "資料洩漏與 Pipeline - scikit-learn 官方文件", url: "https://scikit-learn.org/stable/common_pitfalls.html" },
+          { title: "交叉驗證與資料切分 - scikit-learn 官方文件", url: "https://scikit-learn.org/stable/modules/cross_validation.html" },
+          { title: "Dropout 的訓練與推論行為 - PyTorch 官方文件", url: "https://docs.pytorch.org/docs/stable/generated/torch.nn.Dropout.html" },
         ],
       },
       {
@@ -290,6 +296,8 @@ export const studyGuides: SubjectStudyGuide[] = [
           { title: "隱私 - 維基百科", url: "https://zh.wikipedia.org/wiki/隐私" },
           { title: "Algorithmic bias - Wikipedia", url: "https://en.wikipedia.org/wiki/Algorithmic_bias" },
           { title: "數位發展部（數位治理與資安）", url: "https://moda.gov.tw/" },
+          { title: "可信 AI、隱私與公平性 - NIST AI RMF", url: "https://airc.nist.gov/airmf-resources/airmf/3-sec-characteristics/" },
+          { title: "聯邦學習模型更新的隱私風險 - NIST", url: "https://www.nist.gov/blogs/cybersecurity-insights/protecting-model-updates-privacy-preserving-federated-learning" },
         ],
       },
     ],

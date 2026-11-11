@@ -1,10 +1,14 @@
 import type { StudyNotesBySubject } from "./types";
+import { l231LearningNotes } from "./studyNotes.l231";
+import { l232LearningNotes } from "./studyNotes.l232";
+import { l233LearningNotes } from "./studyNotes.l233";
+import { l234LearningNotes } from "./studyNotes.l234";
 
 // 學習筆記內容：由 docs/study-slices（npm run extract:study-slices 從 docs/markdown 擷取）經 LLM 忠實重構而成，
 // 內容需人工複審（見 .git/sdd 報告與 memory 之待複審清單）；此檔為內容來源，請勿用腳本覆寫。
 //
-// 另有標題以「補充 A／補充 B」開頭的 section：非官方講義，由 LLM 從題庫反推考點撰寫（見 docs/coverage/*.md 的
-// 逐題盤點與缺口清單）。補充 B 的時效性敘述附有查證來源，同樣需人工複審。目前僅 junior-* 兩科具備。
+// 另有標題以「補充」開頭的非官方講義：A 為題庫反推考點，B 為附查證來源的時效性整理；
+// 中級科目三的 C 為依評鑑細項撰寫的白話導讀，獨立存於 studyNotes.l231–l234.ts。
 export const studyNotes: StudyNotesBySubject = {
   "junior-ai-basics": {
     "L111": [
@@ -8940,6 +8944,7 @@ export const studyNotes: StudyNotesBySubject = {
   },
   "senior-ml": {
     "L231": [
+      ...l231LearningNotes,
       {
         "heading": "3.1 機率/統計之機器學習基礎應用",
         "items": [
@@ -9387,6 +9392,7 @@ export const studyNotes: StudyNotesBySubject = {
       }
     ],
     "L232": [
+      ...l232LearningNotes,
       {
         "heading": "4.1 機器學習原理與技術",
         "items": [
@@ -10977,6 +10983,7 @@ export const studyNotes: StudyNotesBySubject = {
       }
     ],
     "L233": [
+      ...l233LearningNotes,
       {
         "heading": "5.1 數據準備與特徵工程",
         "items": [
@@ -11489,6 +11496,7 @@ export const studyNotes: StudyNotesBySubject = {
       }
     ],
     "L234": [
+      ...l234LearningNotes,
       {
         "heading": "6.1 數據隱私、安全與合規",
         "items": [

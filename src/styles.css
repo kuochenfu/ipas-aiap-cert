@@ -815,6 +815,14 @@ mark.study-hit {
 }
 .note-table thead th { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
 .note-table tbody th, .note-table tbody td:first-child { font-weight: 600; }
+/* 白話導讀的比較表含完整解說，讓段落換行；窄螢幕仍在原容器內橫向捲動。 */
+.reader-section[data-note-section="learning"] .note-table {
+  width: 100%; min-width: 34rem; table-layout: fixed;
+}
+.reader-section[data-note-section="learning"] .note-table th,
+.reader-section[data-note-section="learning"] .note-table td {
+  white-space: normal; overflow-wrap: anywhere; vertical-align: top;
+}
 /* 公式：淡綠底的整塊，靠底色而不是側邊色條與內文區隔。 */
 .note-formula {
   display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px;

@@ -809,6 +809,28 @@ describe("學習主題頁的索引與閱讀器導覽", () => {
     expect(html).toContain("補充 A｜題庫考點反推（非官方講義）");
   });
 
+  it("科目三的全部白話導讀可從分節籤辨識，且保留原筆記與練題入口", () => {
+    for (const code of ["L231", "L232", "L233", "L234"]) {
+      const html = reader(studyNotes, "senior-ml", code);
+      expect(html).toMatch(/data-study-jump="sec-0"[^>]*>學習地圖<\/button>/);
+      const nodes = studyNotes["senior-ml"][code]
+        .filter((section) => section.heading.startsWith("補充 C｜"))
+        .slice(1);
+      for (const [index, section] of nodes.entries()) {
+        const nodeCode = section.heading.match(/L\d{5}/)![0];
+        expect(html).toMatch(new RegExp(`data-study-jump="sec-${index + 1}"[^>]*>${nodeCode} `));
+        expect(html).toContain(`id="sec-${index + 1}"`);
+      }
+      expect(html).toContain('data-note-section="learning"');
+      expect(html).toContain('class="note-table"');
+      expect(html).toContain('class="note-flow"');
+      expect(html).toContain(`data-topic-drill="senior-ml|${code}"`);
+      expect(html).toContain(`data-study-read="${code}"`);
+      const original = studyNotes["senior-ml"][code].find((section) => /^\d+\.\d+\s/.test(section.heading))!;
+      expect(html).toContain(original.heading);
+    }
+  });
+
   it("上一節／下一節沿索引順序走，頭尾不出按鈕", () => {
     const first = reader(undefined, "junior-ai-basics", "L111");
     expect(first).toContain('data-study-open="junior-ai-basics|L112"');

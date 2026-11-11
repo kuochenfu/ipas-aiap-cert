@@ -854,7 +854,8 @@ const NOTE_SECTION_KEYS: Record<string, string> = {
   "推薦資源": "resource",
 };
 
-const noteSectionKey = (heading: string): string => NOTE_SECTION_KEYS[heading] ?? "other";
+const noteSectionKey = (heading: string): string =>
+  heading.startsWith("補充 C｜") ? "learning" : NOTE_SECTION_KEYS[heading] ?? "other";
 
 const renderNoteSectionBody = (section: StudyNoteSection, headingTag: "h2" | "h3" | "h5"): string => `
   <div class="study-note-heading">
@@ -1163,8 +1164,12 @@ export const renderStudyIndex = (data: StudyIndexData): string => {
   `;
 };
 
-/** 分節籤的文字：「補充 A｜題庫考點反推（非官方講義）」只留「補充 A」，其餘照原標題。 */
-const sectionChipLabel = (heading: string): string => heading.split("｜")[0].trim();
+/** 白話導讀顯示評鑑細項，避免多個「補充 C」分節籤無法辨識。其他標題沿用原標籤。 */
+const sectionChipLabel = (heading: string): string => {
+  const learning = /^補充 C｜(L\d{3}(?:\d{2})?)\s+([^：]+)/.exec(heading);
+  if (learning) return learning[1].length === 4 ? "學習地圖" : `${learning[1]} ${learning[2]}`;
+  return heading.split("｜")[0].trim();
+};
 
 const renderReaderSections = (sections: StudyNoteSection[], links: ReadingLink[] = []): string => {
   const chips = [

@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { studyNotes } from "../src/data/studyNotes";
+import { seniorNodes } from "../src/domain/assessmentTopics";
 import type { StudyNoteItem, StudyNoteSection } from "../src/data/types";
 
 const hasNesting = (items: StudyNoteItem[]): boolean =>
@@ -112,5 +113,27 @@ describe("studyNotes 補充節（中級科目一）", () => {
         }
       }
     }
+  });
+});
+
+describe("科目三白話導讀的完整範圍", () => {
+  it("全部四單元的導讀涵蓋 12 個評鑑細項，並保留原講義與非官方標示", () => {
+    const covered: string[] = [];
+    for (const code of ["L231", "L232", "L233", "L234"]) {
+      const sections = studyNotes["senior-ml"][code];
+      expect(sections[0].heading).toMatch(new RegExp(`^補充 C｜${code} .*學習地圖`));
+      expect(sections.some((section) => /^\d+\.\d+\s/.test(section.heading))).toBe(true);
+      for (const section of sections.filter((s) => s.heading.startsWith("補充 C｜"))) {
+        expect(section.heading).toContain("非官方講義");
+        const node = section.heading.match(/L\d{5}/)?.[0];
+        if (node) covered.push(node);
+        for (const item of walk(section.items)) {
+          if (item.table) {
+            expect(item.table.rows.every((row) => row.length === item.table!.headers.length)).toBe(true);
+          }
+        }
+      }
+    }
+    expect(covered.sort()).toEqual(seniorNodes["senior-ml"].map((node) => node.code).sort());
   });
 });

@@ -1,4 +1,5 @@
 import type { StudyNotesBySubject } from "./types";
+import { attachStudyVisuals } from "./studyVisuals";
 import { l211LearningNotes } from "./studyNotes.l211";
 import { l212LearningNotes } from "./studyNotes.l212";
 import { l213LearningNotes } from "./studyNotes.l213";
@@ -16,7 +17,7 @@ import { l234LearningNotes } from "./studyNotes.l234";
 //
 // 另有標題以「補充」開頭的非官方講義：A 為題庫反推考點，B 為附查證來源的時效性整理；
 // 中級三科的 C 為依評鑑細項撰寫的白話導讀，獨立存於 studyNotes.l211–l234.ts 各單元檔。
-export const studyNotes: StudyNotesBySubject = {
+const baseStudyNotes: StudyNotesBySubject = {
   "junior-ai-basics": {
     "L111": [
       {
@@ -12153,3 +12154,6 @@ export const studyNotes: StudyNotesBySubject = {
     ]
   }
 };
+
+// 圖解於對應導讀開頭合併；保持原講義與既有段落的來源及文字。
+export const studyNotes: StudyNotesBySubject = attachStudyVisuals(baseStudyNotes);

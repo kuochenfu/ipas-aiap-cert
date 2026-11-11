@@ -1,0 +1,79 @@
+/* 圖解的寬度與捲動只限 figure 內；沿用網站的明暗色彩 token。 */
+.study-visual {
+  --visual-0: var(--accent);
+  --visual-1: var(--wrong);
+  --visual-2: var(--warn-fg);
+  --visual-3: var(--text);
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  margin: 1rem 0;
+  padding: 1rem;
+  overflow: hidden;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.study-visual .study-visual-title { font-weight: 750; font-size: 1.0625rem; line-height: 1.6; overflow-wrap: anywhere; }
+.study-visual .study-visual-summary,
+.study-visual .study-visual-how,
+.study-visual .study-visual-notice { margin: 0.6rem 0; line-height: 1.75; overflow-wrap: anywhere; }
+.study-visual .study-visual-how { color: var(--muted); }
+.study-visual .study-visual-notice { color: var(--warn-fg); }
+.study-visual .study-visual-scroll,
+.study-visual .study-visual-table-scroll { width: 100%; min-width: 0; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+.study-visual .study-visual-scroll { margin: 0.8rem 0; border-radius: 6px; }
+.study-visual .study-visual-scroll-hint { display: none; margin: 0.4rem 0; color: var(--muted); font-size: 1rem; line-height: 1.7; }
+.study-visual .study-visual-relations { margin: 0.6rem 0; padding-left: 1.3rem; line-height: 1.7; }
+.study-visual .study-visual-svg { display: block; width: 100%; max-width: none; height: auto; font-family: inherit; }
+.study-visual .study-visual-svg text { fill: var(--text); font-size: 16px; }
+.study-visual .study-visual-svg .study-visual-tick { fill: var(--muted); }
+.study-visual .study-visual-svg .study-visual-axis-label { font-weight: 650; }
+.study-visual .study-visual-grid { stroke: var(--border); stroke-width: 1; }
+.study-visual .study-visual-axis { stroke: var(--muted); stroke-width: 1.5; }
+.study-visual .study-visual-series-0 { color: var(--visual-0); }
+.study-visual .study-visual-series-1 { color: var(--visual-1); }
+.study-visual .study-visual-series-2 { color: var(--visual-2); }
+.study-visual .study-visual-series-3 { color: var(--visual-3); }
+.study-visual .study-visual-bar,
+.study-visual .study-visual-waffle-cell { fill: currentColor; }
+.study-visual .study-visual-value,
+.study-visual .study-visual-cell-value { font-weight: 700; }
+.study-visual .study-visual-line { fill: none; stroke: currentColor; stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.study-visual .study-visual-line.is-pattern-1 { stroke-dasharray: 9 5; }
+.study-visual .study-visual-line.is-pattern-2 { stroke-dasharray: 3 5; }
+.study-visual .study-visual-line.is-pattern-3 { stroke-dasharray: 12 4 3 4; }
+.study-visual .study-visual-guide { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 5 5; }
+.study-visual .study-visual-point { fill: currentColor; stroke: var(--panel); stroke-width: 1.5; }
+.study-visual .study-visual-svg .study-visual-point-label,
+.study-visual .study-visual-svg .study-visual-edge-label { fill: var(--text); paint-order: stroke; stroke: var(--panel); stroke-width: 4; stroke-linejoin: round; }
+.study-visual .study-visual-edge path { fill: none; stroke: var(--muted); stroke-width: 2; }
+.study-visual .study-visual-edge polygon { fill: var(--muted); }
+.study-visual .study-visual-node rect { fill: var(--accent-soft); stroke: currentColor; stroke-width: 2; }
+.study-visual .study-visual-svg .study-visual-node-label { font-weight: 650; }
+.study-visual .study-visual-cell rect { fill: var(--accent); stroke: var(--border); }
+.study-visual .study-visual-cell.is-negative rect { fill: var(--wrong); }
+.study-visual .study-visual-cell.is-zero rect { fill: var(--panel); fill-opacity: 1; }
+.study-visual .study-visual-svg .study-visual-cell-label { fill: var(--muted); }
+.study-visual .study-visual-legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin: 0.7rem 0; padding: 0; list-style: none; }
+.study-visual .study-visual-legend li { display: flex; gap: 0.5rem; align-items: baseline; margin: 0; font-size: 1rem; line-height: 1.6; overflow-wrap: anywhere; }
+.study-visual .study-visual-key { display: inline-block; flex: 0 0 15px; width: 15px; height: 15px; border-radius: 3px; background: currentColor; }
+.study-visual .study-visual-key.is-line { flex-basis: 28px; width: 28px; height: 0; border-radius: 0; border-top: 3px solid currentColor; background: none; }
+.study-visual .study-visual-key.is-pattern-1 { border-top-style: dashed; }
+.study-visual .study-visual-key.is-pattern-2 { border-top-style: dotted; }
+.study-visual .study-visual-key.is-pattern-3 { border-top-style: double; }
+.study-visual .study-visual-data { margin-top: 0.8rem; border-top: 1px solid var(--border); padding-top: 0.4rem; }
+.study-visual .study-visual-data summary { min-height: var(--tap, 44px); padding: 0.65rem 0; color: var(--accent); font-weight: 650; cursor: pointer; }
+.study-visual .study-visual-table { border-collapse: collapse; min-width: 100%; font-size: 1rem; margin-bottom: 0.8rem; }
+.study-visual .study-visual-table caption { text-align: left; color: var(--text); font-weight: 650; padding: 0.5rem 0; }
+.study-visual .study-visual-table th,
+.study-visual .study-visual-table td { border: 1px solid var(--border); padding: 0.5rem 0.65rem; text-align: left; vertical-align: top; min-width: 6rem; overflow-wrap: anywhere; }
+.study-visual .study-visual-table thead th { background: var(--accent-soft); color: var(--accent); }
+@media (max-width: 540px) {
+  .study-visual { padding: 0.75rem; }
+  .study-visual .study-visual-legend { gap: 0.4rem 1rem; }
+}
+@media (max-width: 800px) {
+  .study-visual .study-visual-scroll-hint { display: block; }
+}

@@ -1,3 +1,4 @@
+import { studyVisualText } from "./domain/studyVisuals";
 import "./styles.css";
 import {
   renderHome, renderCert, renderLevel, renderModePicker, renderQuestion, renderResult,
@@ -532,6 +533,7 @@ function noteText(sections: StudyNoteSection[] | undefined): string {
       out.push(item.text);
       if (item.formula) out.push(item.formula.expr, item.formula.note ?? "");
       if (item.flow) out.push(...item.flow);
+      if (item.visual) out.push("教學圖解", studyVisualText(item.visual));
       if (item.table) out.push(...item.table.headers, ...item.table.rows.flat());
       if (item.children) walk(item.children);
     }
@@ -606,7 +608,7 @@ function highlightStudyQuery(root: HTMLElement, query: string): HTMLElement | nu
   if (!needle) return null;
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode: (node) =>
-      node.parentElement?.closest('button, script, style, mark')
+      node.parentElement?.closest('button, script, style, mark, svg')
         ? NodeFilter.FILTER_REJECT
         : NodeFilter.FILTER_ACCEPT,
   });
@@ -631,6 +633,14 @@ function highlightStudyQuery(root: HTMLElement, query: string): HTMLElement | nu
     }
     fragment.append(text.slice(cursor));
     node.replaceWith(fragment);
+  }
+  // 圖內文字也會收錄於精確資料表；命中收合內容時展開，才能看見搜尋位置。
+  if (first) {
+    let detail = first.closest("details");
+    while (detail) {
+      detail.open = true;
+      detail = detail.parentElement?.closest("details") ?? null;
+    }
   }
   return first;
 }

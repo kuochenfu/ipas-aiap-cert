@@ -45,7 +45,8 @@ const emitted = new Set(
     .filter((attribute) => !NON_CLICKABLE.has(attribute)),
 );
 
-const delegationList = mainSource.match(/closest\("([^"]+)"\)/)?.[1] ?? "";
+// 限定在 click 處理器內；搜尋高亮等輔助功能也會使用 closest。
+const delegationList = mainSource.match(/app\.addEventListener\("click",[\s\S]*?\.closest\("([^"]+)"\)/)?.[1] ?? "";
 const listened = new Set(
   [...delegationList.matchAll(/\[(data-[a-z-]+)\]/g)].map((match) => match[1]),
 );

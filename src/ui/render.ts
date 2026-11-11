@@ -1,4 +1,6 @@
 import { escapeHtml } from "./escape";
+import { renderStudyVisual } from "./studyVisual";
+import { countStudyVisuals } from "../domain/studyVisuals";
 import type { Choice, QuestionFigure } from "../data/types";
 import type { Subject } from "../domain/catalog";
 import { certs, getLevels, getSubjects, subjects } from "../domain/catalog";
@@ -820,6 +822,7 @@ const renderNoteFlow = (label: string, steps: string[]): string => `
 `;
 
 const renderNoteBody = (item: StudyNoteItem): string => {
+  if (item.visual) return renderStudyVisual(item.text, item.visual);
   if (item.table) return renderNoteTable(item.text, item.table);
   if (item.formula) return renderNoteFormula(item.text, item.formula);
   if (item.flow) return renderNoteFlow(item.text, item.flow);
@@ -829,7 +832,7 @@ const renderNoteBody = (item: StudyNoteItem): string => {
 const renderNoteItems = (items: StudyNoteItem[]): string => `
   <ul>
     ${items.map((item) => `
-      <li${item.table || item.formula || item.flow ? ` class="note-block"` : ""}>
+      <li${item.table || item.formula || item.flow || item.visual ? ` class="note-block"` : ""}>
         ${renderNoteBody(item)}
         ${item.children?.length ? renderNoteItems(item.children) : ""}
       </li>
@@ -1006,6 +1009,7 @@ const renderStudyNodeRow = (
   const sections = entry.topic.notes?.length ?? 0;
   const meta = [
     sections > 0 ? `${sections} 節筆記` : "尚無筆記",
+    ...(countStudyVisuals(entry.topic.notes) ? [`${countStudyVisuals(entry.topic.notes)} 張圖解`] : []),
     questionCount > 0 ? `${questionCount} 題` : "尚無題目",
   ].join("・") + renderPracticeMeta(practice);
   return `
@@ -1265,6 +1269,7 @@ const renderNodeReader = (
           <span class="reader-source">${notesLabelFor(subject)}</span>
           ${subject.cert === "aiap" && guideChapterLabel(sections) ? `<span>${escapeHtml(guideChapterLabel(sections)!)}</span>` : ""}
           <span>${sections.length} 節・${noteLeafCount(sections)} 則重點</span>
+          ${countStudyVisuals(sections) ? `<span class="reader-visual-count">${countStudyVisuals(sections)} 張教學圖解</span>` : ""}
         </p>
         ${sections.length ? renderTtsRate() : ""}
         <div class="reader-scope">

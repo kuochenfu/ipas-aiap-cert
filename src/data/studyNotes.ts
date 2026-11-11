@@ -1,4 +1,11 @@
 import type { StudyNotesBySubject } from "./types";
+import { l211LearningNotes } from "./studyNotes.l211";
+import { l212LearningNotes } from "./studyNotes.l212";
+import { l213LearningNotes } from "./studyNotes.l213";
+import { l221LearningNotes } from "./studyNotes.l221";
+import { l222LearningNotes } from "./studyNotes.l222";
+import { l223LearningNotes } from "./studyNotes.l223";
+import { l224LearningNotes } from "./studyNotes.l224";
 import { l231LearningNotes } from "./studyNotes.l231";
 import { l232LearningNotes } from "./studyNotes.l232";
 import { l233LearningNotes } from "./studyNotes.l233";
@@ -8,7 +15,7 @@ import { l234LearningNotes } from "./studyNotes.l234";
 // 內容需人工複審（見 .git/sdd 報告與 memory 之待複審清單）；此檔為內容來源，請勿用腳本覆寫。
 //
 // 另有標題以「補充」開頭的非官方講義：A 為題庫反推考點，B 為附查證來源的時效性整理；
-// 中級科目三的 C 為依評鑑細項撰寫的白話導讀，獨立存於 studyNotes.l231–l234.ts。
+// 中級三科的 C 為依評鑑細項撰寫的白話導讀，獨立存於 studyNotes.l211–l234.ts 各單元檔。
 export const studyNotes: StudyNotesBySubject = {
   "junior-ai-basics": {
     "L111": [
@@ -2824,6 +2831,7 @@ export const studyNotes: StudyNotesBySubject = {
   },
   "senior-ai-tech": {
     "L211": [
+      ...l211LearningNotes,
       {
         "heading": "3.1 自然語言處理技術與應用",
         "items": [
@@ -4024,6 +4032,7 @@ export const studyNotes: StudyNotesBySubject = {
       }
     ],
     "L212": [
+      ...l212LearningNotes,
       {
         "heading": "4.1 AI 導入評估",
         "items": [
@@ -4855,6 +4864,7 @@ export const studyNotes: StudyNotesBySubject = {
       }
     ],
     "L213": [
+      ...l213LearningNotes,
       {
         "heading": "5.1 數據準備與模型選擇",
         "items": [
@@ -5571,6 +5581,7 @@ export const studyNotes: StudyNotesBySubject = {
   },
   "senior-bigdata": {
     "L221": [
+      ...l221LearningNotes,
       {
         "heading": "3.1 敘述性統計與資料摘要技術",
         "items": [
@@ -6430,6 +6441,7 @@ export const studyNotes: StudyNotesBySubject = {
       }
     ],
     "L222": [
+      ...l222LearningNotes,
       {
         "heading": "4.1 數據收集與清理",
         "items": [
@@ -7002,6 +7014,7 @@ export const studyNotes: StudyNotesBySubject = {
       }
     ],
     "L223": [
+      ...l223LearningNotes,
       {
         "heading": "5.1 統計學在大數據中的應用",
         "items": [
@@ -8337,6 +8350,7 @@ export const studyNotes: StudyNotesBySubject = {
       }
     ],
     "L224": [
+      ...l224LearningNotes,
       {
         "heading": "6.1 大數據與機器學習",
         "items": [

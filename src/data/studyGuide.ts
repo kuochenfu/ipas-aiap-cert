@@ -135,6 +135,10 @@ export const studyGuides: SubjectStudyGuide[] = [
           "多模態人工智慧應用（文字、圖像、聲音等）",
         ],
         links: [
+          { title: "IoU 邊界框重疊率 - torchvision 官方文件", url: "https://docs.pytorch.org/vision/stable/generated/torchvision.ops.box_iou.html" },
+          { title: "文字特徵與 TF-IDF - scikit-learn 官方文件", url: "https://scikit-learn.org/stable/modules/feature_extraction.html#tfidf-term-weighting" },
+          { title: "RAG 檢索增強生成原始論文", url: "https://arxiv.org/abs/2005.11401" },
+          { title: "CLIP 圖文對齊原始論文", url: "https://arxiv.org/abs/2103.00020" },
           { title: "自然語言處理 - 維基百科", url: "https://zh.wikipedia.org/wiki/自然语言处理" },
           { title: "電腦視覺 - 維基百科", url: "https://zh.wikipedia.org/wiki/電腦視覺" },
           { title: "多模態學習 - 維基百科", url: "https://zh.wikipedia.org/wiki/多模态学习" },
@@ -149,6 +153,7 @@ export const studyGuides: SubjectStudyGuide[] = [
           "AI 風險管理（風險識別、安全與合規性、AI 倫理、負責任 AI 等）",
         ],
         links: [
+          { title: "AI 風險管理四項核心功能 - NIST AI RMF", url: "https://airc.nist.gov/airmf-resources/airmf/5-sec-core/" },
           {
             title: "EU AI Act 監管框架（負責任 AI 與合規）- 歐盟執委會",
             url: "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
@@ -165,6 +170,8 @@ export const studyGuides: SubjectStudyGuide[] = [
           "AI 技術系統集成與部署（系統架構設計、模型部署、效能監控與更新管理、系統測試與驗證、穩定性與可用性、雲端環境建置等）",
         ],
         links: [
+          { title: "資料洩漏與建模流程 - scikit-learn 官方文件", url: "https://scikit-learn.org/stable/common_pitfalls.html" },
+          { title: "部署後的監控與服務訊號 - Google SRE", url: "https://sre.google/sre-book/monitoring-distributed-systems/" },
           { title: "MLOps - Wikipedia", url: "https://en.wikipedia.org/wiki/MLOps" },
           { title: "Azure 上的 AI/ML 架構與部署 - Microsoft Learn", url: "https://learn.microsoft.com/zh-tw/azure/architecture/ai-ml/" },
         ],
@@ -183,6 +190,7 @@ export const studyGuides: SubjectStudyGuide[] = [
           "假設檢定與統計推論",
         ],
         links: [
+          { title: "統計推論、信賴區間與假設檢定 - NIST 統計手冊", url: "https://www.itl.nist.gov/div898/handbook/eda/section3/eda35.htm" },
           { title: "描述統計學 - 維基百科", url: "https://zh.wikipedia.org/wiki/描述統計學" },
           { title: "機率分布 - 維基百科", url: "https://zh.wikipedia.org/wiki/概率分布" },
           { title: "假設檢定 - 維基百科", url: "https://zh.wikipedia.org/wiki/假設檢定" },
@@ -197,6 +205,9 @@ export const studyGuides: SubjectStudyGuide[] = [
           "數據處理技術與工具",
         ],
         links: [
+          { title: "HDFS 儲存架構 - Apache Hadoop 官方文件", url: "https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html" },
+          { title: "交易與一致性 - PostgreSQL 官方文件", url: "https://www.postgresql.org/docs/current/tutorial-transactions.html" },
+          { title: "串流處理與事件時間 - Apache Spark 官方文件", url: "https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html" },
           { title: "資料庫 - 維基百科", url: "https://zh.wikipedia.org/wiki/数据库" },
           { title: "Apache Hadoop - 維基百科", url: "https://zh.wikipedia.org/wiki/Apache_Hadoop" },
           { title: "Apache Spark - 維基百科", url: "https://zh.wikipedia.org/wiki/Apache_Spark" },
@@ -211,6 +222,10 @@ export const studyGuides: SubjectStudyGuide[] = [
           "數據可視化工具（資訊呈現原則、圖表類型選擇、視覺化效能等）",
         ],
         links: [
+          { title: "關聯規則的 Support、Confidence 與 Lift - mlxtend 官方文件", url: "https://rasbt.github.io/mlxtend/user_guide/frequent_patterns/association_rules/" },
+          { title: "資料縮放與轉換 - scikit-learn 官方文件", url: "https://scikit-learn.org/stable/modules/preprocessing.html" },
+          { title: "圖表、資料編碼與互動視覺化 - Vega-Lite 官方文件", url: "https://vega.github.io/vega-lite/docs/" },
+          { title: "Figure、Axes 與圖表基本元件 - Matplotlib 官方文件", url: "https://matplotlib.org/stable/users/explain/quick_start.html" },
           { title: "資料轉換與縮放 - scikit-learn", url: "https://scikit-learn.org/stable/data_transforms.html" },
           { title: "數據可視化 - 維基百科", url: "https://zh.wikipedia.org/wiki/数据可视化" },
           { title: "什麼是資料視覺化 - AWS", url: "https://aws.amazon.com/tw/what-is/data-visualization/" },
@@ -226,6 +241,9 @@ export const studyGuides: SubjectStudyGuide[] = [
           "大數據隱私保護、安全與合規（數據安全性與法律合規技術等）",
         ],
         links: [
+          { title: "Naive Bayes 生成式分類器 - scikit-learn 官方文件", url: "https://scikit-learn.org/stable/modules/naive_bayes.html" },
+          { title: "RAG 與外部知識索引原始論文", url: "https://arxiv.org/abs/2005.11401" },
+          { title: "可信 AI 的隱私、安全與公平性 - NIST AI RMF", url: "https://airc.nist.gov/airmf-resources/airmf/3-sec-characteristics/" },
           { title: "大數據 - 維基百科", url: "https://zh.wikipedia.org/wiki/大数据" },
           { title: "機器學習 - 維基百科", url: "https://zh.wikipedia.org/wiki/机器学习" },
           { title: "隱私 - 維基百科", url: "https://zh.wikipedia.org/wiki/隐私" },

@@ -847,6 +847,49 @@ mark.study-hit {
   padding: 2px 10px; font-size: var(--fs-sm);
 }
 .note-flow-steps li + li::before { content: "→"; color: var(--muted); margin-right: 8px; }
+/* 程式速查（科目層級的閱讀器頁）：卡片正面是考點，細節收在 <details>。 */
+.code-section-summary { margin: 4px 0 12px; color: var(--muted); font-size: var(--fs-sm); line-height: 1.7; }
+.code-traps { margin: 8px 0 0; padding-left: 1.4em; display: grid; gap: 10px; line-height: 1.7; }
+.code-traps li > span { display: block; }
+.code-trap-refs { color: var(--muted); font-size: var(--fs-xs); }
+.code-formulas { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 8px; }
+.code-card {
+  margin: 12px 0; padding: 14px 16px; background: var(--panel);
+  border: 1px solid var(--border); border-radius: 10px; scroll-margin-top: var(--toc-h, 64px);
+}
+.code-card-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; }
+.code-card-api {
+  margin: 0; font-size: var(--fs-h4); line-height: 1.5; overflow-wrap: anywhere;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+.code-card-tags { display: inline-flex; gap: 6px; flex-shrink: 0; }
+.code-badge, .code-lib, .code-exam {
+  display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: var(--fs-xs); line-height: 1.7;
+}
+.code-badge { background: var(--panel-alt); color: var(--muted); }
+.code-badge.is-core { background: var(--accent); color: var(--on-accent); font-weight: 700; }
+.code-lib { border: 1px solid var(--border); color: var(--muted); }
+.code-point { margin: 10px 0 0; line-height: 1.75; }
+.code-note { margin: 8px 0 0; padding: 8px 12px; border-radius: 8px; line-height: 1.7; font-size: var(--fs-sm); }
+.code-note.is-trap { background: var(--warn-bg); color: var(--warn-fg); border: 1px solid var(--warn-border); }
+.code-note.is-version { background: var(--accent-soft); border: 1px solid var(--accent-tint); }
+.code-note-label { font-weight: 700; margin-right: 0.6em; }
+.code-snippet { margin-top: 10px; }
+.code-card .note-table-wrap { margin-top: 10px; }
+.code-exams { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 10px 0 0; }
+.code-exams-label { font-size: var(--fs-xs); color: var(--muted); margin-right: 2px; }
+.code-exam { background: var(--accent-soft); color: var(--accent); }
+.code-exam.is-forecast { background: var(--panel-alt); color: var(--muted); }
+.code-more { margin-top: 10px; }
+.code-more > summary {
+  cursor: pointer; min-height: var(--tap); display: flex; align-items: center;
+  color: var(--accent); font-size: var(--fs-sm); font-weight: 600;
+}
+.code-more-list { margin: 4px 0 0; line-height: 1.7; }
+.code-more-list dt { font-weight: 700; font-size: var(--fs-sm); margin-top: 6px; }
+.code-more-list dd { margin: 2px 0 0; }
+
+
 /* ── 懸停狀態 ─────────────────────────────────────────
    只給真的有滑鼠的裝置。觸控裝置的 :hover 會在點擊後黏住，
    讓剛點過的卡片看起來像「被選取」。 */
@@ -875,4 +918,5 @@ mark.study-hit {
   .node-read:hover { border-color: var(--accent); color: var(--accent); }
   .exam-map-cell:not(.is-answered):hover { border-style: solid; border-color: var(--accent); color: var(--accent); }
   .reading-link:hover { text-decoration-color: currentColor; }
+  .code-more > summary:hover { text-decoration: underline; }
 }

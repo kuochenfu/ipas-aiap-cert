@@ -30,6 +30,7 @@ import { loadDrillProgress, saveDrillProgress, clearDrillProgress } from "./stat
 import type { ChoiceId, Question } from "./data/types";
 import type { Cert, Level } from "./data/types";
 import type { StudyNoteSection, StudyNotesBySubject } from "./data/types";
+import type { CodeSheet } from "./data/codeSheet.types";
 import type { AbbrEntry, DrillCounts } from "./ui/render";
 import { hasResumableProgress, resumePoint, splitForSpeech, type SpeechProgress } from "./ui/speechChunks";
 
@@ -82,6 +83,7 @@ type StudyContent = {
   notes: StudyNotesBySubject;
   overviews: Partial<Record<Cert, StudyNoteSection[]>>;
   abbreviations: Partial<Record<Cert, AbbrEntry[]>>;
+  codeSheets: Record<string, CodeSheet>;
 };
 let studyNotesCache: StudyContent | null = null;
 let studyNotesPromise: Promise<StudyContent> | null = null;
@@ -417,17 +419,20 @@ function readStudySection(button: HTMLButtonElement, options: { restart?: boolea
   else speakChunks(session, chunks, start.index, start.offset);
 }
 
-// 兩個筆記模組都是獨立 chunk，只有進入「學習主題」時才載入：
-// studyNotes 是 AI 應用規劃師五科的官方指引重構，studyNotes.aiot 是 AIoT 的備考整理。
+// 筆記模組都是獨立 chunk，只有進入「學習主題」時才載入：
+// studyNotes 是 AI 應用規劃師五科的官方指引重構，studyNotes.aiot 是 AIoT 的備考整理，
+// codeSheet.* 是科目層級的「程式速查」（真題程式題 × 最新穩定版文件）。
 async function loadStudyNotes(): Promise<StudyContent> {
   if (studyNotesCache) return studyNotesCache;
   studyNotesPromise ??= Promise.all([
     import("./data/studyNotes"),
     import("./data/studyNotes.aiot"),
-  ]).then(([core, aiot]) => ({
+    import("./data/codeSheet.senior-ml"),
+  ]).then(([core, aiot, codeMl]) => ({
     notes: { ...core.studyNotes, ...aiot.aiotStudyNotes },
     overviews: { aiot: aiot.aiotExamOverview } as StudyContent["overviews"],
     abbreviations: { aiot: aiot.aiotAbbreviations },
+    codeSheets: { [codeMl.seniorMlCodeSheet.subjectId]: codeMl.seniorMlCodeSheet },
   }));
   studyNotesCache = await studyNotesPromise;
   return studyNotesCache;
@@ -793,6 +798,7 @@ function renderStudy(content: StudyContent) {
       notes: content.notes,
       overviews: content.overviews,
       abbreviations: content.abbreviations,
+      codeSheets: content.codeSheets,
       readNodes,
       lastNode: loadStudyLast().nodes[session.studyCert],
       practice: nodePractice(session.studyCert),
@@ -807,6 +813,7 @@ function renderStudy(content: StudyContent) {
     notes: content.notes,
     overviews: content.overviews,
     abbreviations: content.abbreviations,
+    codeSheets: content.codeSheets,
     readNodes,
   });
   syncTtsControls();

@@ -9,6 +9,7 @@ import { certs, getLevels, getSubjects, subjects } from "../domain/catalog";
 import { getBankStats, getTopicCounts } from "../data/index";
 import { getStudyGuide } from "../data/studyGuide";
 import type { Cert, Level } from "../data/types";
+import type { CodeCard, CodeSheet } from "../data/codeSheet.types";
 import type { Question } from "../data/types";
 import type {
   ReadingLink, StudyNoteItem, StudyNoteSection, StudyNoteTable, StudyNotesBySubject, StudyTopic,
@@ -888,14 +889,18 @@ export const renderStudyLoading = (): string => `
 // 現在索引只放一張證照的節點清單與「接著讀」，點進去才是那一節的完整筆記。
 
 
-/** 閱讀器的頁面：一個評鑑節點，或證照層級的「備考總整理」與「縮寫速查」。 */
+/** 閱讀器的頁面：一個評鑑節點、證照層級的「備考總整理」與「縮寫速查」，或科目層級的「程式速查」。 */
 export type StudyPageRef =
   | { kind: "node"; subjectId: string; code: string }
-  | { kind: "overview" | "abbr"; cert: Cert };
+  | { kind: "overview" | "abbr"; cert: Cert }
+  | { kind: "code"; subjectId: string };
 
-/** data-study-open 的值。節點碼含 `.` 但不含 `|`，科目 id 也不會撞到 overview／abbr。 */
-export const studyPageKey = (ref: StudyPageRef): string =>
-  ref.kind === "node" ? `${ref.subjectId}|${ref.code}` : `${ref.kind}|${ref.cert}`;
+/** data-study-open 的值。節點碼含 `.` 但不含 `|`，科目 id 也不會撞到 overview／abbr／code。 */
+export const studyPageKey = (ref: StudyPageRef): string => {
+  if (ref.kind === "node") return `${ref.subjectId}|${ref.code}`;
+  if (ref.kind === "code") return `code|${ref.subjectId}`;
+  return `${ref.kind}|${ref.cert}`;
+};
 
 export const parseStudyPageKey = (key: string): StudyPageRef | undefined => {
   const separator = key.indexOf("|");
@@ -904,6 +909,9 @@ export const parseStudyPageKey = (key: string): StudyPageRef | undefined => {
   const tail = key.slice(separator + 1);
   if (head === "overview" || head === "abbr") {
     return certs.some((cert) => cert.id === tail) ? { kind: head, cert: tail as Cert } : undefined;
+  }
+  if (head === "code") {
+    return subjects.some((subject) => subject.id === tail) ? { kind: "code", subjectId: tail } : undefined;
   }
   return { kind: "node", subjectId: head, code: tail };
 };
@@ -989,6 +997,8 @@ export type StudyIndexData = {
   overviews?: Partial<Record<Cert, StudyNoteSection[]>>;
   /** 各證照的縮寫速查資料，與筆記同屬 lazy chunk；沒有資料的證照就不出這個入口。 */
   abbreviations?: Partial<Record<Cert, AbbrEntry[]>>;
+  /** 以科目 id 為鍵的程式速查；同樣只有有資料的科目才出入口。 */
+  codeSheets?: Record<string, CodeSheet>;
   /** 已讀的節點碼。 */
   readNodes?: ReadonlySet<string>;
   /** 上次打開的節點（studyPageKey）。 */
@@ -1090,7 +1100,7 @@ export const renderAbbrHits = (abbreviations: AbbrEntry[], query: string, limit 
 
 export const renderStudyIndex = (data: StudyIndexData): string => {
   const {
-    cert, notes, overviews, abbreviations, readNodes = new Set<string>(), lastNode, practice = {}, query = "",
+    cert, notes, overviews, abbreviations, codeSheets = {}, readNodes = new Set<string>(), lastNode, practice = {}, query = "",
   } = data;
   const certInfo = certs.find((c) => c.id === cert) ?? certs[0];
   const entries = listStudyNodes(cert, notes);
@@ -1142,6 +1152,14 @@ export const renderStudyIndex = (data: StudyIndexData): string => {
            <span class="study-extra-meta">${abbrs.length} 個縮寫</span>
          </button>`
       : "",
+    ...getLevels(cert).flatMap((level) => getSubjects(cert, level)).map((subject) => {
+      const sheet = codeSheets[subject.id];
+      if (!sheet) return "";
+      return `<button class="study-extra" data-study-open="${escapeHtml(studyPageKey({ kind: "code", subjectId: subject.id }))}">
+           <span class="study-extra-title">${escapeHtml(subjectLabel(subject))} ${escapeHtml(sheet.title)}</span>
+           <span class="study-extra-meta">${codeCardCount(sheet)} 個函式・${codeSheetExamIds(sheet).length} 題真題程式題</span>
+         </button>`;
+    }),
   ].filter(Boolean).join("");
 
   return `
@@ -1249,6 +1267,7 @@ export type StudyReaderData = {
   notes?: StudyNotesBySubject;
   overviews?: Partial<Record<Cert, StudyNoteSection[]>>;
   abbreviations?: Partial<Record<Cert, AbbrEntry[]>>;
+  codeSheets?: Record<string, CodeSheet>;
   readNodes?: ReadonlySet<string>;
 };
 
@@ -1388,6 +1407,127 @@ const renderAbbrReader = (cert: Cert, abbreviations: AbbrEntry[]): string => {
   `;
 };
 
+// ── 程式速查：真題考過的程式 × 最新穩定版文件 ─────────────────────
+// 考前快讀：卡片正面只放「考點／陷阱／新版差異／最小範例」，為什麼重要、實務與文件收在 <details> 裡。
+// 分節沿用閱讀器的目錄籤（data-study-jump＋.reader-section[id]），捲動同步與跳轉都不必另寫。
+
+export const codeCardCount = (sheet: CodeSheet): number =>
+  sheet.sections.reduce((sum, section) => sum + section.cards.length, 0);
+
+/** 卡片引用到的真題 id（去重、依卷次與題號排序）。 */
+export const codeSheetExamIds = (sheet: CodeSheet): string[] =>
+  [...new Set(sheet.sections.flatMap((section) => section.cards.flatMap((card) => card.exams)))]
+    .sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
+
+/** `senior-ml-114-2-q47` → `114 年第 2 次・第 47 題`；認不得的 id 原樣顯示。 */
+export const examRefLabel = (id: string): string => {
+  const match = /-(\d{3})-(\d)-q0*(\d+)$/.exec(id);
+  return match ? `${match[1]} 年第 ${match[2]} 次・第 ${match[3]} 題` : id;
+};
+
+const renderExamRefs = (ids: string[]): string => ids.length
+  ? `<p class="code-exams"><span class="code-exams-label">考過</span>${ids.map((id) => `<span class="code-exam">${escapeHtml(examRefLabel(id))}</span>`).join("")}</p>`
+  : `<p class="code-exams"><span class="code-exams-label">真題未考</span><span class="code-exam is-forecast">高機率延伸</span></p>`;
+
+const renderCodeCard = (card: CodeCard): string => `
+  <article class="code-card" id="code-card-${escapeHtml(card.id)}">
+    <header class="code-card-head">
+      <h4 class="code-card-api">${escapeHtml(card.api)}</h4>
+      <span class="code-card-tags">
+        <span class="code-badge${card.priority === "core" ? " is-core" : ""}">${card.priority === "core" ? "必考" : "高機率"}</span>
+        <span class="code-lib">${escapeHtml(card.lib)}</span>
+      </span>
+    </header>
+    <p class="code-point">${escapeHtml(card.point)}</p>
+    ${card.trap ? `<p class="code-note is-trap"><span class="code-note-label">陷阱</span>${escapeHtml(card.trap)}</p>` : ""}
+    ${card.versionNote ? `<p class="code-note is-version"><span class="code-note-label">新版</span>${escapeHtml(card.versionNote)}</p>` : ""}
+    ${card.code ? `<pre class="figure-pre code-snippet"><code>${escapeHtml(card.code)}</code></pre>` : ""}
+    ${card.table ? renderNoteTable(card.table.caption, card.table) : ""}
+    ${renderExamRefs(card.exams)}
+    <details class="code-more">
+      <summary>為什麼重要・實務應用・官方文件</summary>
+      <dl class="code-more-list">
+        <dt>為什麼重要</dt><dd>${escapeHtml(card.why)}</dd>
+        <dt>實務應用</dt><dd>${escapeHtml(card.practice)}</dd>
+      </dl>
+      <ul class="study-links">${card.docs.map(renderReadingLink).join("")}</ul>
+    </details>
+  </article>
+`;
+
+const renderCodeSheetReader = (subjectId: string, sheet: CodeSheet | undefined): string => {
+  const subject = subjects.find((s) => s.id === subjectId);
+  if (!sheet || !subject) return renderStudyMissing();
+  const examIds = codeSheetExamIds(sheet);
+  const parts: { id: string; label: string; title: string; body: string }[] = [
+    {
+      id: "code-traps", label: "考前陷阱", title: `考前 ${sheet.traps.length} 個陷阱`,
+      body: `<ol class="code-traps">${sheet.traps.map((trap) => `
+        <li><span>${escapeHtml(trap.text)}</span>${trap.exams.length ? `<span class="code-trap-refs">${trap.exams.map((id) => escapeHtml(examRefLabel(id))).join("、")}</span>` : ""}</li>
+      `).join("")}</ol>`,
+    },
+    {
+      id: "code-formulas", label: "速算公式", title: "速算公式",
+      body: `<ul class="code-formulas">${sheet.formulas.map((f) => `<li class="note-block">${renderNoteFormula(f.label, { expr: f.expr, note: f.note })}</li>`).join("")}</ul>`,
+    },
+    ...sheet.sections.map((section) => ({
+      id: `code-${section.id}`,
+      label: section.title.split("｜")[0],
+      title: section.title,
+      body: `<p class="code-section-summary">${escapeHtml(section.summary)}</p>${section.cards.map(renderCodeCard).join("")}`,
+    })),
+    {
+      id: "code-versions", label: "版本與來源", title: "版本與官方文件",
+      body: `
+        <p class="code-section-summary">${escapeHtml(sheet.checkedAt)} 查核 PyPI 的最新穩定版，並以這些版本實際執行本頁每一項程式行為；文件連結都指向官方的 stable 版本。</p>
+        <div class="note-table-wrap">
+          <table class="note-table">
+            <thead><tr><th>套件</th><th>穩定版</th><th>發布日</th><th>備註</th></tr></thead>
+            <tbody>${sheet.versions.map((v) => `
+              <tr><th scope="row"><a class="reading-link" href="${escapeHtml(v.docs)}" target="_blank" rel="noopener noreferrer">${escapeHtml(v.lib)}</a></th>
+              <td>${escapeHtml(v.version)}</td><td>${escapeHtml(v.released)}</td><td>${escapeHtml(v.note ?? "")}</td></tr>
+            `).join("")}</tbody>
+          </table>
+        </div>
+        <p class="code-section-summary">卡片內容由 AI 整理，程式行為已實際執行驗證，觀念敘述尚未經人工查核。</p>
+      `,
+    },
+  ];
+  return `
+    ${renderReaderTopbar(`${subjectLabel(subject)} ${subject.name}`)}
+    <main class="study study-reader study-code" data-cert-section="${escapeHtml(subject.cert)}">
+      <header class="reader-head">
+        <h1>${escapeHtml(subjectLabel(subject))} ${escapeHtml(sheet.title)}</h1>
+        <p class="reader-meta">
+          <span class="reader-source">真題 × 官方文件</span>
+          <span>${codeCardCount(sheet)} 個函式・涵蓋 ${examIds.length} 題真題程式題・${escapeHtml(sheet.checkedAt)} 版本查核</span>
+        </p>
+      </header>
+      <div class="reader-layout">
+        <nav class="reader-toc" aria-label="本頁段落">
+          <p class="reader-toc-heading">本頁目錄<span>${parts.length} 個段落</span></p>
+          <label class="reader-toc-mobile">跳至段落
+            <select class="reader-section-picker" data-reader-section aria-label="跳至本頁段落">
+              ${parts.map((part) => `<option value="${part.id}">${escapeHtml(part.label)}</option>`).join("")}
+            </select>
+          </label>
+          <div class="reader-toc-track"><div class="reader-toc-group"><div class="reader-toc-list">
+            ${parts.map((part) => `<button class="reader-toc-chip" data-study-jump="${part.id}">${escapeHtml(part.label)}</button>`).join("")}
+          </div></div></div>
+        </nav>
+        <div class="reader-body">
+          ${parts.map((part) => `
+            <section class="reader-section code-section" id="${part.id}">
+              <h2 class="study-note-title">${escapeHtml(part.title)}</h2>
+              ${part.body}
+            </section>
+          `).join("")}
+        </div>
+      </div>
+    </main>
+  `;
+};
+
 const renderStudyMissing = (): string => `
   ${renderReaderTopbar("學習主題")}
   <main class="study study-reader">
@@ -1396,8 +1536,9 @@ const renderStudyMissing = (): string => `
 `;
 
 export const renderStudyReader = (data: StudyReaderData): string => {
-  const { page, notes, overviews, abbreviations, readNodes = new Set<string>() } = data;
+  const { page, notes, overviews, abbreviations, codeSheets, readNodes = new Set<string>() } = data;
   if (page.kind === "node") return renderNodeReader(page, notes, readNodes);
+  if (page.kind === "code") return renderCodeSheetReader(page.subjectId, codeSheets?.[page.subjectId]);
   if (page.kind === "overview") return renderOverviewReader(page.cert, overviews?.[page.cert]);
   return renderAbbrReader(page.cert, abbreviations?.[page.cert] ?? []);
 };

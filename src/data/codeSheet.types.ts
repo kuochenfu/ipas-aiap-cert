@@ -11,6 +11,8 @@ export type CodeLib = "scikit-learn" | "NumPy" | "PyTorch" | "torchvision" | "Ke
 
 export type CodeCard = {
   id: string;
+  /** 全局圖上的短名稱。 */
+  short: string;
   /** 卡片標題，通常是函式或類別名稱（含關鍵參數）。 */
   api: string;
   lib: CodeLib;
@@ -41,9 +43,41 @@ export type CodeSheetSection = { id: string; title: string; summary: string; car
 
 export type CodeSheetVersion = { lib: string; version: string; released: string; docs: string; note?: string };
 
+/**
+ * 全局圖（上帝視角）：把整條機器學習 pipeline 依先後排開，每一步標出系統角度的觀念，
+ * 並以 `cards` 指回本頁的函式卡片——讀者先看到「這個函式在整條流程的哪裡」，再看細節。
+ * 步驟編號由陣列順序推得，不另寫。
+ */
+export type CodePipelineStage = {
+  id: string;
+  title: string;
+  /** 圖上的一行摘要。 */
+  goal: string;
+  /** 這一步具體做什麼。 */
+  doing: string;
+  /** 系統角度的觀念：這一步與上下游的關係、邊界與成本。 */
+  system: string;
+  /** 這一步出錯的代價。 */
+  risk: string;
+  /** 本頁卡片 id。 */
+  cards: string[];
+};
+
+export type CodePipelinePhase = { id: string; name: string; role: string; stages: CodePipelineStage[] };
+
+export type CodePipeline = {
+  summary: string;
+  phases: CodePipelinePhase[];
+  /** 回饋迴圈：from／to 為步驟 id。 */
+  loops: { from: string; to: string; text: string }[];
+  /** 貫穿全程、不屬於單一步驟的系統觀念。 */
+  crosscut: { title: string; text: string; cards: string[] }[];
+};
+
 export type CodeSheet = {
   subjectId: string;
   title: string;
+  pipeline?: CodePipeline;
   /** 版本與連結的查核日（YYYY-MM-DD）。 */
   checkedAt: string;
   versions: CodeSheetVersion[];

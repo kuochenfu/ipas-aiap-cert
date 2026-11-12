@@ -15,6 +15,114 @@ export const seniorMlCodeSheet: CodeSheet = {
   subjectId: "senior-ml",
   title: "程式速查",
   checkedAt: "2026-11-12",
+  pipeline: {
+    summary: "考卷上的程式碼都是整條流程的一個切片。先看自己在哪一步，再問三件事：這一步能看到哪些資料、產出要交給誰、出錯時要到哪一步才會發現。",
+    phases: [
+      {
+        id: "define",
+        name: "定義與資料",
+        role: "決定模型能學到什麼",
+        stages: [
+          {
+            id: "problem",
+            title: "問題定義與指標",
+            goal: "業務目標 → 任務型態 → 指標",
+            doing: "判斷是分類、迴歸還是多標籤，先定評估指標與一個簡單的基準模型（例如 KNN，或迴歸時直接預測平均值）。",
+            system: "任務型態一次決定三件事：輸出層、損失函數、評估指標，後面每一步都從這裡往下推。指標要對應錯誤的業務代價：漏掉瑕疵與誤判正常品，成本通常差很多。",
+            risk: "指標選錯，後面每一步都在最佳化錯的目標。瑕疵只占 1% 時看準確率，全部猜「正常」也有 99%。",
+            cards: ["output-loss", "regression-metrics", "lda-knn"],
+          },
+          {
+            id: "split",
+            title: "資料取得與切分",
+            goal: "先切出訓練／驗證／測試",
+            doing: "載入資料後第一件事就是切分；類別不平衡用分層切分，並固定亂數種子。",
+            system: "切分畫出整條流程的資料邊界：測試集鎖起來，最後只用一次。類別不平衡要分層；時間序列依時間切；同一位使用者或病人的資料不能同時出現在訓練與測試兩邊。",
+            risk: "切分錯了不會報錯，只是之後的分數全部失真，而且要到上線後才會發現。",
+            cards: ["stratified-kfold", "random"],
+          },
+          {
+            id: "features",
+            title: "前處理與特徵工程",
+            goal: "縮放、編碼、降維、增強",
+            doing: "標準化或縮放到 0~1、把標籤轉成 one-hot、用 PCA 降維或降噪；影像任務再加資料增強。",
+            system: "前處理的參數（平均、標準差、主成分）是從訓練資料學出來的，屬於模型的一部分：只能在訓練資料上 fit，要和模型一起存檔，上線時套用同一組參數（訓練與推論一致）。資料增強只用在訓練集，而且不能破壞標籤的語意。",
+            risk: "資料洩漏讓離線分數虛高；訓練與線上的前處理不一致，是上線後準確率下滑的常見原因。",
+            cards: ["standardize", "pipeline-leakage", "pca", "linalg", "to-categorical", "transforms", "boolean-mask"],
+          },
+        ],
+      },
+      {
+        id: "model",
+        name: "建模",
+        role: "在資料邊界內找出最好的模型",
+        stages: [
+          {
+            id: "architecture",
+            title: "模型選擇與架構",
+            goal: "基準模型 → 預訓練骨幹",
+            doing: "先用簡單模型建立基準，再決定要不要換深度模型；資料少時載入預訓練模型，換掉最後一層。",
+            system: "架構決定成本：參數量決定記憶體與模型檔大小，運算量（FLOPs）決定延遲。全連接層吃參數，卷積層吃運算。底層都是矩陣乘法，所以讀得懂 shape 就讀得懂架構。",
+            risk: "一開始就用大模型，就無法判斷多出來的複雜度值不值得；模型做完才發現部署端放不下。",
+            cards: ["tv-models", "cnn-layers", "dense-summary", "param-count", "dot-vs-multiply"],
+          },
+          {
+            id: "training",
+            title: "訓練",
+            goal: "前向 → 損失 → 反向 → 更新",
+            doing: "PyTorch 自己寫訓練迴圈，Keras 呼叫 compile 與 fit；遷移學習時決定凍結哪些層。",
+            system: "迴圈順序固定，放錯位置不會報錯，只會學不好。數值穩定要靠整套設定一起顧：損失函數直接吃 logits、梯度裁剪、BatchNorm、合適的學習率，都是在防止 NaN。凍結哪些層、學習率多小，決定能保住多少預訓練知識。",
+            risk: "訓練了好幾個小時才發現 loss 變成 NaN；沒有固定亂數種子，結果無法重現。",
+            cards: ["train-loop", "cross-entropy", "freeze", "bn-dropout"],
+          },
+          {
+            id: "evaluation",
+            title: "評估與驗證",
+            goal: "估計沒看過的資料上的表現",
+            doing: "用交叉驗證回報平均與標準差，畫學習曲線，評估前把模型切到推論模式。",
+            system: "評估方式比模型更常出錯：scoring 與任務要相符，前處理要放在每一折裡重新 fit，驗證集用來挑模型，測試集只用來報告。學習曲線同時用來診斷問題：落差擴大是過擬合，兩條線都偏低是欠擬合。",
+            risk: "用錯 scoring 會得到 nan 或錯的數字；在同一份驗證集上反覆挑選，分數會過度樂觀。",
+            cards: ["cross-val-score", "regression-metrics", "fit-history", "train-eval"],
+          },
+          {
+            id: "tuning",
+            title: "調整與優化",
+            goal: "依診斷對症下藥",
+            doing: "過擬合時用 Dropout、正則化、資料增強或 EarlyStopping；欠擬合時加大模型或訓練更久；遷移學習則解凍後段微調。",
+            system: "每次只改一個變數，才知道是哪個改動有效。超參數搜尋本身也在「看」驗證集，搜得越多，越需要一份完全沒碰過的測試集。GridSearchCV 直接吃 Pipeline，前處理會跟著每一折重新 fit。",
+            risk: "沒有診斷就盲目調參；在驗證集上調過頭，是另一種形式的資料洩漏。",
+            cards: ["bn-dropout", "fit-history", "freeze", "pipeline-leakage"],
+          },
+        ],
+      },
+      {
+        id: "ship",
+        name: "上線",
+        role: "讓模型在真實資料上持續有效",
+        stages: [
+          {
+            id: "deploy",
+            title: "部署與監控",
+            goal: "推論模式、一致前處理、監控",
+            doing: "推論時開 eval() 與 no_grad()，前處理沿用訓練時的參數，並記錄延遲、記憶體、輸入分布與線上指標。",
+            system: "上線的是「前處理＋模型」整條 pipeline，不只是一個權重檔。要事先定好延遲與記憶體預算；真實資料的分布會變，監控到資料漂移時就要回到資料端重新收集、重新訓練。",
+            risk: "離線好、線上差；模型悄悄退化，卻沒有人發現。",
+            cards: ["train-eval", "tv-models", "param-count", "standardize"],
+          },
+        ],
+      },
+    ],
+    loops: [
+      { from: "evaluation", to: "tuning", text: "評估不達標 → 調整；調整無效時再往回到前處理或模型選擇" },
+      { from: "deploy", to: "split", text: "監控到資料漂移或指標下滑 → 回到資料端重新收集、切分、訓練" },
+    ],
+    crosscut: [
+      { title: "資料邊界", text: "每一步都要問：誰在什麼時候看得到哪份資料。訓練資料用來 fit，驗證資料用來挑模型，測試資料只用一次。", cards: ["pipeline-leakage", "stratified-kfold"] },
+      { title: "可重現", text: "固定亂數種子，並記錄套件版本與資料版本；本頁的版本表就是這個目的。", cards: ["random"] },
+      { title: "一致性", text: "訓練與推論要用同一套前處理與模式：scaler、weights.transforms()、eval()。", cards: ["standardize", "train-eval"] },
+      { title: "成本", text: "參數量對應記憶體，運算量對應延遲，資料量對應訓練時間；每個選擇都在花這三種預算。", cards: ["param-count"] },
+    ],
+  },
   versions: [
     { lib: "scikit-learn", version: "1.9.1", released: "2026-09-10", docs: "https://scikit-learn.org/stable/" },
     { lib: "NumPy", version: "2.5.4", released: "2026-10-10", docs: "https://numpy.org/doc/stable/" },
@@ -60,6 +168,7 @@ export const seniorMlCodeSheet: CodeSheet = {
       cards: [
         {
           id: "cross-val-score",
+          short: "cross_val_score",
           api: "cross_val_score(estimator, X, y, cv, scoring)",
           lib: "scikit-learn",
           priority: "core",
@@ -83,6 +192,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "stratified-kfold",
+          short: "StratifiedKFold",
           api: "StratifiedKFold／KFold／RepeatedStratifiedKFold",
           lib: "scikit-learn",
           priority: "core",
@@ -106,6 +216,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "pipeline-leakage",
+          short: "Pipeline",
           api: "make_pipeline(前處理, 模型)｜防資料洩漏",
           lib: "scikit-learn",
           priority: "high",
@@ -129,6 +240,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "standardize",
+          short: "StandardScaler",
           api: "StandardScaler｜X.mean(axis=0)、X.std(axis=0)",
           lib: "scikit-learn",
           priority: "core",
@@ -152,6 +264,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "pca",
+          short: "PCA",
           api: "PCA(n_components)：fit → transform → inverse_transform",
           lib: "scikit-learn",
           priority: "high",
@@ -173,6 +286,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "lda-knn",
+          short: "LDA／KNN",
           api: "LinearDiscriminantAnalysis.fit_transform(X, y)｜KNeighborsClassifier(n_neighbors)",
           lib: "scikit-learn",
           priority: "high",
@@ -189,6 +303,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "regression-metrics",
+          short: "MSE／RMSE",
           api: "mean_squared_error／root_mean_squared_error／mean_absolute_error／r2_score",
           lib: "scikit-learn",
           priority: "high",
@@ -218,6 +333,7 @@ export const seniorMlCodeSheet: CodeSheet = {
       cards: [
         {
           id: "dot-vs-multiply",
+          short: "np.dot",
           api: "v1 * v2 vs np.dot(v1, v2)／v1 @ v2",
           lib: "NumPy",
           priority: "high",
@@ -233,6 +349,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "linalg",
+          short: "np.linalg",
           api: "np.linalg.inv／det／eig",
           lib: "NumPy",
           priority: "high",
@@ -249,6 +366,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "boolean-mask",
+          short: "布林遮罩",
           api: "布林遮罩：(arr % 2 == 0)、A & B、.sum()",
           lib: "NumPy",
           priority: "high",
@@ -264,6 +382,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "random",
+          short: "亂數種子",
           api: "np.random.seed／randint／binomial／normal",
           lib: "NumPy",
           priority: "high",
@@ -293,6 +412,7 @@ export const seniorMlCodeSheet: CodeSheet = {
       cards: [
         {
           id: "train-loop",
+          short: "訓練迴圈",
           api: "訓練迴圈：zero_grad → forward → loss → backward → clip_grad_norm_ → step",
           lib: "PyTorch",
           priority: "high",
@@ -316,6 +436,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "cross-entropy",
+          short: "CrossEntropyLoss",
           api: "nn.CrossEntropyLoss()｜輸出層給 logits",
           lib: "PyTorch",
           priority: "high",
@@ -330,6 +451,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "freeze",
+          short: "凍結參數",
           api: "凍結：param.requires_grad = False＋換分類頭",
           lib: "PyTorch",
           priority: "core",
@@ -356,6 +478,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "tv-models",
+          short: "預訓練模型",
           api: "torchvision.models.resnet50／vgg16(weights=…)",
           lib: "torchvision",
           priority: "core",
@@ -380,6 +503,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "param-count",
+          short: "參數量",
           api: "參數量與運算量：nn.Linear／nn.Conv2d／summary",
           lib: "PyTorch",
           priority: "core",
@@ -397,6 +521,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "transforms",
+          short: "transforms",
           api: "transforms.Compose／RandomHorizontalFlip／RandomRotation／ColorJitter",
           lib: "torchvision",
           priority: "high",
@@ -423,6 +548,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "train-eval",
+          short: "eval／no_grad",
           api: "model.train()／model.eval()／torch.no_grad()",
           lib: "PyTorch",
           priority: "high",
@@ -451,6 +577,7 @@ export const seniorMlCodeSheet: CodeSheet = {
       cards: [
         {
           id: "output-loss",
+          short: "輸出層×損失",
           api: "輸出層 activation × compile(loss=…) 配對",
           lib: "Keras",
           priority: "core",
@@ -477,6 +604,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "dense-summary",
+          short: "Dense／summary",
           api: "Dense(units, activation)｜model.summary() 參數量",
           lib: "Keras",
           priority: "core",
@@ -504,6 +632,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "cnn-layers",
+          short: "Conv2D",
           api: "Conv2D／MaxPooling2D／Flatten",
           lib: "Keras",
           priority: "high",
@@ -520,6 +649,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "bn-dropout",
+          short: "BN／Dropout",
           api: "BatchNormalization()／Dropout(rate)",
           lib: "Keras",
           priority: "core",
@@ -535,6 +665,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "to-categorical",
+          short: "to_categorical",
           api: "keras.utils.to_categorical(y, num_classes)｜x / 255.0",
           lib: "Keras",
           priority: "high",
@@ -557,6 +688,7 @@ export const seniorMlCodeSheet: CodeSheet = {
         },
         {
           id: "fit-history",
+          short: "fit／EarlyStopping",
           api: "model.compile／fit(validation_data)／History 與 EarlyStopping",
           lib: "Keras",
           priority: "high",

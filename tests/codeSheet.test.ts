@@ -69,6 +69,28 @@ describe("科目三程式速查", () => {
     }
   });
 
+  it("全局圖：步驟引用的卡片都存在，每張卡片至少落在一個步驟，迴圈指向存在的步驟", () => {
+    const pipeline = sheet.pipeline!;
+    expect(pipeline).toBeDefined();
+    const cardIds = new Set(cards.map((c) => c.id));
+    const stages = pipeline.phases.flatMap((p) => p.stages);
+    const stageIds = new Set(stages.map((s) => s.id));
+    expect(stageIds.size).toBe(stages.length);
+    for (const stage of stages) {
+      for (const id of stage.cards) expect(cardIds.has(id), `${stage.id} → ${id}`).toBe(true);
+      for (const text of [stage.goal, stage.doing, stage.system, stage.risk]) expect(text.trim(), stage.id).not.toBe("");
+    }
+    for (const item of pipeline.crosscut) {
+      for (const id of item.cards) expect(cardIds.has(id), `${item.title} → ${id}`).toBe(true);
+    }
+    const placed = new Set(stages.flatMap((s) => s.cards));
+    expect(cards.filter((c) => !placed.has(c.id)).map((c) => c.id)).toEqual([]);
+    for (const loop of pipeline.loops) {
+      expect(stageIds.has(loop.from), loop.from).toBe(true);
+      expect(stageIds.has(loop.to), loop.to).toBe(true);
+    }
+  });
+
   it("題號標籤以卷次與題號顯示", () => {
     expect(examRefLabel("senior-ml-114-2-q47")).toBe("114 年第 2 次・第 47 題");
     expect(examRefLabel("senior-ml-115-1-q05")).toBe("115 年第 1 次・第 5 題");
@@ -98,6 +120,16 @@ describe("程式速查頁的呈現", () => {
     const anchors = html.match(/<a [^>]*>/g) ?? [];
     expect(anchors.length).toBeGreaterThan(0);
     for (const a of anchors) expect(a).toContain('target="_blank" rel="noopener noreferrer"');
+  });
+
+  it("全局圖排在第一段，每個跳轉都有對應的目標", () => {
+    const html = renderStudyReader({ page: { kind: "code", subjectId: "senior-ml" }, codeSheets });
+    const stages = sheet.pipeline!.phases.flatMap((p) => p.stages);
+    expect(html.match(/class="ml-node"/g)?.length).toBe(stages.length);
+    expect(html.indexOf('id="code-pipeline"')).toBeLessThan(html.indexOf('id="code-traps"'));
+    const targets = [...html.matchAll(/data-study-jump="([^"]+)"/g)].map((m) => m[1]);
+    expect(targets.length).toBeGreaterThan(stages.length);
+    for (const id of new Set(targets)) expect(html, id).toContain(`id="${id}"`);
   });
 
   it("沒有資料時顯示找不到頁面", () => {

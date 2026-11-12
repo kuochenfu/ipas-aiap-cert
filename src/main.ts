@@ -457,7 +457,8 @@ function jumpToStudySection(anchorId: string) {
   if (!target) return;
   target.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
   // 焦點跟著進到該節，下一個 Tab 才會走進內文而不是留在籤列。
-  const heading = target.querySelector<HTMLElement>(".study-note-title");
+  // 程式速查的全局圖會跳到步驟或函式卡片，它們的標題不是 .study-note-title。
+  const heading = target.querySelector<HTMLElement>(".study-note-title, .ml-stage-title, .code-card-api");
   if (!heading) return;
   heading.setAttribute("tabindex", "-1");
   heading.classList.add("view-anchor");

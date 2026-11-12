@@ -9,7 +9,7 @@ import { certs, getLevels, getSubjects, subjects } from "../domain/catalog";
 import { getBankStats, getTopicCounts } from "../data/index";
 import { getStudyGuide } from "../data/studyGuide";
 import type { Cert, Level } from "../data/types";
-import type { CodeCard, CodeSheet } from "../data/codeSheet.types";
+import type { CodeCard, CodePipeline, CodeSheet } from "../data/codeSheet.types";
 import type { Question } from "../data/types";
 import type {
   ReadingLink, StudyNoteItem, StudyNoteSection, StudyNoteTable, StudyNotesBySubject, StudyTopic,
@@ -1455,11 +1455,98 @@ const renderCodeCard = (card: CodeCard): string => `
   </article>
 `;
 
+const renderCodeChips = (ids: string[], cardsById: Map<string, CodeCard>): string =>
+  ids.map((id) => cardsById.get(id))
+    .filter((card): card is CodeCard => card !== undefined)
+    .map((card) => `<button class="ml-chip" data-study-jump="code-card-${escapeHtml(card.id)}">${escapeHtml(card.short)}</button>`)
+    .join("");
+
+/**
+ * 全局圖：三條帶（定義與資料 → 建模 → 上線）由上而下，帶內的步驟由左而右。
+ * 桌面四欄對齊，讓三條帶的步驟上下對得起來；上線帶只有一步，剩下的欄位放回饋迴圈。
+ * 用 HTML 而非 SVG：手機上要能重排成兩欄，文字也要能選取、被搜尋與朗讀。
+ */
+const renderCodePipeline = (pipeline: CodePipeline, cards: CodeCard[]): string => {
+  const cardsById = new Map(cards.map((card) => [card.id, card]));
+  const stages = pipeline.phases.flatMap((phase) => phase.stages.map((stage) => ({ phase, stage })));
+  const numberOf = new Map(stages.map(({ stage }, index) => [stage.id, index + 1]));
+  const stageTitle = (id: string): string => {
+    const found = stages.find(({ stage }) => stage.id === id);
+    return found ? `${numberOf.get(id)} ${found.stage.title}` : id;
+  };
+  const examCount = (ids: string[]): number =>
+    new Set(ids.flatMap((id) => cardsById.get(id)?.exams ?? [])).size;
+  const loops = pipeline.loops.length ? `
+    <ul class="ml-loops" aria-label="回饋迴圈" style="--span: ${4 - (pipeline.phases.at(-1)?.stages.length ?? 1)}">
+      ${pipeline.loops.map((loop) => `
+        <li><span class="ml-loop-icon" aria-hidden="true">↺</span>
+          <span><strong>${escapeHtml(stageTitle(loop.from))} → ${escapeHtml(stageTitle(loop.to))}</strong>${escapeHtml(loop.text)}</span></li>
+      `).join("")}
+    </ul>` : "";
+  const bands = pipeline.phases.map((phase, phaseIndex) => {
+    const last = phaseIndex === pipeline.phases.length - 1;
+    const span = last && loops ? phase.stages.length : 4;
+    return `
+      <div class="ml-band is-${escapeHtml(phase.id)}">
+        <p class="ml-band-label"><strong>${escapeHtml(phase.name)}</strong><span>${escapeHtml(phase.role)}</span></p>
+        <div class="ml-band-body">
+          <ol class="ml-band-stages" style="--span: ${span}" start="${numberOf.get(phase.stages[0]?.id ?? "") ?? 1}">
+            ${phase.stages.map((stage) => `
+              <li class="ml-node">
+                <button class="ml-node-link" data-study-jump="code-stage-${escapeHtml(stage.id)}">
+                  <span class="ml-node-no">${numberOf.get(stage.id)}</span>
+                  <span class="ml-node-title">${escapeHtml(stage.title)}</span>
+                  <span class="ml-node-goal">${escapeHtml(stage.goal)}</span>
+                  <span class="ml-node-exams">真題 ${examCount(stage.cards)} 題・${stage.cards.length} 個函式</span>
+                </button>
+              </li>
+            `).join("")}
+          </ol>
+          ${last ? loops : ""}
+        </div>
+      </div>
+    `;
+  }).join("");
+  const details = stages.map(({ phase, stage }) => `
+    <li class="ml-stage" id="code-stage-${escapeHtml(stage.id)}">
+      <h3 class="ml-stage-title"><span class="ml-node-no">${numberOf.get(stage.id)}</span>${escapeHtml(stage.title)}<span class="ml-stage-phase">${escapeHtml(phase.name)}</span></h3>
+      <dl class="code-more-list">
+        <dt>做什麼</dt><dd>${escapeHtml(stage.doing)}</dd>
+        <dt>系統觀念</dt><dd>${escapeHtml(stage.system)}</dd>
+        <dt>出錯的代價</dt><dd>${escapeHtml(stage.risk)}</dd>
+      </dl>
+      <p class="ml-chips"><span class="code-exams-label">本頁函式</span>${renderCodeChips(stage.cards, cardsById)}</p>
+    </li>
+  `).join("");
+  return `
+    <p class="code-section-summary">${escapeHtml(pipeline.summary)}</p>
+    <figure class="ml-map">
+      <figcaption class="ml-map-caption">機器學習 Pipeline 全局圖：由上而下、由左而右是先後順序，點步驟看系統觀念</figcaption>
+      ${bands}
+      <div class="ml-crosscut">
+        <p class="ml-band-label"><strong>貫穿全程</strong><span>每一步都要顧到</span></p>
+        <ul class="ml-crosscut-list">
+          ${pipeline.crosscut.map((item) => `
+            <li><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.text)}</span>
+              <span class="ml-chips">${renderCodeChips(item.cards, cardsById)}</span></li>
+          `).join("")}
+        </ul>
+      </div>
+    </figure>
+    <ol class="ml-stage-list">${details}</ol>
+  `;
+};
+
 const renderCodeSheetReader = (subjectId: string, sheet: CodeSheet | undefined): string => {
   const subject = subjects.find((s) => s.id === subjectId);
   if (!sheet || !subject) return renderStudyMissing();
   const examIds = codeSheetExamIds(sheet);
+  const cards = sheet.sections.flatMap((section) => section.cards);
   const parts: { id: string; label: string; title: string; body: string }[] = [
+    ...(sheet.pipeline ? [{
+      id: "code-pipeline", label: "全局圖", title: "全局圖：機器學習 Pipeline",
+      body: renderCodePipeline(sheet.pipeline, cards),
+    }] : []),
     {
       id: "code-traps", label: "考前陷阱", title: `考前 ${sheet.traps.length} 個陷阱`,
       body: `<ol class="code-traps">${sheet.traps.map((trap) => `

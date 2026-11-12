@@ -60,6 +60,33 @@ for (const [label, tier] of [["必考", "core"], ["高機率", "high"]] as const
   out.push("");
 }
 
+if (sheet.pipeline) {
+  const pl = sheet.pipeline;
+  const stages = pl.phases.flatMap((phase) => phase.stages.map((stage) => ({ phase, stage })));
+  const no = new Map(stages.map(({ stage }, i) => [stage.id, i + 1]));
+  const short = new Map(cards.map((c) => [c.id, c.short]));
+  out.push("## 全局圖：機器學習 Pipeline（系統角度）", "", pl.summary, "", "```");
+  for (const phase of pl.phases) {
+    out.push(`【${phase.name}】${phase.stages.map((s) => `${no.get(s.id)} ${s.title}`).join(" → ")}`);
+  }
+  for (const loop of pl.loops) out.push(`↺ ${no.get(loop.from)} → ${no.get(loop.to)}：${loop.text}`);
+  out.push(`【貫穿全程】${pl.crosscut.map((c) => c.title).join("・")}`, "```", "");
+  for (const { phase, stage } of stages) {
+    out.push(
+      `### ${no.get(stage.id)}. ${stage.title}（${phase.name}）`,
+      "",
+      `- 做什麼：${stage.doing}`,
+      `- 系統觀念：${stage.system}`,
+      `- 出錯的代價：${stage.risk}`,
+      `- 本頁函式：${stage.cards.map((id) => `\`${short.get(id) ?? id}\``).join("、")}`,
+      "",
+    );
+  }
+  out.push("### 貫穿全程", "");
+  for (const item of pl.crosscut) out.push(`- **${item.title}**：${item.text}`);
+  out.push("");
+}
+
 out.push(
   "## 三、真題考過的程式題 × 函式 × 實務應用",
   "",

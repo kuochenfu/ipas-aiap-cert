@@ -78,12 +78,15 @@ if (sheet.pipeline) {
       `- 做什麼：${stage.doing}`,
       `- 系統觀念：${stage.system}`,
       `- 出錯的代價：${stage.risk}`,
-      `- 本頁函式：${stage.cards.map((id) => `\`${short.get(id) ?? id}\``).join("、")}`,
+      `- 本頁函式：${stage.cards.length ? stage.cards.map((id) => `\`${short.get(id) ?? id}\``).join("、") : "（程式真題未考）"}`,
+      `- 對應學習筆記：${stage.nodes.join("、")}`,
+      "- 學習筆記重點：",
+      ...stage.concepts.map((c) => `  - **${c.term}**：${c.text}`),
       "",
     );
   }
   out.push("### 貫穿全程", "");
-  for (const item of pl.crosscut) out.push(`- **${item.title}**：${item.text}`);
+  for (const item of pl.crosscut) out.push(`- **${item.title}**：${item.text}（${item.nodes.join("、")}）`);
   out.push("");
 }
 
@@ -102,6 +105,13 @@ for (const id of examIds) {
     out.push(`| \`${cell(c.api)}\` | ${cell(c.point)} | ${cell(c.practice)} | ${c.docs.map(link).join("<br>")} |`);
   }
   out.push("");
+}
+
+out.push("## 真題程式逐行解讀", "", "每一行都照原卷轉錄；shape、參數量與數值以最新穩定版實跑。", "");
+for (const walk of sheet.walkthroughs) {
+  out.push(`### ${walk.title}（${walk.exams.map(examLabel).join("、")}）`, "", walk.context, "", "| 程式 | 意思 |", "|---|---|");
+  for (const line of walk.lines) out.push(`| \`${cell(line.code.trim())}\` | ${cell(line.meaning)} |`);
+  out.push("", `**解題**：${walk.answer}`, "");
 }
 
 const versionCards = cards.filter((c) => c.versionNote);

@@ -9,7 +9,7 @@ import { certs, getLevels, getSubjects, subjects } from "../domain/catalog";
 import { getBankStats, getTopicCounts } from "../data/index";
 import { getStudyGuide } from "../data/studyGuide";
 import type { Cert, Level } from "../data/types";
-import type { CodeCard, CodePipeline, CodeSheet } from "../data/codeSheet.types";
+import type { CodeCard, CodePipeline, CodeSheet, CodeWalkLine, CodeWalkthrough } from "../data/codeSheet.types";
 import type { Question } from "../data/types";
 import type {
   ReadingLink, StudyNoteItem, StudyNoteSection, StudyNoteTable, StudyNotesBySubject, StudyTopic,
@@ -17,7 +17,7 @@ import type {
 import type { Confidence, DrillFilter } from "../domain/drill";
 import { CONCEPT_MIN_SAMPLE } from "../domain/diagnostics";
 import type { Calibration, ConceptRow, Diagnostics, ErrorRow, MetaStatRow } from "../domain/diagnostics";
-import { isTopicClassified, topicMatchesGuideCode } from "../domain/assessmentTopics";
+import { allNodes, isTopicClassified, topicMatchesGuideCode } from "../domain/assessmentTopics";
 import { examRules } from "../domain/exam";
 
 // 介面圖示一律是內嵌 SVG（同一種線寬），不用 ← → ✓ 這類文字符號充當圖示。
@@ -1425,11 +1425,67 @@ export const examRefLabel = (id: string): string => {
   return match ? `${match[1]} 年第 ${match[2]} 次・第 ${match[3]} 題` : id;
 };
 
-const renderExamRefs = (ids: string[]): string => ids.length
-  ? `<p class="code-exams"><span class="code-exams-label">考過</span>${ids.map((id) => `<span class="code-exam">${escapeHtml(examRefLabel(id))}</span>`).join("")}</p>`
+/** 卡片上的真題題號：有逐行解讀的題目做成跳轉鈕，沒有的（題目本身不附程式）維持純文字。 */
+const renderExamRefs = (ids: string[], walkByExam: Map<string, string>): string => ids.length
+  ? `<p class="code-exams"><span class="code-exams-label">考過</span>${ids.map((id) => {
+    const walk = walkByExam.get(id);
+    return walk
+      ? `<button class="code-exam is-link" data-study-jump="code-walk-${escapeHtml(walk)}">${escapeHtml(examRefLabel(id))}</button>`
+      : `<span class="code-exam">${escapeHtml(examRefLabel(id))}</span>`;
+  }).join("")}</p>`
   : `<p class="code-exams"><span class="code-exams-label">真題未考</span><span class="code-exam is-forecast">高機率延伸</span></p>`;
 
-const renderCodeCard = (card: CodeCard): string => `
+/** 逐行說明：左邊（手機上是上方）是程式，右邊是這一行的意思。 */
+const renderWalkLines = (lines: CodeWalkLine[], label: string): string => `
+  <ol class="code-walk" aria-label="${escapeHtml(label)}">
+    ${lines.map((line) => `
+      <li class="code-walk-row">
+        <pre class="code-walk-code"><code>${escapeHtml(line.code.trim())}</code></pre>
+        <p class="code-walk-meaning">${escapeHtml(line.meaning)}</p>
+      </li>
+    `).join("")}
+  </ol>
+`;
+
+/**
+ * 帶註解的範例：把範例程式切成一段段，有說明的那一行與它前面的續行（以 `(`、`[` 結尾）同一格，
+ * 沒有說明的行（import、收尾括號）獨立成只有程式的格。保留縮排，範例只出現一次。
+ * 同一行文字出現兩次時，說明只掛在第一次。
+ */
+export const annotateCode = (code: string, notes: CodeWalkLine[]): { code: string; meaning?: string }[] => {
+  const pending = new Map(notes.map((note) => [note.code.trim(), note.meaning]));
+  const rows: { code: string; meaning?: string }[] = [];
+  let buffer: string[] = [];
+  const flush = () => {
+    const text = buffer.join("\n").replace(/^\n+|\n+$/g, "");
+    if (text.trim()) rows.push({ code: text });
+    buffer = [];
+  };
+  for (const line of code.split("\n")) {
+    const meaning = pending.get(line.trim());
+    if (meaning === undefined) { buffer.push(line); continue; }
+    pending.delete(line.trim());
+    const last = buffer.filter((l) => l.trim()).at(-1)?.trimEnd() ?? "";
+    const carry = /[([]$/.test(last) ? buffer.splice(buffer.lastIndexOf(buffer.filter((l) => l.trim()).at(-1)!)) : [];
+    flush();
+    rows.push({ code: [...carry, line].join("\n"), meaning });
+  }
+  flush();
+  return rows;
+};
+
+const renderAnnotatedCode = (rows: { code: string; meaning?: string }[], label: string): string => `
+  <ol class="code-walk is-annotated" aria-label="${escapeHtml(label)}">
+    ${rows.map((row) => `
+      <li class="code-walk-row${row.meaning ? "" : " is-plain"}">
+        <pre class="code-walk-code"><code>${escapeHtml(row.code)}</code></pre>
+        ${row.meaning ? `<p class="code-walk-meaning">${escapeHtml(row.meaning)}</p>` : ""}
+      </li>
+    `).join("")}
+  </ol>
+`;
+
+const renderCodeCard = (card: CodeCard, walkByExam: Map<string, string>): string => `
   <article class="code-card" id="code-card-${escapeHtml(card.id)}">
     <header class="code-card-head">
       <h4 class="code-card-api">${escapeHtml(card.api)}</h4>
@@ -1441,9 +1497,11 @@ const renderCodeCard = (card: CodeCard): string => `
     <p class="code-point">${escapeHtml(card.point)}</p>
     ${card.trap ? `<p class="code-note is-trap"><span class="code-note-label">陷阱</span>${escapeHtml(card.trap)}</p>` : ""}
     ${card.versionNote ? `<p class="code-note is-version"><span class="code-note-label">新版</span>${escapeHtml(card.versionNote)}</p>` : ""}
-    ${card.code ? `<pre class="figure-pre code-snippet"><code>${escapeHtml(card.code)}</code></pre>` : ""}
+    ${card.code && card.codeNotes?.length
+      ? `<p class="code-walk-heading">範例・逐行說明</p>${renderAnnotatedCode(annotateCode(card.code, card.codeNotes), `${card.short} 範例逐行說明`)}`
+      : card.code ? `<pre class="figure-pre code-snippet"><code>${escapeHtml(card.code)}</code></pre>` : ""}
     ${card.table ? renderNoteTable(card.table.caption, card.table) : ""}
-    ${renderExamRefs(card.exams)}
+    ${renderExamRefs(card.exams, walkByExam)}
     <details class="code-more">
       <summary>為什麼重要・實務應用・官方文件</summary>
       <dl class="code-more-list">
@@ -1454,6 +1512,33 @@ const renderCodeCard = (card: CodeCard): string => `
     </details>
   </article>
 `;
+
+/** 題號 → 逐行解讀 id。 */
+export const walkthroughByExam = (sheet: CodeSheet): Map<string, string> =>
+  new Map(sheet.walkthroughs.flatMap((walk) => walk.exams.map((id) => [id, walk.id] as const)));
+
+const renderWalkthrough = (walk: CodeWalkthrough, stageLabel: string, cardsById: Map<string, CodeCard>): string => `
+  <article class="code-card code-walkthrough" id="code-walk-${escapeHtml(walk.id)}">
+    <header class="code-card-head">
+      <h3 class="code-card-api">${escapeHtml(walk.title)}</h3>
+      <span class="code-card-tags">${walk.exams.map((id) => `<span class="code-lib">${escapeHtml(examRefLabel(id))}</span>`).join("")}</span>
+    </header>
+    <p class="code-point">${escapeHtml(walk.context)}</p>
+    ${renderWalkLines(walk.lines, `${walk.title} 逐行解讀`)}
+    <p class="code-note is-answer"><span class="code-note-label">解題</span>${escapeHtml(walk.answer)}</p>
+    <p class="ml-chips"><span class="code-exams-label">全局圖</span><button class="ml-chip" data-study-jump="code-stage-${escapeHtml(walk.stage)}">${escapeHtml(stageLabel)}</button>
+      <span class="code-exams-label">函式卡</span>${renderCodeChips(walk.cards, cardsById)}</p>
+  </article>
+`;
+
+/** 評鑑內容節點 → 學習主題閱讀器（三碼主題一頁），標籤帶出節點名稱。 */
+const renderNodeLinks = (subjectId: string, codes: string[]): string => {
+  const nodes = allNodes[subjectId] ?? [];
+  return codes.map((code) => {
+    const name = nodes.find((node) => node.code === code)?.name ?? "";
+    return `<button class="ml-chip is-note" data-study-open="${escapeHtml(studyPageKey({ kind: "node", subjectId, code: code.slice(0, 4) }))}">${escapeHtml(`${code} ${name}`.trim())}</button>`;
+  }).join("");
+};
 
 const renderCodeChips = (ids: string[], cardsById: Map<string, CodeCard>): string =>
   ids.map((id) => cardsById.get(id))
@@ -1466,7 +1551,7 @@ const renderCodeChips = (ids: string[], cardsById: Map<string, CodeCard>): strin
  * 桌面四欄對齊，讓三條帶的步驟上下對得起來；上線帶只有一步，剩下的欄位放回饋迴圈。
  * 用 HTML 而非 SVG：手機上要能重排成兩欄，文字也要能選取、被搜尋與朗讀。
  */
-const renderCodePipeline = (pipeline: CodePipeline, cards: CodeCard[]): string => {
+const renderCodePipeline = (subjectId: string, pipeline: CodePipeline, cards: CodeCard[]): string => {
   const cardsById = new Map(cards.map((card) => [card.id, card]));
   const stages = pipeline.phases.flatMap((phase) => phase.stages.map((stage) => ({ phase, stage })));
   const numberOf = new Map(stages.map(({ stage }, index) => [stage.id, index + 1]));
@@ -1497,7 +1582,7 @@ const renderCodePipeline = (pipeline: CodePipeline, cards: CodeCard[]): string =
                   <span class="ml-node-no">${numberOf.get(stage.id)}</span>
                   <span class="ml-node-title">${escapeHtml(stage.title)}</span>
                   <span class="ml-node-goal">${escapeHtml(stage.goal)}</span>
-                  <span class="ml-node-exams">真題 ${examCount(stage.cards)} 題・${stage.cards.length} 個函式</span>
+                  <span class="ml-node-exams">${stage.concepts.length} 個筆記觀念・${stage.cards.length ? `真題 ${examCount(stage.cards)} 題・${stage.cards.length} 個函式` : "程式真題未考"}</span>
                 </button>
               </li>
             `).join("")}
@@ -1514,8 +1599,11 @@ const renderCodePipeline = (pipeline: CodePipeline, cards: CodeCard[]): string =
         <dt>做什麼</dt><dd>${escapeHtml(stage.doing)}</dd>
         <dt>系統觀念</dt><dd>${escapeHtml(stage.system)}</dd>
         <dt>出錯的代價</dt><dd>${escapeHtml(stage.risk)}</dd>
+        <dt>學習筆記重點</dt>
+        <dd><ul class="ml-concepts">${stage.concepts.map((concept) => `<li><strong>${escapeHtml(concept.term)}</strong>${escapeHtml(concept.text)}</li>`).join("")}</ul></dd>
       </dl>
-      <p class="ml-chips"><span class="code-exams-label">本頁函式</span>${renderCodeChips(stage.cards, cardsById)}</p>
+      <p class="ml-chips"><span class="code-exams-label">對應學習筆記</span>${renderNodeLinks(subjectId, stage.nodes)}</p>
+      ${stage.cards.length ? `<p class="ml-chips"><span class="code-exams-label">本頁函式</span>${renderCodeChips(stage.cards, cardsById)}</p>` : ""}
     </li>
   `).join("");
   return `
@@ -1528,7 +1616,7 @@ const renderCodePipeline = (pipeline: CodePipeline, cards: CodeCard[]): string =
         <ul class="ml-crosscut-list">
           ${pipeline.crosscut.map((item) => `
             <li><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.text)}</span>
-              <span class="ml-chips">${renderCodeChips(item.cards, cardsById)}</span></li>
+              <span class="ml-chips">${renderCodeChips(item.cards, cardsById)}${renderNodeLinks(subjectId, item.nodes)}</span></li>
           `).join("")}
         </ul>
       </div>
@@ -1542,10 +1630,19 @@ const renderCodeSheetReader = (subjectId: string, sheet: CodeSheet | undefined):
   if (!sheet || !subject) return renderStudyMissing();
   const examIds = codeSheetExamIds(sheet);
   const cards = sheet.sections.flatMap((section) => section.cards);
+  const cardsById = new Map(cards.map((card) => [card.id, card]));
+  const walkByExam = walkthroughByExam(sheet);
+  const stageLabels = new Map((sheet.pipeline?.phases ?? []).flatMap((phase) => phase.stages)
+    .map((stage, index) => [stage.id, `${index + 1} ${stage.title}`] as const));
   const parts: { id: string; label: string; title: string; body: string }[] = [
     ...(sheet.pipeline ? [{
       id: "code-pipeline", label: "全局圖", title: "全局圖：機器學習 Pipeline",
-      body: renderCodePipeline(sheet.pipeline, cards),
+      body: renderCodePipeline(subjectId, sheet.pipeline, cards),
+    }] : []),
+    ...(sheet.walkthroughs.length ? [{
+      id: "code-walkthroughs", label: "真題逐行解讀", title: `真題程式逐行解讀（${sheet.walkthroughs.length} 段・${new Set(sheet.walkthroughs.flatMap((w) => w.exams)).size} 題）`,
+      body: `<p class="code-section-summary">照原卷程式逐行說明：這行做了什麼、資料變成什麼形狀、為什麼這樣寫，最後是解題結論。shape、參數量與數值都以最新穩定版實際執行過。</p>
+        ${sheet.walkthroughs.map((walk) => renderWalkthrough(walk, stageLabels.get(walk.stage) ?? walk.stage, cardsById)).join("")}`,
     }] : []),
     {
       id: "code-traps", label: "考前陷阱", title: `考前 ${sheet.traps.length} 個陷阱`,
@@ -1561,7 +1658,7 @@ const renderCodeSheetReader = (subjectId: string, sheet: CodeSheet | undefined):
       id: `code-${section.id}`,
       label: section.title.split("｜")[0],
       title: section.title,
-      body: `<p class="code-section-summary">${escapeHtml(section.summary)}</p>${section.cards.map(renderCodeCard).join("")}`,
+      body: `<p class="code-section-summary">${escapeHtml(section.summary)}</p>${section.cards.map((card) => renderCodeCard(card, walkByExam)).join("")}`,
     })),
     {
       id: "code-versions", label: "版本與來源", title: "版本與官方文件",

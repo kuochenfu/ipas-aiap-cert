@@ -31,6 +31,8 @@ export type CodeCard = {
   trap?: string;
   /** 以最新穩定版寫法的最小範例。 */
   code?: string;
+  /** 範例的逐行說明；`code` 必須是 `code` 裡的某一行（去頭尾空白後相等）。 */
+  codeNotes?: CodeWalkLine[];
   table?: StudyNoteTable & { caption: string };
   /** 實務上用在哪裡。 */
   practice: string;
@@ -39,7 +41,30 @@ export type CodeCard = {
   docs: ReadingLink[];
 };
 
-export type CodeSheetSection = { id: string; title: string; summary: string; cards: CodeCard[] };
+/** 一行程式與它的意思。 */
+export type CodeWalkLine = { code: string; meaning: string };
+
+/**
+ * 真題程式逐行解讀：照原卷的程式逐行說明「這行做了什麼、資料變成什麼形狀、為什麼這樣寫」。
+ * `lines[].code` 必須與原卷轉錄（題目的 figures／choiceFigures）的某一行相同，測試會比對，
+ * 避免解讀與考卷程式對不上。
+ */
+export type CodeWalkthrough = {
+  id: string;
+  /** 共用同一段程式的真題 id（VGG16 summary 一段程式出了三題）。 */
+  exams: string[];
+  title: string;
+  /** 這段程式落在全局圖的哪一步（步驟 id）。 */
+  stage: string;
+  /** 題目情境：這段程式想完成什麼。 */
+  context: string;
+  lines: CodeWalkLine[];
+  /** 讀完整段程式後的解題結論。 */
+  answer: string;
+  cards: string[];
+};
+
+export type CodeSheetSection ={ id: string; title: string; summary: string; cards: CodeCard[] };
 
 export type CodeSheetVersion = { lib: string; version: string; released: string; docs: string; note?: string };
 
@@ -61,6 +86,13 @@ export type CodePipelineStage = {
   risk: string;
   /** 本頁卡片 id。 */
   cards: string[];
+  /**
+   * 學習筆記裡屬於這一步的觀念（L231–L234 官方講義重構與補充導讀）。全局圖以筆記為準：
+   * 筆記講到、但程式真題沒考的觀念也要放進來，圖才是完整的流程而不只是函式地圖。
+   */
+  concepts: { term: string; text: string }[];
+  /** 對應的評鑑內容節點（五碼，如 `L23301`），畫面上連到學習主題的那一節。 */
+  nodes: string[];
 };
 
 export type CodePipelinePhase = { id: string; name: string; role: string; stages: CodePipelineStage[] };
@@ -71,13 +103,14 @@ export type CodePipeline = {
   /** 回饋迴圈：from／to 為步驟 id。 */
   loops: { from: string; to: string; text: string }[];
   /** 貫穿全程、不屬於單一步驟的系統觀念。 */
-  crosscut: { title: string; text: string; cards: string[] }[];
+  crosscut: { title: string; text: string; cards: string[]; nodes: string[] }[];
 };
 
 export type CodeSheet = {
   subjectId: string;
   title: string;
   pipeline?: CodePipeline;
+  walkthroughs: CodeWalkthrough[];
   /** 版本與連結的查核日（YYYY-MM-DD）。 */
   checkedAt: string;
   versions: CodeSheetVersion[];

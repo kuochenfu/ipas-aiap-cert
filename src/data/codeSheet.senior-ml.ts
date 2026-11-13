@@ -1,5 +1,6 @@
 import type { CodeSheet } from "./codeSheet.types";
 import { seniorMlWalkthroughs } from "./codeSheet.senior-ml.walkthroughs";
+import { seniorMlDatasets } from "./codeSheet.senior-ml.datasets";
 
 /**
  * 中級科目三「機器學習技術與應用」程式速查。
@@ -17,6 +18,7 @@ export const seniorMlCodeSheet: CodeSheet = {
   title: "程式速查",
   checkedAt: "2026-11-12",
   walkthroughs: seniorMlWalkthroughs,
+  datasets: seniorMlDatasets,
   pipeline: {
     summary: "考卷上的程式碼都是整條流程的一個切片。先看自己在哪一步，再問三件事：這一步能看到哪些資料、產出要交給誰、出錯時要到哪一步才會發現。每一步的「學習筆記重點」整理自 L231–L234 的學習筆記，程式真題沒考的觀念也收在裡面。",
     phases: [

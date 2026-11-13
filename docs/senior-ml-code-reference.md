@@ -767,6 +767,197 @@ OCR 訓練時對每張圖套用下面的轉換。驗證損失一路下降，部�
 
 **解題**：選 C（空格 1＝100、空格 2＝110）。A 把 sigmoid 的公式 1/(1＋e⁻ˣ) 安在 ReLU 上（ReLU 是 max(0, x)）；D 錯在 sigmoid 用於二元或多標籤，多類別要用 softmax。
 
+## 資料集
+
+規格與載入程式以最新穩定版實跑；近期發展只寫趨勢、不寫排行榜名次。
+
+### 真題用過的資料集
+
+#### Iris（鳶尾花）
+
+- 規格：150 筆、4 個特徵（花萼與花瓣的長、寬，公分），3 類各 50 筆。
+- 真題怎麼用它：115 年第 1 次以它考兩件事：先對全部資料做 LDA 再交叉驗證的資料洩漏，以及哪些 cv 寫法能保持類別比例。
+- 考過：115-1 第 44 題、115-1 第 45 題
+- 可以出的考點：
+  - LDA 最多降到「類別數 − 1」維，3 類就是 2 維。
+  - 三類剛好各 50 筆，分層與否的分數差異很小，所以考的是流程觀念而不是數字。
+  - 資料小，KNN 這類簡單模型就很準，是做基準模型的典型資料。
+- 實跑：load_iris：(150, 4)、三類各 50 筆。考卷用 ucimlrepo 的 fetch_ucirepo(id=53) 從 UCI 線上下載；scikit-learn 內建版本不必連網。
+- 來源：[UCI Machine Learning Repository：Iris（編號 53）](https://archive.ics.uci.edu/dataset/53/iris)、[scikit-learn load_iris](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html)
+
+```python
+from sklearn.datasets import load_iris
+
+X, y = load_iris(return_X_y=True, as_frame=True)   # (150, 4)
+# 考卷寫法：from ucimlrepo import fetch_ucirepo; iris = fetch_ucirepo(id=53)
+```
+
+#### CIFAR-10
+
+- 規格：6 萬張 32×32 彩色圖（訓練 5 萬、測試 1 萬），10 類各 6 千張；像素為 0～255 的 uint8。
+- 真題怎麼用它：115 年第 1 次以它連出三題：像素除以 255.0 與 one-hot 標籤、四個區塊的 CNN 每層在做什麼、學習曲線怎麼判讀。
+- 考過：115-1 第 46 題、115-1 第 47 題、115-1 第 48 題
+- 可以出的考點：
+  - x 是 (50000, 32, 32, 3)、y 是 (50000, 1) 的整數；to_categorical 後變成 (50000, 10)。
+  - 除以 255.0 是等比例縮到 0～1，不是 z-score。
+  - Conv2D 加 padding="same" 保住 32×32，通道數變成濾波器數。
+- 實跑：keras 3.15.1 實跑：x_train (50000, 32, 32, 3) uint8、範圍 0～255；y_train (50000, 1)。
+- 來源：[CIFAR-10 官方頁（多倫多大學）](https://www.cs.toronto.edu/~kriz/cifar.html)、[Keras CIFAR10 dataset](https://keras.io/api/datasets/cifar10/)
+
+```python
+from keras import datasets
+
+(x_train, y_train), (x_test, y_test) = datasets.cifar10.load_data()
+x_train.shape, y_train.shape   # (50000, 32, 32, 3), (50000, 1)
+```
+
+#### Digits（手寫數字 8×8）
+
+- 規格：1,797 張 8×8 灰階手寫數字，攤平成 64 個特徵，像素 0～16，10 類。
+- 真題怎麼用它：114 年第 2 次以它考 PCA 降噪（哪一行設定錯了）與 KNN 交叉驗證（scoring="f1" 用在 10 類得到 nan）。
+- 考過：114-2 第 46 題、114-2 第 47 題
+- 可以出的考點：
+  - 64 個特徵，PCA() 不給 n_components 就保留全部 64 個成分，還原後雜訊也留著。
+  - 10 類是多類別：scoring 要用 "accuracy" 或 "f1_macro"，不能用 "f1"。
+  - 和 MNIST 不同：MNIST 是 28×28（784 維）、7 萬張。
+- 實跑：load_digits：(1797, 64)，像素最大值 16。
+- 來源：[scikit-learn load_digits](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html)、[UCI：Optical Recognition of Handwritten Digits](https://archive.ics.uci.edu/dataset/80/optical+recognition+of+handwritten+digits)
+
+```python
+from sklearn.datasets import load_digits
+
+X, y = load_digits(return_X_y=True)   # (1797, 64)，像素最大 16
+```
+
+#### ImageNet-1K（預訓練權重）
+
+- 規格：1,000 類、約 128 萬張訓練圖。真題沒有載入資料本身，只載入在它上面預訓練好的權重。
+- 真題怎麼用它：兩份真題的遷移學習題都從 ImageNet 預訓練權重開始：ResNet50 的特徵萃取、VGG16 的參數量、運算量與凍結寫法。
+- 考過：115-1 第 42 題、114-2 第 42 題、114-2 第 43 題、114-2 第 44 題、114-2 第 45 題
+- 可以出的考點：
+  - 預訓練模型的最後一層輸出 1000（對應 1,000 類），換任務時要換成自己的類別數。
+  - 用 weights.transforms() 取得預訓練時的前處理，推論時保持一致。
+  - VGG16 在這組權重下共 138,357,544 個參數。
+- 實跑：VGG16_Weights.IMAGENET1K_V1 的 meta：categories 1,000 類、num_params 138,357,544。
+- 來源：[torchvision Models and pre-trained weights](https://docs.pytorch.org/vision/stable/models.html)、[ImageNet Large Scale Visual Recognition Challenge（arXiv 1409.0575）](https://arxiv.org/abs/1409.0575)
+
+```python
+from torchvision.models import vgg16, VGG16_Weights
+
+weights = VGG16_Weights.IMAGENET1K_V1
+len(weights.meta["categories"])   # 1000 類
+model = vgg16(weights=weights)
+```
+
+### 延伸資料集（依近期發展）
+
+#### California Housing（加州房價）
+
+- 規格：20,640 筆（1990 年加州人口普查的街區群組）、8 個數值特徵（收入中位數、屋齡、房間數、人口、經緯度等），目標是房價中位數，單位 10 萬美元，最高被截在約 5。
+- 為什麼加它：真題的 4 個資料集全是分類，迴歸只考過一個手寫的 MSE 函式。它能把 MSE、RMSE、MAE、R² 放回真實資料上出題。Boston 房價資料因倫理問題在 scikit-learn 1.2 移除，California Housing 是官方文件改用的替代。
+- 對應的發展：表格資料的基礎模型：TabArena 是持續更新的表格資料基準，TabPFN-2.5 的報告指出它在中小型資料上不必調參就勝過調過參的樹模型。題目可能從「選哪一種樹模型」延伸到「小資料表格要不要用基礎模型、怎麼在同一個切分下公平比較」。
+- 可以出的考點：
+  - 目標在約 5 被截斷，模型在高價區會系統性低估，要看殘差而不只看 RMSE。
+  - 特徵尺度差很大（人口上萬、房間數個位數）：線性模型與 KNN 要先縮放，樹模型不必。
+  - 有經緯度：隨機切分會讓相鄰街區同時出現在訓練與測試，分數偏樂觀，可依地區分組切分。
+  - RMSE 的單位是 10 萬美元，比 MSE 好向業務說明。
+- 實跑：fetch_california_housing：(20640, 8)，目標欄名 MedHouseVal，範圍 0.15～5.0。
+- 來源：[scikit-learn fetch_california_housing](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html)、[scikit-learn 1.2 版本說明（移除 load_boston）](https://scikit-learn.org/stable/whats_new/v1.2.html)、[TabArena: A Living Benchmark for Machine Learning on Tabular Data（arXiv 2506.16791）](https://arxiv.org/abs/2506.16791)、[TabArena 排行榜](https://tabarena.ai)、[TabPFN-2.5: Advancing the State of the Art in Tabular Foundation Models（arXiv 2511.08667）](https://arxiv.org/abs/2511.08667)
+
+```python
+from sklearn.datasets import fetch_california_housing
+
+X, y = fetch_california_housing(return_X_y=True, as_frame=True)
+X.shape   # (20640, 8)；y 是 MedHouseVal，範圍 0.15～5.0
+```
+
+#### Credit Card Fraud（信用卡詐欺）
+
+- 規格：284,807 筆刷卡交易（歐洲持卡人，2013 年 9 月的兩天），詐欺 492 筆（0.17%）；V1～V28 是 PCA 轉換後的匿名特徵，另有交易金額 Amount。
+- 為什麼加它：真題考過不平衡的觀念題（115 年第 1 次第 12 題：肺癌只占 1%、準確率 99.1%），但沒有程式題。筆記 L23303、L23304 的 PR 曲線、判定門檻與重取樣，需要一個真的極度不平衡的資料來練。
+- 對應的發展：這不是新資料集。收它是因為不平衡處理是筆記篇幅大、程式真題還沒考的缺口；它的特徵先做過 PCA 匿名化，本身也是 L23401 隱私處理的例子。
+- 可以出的考點：
+  - 全部猜「正常」的準確率是 99.83%，Recall 卻是 0。
+  - 看 PR 曲線與 average_precision；極度不平衡時 ROC-AUC 容易顯得樂觀。
+  - SMOTE 只能在訓練折內做：用 imbalanced-learn 的 Pipeline 包起來，交叉驗證才不會洩漏。
+  - 切分要 stratify，否則某一折可能只分到個位數的詐欺樣本。
+  - 這個版本的標籤是字串類別，判斷要寫 y == "1"。
+- 實跑：OpenML 1597（creditcard 第 1 版）：(284807, 29)，詐欺 492 筆（0.173%）。與一般介紹的 30 欄不同：這個版本沒有原始的 Time 欄，只有 V1～V28 與 Amount；標籤是 category 型別的字串 '0'／'1'。
+- 來源：[OpenML：creditcard（data_id 1597，作者 Dal Pozzolo 等）](https://www.openml.org/d/1597)、[scikit-learn fetch_openml](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_openml.html)、[scikit-learn average_precision_score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html)、[scikit-learn precision_recall_curve](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_curve.html)、[imbalanced-learn SMOTE](https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTE.html)
+
+```python
+from sklearn.datasets import fetch_openml
+
+X, y = fetch_openml(data_id=1597, return_X_y=True, as_frame=True)
+y.value_counts()   # '0': 284315、'1': 492（標籤是字串）
+```
+
+#### Adult Census Income（成人收入）
+
+- 規格：48,842 筆（1994 年美國人口普查），14 個特徵（6 個數值、8 個類別），預測年收入是否超過 5 萬美元（>50K 約占 24%）。
+- 為什麼加它：公平性是筆記 L23402 一整節的內容，程式真題卻沒有對應的資料。Adult 帶有性別、種族等敏感欄位，是公平性教材最常用的資料；它的延伸版 ACSIncome（folktables）改用較新的美國社區調查資料，是《Retiring Adult》論文建議的替代。
+- 對應的發展：AI 治理越來越要求上線前分組評估錯誤率（筆記 L234 的公平性稽核）；Fairlearn 這類工具讓「依群組算 Recall、FPR」只需要幾行程式。
+- 可以出的考點：
+  - 8 個類別欄位：無順序的用 OneHotEncoder，搭配 ColumnTransformer 分開處理數值與類別。
+  - workclass、occupation、native-country 有缺失值，補值也要放進 Pipeline。
+  - 男性 32,650 筆、女性 16,192 筆，樣本不均；整體分數高不代表兩組都好，要分組算。
+  - 刪掉 sex 欄位不等於消除偏見：relationship（Husband／Wife）等代理變數仍帶有性別資訊。
+  - >50K 只占 24%，同時也是不平衡問題。
+- 實跑：fetch_openml("adult", version=2)（OpenML 1590）：(48842, 14)，>50K 占 23.93%；8 個類別欄位為 category 型別；workclass、occupation、native-country 有缺失值；男 32,650、女 16,192。
+- 來源：[UCI Machine Learning Repository：Adult（編號 2）](https://archive.ics.uci.edu/dataset/2/adult)、[OpenML：adult 第 2 版（data_id 1590）](https://www.openml.org/d/1590)、[Retiring Adult: New Datasets for Fair Machine Learning（arXiv 2108.04884）](https://arxiv.org/abs/2108.04884)、[folktables（ACSIncome 等資料集）](https://github.com/socialfoundations/folktables)、[Fairlearn：Assessment（分組評估）](https://fairlearn.org/main/user_guide/assessment/index.html)、[scikit-learn ColumnTransformer](https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html)
+
+```python
+from sklearn.datasets import fetch_openml
+
+X, y = fetch_openml("adult", version=2, return_X_y=True, as_frame=True)
+X.select_dtypes("category").columns   # 8 個類別欄位要編碼
+```
+
+#### ETTh1（電力變壓器溫度，每小時）
+
+- 規格：17,420 筆、每小時一筆（2016-07-01～2018-06-26），來自中國某省的電力變壓器：6 個負載特徵＋目標油溫 OT。
+- 為什麼加它：真題沒有任何時間序列資料，筆記卻一再強調「預測未來要依時間切分」以及 lag、移動平均特徵。ETTh1 是 Informer（AAAI 2021）提出的長序列預測基準，資料小、欄位少，很適合出切分與特徵題。
+- 對應的發展：時間序列基礎模型（不必在目標資料上訓練的零樣本預測）發展很快；GIFT-Eval 是主要的評測基準之一，收錄了 ETT 系列，而且刻意把預訓練資料和評測資料分開，避免評測污染。題目可能從「怎麼切分」延伸到「基礎模型的評測資料有沒有被訓練看過」。
+- 可以出的考點：
+  - 用 TimeSeriesSplit：訓練永遠在測試之前，不能隨機 K-fold，也不能 shuffle。
+  - lag 與移動平均只能用過去的值：rolling 前要先 shift(1)，否則等於把當下的答案放進特徵。
+  - 標準化的平均與標準差只能用訓練時段計算。
+  - 夏季與冬季負載不同，最後一段測試期的分布可能和訓練期不同（資料漂移）。
+- 實跑：pandas 3.1.1 讀取：(17420, 8)，欄位 date、HUFL、HULL、MUFL、MULL、LUFL、LULL、OT；TimeSeriesSplit(n_splits=3) 三折的訓練索引都在測試索引之前。GIFT-Eval 的 Hugging Face 資料集目錄確實有 ett1、ett2。
+- 來源：[ETDataset（GitHub，官方資料與說明）](https://github.com/zhouhaoyi/ETDataset)、[Informer: Beyond Efficient Transformer for Long Sequence Time-Series Forecasting（arXiv 2012.07436）](https://arxiv.org/abs/2012.07436)、[GIFT-Eval: A Benchmark For General Time Series Forecasting Model Evaluation（arXiv 2410.10393）](https://arxiv.org/abs/2410.10393)、[GIFT-Eval 排行榜（Hugging Face）](https://huggingface.co/spaces/Salesforce/GIFT-Eval)、[GIFT-Eval 資料集（Hugging Face）](https://huggingface.co/datasets/Salesforce/GiftEval)、[scikit-learn TimeSeriesSplit](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html)
+
+```python
+import pandas as pd
+from sklearn.model_selection import TimeSeriesSplit
+
+url = "https://raw.githubusercontent.com/zhouhaoyi/ETDataset/main/ETT-small/ETTh1.csv"
+df = pd.read_csv(url, parse_dates=["date"])   # (17420, 8)
+for train_idx, test_idx in TimeSeriesSplit(n_splits=3).split(df):
+    pass   # 每一折的訓練時段都在測試時段之前
+```
+
+#### CIFAR-10-C（影像劣化版 CIFAR-10）
+
+- 規格：CIFAR-10 測試集的 1 萬張圖套上 19 種劣化（論文的 15 種，加上 4 種保留驗證用；分為雜訊、模糊、天氣、數位四大類），每種 5 個強度，各存成 (50000, 32, 32, 3)。
+- 為什麼加它：直接延伸已考過的 CIFAR-10：同一個 CNN 在乾淨測試集與劣化影像上的準確率差多少，就是「離線好、線上差」的具體例子，對應全局圖的部署與監控和筆記 L234 的資料漂移。
+- 對應的發展：這也不是新資料集。模型越來越常部署到真實環境（相機、光線、壓縮都會變），上線前的穩健性測試與上線後的漂移監控已是標準流程；CIFAR-10-C 是做這件事最輕量的基準。
+- 可以出的考點：
+  - 每 1 萬張是一個強度，強度 1 到 5 依序排列；labels.npy 是測試集標籤重複 5 次。
+  - 只拿來測試、不拿來訓練：把同樣的劣化加進訓練，等於偷看了測試分布。
+  - 資料增強（亮度、雜訊）能改善部分劣化，但不保證泛化到沒見過的劣化。
+  - 準確率隨強度下降的曲線，就是上線後要監控「輸入品質」的理由。
+  - 像素同樣要除以 255.0，和訓練時的前處理一致。
+- 實跑：Zenodo 封存檔 2.9GB，未整檔下載；以 HTTP 分段讀取確認 19 個劣化檔皆為 (50000, 32, 32, 3) uint8，labels.npy 為 (50000,)，且每 1 萬筆都等於 CIFAR-10 的測試標籤。
+- 來源：[Benchmarking Neural Network Robustness to Common Corruptions and Perturbations（arXiv 1903.12261）](https://arxiv.org/abs/1903.12261)、[CIFAR-10-C 下載（Zenodo）](https://zenodo.org/records/2535967)、[hendrycks/robustness（GitHub，產生程式與說明）](https://github.com/hendrycks/robustness)
+
+```python
+import numpy as np
+
+x = np.load("CIFAR-10-C/fog.npy")      # (50000, 32, 32, 3)：5 個強度 × 1 萬張
+y = np.load("CIFAR-10-C/labels.npy")   # (50000,)：測試集標籤重複 5 次
+x_sev5, y_sev5 = x[40000:], y[40000:]   # 強度 5（最嚴重）
+```
+
 ## 四、考卷寫法與最新穩定版的差異
 
 考試照考卷寫法作答；實務寫程式請用新寫法。

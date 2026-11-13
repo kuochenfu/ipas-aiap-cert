@@ -150,6 +150,38 @@ describe("科目三程式速查", () => {
     expect(cards.filter((c) => c.code && !c.codeNotes?.length).map((c) => c.id)).toEqual([]);
   });
 
+  it("資料集：真題用過的都對到真題，延伸的 5 個都寫明理由、對應發展與來源", () => {
+    const DATASET_HOSTS = new Set([
+      ...OFFICIAL_HOSTS, "arxiv.org", "www.openml.org", "archive.ics.uci.edu", "www.cs.toronto.edu",
+      "zenodo.org", "huggingface.co", "tabarena.ai", "fairlearn.org", "imbalanced-learn.org",
+    ]);
+    const stageIds = new Set(sheet.pipeline!.phases.flatMap((p) => p.stages.map((s) => s.id)));
+    const cardIds = new Set(cards.map((c) => c.id));
+    const known = new Set(allNodes["senior-ml"].map((node) => node.code));
+    expect(new Set(sheet.datasets.map((d) => d.id)).size).toBe(sheet.datasets.length);
+    for (const d of sheet.datasets) {
+      for (const id of d.exams) expect(byId.get(id)?.source, `${d.id} → ${id}`).toBe("past-exam");
+      expect(d.group === "exam" ? d.exams.length > 0 : d.exams.length === 0, d.id).toBe(true);
+      if (d.group === "extension") expect(d.trend?.trim(), d.id).toBeTruthy();
+      expect(d.why.trim() && d.spec.trim() && d.load.trim() && d.verified.trim(), d.id).toBeTruthy();
+      expect(d.points.length, d.id).toBeGreaterThanOrEqual(3);
+      expect(stageIds.has(d.stage), d.id).toBe(true);
+      for (const code of d.nodes) expect(known.has(code), `${d.id} → ${code}`).toBe(true);
+      for (const id of d.cards) expect(cardIds.has(id), `${d.id} → ${id}`).toBe(true);
+      expect(d.sources.length, d.id).toBeGreaterThanOrEqual(2);
+      for (const src of d.sources) {
+        const url = new URL(src.url);
+        expect(url.protocol, src.url).toBe("https:");
+        expect(DATASET_HOSTS.has(url.hostname), src.url).toBe(true);
+      }
+    }
+    expect(sheet.datasets.filter((d) => d.group === "extension").length).toBe(5);
+    // 真題附程式的題目裡出現的具名資料集都要收：iris、CIFAR-10、digits、ImageNet 權重
+    const examDatasetQuestions = ["senior-ml-115-1-q44", "senior-ml-115-1-q46", "senior-ml-114-2-q46", "senior-ml-114-2-q42", "senior-ml-115-1-q42"];
+    const covered = new Set(sheet.datasets.flatMap((d) => d.exams));
+    expect(examDatasetQuestions.filter((id) => !covered.has(id))).toEqual([]);
+  });
+
   it("題號標籤以卷次與題號顯示", () => {
     expect(examRefLabel("senior-ml-114-2-q47")).toBe("114 年第 2 次・第 47 題");
     expect(examRefLabel("senior-ml-115-1-q05")).toBe("115 年第 1 次・第 5 題");
@@ -197,7 +229,9 @@ describe("程式速查頁的呈現", () => {
   it("逐行解讀排在全局圖之後，卡片上的題號可以跳到解讀", () => {
     const html = renderStudyReader({ page: { kind: "code", subjectId: "senior-ml" }, codeSheets });
     expect(html.indexOf('id="code-pipeline"')).toBeLessThan(html.indexOf('id="code-walkthroughs"'));
-    expect(html.indexOf('id="code-walkthroughs"')).toBeLessThan(html.indexOf('id="code-traps"'));
+    expect(html.indexOf('id="code-walkthroughs"')).toBeLessThan(html.indexOf('id="code-datasets"'));
+    expect(html.indexOf('id="code-datasets"')).toBeLessThan(html.indexOf('id="code-traps"'));
+    expect(html.match(/class="code-card code-dataset"/g)?.length).toBe(sheet.datasets.length);
     expect(html.match(/class="code-card code-walkthrough"/g)?.length).toBe(sheet.walkthroughs.length);
     expect(html).toContain('data-study-jump="code-walk-vgg-summary"');
   });
@@ -216,6 +250,19 @@ describe("程式速查頁的呈現", () => {
     const html = renderStudyReader({ page: { kind: "code", subjectId: "senior-ml" }, codeSheets });
     const freeze = html.slice(html.indexOf('id="code-card-freeze"'), html.indexOf('id="code-card-tv-models"'));
     expect(freeze.match(/model\.classifier\[6\] = torch\.nn\.Linear\(4096, 10\)/g)?.length).toBe(1);
+  });
+
+  it("逐行解讀上方附原題：題幹、四個選項與正解，題目共用說明（描述 A～F）也要在", () => {
+    const html = renderStudyReader({ page: { kind: "code", subjectId: "senior-ml" }, codeSheets });
+    for (const id of sheet.walkthroughs.flatMap((w) => w.exams)) {
+      expect(html, id).toContain(`id="code-walk-q-${id}"`);
+      const block = html.slice(html.indexOf(`id="code-walk-q-${id}"`));
+      expect(block.slice(0, block.indexOf("</details>")).match(/class="code-walk-q-choice[" ]/g)?.length, id).toBe(4);
+    }
+    const q47 = html.slice(html.indexOf('id="code-walk-q-senior-ml-115-1-q47"'));
+    expect(q47.slice(0, q47.indexOf("</details>"))).toContain("描述 A：");
+    const q45 = html.slice(html.indexOf('id="code-walk-q-senior-ml-114-2-q45"'));
+    expect(q45.slice(0, q45.indexOf("</details>")).match(/凍結卷積層的參數/g)?.length).toBe(1);
   });
 
   it("沒有資料時顯示找不到頁面", () => {

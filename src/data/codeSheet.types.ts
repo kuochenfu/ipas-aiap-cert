@@ -64,7 +64,37 @@ export type CodeWalkthrough = {
   cards: string[];
 };
 
-export type CodeSheetSection ={ id: string; title: string; summary: string; cards: CodeCard[] };
+/**
+ * 資料集：真題用過的（`exam`）與依近期發展延伸的（`extension`）。
+ * 每一筆都要說明「為什麼收」並附來源；規格與載入程式以最新穩定版實跑。
+ */
+export type CodeDataset = {
+  id: string;
+  name: string;
+  group: "exam" | "extension";
+  /** 規格：筆數、特徵、類別或目標。 */
+  spec: string;
+  /** 最新穩定版的載入程式。 */
+  load: string;
+  /** 用到這個資料集的真題 id；延伸資料集留空。 */
+  exams: string[];
+  /** exam：真題怎麼用它；extension：補現有資料集的哪個缺口。 */
+  why: string;
+  /** extension：對應的近期發展。 */
+  trend?: string;
+  /** 拿它可以出的考點。 */
+  points: string[];
+  /** 全局圖步驟 id。 */
+  stage: string;
+  /** 評鑑內容節點（五碼）。 */
+  nodes: string[];
+  cards: string[];
+  /** 實跑查核的結果（含與一般介紹不同的地方）。 */
+  verified: string;
+  sources: ReadingLink[];
+};
+
+export type CodeSheetSection = { id: string; title: string; summary: string; cards: CodeCard[] };
 
 export type CodeSheetVersion = { lib: string; version: string; released: string; docs: string; note?: string };
 
@@ -111,6 +141,7 @@ export type CodeSheet = {
   title: string;
   pipeline?: CodePipeline;
   walkthroughs: CodeWalkthrough[];
+  datasets: CodeDataset[];
   /** 版本與連結的查核日（YYYY-MM-DD）。 */
   checkedAt: string;
   versions: CodeSheetVersion[];

@@ -114,6 +114,24 @@ for (const walk of sheet.walkthroughs) {
   out.push("", `**解題**：${walk.answer}`, "");
 }
 
+out.push("## 資料集", "", "規格與載入程式以最新穩定版實跑；近期發展只寫趨勢、不寫排行榜名次。", "");
+for (const group of ["exam", "extension"] as const) {
+  out.push(`### ${group === "exam" ? "真題用過的資料集" : "延伸資料集（依近期發展）"}`, "");
+  for (const d of sheet.datasets.filter((x) => x.group === group)) {
+    out.push(
+      `#### ${d.name}`, "",
+      `- 規格：${d.spec}`,
+      `- ${group === "exam" ? "真題怎麼用它" : "為什麼加它"}：${d.why}`,
+      ...(d.trend ? [`- 對應的發展：${d.trend}`] : []),
+      ...(d.exams.length ? [`- 考過：${d.exams.map(examLabel).join("、")}`] : []),
+      `- 可以出的考點：`, ...d.points.map((p) => `  - ${p}`),
+      `- 實跑：${d.verified}`,
+      `- 來源：${d.sources.map(link).join("、")}`,
+      "", "```python", d.load, "```", "",
+    );
+  }
+}
+
 const versionCards = cards.filter((c) => c.versionNote);
 out.push("## 四、考卷寫法與最新穩定版的差異", "", "考試照考卷寫法作答；實務寫程式請用新寫法。", "");
 for (const c of versionCards) out.push(`- **\`${c.api}\`**：${c.versionNote}`);

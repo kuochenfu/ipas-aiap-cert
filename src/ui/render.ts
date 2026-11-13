@@ -6,10 +6,10 @@ import { groupReaderSections } from "../domain/readerSections";
 import type { Choice, QuestionFigure } from "../data/types";
 import type { Subject } from "../domain/catalog";
 import { certs, getLevels, getSubjects, subjects } from "../domain/catalog";
-import { getBankStats, getTopicCounts } from "../data/index";
+import { getBankStats, getQuestions, getTopicCounts } from "../data/index";
 import { getStudyGuide } from "../data/studyGuide";
 import type { Cert, Level } from "../data/types";
-import type { CodeCard, CodePipeline, CodeSheet, CodeWalkLine, CodeWalkthrough } from "../data/codeSheet.types";
+import type { CodeCard, CodeDataset, CodePipeline, CodeSheet, CodeWalkLine, CodeWalkthrough } from "../data/codeSheet.types";
 import type { Question } from "../data/types";
 import type {
   ReadingLink, StudyNoteItem, StudyNoteSection, StudyNoteTable, StudyNotesBySubject, StudyTopic,
@@ -1517,13 +1517,47 @@ const renderCodeCard = (card: CodeCard, walkByExam: Map<string, string>): string
 export const walkthroughByExam = (sheet: CodeSheet): Map<string, string> =>
   new Map(sheet.walkthroughs.flatMap((walk) => walk.exams.map((id) => [id, walk.id] as const)));
 
-const renderWalkthrough = (walk: CodeWalkthrough, stageLabel: string, cardsById: Map<string, CodeCard>): string => `
+/**
+ * 逐行解讀上方的原題：題幹、文字說明（例如「描述 A～F」）與四個選項，正解標出。
+ * 直接取自題庫（與刷題同一份資料），不另抄一份；題目附的程式與輸出由下方逐行解讀呈現，不重複。
+ */
+const renderWalkQuestion = (subjectId: string, id: string): string => {
+  const q = getQuestions(subjectId).find((item) => item.id === id);
+  if (!q) return "";
+  // 有些題目的轉錄把題幹（整理過的版本）又存成一段說明；去掉標點與空白後開頭 20 字與題幹相同，就視為重複不再顯示。
+  const plain = (text: string): string => text.replace(/[\s\p{P}]/gu, "");
+  const promptHead = plain(q.prompt).slice(0, 20);
+  const notes = (q.figures ?? [])
+    .filter((fig) => fig.kind === "note" || fig.kind === "table" || fig.kind === "chart")
+    .filter((fig) => !plain(fig.content).startsWith(promptHead));
+  return `
+    <details class="code-more code-walk-q" id="code-walk-q-${escapeHtml(id)}" open>
+      <summary>原題・${escapeHtml(examRefLabel(id))}</summary>
+      <p class="code-walk-q-prompt">${escapeHtml(q.prompt)}</p>
+      ${renderFigures(notes)}
+      <ol class="code-walk-q-choices">
+        ${q.choices.map((c) => `
+          <li class="code-walk-q-choice${c.id === q.answer ? " is-answer" : ""}">
+            <span class="choice-id">${escapeHtml(c.id)}</span>
+            <span class="code-walk-q-text">${renderChoiceBody(c, q.choiceFigures?.[c.id])}</span>
+            ${c.id === q.answer ? `<span class="code-badge is-core">正解</span>` : ""}
+          </li>
+        `).join("")}
+      </ol>
+      ${(q.figures ?? []).some((fig) => fig.kind === "code" || fig.kind === "output") ? `<p class="code-walk-q-more">題目附的程式與輸出見下方逐行解讀。</p>` : ""}
+    </details>
+  `;
+};
+
+const renderWalkthrough = (subjectId: string, walk: CodeWalkthrough, stageLabel: string, cardsById: Map<string, CodeCard>): string => `
   <article class="code-card code-walkthrough" id="code-walk-${escapeHtml(walk.id)}">
     <header class="code-card-head">
       <h3 class="code-card-api">${escapeHtml(walk.title)}</h3>
       <span class="code-card-tags">${walk.exams.map((id) => `<span class="code-lib">${escapeHtml(examRefLabel(id))}</span>`).join("")}</span>
     </header>
     <p class="code-point">${escapeHtml(walk.context)}</p>
+    ${walk.exams.map((id) => renderWalkQuestion(subjectId, id)).join("")}
+    <p class="code-walk-heading">程式逐行解讀</p>
     ${renderWalkLines(walk.lines, `${walk.title} 逐行解讀`)}
     <p class="code-note is-answer"><span class="code-note-label">解題</span>${escapeHtml(walk.answer)}</p>
     <p class="ml-chips"><span class="code-exams-label">全局圖</span><button class="ml-chip" data-study-jump="code-stage-${escapeHtml(walk.stage)}">${escapeHtml(stageLabel)}</button>
@@ -1625,6 +1659,36 @@ const renderCodePipeline = (subjectId: string, pipeline: CodePipeline, cards: Co
   `;
 };
 
+/** 資料集卡：規格、為什麼收、（延伸的）對應發展、載入程式、考點、實跑查核與來源。 */
+const renderDataset = (
+  subjectId: string, data: CodeDataset, stageLabel: string,
+  cardsById: Map<string, CodeCard>, walkByExam: Map<string, string>,
+): string => `
+  <article class="code-card code-dataset" id="code-data-${escapeHtml(data.id)}">
+    <header class="code-card-head">
+      <h4 class="code-card-api">${escapeHtml(data.name)}</h4>
+      <span class="code-card-tags"><span class="code-badge${data.group === "exam" ? " is-core" : ""}">${data.group === "exam" ? "真題用過" : "延伸"}</span></span>
+    </header>
+    <p class="code-point">${escapeHtml(data.spec)}</p>
+    <dl class="code-more-list">
+      <dt>${data.group === "exam" ? "真題怎麼用它" : "為什麼加它"}</dt><dd>${escapeHtml(data.why)}</dd>
+      ${data.trend ? `<dt>對應的發展</dt><dd>${escapeHtml(data.trend)}</dd>` : ""}
+      <dt>可以出的考點</dt>
+      <dd><ul class="ml-concepts">${data.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul></dd>
+    </dl>
+    <p class="code-walk-heading">載入程式（最新穩定版）</p>
+    <pre class="figure-pre code-snippet"><code>${escapeHtml(data.load)}</code></pre>
+    <p class="code-note is-version"><span class="code-note-label">實跑</span>${escapeHtml(data.verified)}</p>
+    ${data.exams.length ? renderExamRefs(data.exams, walkByExam) : ""}
+    <p class="ml-chips"><span class="code-exams-label">全局圖</span><button class="ml-chip" data-study-jump="code-stage-${escapeHtml(data.stage)}">${escapeHtml(stageLabel)}</button>${renderCodeChips(data.cards, cardsById)}</p>
+    <p class="ml-chips"><span class="code-exams-label">學習筆記</span>${renderNodeLinks(subjectId, data.nodes)}</p>
+    <details class="code-more" open>
+      <summary>來源（${data.sources.length}）</summary>
+      <ul class="study-links">${data.sources.map(renderReadingLink).join("")}</ul>
+    </details>
+  </article>
+`;
+
 const renderCodeSheetReader = (subjectId: string, sheet: CodeSheet | undefined): string => {
   const subject = subjects.find((s) => s.id === subjectId);
   if (!sheet || !subject) return renderStudyMissing();
@@ -1642,7 +1706,15 @@ const renderCodeSheetReader = (subjectId: string, sheet: CodeSheet | undefined):
     ...(sheet.walkthroughs.length ? [{
       id: "code-walkthroughs", label: "真題逐行解讀", title: `真題程式逐行解讀（${sheet.walkthroughs.length} 段・${new Set(sheet.walkthroughs.flatMap((w) => w.exams)).size} 題）`,
       body: `<p class="code-section-summary">照原卷程式逐行說明：這行做了什麼、資料變成什麼形狀、為什麼這樣寫，最後是解題結論。shape、參數量與數值都以最新穩定版實際執行過。</p>
-        ${sheet.walkthroughs.map((walk) => renderWalkthrough(walk, stageLabels.get(walk.stage) ?? walk.stage, cardsById)).join("")}`,
+        ${sheet.walkthroughs.map((walk) => renderWalkthrough(subjectId, walk, stageLabels.get(walk.stage) ?? walk.stage, cardsById)).join("")}`,
+    }] : []),
+    ...(sheet.datasets.length ? [{
+      id: "code-datasets", label: "資料集", title: `資料集：真題用過 ${sheet.datasets.filter((d) => d.group === "exam").length} 個・延伸 ${sheet.datasets.filter((d) => d.group === "extension").length} 個`,
+      body: `<p class="code-section-summary">真題程式用過的資料集，加上依近期機器學習發展延伸的資料集。延伸的挑法：補真題資料沒涵蓋的題型（迴歸、極度不平衡、公平性、時間序列、分布偏移），而且都能用幾行程式載入、出得成程式題。規格與載入程式都以最新穩定版實跑；近期發展只寫趨勢、不寫排行榜名次，名次請看來源的即時排行榜。</p>
+        ${(["exam", "extension"] as const).map((group) => `
+          <h3 class="code-dataset-group">${group === "exam" ? "真題用過的資料集" : "延伸資料集（依近期發展）"}</h3>
+          ${sheet.datasets.filter((d) => d.group === group).map((d) => renderDataset(subjectId, d, stageLabels.get(d.stage) ?? d.stage, cardsById, walkByExam)).join("")}
+        `).join("")}`,
     }] : []),
     {
       id: "code-traps", label: "考前陷阱", title: `考前 ${sheet.traps.length} 個陷阱`,
